@@ -51,7 +51,7 @@ public class Main extends Sprite {
                 new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight),
                 ScaleMode.SHOW_ALL);
 
-        _scaleFactor = viewPort.width < 480 ? 1 : 2;
+        _scaleFactor = viewPort.width < 1152 ? 1 : 2;
 //        var appDir:File = File.applicationDirectory;
 //        _assets = new AssetManager(_scaleFactor);
 //
@@ -94,7 +94,7 @@ public class Main extends Sprite {
 
 //        var bgTexture:Texture = Texture.fromBitmap(_background, false, false, _scaleFactor);
 
-//        app.start(bgTexture, _assets);
+        app.start();
         _starling.start();
     }
 }
