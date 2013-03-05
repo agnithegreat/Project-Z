@@ -9,9 +9,13 @@ package {
 import com.projectz.model.Game;
 import com.projectz.view.GameScreen;
 
+import starling.core.Starling;
 import starling.display.Sprite;
+import starling.utils.AssetManager;
 
 public class App extends Sprite {
+
+    public static var assets: AssetManager;
 
     private var _game: Game;
     private var _view: GameScreen;
@@ -20,7 +24,18 @@ public class App extends Sprite {
     public function App() {
     }
 
-    public function start():void {
+    public function start($assets: AssetManager):void {
+        assets = $assets;
+        assets.loadQueue(handleProgress);
+    }
+
+    private function handleProgress(ratio: Number):void {
+        if (ratio == 1) {
+            Starling.juggler.delayCall(startGame, 0.15);
+        }
+    }
+
+    private function startGame():void {
         _game = new Game();
         _game.init();
 

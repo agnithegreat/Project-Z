@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="Flex" version="4">
-  <component name="FlexBuildConfigurationManager" active="Project-Z">
+  <component name="FlexBuildConfigurationManager" active="Project-Z Mobile">
     <configurations>
-      <configuration name="Project-Z" target-platform="Mobile" pure-as="true" main-class="Main" output-file="Project-Z.swf" output-folder="$MODULE_DIR$/build">
+      <configuration name="Project-Z Mobile" target-platform="Mobile" pure-as="true" main-class="Main" output-file="Project-Z-mobile.swf" output-folder="$MODULE_DIR$/build">
         <dependencies>
           <entries>
             <entry library-name="starling" library-level="project">
@@ -12,14 +12,38 @@
               <dependency linkage="Merged" />
             </entry>
           </entries>
-          <sdk name="flex_4.9.1" />
+          <sdk name="flex_sdk_4.9" />
         </dependencies>
         <compiler-options />
         <packaging-air-desktop />
         <packaging-android package-file-name="Project-Z" />
-        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app.xml" package-file-name="Project-Z">
-          <AirSigningOptions keystore-path="$MODULE_DIR$/../../KEYS/Apple Developer Certificate/FakeCert.p12" provisioning-profile-path="$MODULE_DIR$/../../KEYS/Apple Developer Certificate/Fake.mobileprovision" />
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-mobile.xml" package-file-name="Project-Z">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="C:/My Dropbox/Project Z/Art/Final/textures" path-in-package="textures" />
+          </files-to-package>
+          <AirSigningOptions keystore-path="$MODULE_DIR$/../../keys/Apple Developer Certificate/FakeCert.p12" provisioning-profile-path="$MODULE_DIR$/../../keys/Apple Developer Certificate/Fake.mobileprovision" />
         </packaging-ios>
+      </configuration>
+      <configuration name="Project-Z Desktop" target-platform="Desktop" pure-as="true" main-class="Main" output-file="Project-Z-desktop.swf" output-folder="$MODULE_DIR$/build">
+        <dependencies>
+          <entries>
+            <entry library-id="638f56d9-ce9c-4241-bd5a-f79695ebfd8d">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="3ca0fd61-bfd8-4639-972b-8d1e67f33494">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="flex_sdk_4.9" />
+        </dependencies>
+        <compiler-options />
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-desktop.xml" package-file-name="Project-Z_AIR">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="C:/My Dropbox/Project Z/Art/Final/textures" path-in-package="textures" />
+          </files-to-package>
+        </packaging-air-desktop>
+        <packaging-android />
+        <packaging-ios />
       </configuration>
     </configurations>
     <compiler-options />
@@ -29,7 +53,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="flex_4.9.1" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="flex_sdk_4.9" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library>
@@ -42,6 +66,26 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="starling" level="project" />
     <orderEntry type="library" exported="" name="Starling-Extension-Graphics" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="638f56d9-ce9c-4241-bd5a-f79695ebfd8d" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/Starling-Extension-Graphics.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="3ca0fd61-bfd8-4639-972b-8d1e67f33494" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/starling.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

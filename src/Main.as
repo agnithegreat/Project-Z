@@ -9,17 +9,17 @@ package {
 import flash.desktop.NativeApplication;
 import flash.display.Bitmap;
 import flash.display.Sprite;
+import flash.filesystem.File;
 import flash.events.Event;
 import flash.geom.Rectangle;
 import flash.system.Capabilities;
 
 import starling.core.Starling;
 import starling.events.Event;
-import starling.textures.Texture;
-
 import starling.utils.AssetManager;
 import starling.utils.RectangleUtil;
 import starling.utils.ScaleMode;
+import starling.utils.formatString;
 
 [SWF(frameRate="60")]
 public class Main extends Sprite {
@@ -48,20 +48,20 @@ public class Main extends Sprite {
 
         var viewPort:Rectangle = RectangleUtil.fit(
                 new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT),
-                new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight),
+                iOS ? new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight) : new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT),
                 ScaleMode.SHOW_ALL);
 
         _scaleFactor = viewPort.width < 1152 ? 1 : 2;
-//        var appDir:File = File.applicationDirectory;
-//        _assets = new AssetManager(_scaleFactor);
-//
-//        _assets.verbose = Capabilities.isDebugger;
+        var appDir:File = File.applicationDirectory;
+        _assets = new AssetManager(_scaleFactor);
+
+        _assets.verbose = Capabilities.isDebugger;
 //        _assets.verbose = true;
-//        _assets.enqueue(
+        _assets.enqueue(
 //                appDir.resolvePath("audio"),
 //                appDir.resolvePath("fonts"),
-//                appDir.resolvePath(formatString("textures/{0}x", _scaleFactor))
-//        );
+                appDir.resolvePath(formatString("textures/{0}x", _scaleFactor))
+        );
 
 //        _background = _scaleFactor == 1 ? new Background() : new BackgroundHD();
 //        Background = BackgroundHD = null;
@@ -94,7 +94,7 @@ public class Main extends Sprite {
 
 //        var bgTexture:Texture = Texture.fromBitmap(_background, false, false, _scaleFactor);
 
-        app.start();
+        app.start(_assets);
         _starling.start();
     }
 }

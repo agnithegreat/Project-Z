@@ -6,31 +6,98 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.view {
+import com.projectz.event.GameEvent;
 import com.projectz.model.Field;
+import com.projectz.model.Personage;
 
+import flash.utils.setTimeout;
+
+import starling.display.Image;
 import starling.display.Sprite;
+import starling.events.Event;
 
 public class FieldView extends Sprite {
 
     private var _field: Field;
 
+    private var _bg: Image;
+    private var _container: Sprite;
+
     private var _cells: Sprite;
+    private var _shadows: Sprite;
     private var _objects: Sprite;
 
     public function FieldView($field: Field) {
         _field = $field;
+        _field.addEventListener(GameEvent.UPDATE, handleUpdate);
+
+        _bg = new Image(App.assets.getTexture("bg-test"));
+        _bg.touchable = false;
+        addChild(_bg);
+
+        _container = new Sprite();
+        addChild(_container);
 
         _cells = new Sprite();
-        addChild(_cells);
+        _cells.alpha = 0.1;
+        _container.addChild(_cells);
 
         var len: int = _field.field.length;
+        var cell: CellView;
         for (var i:int = 0; i < len; i++) {
-            var cell: CellView = new CellView(_field.field[i]);
-            addChild(cell);
+            cell = new CellView(_field.field[i], "so-cell");
+            _cells.addChild(cell);
         }
+        _cells.flatten();
+
+//        _container.x = (Constants.WIDTH+(1-(_field.width+_field.height)*0.5)*CellView.cellWidth)*0.5;
+//        _container.y = (Constants.HEIGHT+CellView.cellHeight)*0.5;
+        _container.x = (Constants.WIDTH+PositionView.cellWidth)*0.5;
+        _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
+
+        _shadows = new Sprite();
+        _shadows.touchable = false;
+        _container.addChild(_shadows);
 
         _objects = new Sprite();
-        addChild(_objects);
+        _objects.touchable = false;
+        _container.addChild(_objects);
+
+        var object: PositionView;
+        var shadow: ShadowView;
+        for (i = 0; i < len; i++) {
+            if (_field.field[i].object is Personage) {
+                object = new ZombieView(_field.field[i].object as Personage);
+                _objects.addChild(object);
+            } else if (_field.field[i].object) {
+                object = new ObjectView(_field.field[i].object);
+                _objects.addChild(object);
+
+                shadow = new ShadowView(_field.field[i].object.cell);
+                _shadows.addChild(shadow);
+            }
+        }
+
+        _shadows.flatten();
+
+        update();
+    }
+
+    private function handleUpdate($event: Event):void {
+        update();
+    }
+
+    public function update():void {
+        _objects.sortChildren(sortByDepth);
+    }
+
+    private function sortByDepth($child1: PositionView, $child2: PositionView):int {
+        if ($child1.depth>$child2.depth) {
+            return 1;
+        } else if ($child1.depth<$child2.depth) {
+            return -1;
+        }
+        return 0;
     }
 }
 }

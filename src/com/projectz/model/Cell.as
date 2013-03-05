@@ -20,9 +20,30 @@ public class Cell extends EventDispatcher {
         return _y;
     }
 
+    private var _object: FieldObject;
+    public function get object():FieldObject {
+        return _object;
+    }
+    public function set object(value: FieldObject):void {
+        _object = value;
+    }
+
+    private var _locked: Boolean;
+    public function get locked():Boolean {
+        return _locked;
+    }
+
     public function Cell($x: int, $y: int) {
         _x = $x;
         _y = $y;
+    }
+
+    public function lock():void {
+        _locked = true;
+    }
+
+    public function unlock():void {
+        _locked = false;
     }
 
     public function destroy():void {

@@ -8,39 +8,42 @@
 package com.projectz.view {
 import com.projectz.model.Cell;
 
-import starling.display.Shape;
+import starling.display.DisplayObject;
+import starling.display.Image;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 
-import starling.display.Sprite;
+public class CellView extends PositionView {
 
-public class CellView extends Sprite {
-
-    public static var cellWidth: int = 40;
-    public static var cellHeight: int = 40;
-
-    private var _cell: Cell;
-
-    private var _shape: Shape;
-
-    public function CellView($cell: Cell) {
-        _cell = $cell;
-
-        x = _cell.x*cellWidth;
-        y = _cell.y*cellHeight;
+    protected var _cell: Cell;
+    override public function get positionX():Number {
+        return _cell.x;
+    }
+    override public function get positionY():Number {
+        return _cell.y;
     }
 
-    private function draw():void {
-        _shape = new Shape();
-        addChild(_shape);
+    private var _bg: Image;
 
-        _shape.graphics.lineStyle(2, 0);
-        _shape.graphics.beginFill(0x00FF00);
-        _shape.graphics.drawRect(0,0,cellWidth,cellHeight);
-        _shape.graphics.endFill();
-//
-//        _shape.pivotX = _shape.width/2;
-//        _shape.pivotY = _shape.height/2;
-//        _shape.rotation = Math.PI/4;
-//        _shape.height *= 0.5;
+    public function CellView($cell: Cell, $texture: String = null) {
+        _cell = $cell;
+
+        super();
+
+        if ($texture) {
+            _bg = new Image(App.assets.getTexture($texture));
+            _bg.pivotX = _bg.width/2;
+            _bg.pivotY = _bg.height-cellHeight;
+            addChild(_bg);
+        }
+
+//        addEventListener(TouchEvent.TOUCH, handleTouch);
+    }
+
+    private function handleTouch(event:TouchEvent):void {
+        var touch: Touch = event.getTouch(event.target as DisplayObject, TouchPhase.MOVED);
+        _bg.color = touch ? 0x00FF00 : 0x000000;
     }
 }
 }
