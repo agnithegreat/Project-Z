@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.model {
+import com.projectz.utils.objectEditor.data.ObjectData;
+
 import starling.events.EventDispatcher;
 
 public class FieldObject extends EventDispatcher {
@@ -22,13 +24,17 @@ public class FieldObject extends EventDispatcher {
         return _cell.y;
     }
 
-    private var _name: String;
-    public function get name():String {
-        return _name;
+    private var _data: ObjectData;
+    public function get data():ObjectData {
+        return _data;
     }
 
-    public function FieldObject($name: String) {
-        _name = $name;
+    public function FieldObject($data: ObjectData) {
+        _data = $data;
+
+        if (!_data.exists) {
+            _data.save();
+        }
     }
 
     public function place($cell: Cell):void {

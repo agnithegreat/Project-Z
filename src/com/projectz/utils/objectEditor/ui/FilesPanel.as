@@ -6,8 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
-import flash.filesystem.File;
-
 import starling.display.Quad;
 import starling.display.Sprite;
 
@@ -25,11 +23,11 @@ public class FilesPanel extends Sprite {
         addChild(_filesList);
     }
 
-    public function showFiles($files: Vector.<File>):void {
-        var len: int = $files.length;
+    public function showFiles($names: Array):void {
+        var len: int = $names.length;
         var line: FileLine;
         for (var i:int = 0; i < len; i++) {
-            line = new FileLine($files[i]);
+            line = new FileLine($names[i]);
             line.y = i*20;
             _filesList.addChild(line);
         }

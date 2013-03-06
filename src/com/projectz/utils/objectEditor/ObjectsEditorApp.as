@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor {
+import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.model.Field;
 import com.projectz.utils.objectEditor.ui.FileLine;
 import com.projectz.utils.objectEditor.ui.UI;
@@ -51,14 +52,46 @@ public class ObjectsEditorApp extends Sprite {
         _ui.addEventListener(FileLine.SELECT_FILE, handleSelectObject);
         addChild(_ui);
 
-        var description: File = File.applicationDirectory.resolvePath("textures");
-        var listing: Vector.<File> = getFilesRecursive(description);
+        var staticObjects: File = File.applicationDirectory.resolvePath("textures/1x/level_elements/static_objects");
+        var listing: Vector.<File> = getFilesRecursive(staticObjects);
+        var files: Array = filterFiles(staticObjects, listing);
 
-        _ui.filesPanel.showFiles(listing);
+        _ui.filesPanel.showFiles(files);
+    }
+
+    private function filterFiles($parent: File, $files: Vector.<File>):Array {
+        var names: Object = {};
+        var fileNames: Object = {};
+
+        var len: int = $files.length;
+        var name: String;
+        var fileName: String;
+        for (var i:int = 0; i < len; i++) {
+            fileName = $files[i].name;
+            fileNames[fileName] = $files[i];
+            name = getFileName(fileName);
+            names[name] = name;
+        }
+
+        var files: Array = [];
+        for (name in names) {
+            files.push(new ObjectData(name, $parent.resolvePath(name+".json")));
+        }
+        files.sortOn("name");
+        return files;
     }
 
     private function handleSelectObject($event: Event):void {
-        _model.addObject(($event.data as File).name.replace(".png", ""));
+        var data: ObjectData = $event.data as ObjectData;
+        _model.addObject(data);
+    }
+
+    private function getFileName($name: String):String {
+        $name = $name.split(".")[0];
+        $name = $name.replace("_front");
+        $name = $name.replace("_back");
+        $name = $name.replace("_shadow");
+        return $name;
     }
 
     private function getFilesRecursive($file: File):Vector.<File> {

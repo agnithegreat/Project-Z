@@ -6,11 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.view {
+import com.projectz.utils.objectEditor.ObjectsEditorApp;
 import com.projectz.utils.objectEditor.model.Field;
 import com.projectz.utils.objectEditor.model.FieldObject;
 
 import starling.display.Sprite;
 import starling.events.Event;
+import starling.textures.Texture;
 
 public class FieldView extends Sprite {
 
@@ -19,7 +21,6 @@ public class FieldView extends Sprite {
     private var _container: Sprite;
 
     private var _cells: Sprite;
-    private var _shadows: Sprite;
     private var _objects: Sprite;
 
     public function FieldView($field: Field) {
@@ -36,17 +37,13 @@ public class FieldView extends Sprite {
         var len: int = _field.field.length;
         var cell: CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], "so-cell");
+            cell = new CellView(ObjectsEditorApp.assets.getTexture("so-cell"));
             _cells.addChild(cell);
         }
         _cells.flatten();
 
         _container.x = (Constants.WIDTH-200+PositionView.cellWidth)*0.5;
         _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
-
-        _shadows = new Sprite();
-        _shadows.touchable = false;
-        _container.addChild(_shadows);
 
         _objects = new Sprite();
         _objects.touchable = false;
@@ -61,7 +58,12 @@ public class FieldView extends Sprite {
             obj.removeFromParent(true);
         }
 
-        _objects.addChild(new ObjectView(_field.object));
+        var textures: Vector.<Texture> = ObjectsEditorApp.assets.getTextures(_field.object.data.name);
+
+        var len: int = textures.length;
+        for (var i:int = 0; i < len; i++) {
+            _objects.addChild(new ObjectView(textures[i]));
+        }
     }
 
     public function destroy():void {
@@ -78,15 +80,6 @@ public class FieldView extends Sprite {
         }
         _cells.removeFromParent(true);
         _cells = null;
-
-        var shadow: ShadowView;
-        while (_shadows.numChildren>0) {
-            shadow = _shadows.getChildAt(0) as ShadowView;
-            shadow.destroy();
-            shadow.removeFromParent(true);
-        }
-        _shadows.removeFromParent(true);
-        _shadows = null;
 
         var object: ObjectView;
         while (_objects.numChildren>0) {

@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
-import flash.filesystem.File;
+import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.display.Sprite;
 import starling.events.TouchEvent;
@@ -17,14 +17,15 @@ public class FileLine extends Sprite {
 
     public static const SELECT_FILE: String = "select_file_FileLine";
 
-    private var _file: File;
+    private var _data: ObjectData;
 
     private var _tf: TextField;
 
-    public function FileLine($file: File) {
-        _file = $file;
+    public function FileLine($data: ObjectData) {
+        _data = $data;
 
-        _tf = new TextField(200, 20, _file.name);
+        _tf = new TextField(200, 20, _data.name);
+        _tf.color = _data.exists ? 0x009900 : 0x990000;
         addChild(_tf);
 
         addEventListener(TouchEvent.TOUCH, handleTouch);
@@ -32,7 +33,7 @@ public class FileLine extends Sprite {
 
     private function handleTouch($event: TouchEvent):void {
         if ($event.getTouch(this, TouchPhase.ENDED)) {
-            dispatchEventWith(SELECT_FILE, true, _file);
+            dispatchEventWith(SELECT_FILE, true, _data);
         }
     }
 }

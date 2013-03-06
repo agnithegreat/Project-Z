@@ -7,6 +7,8 @@
  */
 package com.projectz.utils.objectEditor.model {
 
+import com.projectz.utils.objectEditor.data.ObjectData;
+
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
@@ -43,13 +45,13 @@ public class Field extends EventDispatcher {
         createField();
     }
 
-    public function addObject($name: String):void {
+    public function addObject($data: ObjectData):void {
         if (_object) {
             _object.destroy();
             _object = null;
         }
 
-        _object = new FieldObject($name);
+        _object = new FieldObject($data);
         _object.place(getCell(0,0));
 
         dispatchEventWith(ADD_OBJECT);
