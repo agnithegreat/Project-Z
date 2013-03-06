@@ -56,7 +56,7 @@ public class Main extends Sprite {
         _assets = new AssetManager(_scaleFactor);
 
         _assets.verbose = Capabilities.isDebugger;
-//        _assets.verbose = true;
+        _assets.verbose = false;
         _assets.enqueue(
 //                appDir.resolvePath("audio"),
 //                appDir.resolvePath("fonts"),

@@ -21,9 +21,9 @@ public class PositionView extends Sprite {
     public function get positionY():Number {
         return 0;
     }
+
     public function get depth():Number {
-        return y+x*0.1;
-//        return Math.sqrt(positionX*positionX+positionY*positionY);
+        return 0;
     }
 
     public function PositionView() {

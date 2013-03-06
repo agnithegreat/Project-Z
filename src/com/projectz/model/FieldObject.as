@@ -8,8 +8,6 @@
 package com.projectz.model {
 import com.projectz.event.GameEvent;
 
-import flash.geom.Point;
-
 import starling.events.EventDispatcher;
 
 public class FieldObject extends EventDispatcher {
@@ -19,9 +17,9 @@ public class FieldObject extends EventDispatcher {
         return _cell;
     }
 
-    protected var _size: Array;
-    public function get size():Array {
-        return _size;
+    protected var _mask: Array;
+    public function get mask():Array {
+        return _mask;
     }
 
     public function get positionX():Number {
@@ -31,8 +29,47 @@ public class FieldObject extends EventDispatcher {
         return _cell.y;
     }
 
-    public function FieldObject($size: Array = null) {
-        _size = $size ? $size : [[new Point(0,0)]];
+    private var _size: Array;
+
+    private var _depth: int;
+    public function get depth():int {
+        return _depth;
+    }
+    public function set depth(value:int):void {
+        _depth = value;
+    }
+
+    public function FieldObject($mask: Array = null) {
+        _mask = $mask ? $mask : [[1]];
+        createSize();
+    }
+
+    private function createSize():void {
+        _size = [];
+        for (var i:int = 0; i < _mask.length; i++) {
+            _size[i] = [];
+            for (var j:int = 0; j < _mask[i].length; j++) {
+                _size[i][j] = false;
+            }
+        }
+    }
+
+    public function clearSize():void {
+        for (var i:int = 0; i < _mask.length; i++) {
+            for (var j:int = 0; j < _mask[i].length; j++) {
+                _size[i][j] = false;
+            }
+        }
+    }
+
+    public function markSize($x: int, $y: int):void {
+        var tx: int = (_size.length-1)-(_cell.x-$x);
+        var ty: int = (_size[0].length-1)-(_cell.y-$y);
+        _size[tx][ty] = true;
+    }
+
+    public function get sizeChecked():Boolean {
+        return _size[0][_size[0].length-1] && _size[_size.length-1][0];
     }
 
     public function place($cell: Cell):void {
@@ -46,8 +83,16 @@ public class FieldObject extends EventDispatcher {
     public function destroy():void {
         _cell = null;
 
-        for (var i:int = 0; i < _size.length; i++) {
-            for (var j:int = 0; j < _size[i].length; j++) {
+        for (var i:int = 0; i < _mask.length; i++) {
+            for (var j:int = 0; j < _mask[i].length; j++) {
+                _mask[i][j] = null;
+            }
+            _mask[i] = null;
+        }
+        _mask = null;
+
+        for (i = 0; i < _size.length; i++) {
+            for (j = 0; j < _size[i].length; j++) {
                 _size[i][j] = null;
             }
             _size[i] = null;

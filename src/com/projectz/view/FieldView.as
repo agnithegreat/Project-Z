@@ -67,7 +67,7 @@ public class FieldView extends Sprite {
             if (_field.field[i].object is Personage) {
                 object = new ZombieView(_field.field[i].object as Personage);
                 _objects.addChild(object);
-            } else if (_field.field[i].object) {
+            } else if (_field.field[i].object && _field.field[i].object.cell==_field.field[i]) {
                 object = new ObjectView(_field.field[i].object);
                 _objects.addChild(object);
 

@@ -25,6 +25,10 @@ public class PersonageView extends PositionView {
         return _personage.positionY;
     }
 
+    override public function get depth():Number {
+        return _personage.depth;
+    }
+
     protected var _currentState: MovieClip;
     protected var _states: Object;
 

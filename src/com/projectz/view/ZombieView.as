@@ -27,10 +27,10 @@ public class ZombieView extends PersonageView {
         _personage.addEventListener(Zombie.DIE, handleDie);
 
         for (var i:int = 1; i <= 5; i++) {
-            addState(WALK+i, App.assets.getTextureAtlas(WALK+i).getTextures(), 8);
-            addState(ATTACK+i, App.assets.getTextureAtlas(ATTACK+i).getTextures(), 8);
+            addState(WALK+i, App.assets.getTextureAtlas(WALK+i).getTextures(), 12);
+            addState(ATTACK+i, App.assets.getTextureAtlas(ATTACK+i).getTextures(), 12);
         }
-        addState(DIE, App.assets.getTextureAtlas(DIE).getTextures(), 8, false);
+        addState(DIE, App.assets.getTextureAtlas(DIE).getTextures(), 12, false);
     }
 
     private function handleWalk($event: Event):void {
@@ -57,6 +57,7 @@ public class ZombieView extends PersonageView {
 
     public function die():void {
         setState(DIE);
+        _currentState.currentFrame = 0;
         _currentState.scaleX = 1;
         _currentState.addEventListener(Event.COMPLETE, handleDied);
     }
