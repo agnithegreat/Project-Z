@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f733001-a71b-4ea2-be07-434055d24b2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/index.html" afterPath="$PROJECT_DIR$/build/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.as" afterPath="$PROJECT_DIR$/src/Main.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectZ.iws" afterPath="$PROJECT_DIR$/ProjectZ.iws" />
     </list>
     <ignored path="ProjectZ.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,9 +78,6 @@
             <state line="18" column="78" selection-start="495" selection-end="495" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
-                <marker date="1362576132329" expanded="true" signature="1279:1345" placeholder="{...}" />
-                <marker date="1362576132329" expanded="true" signature="1543:1747" placeholder="{...}" />
-                <marker date="1362576132329" expanded="true" signature="1827:1993" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -88,11 +86,10 @@
       <file leaf-file-name="App.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="0" selection-start="1510" selection-end="1510" vertical-scroll-proportion="-12.56">
+            <state line="63" column="0" selection-start="1510" selection-end="1510" vertical-scroll-proportion="-27.28">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#169#200#0" expanded="true" />
-                <marker date="1362576132275" expanded="true" signature="1283:1315" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -101,12 +98,56 @@
       <file leaf-file-name="Main.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="48" selection-start="638" selection-end="638" vertical-scroll-proportion="0.4753915">
+            <state line="18" column="23" selection-start="424" selection-end="424" vertical-scroll-proportion="0.34228188">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#233#261#0" expanded="true" />
-                <element signature="e#345#371#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Grid.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Grid.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Node.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Node.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Image.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../sdk/flex_4.6/frameworks/projects/spark/src/spark/components/Image.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="73" column="53" selection-start="1889" selection-end="1889" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CellView.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/view/CellView.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="34" column="0" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectView.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ObjectView.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="27" column="47" selection-start="880" selection-end="880" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -642,38 +683,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/PositionView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="40" selection-start="452" selection-end="452" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ObjectView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="14" selection-start="503" selection-end="503" vertical-scroll-proportion="0.24665178">
-          <folding>
-            <element signature="e#257#289#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/PersonageView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="23" selection-start="1838" selection-end="1838" vertical-scroll-proportion="-25.32">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ZombieView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="23" selection-start="303" selection-end="313" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/Starling-Extension-Graphics.swc!/library.swf">
       <provider selected="true" editor-type-id="text-editor">
         <state line="620" column="47" selection-start="30845" selection-end="30845" vertical-scroll-proportion="0.42141622">
@@ -741,14 +750,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Grid.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="0" selection-start="1510" selection-end="1510" vertical-scroll-proportion="-12.56">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#169#200#0" expanded="true" />
-            <marker date="1362576132275" expanded="true" signature="1283:1315" placeholder="{...}" />
-          </folding>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Node.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../sdk/flex_4.6/frameworks/projects/spark/src/spark/components/Image.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="53" selection-start="1889" selection-end="1889" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/CellView.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="0" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ObjectView.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="47" selection-start="880" selection-end="880" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -757,27 +790,26 @@
         <state line="18" column="78" selection-start="495" selection-end="495" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <marker date="1362576132329" expanded="true" signature="1279:1345" placeholder="{...}" />
-            <marker date="1362576132329" expanded="true" signature="1543:1747" placeholder="{...}" />
-            <marker date="1362576132329" expanded="true" signature="1827:1993" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../sdk/flex_4.6/frameworks/projects/spark/src/spark/components/Image.as">
+    <entry file="file://$PROJECT_DIR$/src/App.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="0" selection-start="1767" selection-end="1767" vertical-scroll-proportion="-3.1577947">
-          <folding />
+        <state line="63" column="0" selection-start="1510" selection-end="1510" vertical-scroll-proportion="-27.28">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#169#200#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="48" selection-start="638" selection-end="638" vertical-scroll-proportion="0.4753915">
+        <state line="18" column="23" selection-start="424" selection-end="424" vertical-scroll-proportion="0.34228188">
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#233#261#0" expanded="true" />
-            <element signature="e#345#371#0" expanded="true" />
           </folding>
         </state>
       </provider>

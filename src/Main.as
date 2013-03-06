@@ -98,6 +98,9 @@ public class Main extends Sprite {
             _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testbox.png");
             _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testwall.png");
             _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-tree-01.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testcar.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-downlayer.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-uplayer.png");
         }
 
         _assets.verbose = Capabilities.isDebugger;
