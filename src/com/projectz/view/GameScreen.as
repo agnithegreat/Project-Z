@@ -22,5 +22,13 @@ public class GameScreen extends Sprite {
         _field = new FieldView(_game.field);
         addChild(_field);
     }
+
+    public function destroy():void {
+        _game = null;
+
+        _field.destroy();
+        _field.removeFromParent(true);
+        _field = null;
+    }
 }
 }

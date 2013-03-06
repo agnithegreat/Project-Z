@@ -20,5 +20,11 @@ public class ObjectView extends CellView {
 
         pivotY -= int(_object.size.length*0.5)*cellHeight;
     }
+
+    override public function destroy():void {
+        super.destroy();
+
+        _object = null;
+    }
 }
 }

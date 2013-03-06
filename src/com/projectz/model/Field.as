@@ -61,7 +61,7 @@ public class Field extends EventDispatcher {
         for (var i:int = 0; i < len; i++) {
             personage = _personages[i] as Zombie;
             if (personage) {
-                if (!personage.target) {
+                if (personage.alive && !personage.target) {
                     while (!cell || cell.locked) {
                         cell = getRandomCell();
                     }
@@ -172,13 +172,23 @@ public class Field extends EventDispatcher {
     }
 
     public function destroy():void {
-        // TODO: destroy grid
-        _grid = null;
-
         while (_field.length>0) {
             _field.pop().destroy();
         }
         _field = null;
+
+        for (var id: String in _fieldObj) {
+            delete _fieldObj[id];
+        }
+        _fieldObj = null;
+
+        _grid.destroy();
+        _grid = null;
+
+        while (_personages.length>0) {
+            _personages.pop().destroy();
+        }
+        _personages = null;
     }
 }
 }

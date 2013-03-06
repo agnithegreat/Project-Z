@@ -66,5 +66,26 @@ public class PersonageView extends PositionView {
         x = (positionY-positionX)*cellWidth*0.5;
         y = (positionY+positionX)*cellHeight*0.5;
     }
+
+    override public function destroy():void {
+        super.destroy();
+
+        _personage.removeEventListeners();
+        _personage = null;
+
+        if (_currentState) {
+            Starling.juggler.remove(_currentState);
+            _currentState.removeFromParent();
+        }
+        _currentState = null;
+
+        var state: MovieClip;
+        for (var id: String in _states) {
+            state = _states[id];
+            state.dispose();
+            delete _states[id];
+        }
+        _states = null;
+    }
 }
 }

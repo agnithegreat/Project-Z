@@ -42,5 +42,17 @@ public class FieldObject extends EventDispatcher {
     public function update():void {
         dispatchEventWith(GameEvent.UPDATE);
     }
+
+    public function destroy():void {
+        _cell = null;
+
+        for (var i:int = 0; i < _size.length; i++) {
+            for (var j:int = 0; j < _size[i].length; j++) {
+                _size[i][j] = null;
+            }
+            _size[i] = null;
+        }
+        _size = null;
+    }
 }
 }

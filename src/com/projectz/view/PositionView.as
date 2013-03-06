@@ -34,8 +34,11 @@ public class PositionView extends Sprite {
         pivotY = cellHeight/2;
     }
 
+    protected function dispatchDestroy():void {
+        dispatchEventWith(GameEvent.DESTROY, true);
+    }
+
     public function destroy():void {
-        dispatchEventWith(GameEvent.DESTROY);
     }
 }
 }

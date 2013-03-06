@@ -31,8 +31,21 @@ public class Personage extends FieldObject {
         return _target ? Point.distance(new Point(_target.x, _target.y), new Point(_cell.x, _cell.y)) : 0;
     }
 
+    protected var _alive: Boolean;
+    public function get alive():Boolean {
+        return _alive;
+    }
+
     public function Personage() {
         super();
+
+        _alive = true;
+    }
+
+    override public function destroy():void {
+        super.destroy();
+
+        _target = null;
     }
 }
 }

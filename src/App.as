@@ -11,6 +11,8 @@ import com.projectz.view.GameScreen;
 
 import starling.core.Starling;
 import starling.display.Sprite;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 
 public class App extends Sprite {
@@ -32,6 +34,8 @@ public class App extends Sprite {
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
             Starling.juggler.delayCall(startGame, 0.15);
+
+            stage.addEventListener(TouchEvent.TOUCH, handleTouch);
         }
     }
 
@@ -41,6 +45,24 @@ public class App extends Sprite {
 
         _view = new GameScreen(_game);
         addChild(_view);
+    }
+
+    private function endGame():void {
+        _view.destroy();
+        _view.removeFromParent(true);
+        _view = null;
+
+        _game.destroy();
+        _game = null;
+    }
+
+    private function handleTouch($event: TouchEvent):void {
+        if ($event.getTouch(stage, TouchPhase.ENDED)) {
+            if (_game) {
+                endGame();
+                startGame();
+            }
+        }
     }
 }
 }
