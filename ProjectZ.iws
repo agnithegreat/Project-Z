@@ -2,33 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f733001-a71b-4ea2-be07-434055d24b2b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/textures/1x/level_elements/static_objects/so-testcar.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/textures/1x/level_elements/static_objects/so-testhome-downlayer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/textures/1x/level_elements/static_objects/so-testhome-uplayer.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/projectz/model/Car.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/Project-Z_AIR.air" afterPath="$PROJECT_DIR$/build/Project-Z_AIR.air" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.as" afterPath="$PROJECT_DIR$/src/App.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Field.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/FieldObject.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/FieldObject.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Grid.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Grid.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Node.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Node.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Personage.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Personage.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/PositionView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/PositionView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectZ.iws" afterPath="$PROJECT_DIR$/ProjectZ.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Zombie.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Zombie.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/index.html" afterPath="$PROJECT_DIR$/build/index.html" />
     </list>
     <ignored path="ProjectZ.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362552512873" ignored="false" />
-    <file path="/fragment.js2" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362575996403" ignored="false" />
+    <file path="/fragment.js2" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362576340058" ignored="false" />
     <file path="/PersonageView.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362509868054" ignored="false" />
     <file path="/Main.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362575779595" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -122,7 +101,7 @@
       <file leaf-file-name="Main.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="31" selection-start="158" selection-end="158" vertical-scroll-proportion="0.19391635">
+            <state line="25" column="48" selection-start="638" selection-end="638" vertical-scroll-proportion="0.4753915">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#233#261#0" expanded="true" />
@@ -572,7 +551,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -581,7 +560,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329718" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -794,7 +773,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="31" selection-start="158" selection-end="158" vertical-scroll-proportion="0.19391635">
+        <state line="25" column="48" selection-start="638" selection-end="638" vertical-scroll-proportion="0.4753915">
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#233#261#0" expanded="true" />
