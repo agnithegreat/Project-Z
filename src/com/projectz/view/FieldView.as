@@ -10,8 +10,6 @@ import com.projectz.event.GameEvent;
 import com.projectz.model.Field;
 import com.projectz.model.Personage;
 
-import flash.utils.setTimeout;
-
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.events.Event;
@@ -69,7 +67,7 @@ public class FieldView extends Sprite {
             if (_field.field[i].object is Personage) {
                 object = new ZombieView(_field.field[i].object as Personage);
                 _objects.addChild(object);
-            } else if (_field.field[i].object) {
+            } else if (_field.field[i].object && _field.field[i].object.cell==_field.field[i]) {
                 object = new ObjectView(_field.field[i].object);
                 _objects.addChild(object);
 
@@ -80,11 +78,19 @@ public class FieldView extends Sprite {
 
         _shadows.flatten();
 
+        addEventListener(GameEvent.DESTROY, handleDestroy);
+
         update();
     }
 
     private function handleUpdate($event: Event):void {
         update();
+    }
+
+    private function handleDestroy($event: Event):void {
+        var obj: PositionView = $event.target as PositionView;
+        obj.destroy();
+        obj.removeFromParent(true);
     }
 
     public function update():void {
@@ -98,6 +104,47 @@ public class FieldView extends Sprite {
             return -1;
         }
         return 0;
+    }
+
+    public function destroy():void {
+        removeEventListeners();
+
+        _field.removeEventListeners();
+        _field = null;
+
+        _bg.removeFromParent(true);
+        _bg = null;
+
+        var cell: CellView;
+        while (_cells.numChildren>0) {
+            cell = _cells.getChildAt(0) as CellView;
+            cell.destroy();
+            cell.removeFromParent(true);
+        }
+        _cells.removeFromParent(true);
+        _cells = null;
+
+        var shadow: ShadowView;
+        while (_shadows.numChildren>0) {
+            shadow = _shadows.getChildAt(0) as ShadowView;
+            shadow.destroy();
+            shadow.removeFromParent(true);
+        }
+        _shadows.removeFromParent(true);
+        _shadows = null;
+
+        var object: ObjectView;
+        while (_objects.numChildren>0) {
+            object = _objects.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
+            }
+        }
+        _objects.removeFromParent(true);
+        _objects = null;
+
+        _container.removeFromParent(true);
+        _container = null;
     }
 }
 }

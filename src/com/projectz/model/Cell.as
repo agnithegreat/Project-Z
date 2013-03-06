@@ -47,7 +47,7 @@ public class Cell extends EventDispatcher {
     }
 
     public function destroy():void {
-
+        _object = null;
     }
 }
 }

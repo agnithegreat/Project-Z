@@ -45,5 +45,16 @@ public class CellView extends PositionView {
         var touch: Touch = event.getTouch(event.target as DisplayObject, TouchPhase.MOVED);
         _bg.color = touch ? 0x00FF00 : 0x000000;
     }
+
+    override public function destroy():void {
+        super.destroy();
+
+        _cell = null;
+
+        if (_bg) {
+            _bg.removeFromParent(true);
+        }
+        _bg = null;
+    }
 }
 }

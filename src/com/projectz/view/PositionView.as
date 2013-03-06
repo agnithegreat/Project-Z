@@ -21,9 +21,9 @@ public class PositionView extends Sprite {
     public function get positionY():Number {
         return 0;
     }
+
     public function get depth():Number {
-        return y+x*0.1;
-//        return Math.sqrt(positionX*positionX+positionY*positionY);
+        return 0;
     }
 
     public function PositionView() {
@@ -34,8 +34,11 @@ public class PositionView extends Sprite {
         pivotY = cellHeight/2;
     }
 
+    protected function dispatchDestroy():void {
+        dispatchEventWith(GameEvent.DESTROY, true);
+    }
+
     public function destroy():void {
-        dispatchEventWith(GameEvent.DESTROY);
     }
 }
 }

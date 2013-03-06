@@ -9,6 +9,8 @@ package com.projectz.view {
 import com.projectz.model.Personage;
 import com.projectz.model.Zombie;
 
+import starling.core.Starling;
+
 import starling.events.Event;
 
 public class ZombieView extends PersonageView {
@@ -22,12 +24,13 @@ public class ZombieView extends PersonageView {
 
         _personage.addEventListener(Zombie.WALK, handleWalk);
         _personage.addEventListener(Zombie.ATTACK, handleAttack);
+        _personage.addEventListener(Zombie.DIE, handleDie);
 
         for (var i:int = 1; i <= 5; i++) {
-            addState(WALK+i, App.assets.getTextureAtlas(WALK+i).getTextures(), 8);
-            addState(ATTACK+i, App.assets.getTextureAtlas(ATTACK+i).getTextures(), 8);
+            addState(WALK+i, App.assets.getTextureAtlas(WALK+i).getTextures(), 12);
+            addState(ATTACK+i, App.assets.getTextureAtlas(ATTACK+i).getTextures(), 12);
         }
-        addState(DIE, App.assets.getTextureAtlas(DIE).getTextures(), 8, false);
+        addState(DIE, App.assets.getTextureAtlas(DIE).getTextures(), 12, false);
     }
 
     private function handleWalk($event: Event):void {
@@ -36,6 +39,10 @@ public class ZombieView extends PersonageView {
 
     private function handleAttack($event: Event):void {
         attack(_personage.direction);
+    }
+
+    private function handleDie($event: Event):void {
+        die();
     }
 
     public function walk(dir: int = 0):void {
@@ -50,7 +57,25 @@ public class ZombieView extends PersonageView {
 
     public function die():void {
         setState(DIE);
+        _currentState.currentFrame = 0;
         _currentState.scaleX = 1;
+        _currentState.addEventListener(Event.COMPLETE, handleDied);
+    }
+
+    private function handleDied($event: Event):void {
+        _currentState.removeEventListener(Event.COMPLETE, handleDied);
+
+        Starling.juggler.tween(this, 1, {
+            alpha: 0,
+            onComplete: dispatchDestroy
+        });
+    }
+
+    override public function destroy():void {
+        if (_currentState) {
+            _currentState.removeEventListeners();
+        }
+        super.destroy();
     }
 }
 }

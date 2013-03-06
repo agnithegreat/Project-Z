@@ -2,9 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f733001-a71b-4ea2-be07-434055d24b2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/Project-Z-desktop.swf" afterPath="$PROJECT_DIR$/build/Project-Z-desktop.swf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/Main-app-desktop.xml" afterPath="$PROJECT_DIR$/build/Main-app-desktop.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.as" afterPath="$PROJECT_DIR$/src/Main.as" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/textures/1x/level_elements/static_objects/so-testcar.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/textures/1x/level_elements/static_objects/so-testhome-downlayer.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/textures/1x/level_elements/static_objects/so-testhome-uplayer.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/projectz/model/Car.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/Project-Z_AIR.air" afterPath="$PROJECT_DIR$/build/Project-Z_AIR.air" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.as" afterPath="$PROJECT_DIR$/src/App.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Field.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/FieldObject.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/FieldObject.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Grid.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Grid.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Node.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/pathFinding/Node.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Personage.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Personage.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/PositionView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/PositionView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectZ.iws" afterPath="$PROJECT_DIR$/ProjectZ.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Zombie.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Zombie.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ProjectZ.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,9 +95,12 @@
       <file leaf-file-name="Zombie.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Zombie.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="78" selection-start="450" selection-end="450" vertical-scroll-proportion="0.0">
+            <state line="18" column="78" selection-start="495" selection-end="495" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
+                <marker date="1362576132329" expanded="true" signature="1279:1345" placeholder="{...}" />
+                <marker date="1362576132329" expanded="true" signature="1543:1747" placeholder="{...}" />
+                <marker date="1362576132329" expanded="true" signature="1827:1993" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -87,10 +109,11 @@
       <file leaf-file-name="App.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="0" selection-start="926" selection-end="926" vertical-scroll-proportion="-12.56">
+            <state line="63" column="0" selection-start="1510" selection-end="1510" vertical-scroll-proportion="-12.56">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#169#200#0" expanded="true" />
+                <marker date="1362576132275" expanded="true" signature="1283:1315" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -99,7 +122,7 @@
       <file leaf-file-name="Main.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="40" selection-start="186" selection-end="186" vertical-scroll-proportion="0.16159695">
+            <state line="6" column="31" selection-start="158" selection-end="158" vertical-scroll-proportion="0.19391635">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#233#261#0" expanded="true" />
@@ -112,9 +135,14 @@
       <file leaf-file-name="FieldView.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/view/FieldView.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="0" selection-start="791" selection-end="791" vertical-scroll-proportion="0.0">
+            <state line="31" column="0" selection-start="759" selection-end="759" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#180#216#0" expanded="true" />
+                <marker date="1362576132346" expanded="true" signature="666:2678" placeholder="{...}" />
+                <marker date="1362576132346" expanded="true" signature="1955:2600" placeholder="{...}" />
+                <marker date="1362576132346" expanded="true" signature="2010:2308" placeholder="{...}" />
+                <marker date="1362576132346" expanded="true" signature="2342:2598" placeholder="{...}" />
+                <marker date="1362576132346" expanded="true" signature="4194:4213" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -123,7 +151,7 @@
       <file leaf-file-name="GameScreen.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/view/GameScreen.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="0" selection-start="424" selection-end="424" vertical-scroll-proportion="0.0">
+            <state line="29" column="0" selection-start="588" selection-end="588" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -544,7 +572,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -646,7 +674,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="19" column="14" selection-start="503" selection-end="503" vertical-scroll-proportion="0.24665178">
           <folding>
-            <element signature="e#187#225#0" expanded="true" />
+            <element signature="e#257#289#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -715,35 +743,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/view/FieldView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="0" selection-start="791" selection-end="791" vertical-scroll-proportion="0.0">
+        <state line="31" column="0" selection-start="759" selection-end="759" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#180#216#0" expanded="true" />
+            <marker date="1362576132346" expanded="true" signature="666:2678" placeholder="{...}" />
+            <marker date="1362576132346" expanded="true" signature="1955:2600" placeholder="{...}" />
+            <marker date="1362576132346" expanded="true" signature="2010:2308" placeholder="{...}" />
+            <marker date="1362576132346" expanded="true" signature="2342:2598" placeholder="{...}" />
+            <marker date="1362576132346" expanded="true" signature="4194:4213" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/view/GameScreen.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="424" selection-end="424" vertical-scroll-proportion="0.0">
+        <state line="29" column="0" selection-start="588" selection-end="588" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/App.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="0" selection-start="926" selection-end="926" vertical-scroll-proportion="-12.56">
+        <state line="63" column="0" selection-start="1510" selection-end="1510" vertical-scroll-proportion="-12.56">
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#169#200#0" expanded="true" />
+            <marker date="1362576132275" expanded="true" signature="1283:1315" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Zombie.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="78" selection-start="450" selection-end="450" vertical-scroll-proportion="0.0">
+        <state line="18" column="78" selection-start="495" selection-end="495" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="n#!!doc" expanded="true" />
+            <marker date="1362576132329" expanded="true" signature="1279:1345" placeholder="{...}" />
+            <marker date="1362576132329" expanded="true" signature="1543:1747" placeholder="{...}" />
+            <marker date="1362576132329" expanded="true" signature="1827:1993" placeholder="{...}" />
           </folding>
         </state>
       </provider>
@@ -757,7 +794,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="40" selection-start="186" selection-end="186" vertical-scroll-proportion="0.16159695">
+        <state line="6" column="31" selection-start="158" selection-end="158" vertical-scroll-proportion="0.19391635">
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#233#261#0" expanded="true" />

@@ -12,6 +12,7 @@ public class Zombie extends Personage {
     public static const WALK: String = "walk";
     public static const ATTACK: String = "attack";
     public static const CAME: String = "came";
+    public static const DIE: String = "die";
 
     private var _way: Vector.<Cell>;
 
@@ -41,13 +42,19 @@ public class Zombie extends Personage {
             _target = _way.shift();
             dispatchEventWith(WALK);
         } else {
-            dispatchEventWith(CAME);
+            // TODO: remove this test
+            die();
         }
     }
 
     public function attack($cell: Cell):void {
         _target = $cell;
         dispatchEventWith(ATTACK);
+    }
+
+    public function die():void {
+        _alive = false;
+        dispatchEventWith(DIE);
     }
 
     public function step($delta: Number):void {
@@ -68,6 +75,13 @@ public class Zombie extends Personage {
 
             walk(_way);
         }
+    }
+
+    override public function destroy():void {
+        while (_way.length>0) {
+            _way.pop();
+        }
+        _way = null;
     }
 }
 }

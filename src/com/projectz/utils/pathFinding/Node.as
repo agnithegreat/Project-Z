@@ -19,5 +19,9 @@ package com.projectz.utils.pathFinding {
 		public function Node($x:int, $y:int) {
 			super($x,$y);
 		}
+
+        public function destroy():void {
+            parent = null;
+        }
 	}
 }

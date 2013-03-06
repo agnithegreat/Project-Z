@@ -11,13 +11,12 @@ import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
 
-import flash.geom.Point;
-
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var TREES: int = 50;
+    public static var CARS: int = 5;
+    public static var TREES: int = 0;
     public static var ZOMBIES: int = 50;
 
     private var _width: int;
@@ -38,7 +37,7 @@ public class Field extends EventDispatcher {
 
     private var _grid: Grid;
 
-    private var _personages: Vector.<Personage>;
+    private var _zombies: Vector.<Zombie>;
 
     public function Field($width: int, $height: int) {
         _width = $width;
@@ -54,24 +53,49 @@ public class Field extends EventDispatcher {
     }
 
     public function step($delta: Number):void {
-        var len: int = _personages.length;
-        var personage:Zombie;
+        updateDepths();
+
+        var len: int = _zombies.length;
+        var zombie:Zombie;
 
         var cell: Cell;
         for (var i:int = 0; i < len; i++) {
-            personage = _personages[i] as Zombie;
-            if (personage) {
-                if (!personage.target) {
-                    while (!cell || cell.locked) {
-                        cell = getRandomCell();
-                    }
-                    personage.walk(getWay(personage.cell, cell));
-                    cell = null;
+            zombie = _zombies[i];
+            if (zombie.alive && !zombie.target) {
+                while (!cell || cell.locked) {
+                    cell = getRandomCell();
                 }
-                personage.step($delta);
+                zombie.walk(getWay(zombie.cell, cell));
+                cell = null;
             }
+            zombie.step($delta);
         }
         dispatchEventWith(GameEvent.UPDATE);
+    }
+
+    private function updateDepths():void {
+        var len: int = _field.length;
+        var cell: Cell;
+        for (var i:int = 0; i < len; i++) {
+            cell = _field[i];
+            if (cell && cell.object) {
+                cell.object.depth = 0;
+                cell.object.clearSize();
+            }
+        }
+
+        var index: int = 0;
+        for (i = 0; i < _width+_height; i++) {
+            for (var j:int = 0; j <= i; j++) {
+                cell = getCell(i-j, j);
+                if (cell && cell.object && !cell.object.depth) {
+                    cell.object.markSize(cell.x, cell.y);
+                    if (cell.object.sizeChecked) {
+                        cell.object.depth = ++index;
+                    }
+                }
+            }
+        }
     }
 
     private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
@@ -80,7 +104,7 @@ public class Field extends EventDispatcher {
         _grid.setEndNode($end.x, $end.y);
         var path: Path = PathFinder.findPath(_grid);
         var len: int = path.path.length;
-        for (var i:int = 0; i < len; i++) {
+        for (var i:int = 1; i < len; i++) {
             way.push(getCell(path.path[i].x, path.path[i].y));
         }
         return way;
@@ -112,11 +136,18 @@ public class Field extends EventDispatcher {
     }
 
     private function createObjects():void {
-        createHouse(_width/2, _height/2);
+        createCar(_width/2, _height/2);
 
         var cell: Cell;
-        for (var i: int = 0; i < TREES; i++) {
-            while (!cell || cell.locked) {
+        for (var i: int = 0; i < CARS; i++) {
+//            while (!cell || cell.locked || cell.object) {
+//                cell = getRandomCell();
+//            }
+//            createCar(cell.x, cell.y);
+        }
+
+        for (i = 0; i < TREES; i++) {
+            while (!cell || cell.locked || cell.object) {
                 cell = getRandomCell();
             }
             createTree(cell.x, cell.y);
@@ -124,18 +155,43 @@ public class Field extends EventDispatcher {
     }
 
     private function createHouse(x: int, y: int):void {
-        var house: House = new House([[0,0,0],[0,1,0],[0,0,0]]);
+//        var house: House = new House([[1,1,1,1,1],[1,0,0,0,1],[1,0,2,0,1],[1,0,0,0,1],[1,1,0,1,1]]);
+        var house: House = new House([[1,1,1],[1,1,1],[1,1,3]]);
 
         var cell: Cell;
-        for (var i:int = 0; i < house.size.length; i++) {
-            for (var j:int = 0; j < house.size[i].length; j++) {
+        for (var i:int = 0; i < house.mask.length; i++) {
+            for (var j:int = 0; j < house.mask[i].length; j++) {
                 cell = getCell(x+i, y+j);
                 if (cell) {
-                    cell.lock();
-                    _grid.setWalkable(cell.x, cell.y, false);
-                    if (house.size[i][j]) {
-                        cell.object = house;
+                    if (house.mask[i][j]==1 || house.mask[i][j]==3) {
+                        cell.lock();
+                        _grid.setWalkable(cell.x, cell.y, false);
+                    }
+                    cell.object = house;
+                    if (house.mask[i][j]==2 || house.mask[i][j]==3) {
                         house.place(cell);
+                    }
+                }
+            }
+        }
+    }
+
+    private function createCar(x: int, y: int):void {
+//        var house: House = new House([[1,1,1,1,1],[1,0,0,0,1],[1,0,2,0,1],[1,0,0,0,1],[1,1,0,1,1]]);
+        var car: Car = new Car([[1,1],[1,1],[1,3]]);
+
+        var cell: Cell;
+        for (var i:int = 0; i < car.mask.length; i++) {
+            for (var j:int = 0; j < car.mask[i].length; j++) {
+                cell = getCell(x+i, y+j);
+                if (cell) {
+                    if (car.mask[i][j]==1 || car.mask[i][j]==3) {
+                        cell.lock();
+                        _grid.setWalkable(cell.x, cell.y, false);
+                    }
+                    cell.object = car;
+                    if (car.mask[i][j]==2 || car.mask[i][j]==3) {
+                        car.place(cell);
                     }
                 }
             }
@@ -154,7 +210,7 @@ public class Field extends EventDispatcher {
     }
 
     private function createPersonages():void {
-        _personages = new <Personage>[];
+        _zombies = new <Zombie>[];
 
         var zombie: Zombie;
         var cell: Cell;
@@ -167,18 +223,28 @@ public class Field extends EventDispatcher {
             cell.object = zombie;
             zombie.place(cell);
             cell = null;
-            _personages.push(zombie);
+            _zombies.push(zombie);
         }
     }
 
     public function destroy():void {
-        // TODO: destroy grid
-        _grid = null;
-
         while (_field.length>0) {
             _field.pop().destroy();
         }
         _field = null;
+
+        for (var id: String in _fieldObj) {
+            delete _fieldObj[id];
+        }
+        _fieldObj = null;
+
+        _grid.destroy();
+        _grid = null;
+
+        while (_zombies.length>0) {
+            _zombies.pop().destroy();
+        }
+        _zombies = null;
     }
 }
 }

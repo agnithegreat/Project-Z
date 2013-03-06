@@ -25,6 +25,10 @@ public class PersonageView extends PositionView {
         return _personage.positionY;
     }
 
+    override public function get depth():Number {
+        return _personage.depth;
+    }
+
     protected var _currentState: MovieClip;
     protected var _states: Object;
 
@@ -65,6 +69,27 @@ public class PersonageView extends PositionView {
     private function handleUpdate($event: Event):void {
         x = (positionY-positionX)*cellWidth*0.5;
         y = (positionY+positionX)*cellHeight*0.5;
+    }
+
+    override public function destroy():void {
+        super.destroy();
+
+        _personage.removeEventListeners();
+        _personage = null;
+
+        if (_currentState) {
+            Starling.juggler.remove(_currentState);
+            _currentState.removeFromParent();
+        }
+        _currentState = null;
+
+        var state: MovieClip;
+        for (var id: String in _states) {
+            state = _states[id];
+            state.dispose();
+            delete _states[id];
+        }
+        _states = null;
     }
 }
 }
