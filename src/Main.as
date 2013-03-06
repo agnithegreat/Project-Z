@@ -6,10 +6,14 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import flash.desktop.NativeApplication;
+CONFIG::desktop {
+    import flash.desktop.NativeApplication;
+}
 import flash.display.Bitmap;
 import flash.display.Sprite;
-import flash.filesystem.File;
+CONFIG::desktop {
+    import flash.filesystem.File;
+}
 import flash.events.Event;
 import flash.geom.Rectangle;
 import flash.system.Capabilities;
@@ -52,16 +56,54 @@ public class Main extends Sprite {
                 ScaleMode.SHOW_ALL);
 
         _scaleFactor = viewPort.width < 1152 ? 1 : 2;
-        var appDir:File = File.applicationDirectory;
         _assets = new AssetManager(_scaleFactor);
+        var basicAssetsPath:String = formatString("textures/{0}x", _scaleFactor);
 
-        _assets.verbose = Capabilities.isDebugger;
-        _assets.verbose = false;
-        _assets.enqueue(
+        CONFIG::desktop {
+            var appDir:File = File.applicationDirectory;
+            _assets.verbose = true;
+            _assets.enqueue(
 //                appDir.resolvePath("audio"),
 //                appDir.resolvePath("fonts"),
-                appDir.resolvePath(formatString("textures/{0}x", _scaleFactor))
-        );
+                appDir.resolvePath(basicAssetsPath)
+            );
+        }
+
+        CONFIG::web {
+            _assets.enqueue(basicAssetsPath + "/level_elements/backgrounds/bg-test.jpg");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_1.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_1.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_2.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_2.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_3.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_3.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_4.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_4.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_5.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_5.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_die.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_die.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_1.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_1.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_2.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_2.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_3.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_3.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_4.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_4.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_5.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_5.xml");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-cell.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-shadow-tree-01.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testbox.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testwall.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-tree-01.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testcar.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-downlayer.png");
+            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-uplayer.png");
+        }
+
+        _assets.verbose = Capabilities.isDebugger;
 
 //        _background = _scaleFactor == 1 ? new Background() : new BackgroundHD();
 //        Background = BackgroundHD = null;
@@ -81,11 +123,17 @@ public class Main extends Sprite {
         _starling.enableErrorChecking = Capabilities.isDebugger;
         _starling.addEventListener(starling.events.Event.ROOT_CREATED, handleRootCreated);
 
-        NativeApplication.nativeApplication.addEventListener(
-                flash.events.Event.ACTIVATE, function (e:*):void { _starling.start(); });
+        CONFIG::desktop {
+            NativeApplication.nativeApplication.addEventListener(
+                    flash.events.Event.ACTIVATE, function (e:*):void { _starling.start(); });
 
-        NativeApplication.nativeApplication.addEventListener(
-                flash.events.Event.DEACTIVATE, function (e:*):void { _starling.stop(); });
+            NativeApplication.nativeApplication.addEventListener(
+                    flash.events.Event.DEACTIVATE, function (e:*):void { _starling.stop(); });
+        }
+
+        CONFIG::web {
+            //_starling.start();
+        }
     }
 
     private function handleRootCreated(event: Object,  app: App):void {
