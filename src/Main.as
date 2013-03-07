@@ -6,7 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-CONFIG::desktop {
+
+    import flash.net.URLLoader;
+    import flash.net.URLRequest;
+
+    CONFIG::desktop {
     import flash.desktop.NativeApplication;
 }
 import flash.display.Bitmap;
@@ -41,6 +45,8 @@ public class Main extends Sprite {
     private var _assets: AssetManager;
     private var _background: Bitmap;
 
+    private var viewPort:Rectangle;
+    private var basicAssetsPath:String;
     private var _scaleFactor: Number;
 
     private var _starling: Starling;
@@ -50,14 +56,16 @@ public class Main extends Sprite {
         Starling.multitouchEnabled = true;
         Starling.handleLostContext = !iOS;
 
-        var viewPort:Rectangle = RectangleUtil.fit(
+        viewPort = RectangleUtil.fit(
                 new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT),
                 iOS ? new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight) : new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT),
                 ScaleMode.SHOW_ALL);
 
         _scaleFactor = viewPort.width < 1152 ? 1 : 2;
         _assets = new AssetManager(_scaleFactor);
-        var basicAssetsPath:String = formatString("textures/{0}x", _scaleFactor);
+        basicAssetsPath = formatString("textures/{0}x", _scaleFactor);
+
+        _assets.verbose = Capabilities.isDebugger;
 
         CONFIG::desktop {
             var appDir:File = File.applicationDirectory;
@@ -67,43 +75,20 @@ public class Main extends Sprite {
 //                appDir.resolvePath("fonts"),
                 appDir.resolvePath(basicAssetsPath)
             );
+            initApp ();
         }
+
+
 
         CONFIG::web {
-            _assets.enqueue(basicAssetsPath + "/level_elements/backgrounds/bg-test.jpg");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_1.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_1.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_2.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_2.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_3.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_3.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_4.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_4.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_5.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_attack_5.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_die.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_die.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_1.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_1.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_2.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_2.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_3.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_3.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_4.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_4.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_5.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/enemies/zombie/zombie_walk_5.xml");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-cell.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-shadow-tree-01.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testbox.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testwall.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-tree-01.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testcar.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-downlayer.png");
-            _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-uplayer.png");
+            //загружаем xml файл c асетами:
+            var urlLoader:URLLoader = new URLLoader ();
+            urlLoader.addEventListener (flash.events.Event.COMPLETE, completeListener_loadTexturesListXml);
+            urlLoader.load (new URLRequest (Constants.TEXTURES_LIST_XML_URL));
         }
+    }
 
-        _assets.verbose = Capabilities.isDebugger;
+    private function initApp ():void {
 
 //        _background = _scaleFactor == 1 ? new Background() : new BackgroundHD();
 //        Background = BackgroundHD = null;
@@ -121,6 +106,7 @@ public class Main extends Sprite {
         _starling.showStats = true;
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
+
         _starling.addEventListener(starling.events.Event.ROOT_CREATED, handleRootCreated);
 
         CONFIG::desktop {
@@ -129,10 +115,6 @@ public class Main extends Sprite {
 
             NativeApplication.nativeApplication.addEventListener(
                     flash.events.Event.DEACTIVATE, function (e:*):void { _starling.stop(); });
-        }
-
-        CONFIG::web {
-            //_starling.start();
         }
     }
 
@@ -144,6 +126,21 @@ public class Main extends Sprite {
 
         app.start(_assets);
         _starling.start();
+    }
+
+    private function completeListener_loadTexturesListXml (event:flash.events.Event):void {
+        var urlLoader:URLLoader = URLLoader (event.currentTarget);
+        urlLoader.removeEventListener (flash.events.Event.COMPLETE, completeListener_loadTexturesListXml);
+        var xml:XML = XML (urlLoader.data);
+
+        //добавляем урлы всех асетов из xml файла в AssetManager:
+        for (var i:int; i < xml.texture.length(); i++) {
+            var url:String = xml.texture [i];
+            _assets.enqueue(basicAssetsPath + url);
+//            trace ('add asset url: "' + (basicAssetsPath + url) + '"');
+        }
+
+        initApp ();
     }
 }
 }
