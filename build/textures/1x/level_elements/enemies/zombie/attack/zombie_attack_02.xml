@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="zombie_attack_02.png">
+    <!-- Created with TexturePacker -->
+    <!-- http://texturepacker.com -->
+    <!--  -->
+    <SubTexture name="zombie_attack_02_0001" x="0" y="0" width="48" height="68" frameX="0" frameY="0" frameWidth="50" frameHeight="68"/>
+    <SubTexture name="zombie_attack_02_0002" x="48" y="0" width="44" height="68" frameX="-6" frameY="0" frameWidth="50" frameHeight="68"/>
+    <SubTexture name="zombie_attack_02_0003" x="0" y="68" width="38" height="64" frameX="-10" frameY="-3" frameWidth="50" frameHeight="68"/>
+    <SubTexture name="zombie_attack_02_0004" x="38" y="68" width="38" height="66" frameX="-6" frameY="-2" frameWidth="50" frameHeight="68"/>
+    <SubTexture name="zombie_attack_02_0005" x="76" y="68" width="38" height="68" frameX="0" frameY="0" frameWidth="50" frameHeight="68"/>
+</TextureAtlas>

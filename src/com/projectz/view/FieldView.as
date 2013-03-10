@@ -6,13 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.view {
+import com.projectz.App;
 import com.projectz.event.GameEvent;
 import com.projectz.model.Field;
-import com.projectz.model.Personage;
+import com.projectz.model.objects.Personage;
 
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.events.Event;
+import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
 
@@ -25,11 +27,11 @@ public class FieldView extends Sprite {
     private var _shadows: Sprite;
     private var _objects: Sprite;
 
-    public function FieldView($field: Field) {
+    public function FieldView($field: Field, $assets: AssetManager) {
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
 
-        _bg = new Image(App.assets.getTexture("bg-test"));
+        _bg = new Image($assets.getTexture("bg-test"));
         _bg.touchable = false;
         addChild(_bg);
 
@@ -43,7 +45,7 @@ public class FieldView extends Sprite {
         var len: int = _field.field.length;
         var cell: CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], "so-cell");
+            cell = new CellView(_field.field[i], $assets.getTexture("so-cell"));
             _cells.addChild(cell);
         }
         _cells.flatten();
@@ -71,8 +73,10 @@ public class FieldView extends Sprite {
                 object = new ObjectView(_field.field[i].object);
                 _objects.addChild(object);
 
-                shadow = new ShadowView(_field.field[i].object.cell);
-                _shadows.addChild(shadow);
+                if (_field.field[i].object.data.getPart("shadow").textures.length>0) {
+                    shadow = new ShadowView(_field.field[i].object);
+                    _shadows.addChild(shadow);
+                }
             }
         }
 

@@ -16,12 +16,10 @@ public class CellView extends PositionView {
     public function CellView($texture: Texture) {
         super();
 
-        if ($texture) {
-            _bg = new Image($texture);
-            _bg.pivotX = _bg.width/2;
-            _bg.pivotY = _bg.height;
-            addChild(_bg);
-        }
+        _bg = new Image($texture);
+        _bg.pivotX = _bg.width/2;
+        _bg.pivotY = _bg.height;
+        addChild(_bg);
     }
 
     override public function destroy():void {

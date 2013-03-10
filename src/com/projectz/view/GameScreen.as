@@ -9,17 +9,22 @@ package com.projectz.view {
 import com.projectz.model.Game;
 
 import starling.display.Sprite;
+import starling.utils.AssetManager;
 
 public class GameScreen extends Sprite {
+
+    private var _assets: AssetManager;
 
     private var _game: Game;
 
     private var _field: FieldView;
 
-    public function GameScreen($game: Game) {
+    public function GameScreen($game: Game, $assets: AssetManager) {
+        _assets = $assets;
+
         _game = $game;
 
-        _field = new FieldView(_game.field);
+        _field = new FieldView(_game.field, _assets);
         addChild(_field);
     }
 

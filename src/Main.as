@@ -6,15 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-CONFIG::desktop {
-    import flash.desktop.NativeApplication;
-}
+import com.projectz.App;
+
 import flash.display.Bitmap;
 import flash.display.Sprite;
 CONFIG::desktop {
+    import flash.desktop.NativeApplication;
     import flash.filesystem.File;
+    import flash.events.Event;
 }
-import flash.events.Event;
 import flash.geom.Rectangle;
 import flash.system.Capabilities;
 
@@ -57,11 +57,12 @@ public class Main extends Sprite {
 
         _scaleFactor = viewPort.width < 1152 ? 1 : 2;
         _assets = new AssetManager(_scaleFactor);
+        _assets.verbose = Capabilities.isDebugger;
         var basicAssetsPath:String = formatString("textures/{0}x", _scaleFactor);
 
         CONFIG::desktop {
             var appDir:File = File.applicationDirectory;
-            _assets.verbose = true;
+//            _assets.verbose = false;
             _assets.enqueue(
 //                appDir.resolvePath("audio"),
 //                appDir.resolvePath("fonts"),
@@ -102,8 +103,6 @@ public class Main extends Sprite {
             _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-downlayer.png");
             _assets.enqueue(basicAssetsPath + "/level_elements/static_objects/so-testhome-uplayer.png");
         }
-
-        _assets.verbose = Capabilities.isDebugger;
 
 //        _background = _scaleFactor == 1 ? new Background() : new BackgroundHD();
 //        Background = BackgroundHD = null;

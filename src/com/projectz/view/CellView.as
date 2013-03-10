@@ -13,6 +13,7 @@ import starling.display.Image;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
+import starling.textures.Texture;
 
 public class CellView extends PositionView {
 
@@ -24,21 +25,25 @@ public class CellView extends PositionView {
         return _cell.y;
     }
 
-    private var _bg: Image;
+    protected var _bg: Image;
 
-    public function CellView($cell: Cell, $texture: String = null) {
+    public function CellView($cell: Cell, $texture: Texture) {
         _cell = $cell;
 
         super();
 
         if ($texture) {
-            _bg = new Image(App.assets.getTexture($texture));
-            _bg.pivotX = _bg.width/2;
-            _bg.pivotY = _bg.height-cellHeight;
-            addChild(_bg);
+            setView($texture);
         }
 
 //        addEventListener(TouchEvent.TOUCH, handleTouch);
+    }
+
+    protected function setView($texture: Texture):void {
+        _bg = new Image($texture);
+        _bg.pivotX = _bg.width/2;
+        _bg.pivotY = _bg.height/2;
+        addChild(_bg);
     }
 
     private function handleTouch(event:TouchEvent):void {

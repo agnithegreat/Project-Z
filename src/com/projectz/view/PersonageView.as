@@ -7,7 +7,9 @@
  */
 package com.projectz.view {
 import com.projectz.event.GameEvent;
-import com.projectz.model.Personage;
+import com.projectz.model.objects.Personage;
+
+import flash.utils.Dictionary;
 
 import starling.core.Starling;
 
@@ -30,15 +32,15 @@ public class PersonageView extends PositionView {
     }
 
     protected var _currentState: MovieClip;
-    protected var _states: Object;
+    protected var _states: Dictionary;
 
     public function PersonageView($personage: Personage) {
         _personage = $personage;
         _personage.addEventListener(GameEvent.UPDATE, handleUpdate);
 
-        super();
+        _states = new Dictionary();
 
-        _states = {};
+        super();
     }
 
     public function addState($id: String, $textures: Vector.<Texture>, $fps: int = 12, $loop: Boolean = true):void {

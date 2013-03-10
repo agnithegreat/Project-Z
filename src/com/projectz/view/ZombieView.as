@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.view {
-import com.projectz.model.Personage;
-import com.projectz.model.Zombie;
+import com.projectz.model.objects.Personage;
+import com.projectz.model.objects.Zombie;
 
 import starling.core.Starling;
 
@@ -15,9 +15,9 @@ import starling.events.Event;
 
 public class ZombieView extends PersonageView {
 
-    public static const WALK: String = "zombie_walk_";
-    public static const ATTACK: String = "zombie_attack_";
-    public static const DIE: String = "zombie_die";
+    public static const WALK: String = "walk_0";
+    public static const ATTACK: String = "attack_0";
+    public static const DIE: String = "die";
 
     public function ZombieView($personage: Personage) {
         super($personage);
@@ -27,10 +27,10 @@ public class ZombieView extends PersonageView {
         _personage.addEventListener(Zombie.DIE, handleDie);
 
         for (var i:int = 1; i <= 5; i++) {
-            addState(WALK+i, App.assets.getTextureAtlas(WALK+i).getTextures(), 12);
-            addState(ATTACK+i, App.assets.getTextureAtlas(ATTACK+i).getTextures(), 12);
+            addState(WALK+i, _personage.data.getPart(WALK+i).textures, 12);
+            addState(ATTACK+i, _personage.data.getPart(ATTACK+i).textures, 12);
         }
-        addState(DIE, App.assets.getTextureAtlas(DIE).getTextures(), 12, false);
+        addState(DIE, _personage.data.getPart(DIE).textures, 12, false);
     }
 
     private function handleWalk($event: Event):void {

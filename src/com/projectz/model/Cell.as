@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.model {
+import com.projectz.model.objects.FieldObject;
+
 import starling.events.EventDispatcher;
 
 public class Cell extends EventDispatcher {

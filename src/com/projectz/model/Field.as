@@ -7,17 +7,21 @@
  */
 package com.projectz.model {
 import com.projectz.event.GameEvent;
+import com.projectz.model.objects.FieldObject;
+import com.projectz.model.objects.Zombie;
+import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
+
+import flash.utils.Dictionary;
 
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var CARS: int = 5;
-    public static var TREES: int = 0;
-    public static var ZOMBIES: int = 50;
+    public static var TREES: int = 30;
+    public static var ZOMBIES: int = 30;
 
     private var _width: int;
     public function get width():int {
@@ -28,6 +32,8 @@ public class Field extends EventDispatcher {
     public function get height():int {
         return _height;
     }
+
+    private var _objects: Dictionary;
 
     private var _fieldObj: Object;
     private var _field: Vector.<Cell>;
@@ -46,7 +52,9 @@ public class Field extends EventDispatcher {
         _grid = new Grid(_width, _height);
     }
 
-    public function init():void {
+    public function init($objects: Dictionary):void {
+        _objects = $objects;
+
         createField();
         createObjects();
         createPersonages();
@@ -136,77 +144,34 @@ public class Field extends EventDispatcher {
     }
 
     private function createObjects():void {
-        createCar(_width/2, _height/2);
+        createObject(_width/2, _height/2, _objects["so-testcar"]);
 
         var cell: Cell;
-        for (var i: int = 0; i < CARS; i++) {
-//            while (!cell || cell.locked || cell.object) {
-//                cell = getRandomCell();
-//            }
-//            createCar(cell.x, cell.y);
-        }
-
-        for (i = 0; i < TREES; i++) {
+        for (var i: int = 0; i < TREES; i++) {
             while (!cell || cell.locked || cell.object) {
                 cell = getRandomCell();
             }
-            createTree(cell.x, cell.y);
+            createObject(cell.x, cell.y, _objects["so-tree-01"]);
         }
     }
 
-    private function createHouse(x: int, y: int):void {
-//        var house: House = new House([[1,1,1,1,1],[1,0,0,0,1],[1,0,2,0,1],[1,0,0,0,1],[1,1,0,1,1]]);
-        var house: House = new House([[1,1,1],[1,1,1],[1,1,3]]);
+    private function createObject($x: int, $y: int, $data: ObjectData):void {
+        var object: FieldObject = new FieldObject($data);
 
         var cell: Cell;
-        for (var i:int = 0; i < house.mask.length; i++) {
-            for (var j:int = 0; j < house.mask[i].length; j++) {
-                cell = getCell(x+i, y+j);
+        for (var i:int = 0; i < object.data.mask.length; i++) {
+            for (var j:int = 0; j < object.data.mask[i].length; j++) {
+                cell = getCell($x+i, $y+j);
                 if (cell) {
-                    if (house.mask[i][j]==1 || house.mask[i][j]==3) {
+                    if (object.data.mask[i][j]==1) {
                         cell.lock();
                         _grid.setWalkable(cell.x, cell.y, false);
                     }
-                    cell.object = house;
-                    if (house.mask[i][j]==2 || house.mask[i][j]==3) {
-                        house.place(cell);
-                    }
+                    cell.object = object;
                 }
             }
         }
-    }
-
-    private function createCar(x: int, y: int):void {
-//        var house: House = new House([[1,1,1,1,1],[1,0,0,0,1],[1,0,2,0,1],[1,0,0,0,1],[1,1,0,1,1]]);
-        var car: Car = new Car([[1,1],[1,1],[1,3]]);
-
-        var cell: Cell;
-        for (var i:int = 0; i < car.mask.length; i++) {
-            for (var j:int = 0; j < car.mask[i].length; j++) {
-                cell = getCell(x+i, y+j);
-                if (cell) {
-                    if (car.mask[i][j]==1 || car.mask[i][j]==3) {
-                        cell.lock();
-                        _grid.setWalkable(cell.x, cell.y, false);
-                    }
-                    cell.object = car;
-                    if (car.mask[i][j]==2 || car.mask[i][j]==3) {
-                        car.place(cell);
-                    }
-                }
-            }
-        }
-    }
-
-    private function createTree(x: int, y: int):void {
-        var cell: Cell = getCell(x, y);
-        if (cell) {
-            var tree: Tree = new Tree();
-            cell.lock();
-            cell.object = tree;
-            _grid.setWalkable(cell.x, cell.y, false);
-            tree.place(cell);
-        }
+        object.place(getCell($x, $y));
     }
 
     private function createPersonages():void {
@@ -215,7 +180,7 @@ public class Field extends EventDispatcher {
         var zombie: Zombie;
         var cell: Cell;
         for (var i:int = 0; i < ZOMBIES; i++) {
-            zombie = new Zombie();
+            zombie = new Zombie(_objects["zombie"]);
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }

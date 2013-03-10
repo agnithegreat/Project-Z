@@ -6,6 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
+import com.projectz.utils.objectEditor.data.ObjectData;
+
+import flash.utils.Dictionary;
+
 import starling.display.Quad;
 import starling.display.Sprite;
 
@@ -15,20 +19,34 @@ public class FilesPanel extends Sprite {
 
     private var _filesList: Sprite;
 
+    private var _files: Array;
+
     public function FilesPanel() {
         _bg = new Quad(200, Constants.HEIGHT, 0xCCCCCC);
         addChild(_bg);
+
+        _files = [];
 
         _filesList = new Sprite();
         addChild(_filesList);
     }
 
-    public function showFiles($names: Array):void {
-        var len: int = $names.length;
+    public function showFiles($names: Dictionary):void {
+        var object: ObjectData;
+        for each (object in $names) {
+            _files.push(new FileLine(object));
+        }
+        _files.sortOn("name");
+
+        showPage();
+    }
+
+    public function showPage():void {
+        var len: int = _files.length;
         var line: FileLine;
         for (var i:int = 0; i < len; i++) {
-            line = new FileLine($names[i]);
-            line.y = i*20;
+            line = _files[i];
+            line.y = i*25;
             _filesList.addChild(line);
         }
     }

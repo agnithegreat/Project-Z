@@ -6,13 +6,49 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.view {
+import com.projectz.utils.objectEditor.data.PartData;
 
-import starling.textures.Texture;
+import starling.core.Starling;
+import starling.display.Image;
+import starling.display.MovieClip;
 
-public class ObjectView extends CellView {
+public class ObjectView extends PositionView {
 
-    public function ObjectView($texture: Texture) {
-        super($texture);
+    private var _partData: PartData;
+    public function get partData():PartData {
+        return _partData;
+    }
+
+    private var _bg: Image;
+
+    public function ObjectView($data: PartData) {
+        _partData = $data;
+
+        if (_partData.animated) {
+            _bg = new MovieClip(_partData.textures);
+            addChild(_bg);
+
+            Starling.juggler.add(_bg as MovieClip);
+        } else {
+            _bg = new Image(_partData.textures[0]);
+            addChild(_bg);
+        }
+
+        update();
+    }
+
+    public function update():void {
+        _bg.pivotX = _bg.width/2+_partData.pivotX;
+        _bg.pivotY = _bg.height/2+_partData.pivotY;
+    }
+
+    override public function destroy():void {
+        super.destroy();
+
+        if (_bg) {
+            _bg.removeFromParent(true);
+        }
+        _bg = null;
     }
 }
 }

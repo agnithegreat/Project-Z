@@ -18,6 +18,9 @@ public class FileLine extends Sprite {
     public static const SELECT_FILE: String = "select_file_FileLine";
 
     private var _data: ObjectData;
+    override public function get name():String {
+        return _data.name;
+    }
 
     private var _tf: TextField;
 

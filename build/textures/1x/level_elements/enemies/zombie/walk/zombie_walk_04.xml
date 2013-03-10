@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextureAtlas imagePath="zombie_walk_04.png">
+    <!-- Created with TexturePacker -->
+    <!-- http://texturepacker.com -->
+    <!--  -->
+    <SubTexture name="zombie_walk_04_0004" x="137" y="0" width="47" height="68" frameX="0" frameY="-4" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0005" x="184" y="0" width="49" height="66" frameX="0" frameY="-6" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0006" x="0" y="70" width="49" height="66" frameX="-1" frameY="-4" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0007" x="49" y="70" width="51" height="68" frameX="0" frameY="0" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0008" x="100" y="70" width="49" height="66" frameX="-1" frameY="-1" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0001" x="0" y="0" width="47" height="66" frameX="-2" frameY="-3" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0002" x="47" y="0" width="45" height="68" frameX="-2" frameY="-2" frameWidth="51" frameHeight="72"/>
+    <SubTexture name="zombie_walk_04_0003" x="92" y="0" width="45" height="70" frameX="0" frameY="-1" frameWidth="51" frameHeight="72"/>
+</TextureAtlas>

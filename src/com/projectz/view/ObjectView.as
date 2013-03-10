@@ -6,25 +6,32 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.view {
-import com.projectz.model.Car;
-import com.projectz.model.FieldObject;
-import com.projectz.model.House;
-import com.projectz.model.Tree;
+import com.projectz.model.objects.FieldObject;
+
+import starling.display.Image;
+import starling.textures.Texture;
 
 public class ObjectView extends CellView {
 
     protected var _object: FieldObject;
+    private var _part: String;
 
     override public function get depth():Number {
         return _object.depth;
     }
 
-    public function ObjectView($object: FieldObject) {
+    public function ObjectView($object: FieldObject, $part: String = "") {
         _object = $object;
+        _part = $part;
 
-//        super($object.cell, _object is Tree ? "so-tree-01" : "so-testhome-uplayer");
-//        super($object.cell, _object is Tree ? "so-tree-01" : "so-testbox");
-        super($object.cell, _object is Tree ? "so-tree-01" : _object is House ? "so-testbox" : _object is Car ? "so-testcar" : "");
+        super(_object.cell, _object.data.getPart(_part).textures[0]);
+    }
+
+    override protected function setView($texture: Texture):void {
+        _bg = new Image($texture);
+        _bg.pivotX = _bg.width/2+_object.data.getPart(_part).pivotX;
+        _bg.pivotY = _bg.height/2+_object.data.getPart(_part).pivotY;
+        addChild(_bg);
     }
 
     override public function destroy():void {

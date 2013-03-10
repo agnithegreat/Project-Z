@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import com.projectz.utils.objectEditor.ObjectsEditorApp;
+import com.projectz.utils.objectEditor.App;
 
 import flash.display.Sprite;
 import flash.filesystem.File;
@@ -40,16 +40,15 @@ public class ObjectsEditor extends Sprite {
                 appDir.resolvePath(formatString("textures/{0}x", 1))
         );
 
-        _starling = new Starling(ObjectsEditorApp, stage, viewPort);
+        _starling = new Starling(App, stage, viewPort);
         _starling.stage.stageWidth  = Constants.WIDTH;
         _starling.stage.stageHeight = Constants.HEIGHT;
-        _starling.showStats = true;
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
         _starling.addEventListener(Event.ROOT_CREATED, handleRootCreated);
     }
 
-    private function handleRootCreated(event: Object,  app: ObjectsEditorApp):void {
+    private function handleRootCreated(event: Object,  app: App):void {
         _starling.removeEventListener(Event.ROOT_CREATED, handleRootCreated);
 
         app.start(_assets);
