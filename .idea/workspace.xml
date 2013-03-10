@@ -47,7 +47,7 @@
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362635917174" ignored="false" />
     <file path="/fragment.js2" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362900061250" ignored="false" />
-    <file path="/Main.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362638127991" ignored="false" />
+    <file path="/Main.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362910464994" ignored="false" />
     <file path="/App.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362909825703" ignored="false" />
     <file path="/Main-app.xml" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362473396660" ignored="false" />
     <file path="/CellView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362848255634" ignored="false" />
@@ -141,13 +141,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Main.as" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Main.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="18" selection-start="951" selection-end="951" vertical-scroll-proportion="0.0">
+            <state line="120" column="63" selection-start="4009" selection-end="4009" vertical-scroll-proportion="2.764622">
               <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#382#410#0" expanded="true" />
+                <element signature="e#170#194#0" expanded="true" />
+                <element signature="e#276#315#0" expanded="true" />
+                <element signature="e#352#380#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -164,10 +165,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Field.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Field.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Field.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="39" selection-start="700" selection-end="700" vertical-scroll-proportion="0.16975749">
+            <state line="23" column="39" selection-start="700" selection-end="700" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -238,7 +239,6 @@
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/ObjectView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/App.as" />
-        <option value="$PROJECT_DIR$/src/Main.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/model/Game.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
@@ -249,6 +249,7 @@
         <option value="$PROJECT_DIR$/src/com/projectz/App.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/PartData.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
+        <option value="$PROJECT_DIR$/src/Main.as" />
       </list>
     </option>
   </component>
@@ -765,16 +766,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="18" selection-start="951" selection-end="951" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#382#410#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ShadowView.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="20" selection-start="406" selection-end="406" vertical-scroll-proportion="0.26676178">
@@ -864,8 +855,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Field.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="39" selection-start="700" selection-end="700" vertical-scroll-proportion="0.16975749">
+        <state line="23" column="39" selection-start="700" selection-end="700" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="120" column="63" selection-start="4009" selection-end="4009" vertical-scroll-proportion="2.764622">
+          <folding>
+            <element signature="e#170#194#0" expanded="true" />
+            <element signature="e#276#315#0" expanded="true" />
+            <element signature="e#352#380#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

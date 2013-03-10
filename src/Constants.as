@@ -10,5 +10,7 @@ public class Constants {
 
     public static const WIDTH: int = 1024;
     public static const HEIGHT: int = 768;
+
+    public static const TEXTURES_LIST_XML_URL:String = "textures/texturesList.xml";
 }
 }
