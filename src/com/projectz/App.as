@@ -53,7 +53,7 @@ public class App extends Sprite {
         _objectsStorage.parseDirectory ("textures/{0}x/level_elements/anim_object", true, _assets);
         _objectsStorage.parseDirectory ("textures/{0}x/level_elements/defenders", true, _assets);
         _objectsStorage.parseDirectory ("textures/{0}x/level_elements/enemies", true, _assets);
-        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/static_objects", true, _assets);
+        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/static_objects", false, _assets);
 
         trace(_assets.getTextureNames());
 

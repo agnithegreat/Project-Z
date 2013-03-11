@@ -31,7 +31,7 @@ public class ObjectView extends CellView {
         }
         else {
             texture = textures [0];
-            trace ("Всё хорошо, нашли текстуру для ассета " + _object.data.name);
+//            trace ("Всё хорошо, нашли текстуру для ассета " + _object.data.name);
         }
         super(_object.cell, texture);
     }

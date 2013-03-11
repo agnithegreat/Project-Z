@@ -56,7 +56,6 @@ public class ObjectParser {
 
     private static function getFilesRecursive($file: File):Vector.<File> {
         var fileList: Vector.<File> = new <File>[];
-        trace ("$file = " + $file + "; nativePath = " + $file.nativePath);
         var files: Array = $file.getDirectoryListing();
         var len: int = files.length;
         var file: File;
