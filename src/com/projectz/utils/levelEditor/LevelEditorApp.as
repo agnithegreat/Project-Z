@@ -45,7 +45,7 @@ public class LevelEditorApp extends Sprite {
     private function startApp():void {
         trace ("запускаем редактор уровней");
         _objectsStorage.parseDirectory ("textures/{0}x/level_elements/anim_object", true, _assets);
-        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/static_objects", true, _assets);
+        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/static_objects", false, _assets);
 
         trace(_assets.getTextureNames());
 
@@ -53,7 +53,8 @@ public class LevelEditorApp extends Sprite {
     }
 
     private function startGame():void {
-        _model = new Field(10, 10);
+        _model = new Field(30, 30);
+        _model.init(_objectsStorage);
 
         _view = new FieldView(_model, _assets);
         addChild(_view);

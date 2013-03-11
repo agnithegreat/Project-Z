@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f733001-a71b-4ea2-be07-434055d24b2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/App.as" afterPath="$PROJECT_DIR$/src/com/projectz/App.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/Main-app-levelEditor.xml" afterPath="$PROJECT_DIR$/build/Main-app-levelEditor.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as" />
+      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\src\com\projectz\utils\levelEditor\model\Game.as" afterPath="" />
+      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\src\com\projectz\utils\levelEditor\view\GameScreen.as" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectZ.iws" afterPath="$PROJECT_DIR$/ProjectZ.iws" />
     </list>
     <ignored path="ProjectZ.iws" />
@@ -19,7 +17,7 @@
     <file path="/texturesList.xml" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362644434230" ignored="false" />
     <file path="/Constants.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362644923863" ignored="false" />
     <file path="/LevelEditor.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362912285623" ignored="false" />
-    <file path="/LevelEditorApp.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363008422278" ignored="false" />
+    <file path="/LevelEditorApp.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363017463673" ignored="false" />
     <file path="/ObjectParser.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362915457399" ignored="false" />
     <file path="/a.dummy" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362987094241" ignored="false" />
     <file path="/PositionView.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362987099581" ignored="false" />
@@ -35,7 +33,8 @@
     <file path="/App.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363015861854" ignored="false" />
     <file path="/Game.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363004197268" ignored="false" />
     <file path="/ObjectView.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363010440081" ignored="false" />
-    <file path="$PROJECT_DIR$/build/levelEditor.swf" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363017116505" ignored="false" />
+    <file path="$PROJECT_DIR$/build/Main-app-levelEditor.xml" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363017571722" ignored="false" />
+    <file path="$PROJECT_DIR$/build/levelEditor.swf" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363017571722" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,16 +108,37 @@
       <file leaf-file-name="ObjectsStorage.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="69" selection-start="1813" selection-end="1813" vertical-scroll-proportion="0.0">
+            <state line="34" column="40" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FieldView.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="FieldView.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/view/FieldView.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="128" selection-start="1012" selection-end="1012" vertical-scroll-proportion="0.14876957">
+            <state line="19" column="25" selection-start="502" selection-end="502" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Field.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="49" column="48" selection-start="1270" selection-end="1270" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+                <element signature="e#201#265#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LevelEditorApp.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="38" selection-start="539" selection-end="539" vertical-scroll-proportion="0.13310961">
               <folding />
             </state>
           </provider>
@@ -156,11 +176,11 @@
         <option value="$PROJECT_DIR$/src/com/projectz/model/Game.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/App.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" />
       </list>
     </option>
   </component>
@@ -850,7 +870,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275488" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32717392" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.59347826" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -935,42 +955,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Game.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="83" selection-start="537" selection-end="537" vertical-scroll-proportion="-6.88">
-          <folding>
-            <element signature="e#181#235#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="20" selection-start="1084" selection-end="1084" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#201#265#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="82" selection-start="1253" selection-end="1253" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Game.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="49" selection-start="419" selection-end="419" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#200#230#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/view/GameScreen.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="26" column="0" selection-start="551" selection-end="551" vertical-scroll-proportion="0.0">
@@ -1045,14 +1029,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="69" selection-start="1813" selection-end="1813" vertical-scroll-proportion="0.0">
+        <state line="34" column="40" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/view/FieldView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="128" selection-start="1012" selection-end="1012" vertical-scroll-proportion="0.14876957">
+        <state line="19" column="25" selection-start="502" selection-end="502" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="48" selection-start="1270" selection-end="1270" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#201#265#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/view/ObjectView.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="35" selection-start="742" selection-end="742" vertical-scroll-proportion="0.7241379">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="38" selection-start="539" selection-end="539" vertical-scroll-proportion="0.13310961">
           <folding />
         </state>
       </provider>
