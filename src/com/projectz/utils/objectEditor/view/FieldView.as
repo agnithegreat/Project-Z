@@ -38,8 +38,7 @@ public class FieldView extends Sprite {
         _container.addChild(_cells);
 
         _objects = new Sprite();
-        _objects.pivotY = PositionView.cellHeight;
-        _objects.alpha = 0.7;
+        _objects.alpha = 0.5;
         _container.addChild(_objects);
     }
 

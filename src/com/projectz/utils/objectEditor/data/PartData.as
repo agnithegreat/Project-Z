@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+import flash.utils.Dictionary;
+
 import starling.textures.Texture;
 
 public class PartData {
@@ -15,7 +17,7 @@ public class PartData {
         return _name;
     }
 
-    private var _mask: Array = [[true]];
+    private var _mask: Array = [[1]];
     public function get mask():Array {
         return _mask;
     }
@@ -44,29 +46,26 @@ public class PartData {
         return _pivotY;
     }
 
-    private var _textures: Vector.<Texture>;
-    public function get textures():Vector.<Texture> {
-        return _textures;
+    private var _states: Dictionary;
+    public function get states():Dictionary {
+        return _states;
     }
 
+    private var _animated: Boolean;
     public function get animated():Boolean {
-        return _textures.length>1;
+        return _animated;
     }
 
     public function PartData($name: String) {
         _name = $name;
-        _textures = new <Texture>[];
+        _states = new Dictionary();
     }
 
-    public function addTextures($textures: *):void {
+    public function addTextures($state: String, $textures: *):void {
         if ($textures) {
-            if ($textures is Texture) {
-                _textures.push($textures);
-            } else {
-                var len: int = $textures.length;
-                for (var i:int = 0; i < len; i++) {
-                    _textures.push($textures[i]);
-                }
+            _states[$state] = $textures;
+            if ($textures is Vector.<Texture>) {
+                _animated = true;
             }
         }
     }
@@ -86,13 +85,13 @@ public class PartData {
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];
             for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = true;
+                _mask[i][j] = 1;
             }
         }
     }
 
     public function invertCellState($x: int, $y: int):void {
-        _mask[$x][$y] = !_mask[$x][$y];
+        _mask[$x][$y] = _mask[$x][$y] ? 0 : 1;
     }
 
     public function parse($data: Object):void {

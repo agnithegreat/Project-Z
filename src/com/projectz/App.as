@@ -50,18 +50,16 @@ public class App extends Sprite {
 
     private function initStart():void {
         var folder: File = File.applicationDirectory.resolvePath(formatString("textures/{0}x/level_elements/anim_object", _assets.scaleFactor));
-        parseObjects(ObjectParser.parseDirectory(folder), true);
+        parseObjects(ObjectParser.parseDirectory(folder, true), true);
 
         folder = File.applicationDirectory.resolvePath(formatString("textures/{0}x/level_elements/defenders", _assets.scaleFactor));
-        parseObjects(ObjectParser.parseDirectory(folder), true);
+        parseObjects(ObjectParser.parseDirectory(folder, true), true);
 
         folder = File.applicationDirectory.resolvePath(formatString("textures/{0}x/level_elements/enemies", _assets.scaleFactor));
-        parseObjects(ObjectParser.parseDirectory(folder), true);
+        parseObjects(ObjectParser.parseDirectory(folder, true), true);
 
         folder = File.applicationDirectory.resolvePath(formatString("textures/{0}x/level_elements/static_objects", _assets.scaleFactor));
-        parseObjects(ObjectParser.parseDirectory(folder), false);
-
-        trace(_assets.getTextureNames());
+        parseObjects(ObjectParser.parseDirectory(folder, false), false);
 
         Starling.juggler.delayCall(startGame, 0.15);
     }
@@ -74,9 +72,9 @@ public class App extends Sprite {
             obj = $objects[name] as ObjectData;
             for each (part in obj.parts) {
                 if ($animated) {
-                    part.addTextures(_assets.getTextures(name+"_"+part.name));
+                    part.addTextures(part.name, _assets.getTextures(name+"_"+part.name));
                 } else {
-                    part.addTextures(_assets.getTexture(part.name ? name+"_"+part.name : name));
+                    part.addTextures(part.name, _assets.getTexture(part.name ? name+"_"+part.name : name));
                 }
             }
             _objects[name] = obj;

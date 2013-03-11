@@ -24,13 +24,13 @@ public class ObjectView extends CellView {
         _object = $object;
         _part = $part;
 
-        super(_object.cell, _object.data.getPart(_part).textures[0]);
+        super(_object.cell, _object.data.states[$part]);
     }
 
     override protected function setView($texture: Texture):void {
         _bg = new Image($texture);
-        _bg.pivotX = _bg.width/2+_object.data.getPart(_part).pivotX;
-        _bg.pivotY = _bg.height/2+_object.data.getPart(_part).pivotY;
+        _bg.pivotX = _bg.width/2+_object.data.pivotX;
+        _bg.pivotY = _bg.height/2+_object.data.pivotY;
         addChild(_bg);
     }
 

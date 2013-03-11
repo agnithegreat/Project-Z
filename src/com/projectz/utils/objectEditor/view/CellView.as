@@ -18,7 +18,7 @@ public class CellView extends PositionView {
 
         _bg = new Image($texture);
         _bg.pivotX = _bg.width/2;
-        _bg.pivotY = _bg.height;
+        _bg.pivotY = _bg.height/2;
         addChild(_bg);
     }
 

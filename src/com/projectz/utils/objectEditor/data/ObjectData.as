@@ -18,7 +18,7 @@ public class ObjectData {
         return _name;
     }
 
-    private var _mask: Array = [[true]];
+    private var _mask: Array = [[1]];
     public function get mask():Array {
         return _mask;
     }
@@ -60,13 +60,13 @@ public class ObjectData {
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];
             for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = true;
+                _mask[i][j] = 1;
             }
         }
     }
 
     public function invertCellState($x: int, $y: int):void {
-        _mask[$x][$y] = !_mask[$x][$y];
+        _mask[$x][$y] = _mask[$x][$y] ? 0 : 1;
     }
 
     private function getParts():Object {

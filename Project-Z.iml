@@ -19,7 +19,6 @@
         <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-mobile.xml" package-file-name="Project-Z">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/textures" path-in-package="textures" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/description" path-in-package="description" />
           </files-to-package>
           <AirSigningOptions keystore-path="$MODULE_DIR$/../../keys/Apple Developer Certificate/FakeCert.p12" provisioning-profile-path="$MODULE_DIR$/../../keys/Apple Developer Certificate/Fake.mobileprovision" />
         </packaging-ios>
@@ -39,7 +38,6 @@
         <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-desktop.xml" package-file-name="Project-Z_AIR">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/textures" path-in-package="textures" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/description" path-in-package="description" />
           </files-to-package>
         </packaging-air-desktop>
         <packaging-android />
@@ -55,10 +53,9 @@
           <sdk name="flex_sdk_4.9" />
         </dependencies>
         <compiler-options />
-        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/build/Main-app-desktop.xml" package-file-name="ObjectEditor">
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-desktop.xml" package-file-name="ObjectEditor">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/textures" path-in-package="textures" />
-            <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/description" path-in-package="description" />
           </files-to-package>
         </packaging-air-desktop>
         <packaging-android />

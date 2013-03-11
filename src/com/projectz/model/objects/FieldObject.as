@@ -8,7 +8,7 @@
 package com.projectz.model.objects {
 import com.projectz.event.GameEvent;
 import com.projectz.model.Cell;
-import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.events.EventDispatcher;
 
@@ -38,12 +38,12 @@ public class FieldObject extends EventDispatcher {
         _depth = value;
     }
 
-    protected var _data: ObjectData;
-    public function get data():ObjectData {
+    protected var _data: PartData;
+    public function get data():PartData {
         return _data;
     }
 
-    public function FieldObject($data:ObjectData) {
+    public function FieldObject($data:PartData) {
         _data = $data;
         createSize();
     }

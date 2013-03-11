@@ -6,10 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.view {
-import com.projectz.App;
 import com.projectz.event.GameEvent;
 import com.projectz.model.Field;
+import com.projectz.model.objects.FieldObject;
 import com.projectz.model.objects.Personage;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.display.Image;
 import starling.display.Sprite;
@@ -50,8 +51,6 @@ public class FieldView extends Sprite {
         }
         _cells.flatten();
 
-//        _container.x = (Constants.WIDTH+(1-(_field.width+_field.height)*0.5)*CellView.cellWidth)*0.5;
-//        _container.y = (Constants.HEIGHT+CellView.cellHeight)*0.5;
         _container.x = (Constants.WIDTH+PositionView.cellWidth)*0.5;
         _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
 
@@ -65,17 +64,19 @@ public class FieldView extends Sprite {
 
         var object: PositionView;
         var shadow: ShadowView;
+        var fieldObject: FieldObject;
         for (i = 0; i < len; i++) {
-            if (_field.field[i].object is Personage) {
-                object = new ZombieView(_field.field[i].object as Personage);
+            fieldObject = _field.field[i].object;
+            if (fieldObject is Personage) {
+                object = new ZombieView(fieldObject as Personage);
                 _objects.addChild(object);
-            } else if (_field.field[i].object && _field.field[i].object.cell==_field.field[i]) {
-                object = new ObjectView(_field.field[i].object);
-                _objects.addChild(object);
-
-                if (_field.field[i].object.data.getPart("shadow").textures.length>0) {
-                    shadow = new ShadowView(_field.field[i].object);
+            } else if (fieldObject && fieldObject.cell==_field.field[i]) {
+                if (fieldObject.data.name == "shadow") {
+                    shadow = new ShadowView(fieldObject);
                     _shadows.addChild(shadow);
+                } else {
+                    object = new ObjectView(fieldObject, fieldObject.data.name);
+                    _objects.addChild(object);
                 }
             }
         }

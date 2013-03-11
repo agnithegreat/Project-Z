@@ -27,10 +27,10 @@ public class ZombieView extends PersonageView {
         _personage.addEventListener(Zombie.DIE, handleDie);
 
         for (var i:int = 1; i <= 5; i++) {
-            addState(WALK+i, _personage.data.getPart(WALK+i).textures, 12);
-            addState(ATTACK+i, _personage.data.getPart(ATTACK+i).textures, 12);
+            addState(WALK+i, _personage.data.states[WALK+i], 12);
+            addState(ATTACK+i, _personage.data.states[ATTACK+i], 12);
         }
-        addState(DIE, _personage.data.getPart(DIE).textures, 12, false);
+        addState(DIE, _personage.data.states[DIE], 12, false);
     }
 
     private function handleWalk($event: Event):void {

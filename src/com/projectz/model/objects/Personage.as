@@ -8,6 +8,7 @@
 package com.projectz.model.objects {
 import com.projectz.model.Cell;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import flash.geom.Point;
 
@@ -39,7 +40,7 @@ public class Personage extends FieldObject {
         return _alive;
     }
 
-    public function Personage($data: ObjectData) {
+    public function Personage($data: PartData) {
         super($data);
 
         _alive = true;

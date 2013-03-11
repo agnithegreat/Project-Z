@@ -11,14 +11,16 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 
+import starling.textures.Texture;
+
 public class ObjectParser {
 
-    public static function parseDirectory($path: File):Dictionary {
+    public static function parseDirectory($path: File, $animated: Boolean):Dictionary {
         var listing: Vector.<File> = getFilesRecursive($path);
-        return filterFiles(listing);
+        return filterFiles(listing, $animated);
     }
 
-    private static function filterFiles($files: Vector.<File>):Dictionary {
+    private static function filterFiles($files: Vector.<File>, $animated: Boolean):Dictionary {
         var names: Object = {};
         var fileNames: Object = {};
         var parts: Object = {};
@@ -44,7 +46,11 @@ public class ObjectParser {
             files[name] = new ObjectData(name, file.parent.resolvePath(name+".json"));
             len = parts[name].length;
             for (i = 0; i < len; i++) {
-                files[name].getPart(parts[name][i]);
+                if ($animated) {
+                    files[name].getPart().states[parts[name][i]] = new <Texture>[];
+                } else {
+                    files[name].getPart(parts[name][i]);
+                }
             }
         }
         return files;

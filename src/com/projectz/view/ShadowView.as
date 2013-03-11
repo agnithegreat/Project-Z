@@ -18,13 +18,13 @@ public class ShadowView extends CellView {
     public function ShadowView($object: FieldObject) {
         _object = $object;
 
-        super(_object.cell, _object.data.getPart("shadow").textures[0]);
+        super(_object.cell, _object.data.states["shadow"]);
     }
 
     override protected function setView($texture: Texture):void {
         _bg = new Image($texture);
-        _bg.pivotX = _bg.width/2+_object.data.getPart("shadow").pivotX;
-        _bg.pivotY = _bg.height/2+_object.data.getPart("shadow").pivotY;
+        _bg.pivotX = _bg.width/2+_object.data.pivotX;
+        _bg.pivotY = _bg.height/2+_object.data.pivotY;
         addChild(_bg);
     }
 }

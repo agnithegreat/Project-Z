@@ -7,7 +7,7 @@
  */
 package com.projectz.model.objects {
 import com.projectz.model.Cell;
-import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 public class Zombie extends Personage {
 
@@ -30,7 +30,7 @@ public class Zombie extends Personage {
         return _target ? _cell.y+(_target.y-_cell.y)*_progress : _cell.y;
     }
 
-    public function Zombie($data: ObjectData) {
+    public function Zombie($data: PartData) {
         super($data);
     }
 

@@ -25,12 +25,12 @@ public class ObjectView extends PositionView {
         _partData = $data;
 
         if (_partData.animated) {
-            _bg = new MovieClip(_partData.textures);
+            _bg = new MovieClip(_partData.states[""]);
             addChild(_bg);
 
             Starling.juggler.add(_bg as MovieClip);
         } else {
-            _bg = new Image(_partData.textures[0]);
+            _bg = new Image(_partData.states[""]);
             addChild(_bg);
         }
 

@@ -83,9 +83,9 @@ public class App extends Sprite {
             obj = $objects[name] as ObjectData;
             for each (part in obj.parts) {
                 if ($animated) {
-                    part.addTextures(_assets.getTextures(part.name));
+                    part.addTextures(part.name, _assets.getTextures(part.name));
                 } else {
-                    part.addTextures(_assets.getTexture(part.name ? name+"_"+part.name : name));
+                    part.addTextures(part.name, _assets.getTexture(part.name ? name+"_"+part.name : name));
                 }
             }
         }

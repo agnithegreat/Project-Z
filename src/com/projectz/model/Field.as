@@ -10,6 +10,7 @@ import com.projectz.event.GameEvent;
 import com.projectz.model.objects.FieldObject;
 import com.projectz.model.objects.Zombie;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
@@ -144,18 +145,31 @@ public class Field extends EventDispatcher {
     }
 
     private function createObjects():void {
-        createObject(_width/2, _height/2, _objects["so-testcar"]);
+//        createObject(_width/2, _height/2, _objects["so-testcar"]);
+        createObject(_width/2, _height/2, _objects["so-test-ambar"]);
 
         var cell: Cell;
         for (var i: int = 0; i < TREES; i++) {
             while (!cell || cell.locked || cell.object) {
                 cell = getRandomCell();
             }
-            createObject(cell.x, cell.y, _objects["so-tree-01"]);
+            createObject(cell.x, cell.y, _objects["so-tree-0"+int(Math.random()*2+1)]);
+        }
+        for (i = 0; i < TREES; i++) {
+            while (!cell || cell.locked || cell.object) {
+                cell = getRandomCell();
+            }
+            createObject(cell.x, cell.y, _objects["so-barrel-01"]);
         }
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
+        for each (var part:PartData in $data.parts) {
+            createPart($x+part.offsetX, $y+part.offsetY, part);
+        }
+    }
+
+    private function createPart($x: int, $y: int, $data: PartData):void {
         var object: FieldObject = new FieldObject($data);
 
         var cell: Cell;
@@ -180,7 +194,7 @@ public class Field extends EventDispatcher {
         var zombie: Zombie;
         var cell: Cell;
         for (var i:int = 0; i < ZOMBIES; i++) {
-            zombie = new Zombie(_objects["zombie"]);
+            zombie = new Zombie(_objects["zombie"].parts[""]);
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
