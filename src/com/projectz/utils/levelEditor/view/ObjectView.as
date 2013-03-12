@@ -5,8 +5,8 @@
  * Time: 23:23
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.view {
-import com.projectz.model.objects.FieldObject;
+package com.projectz.utils.levelEditor.view {
+import com.projectz.utils.levelEditor.model.objects.FieldObject;
 
 import starling.display.Image;
 import starling.textures.Texture;
@@ -24,16 +24,7 @@ public class ObjectView extends CellView {
         _object = $object;
         _part = $part;
 
-        var textures:Vector.<Texture> = _object.data.getPart(_part).textures;
-        var texture:Texture;
-        if (textures.length == 0) {
-            trace ("WARNING! Не находим текстуры для ассета " + _object.data.name);
-        }
-        else {
-            texture = textures [0];
-//            trace ("Всё хорошо, нашли текстуру для ассета " + _object.data.name);
-        }
-        super(_object.cell, texture);
+        super(_object.cell, _object.data.getPart(_part).textures[0]);
     }
 
     override protected function setView($texture: Texture):void {

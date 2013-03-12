@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.model {
+import com.projectz.utils.objectEditor.ObjectsStorage;
+
 import flash.utils.Dictionary;
 
 import starling.core.Starling;
@@ -14,7 +16,7 @@ import starling.events.EventDispatcher;
 
 public class Game extends EventDispatcher {
 
-    private var _objects: Dictionary;
+    private var _objectsStorage: ObjectsStorage;
 
     private var _field: Field;
     public function get field():Field {
@@ -23,13 +25,13 @@ public class Game extends EventDispatcher {
 
     private var _active: Boolean;
 
-    public function Game($objects: Dictionary) {
-        _objects = $objects;
+    public function Game($objectsStorage: ObjectsStorage) {
+        _objectsStorage = $objectsStorage;
     }
 
     public function init():void {
         _field = new Field(36, 36);
-        _field.init(_objects);
+        _field.init(_objectsStorage);
 
         start();
     }

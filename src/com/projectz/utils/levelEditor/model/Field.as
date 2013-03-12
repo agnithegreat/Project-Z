@@ -5,10 +5,9 @@
  * Time: 23:15
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.model {
-import com.projectz.event.GameEvent;
-import com.projectz.model.objects.FieldObject;
-import com.projectz.model.objects.Zombie;
+package com.projectz.utils.levelEditor.model {
+
+import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.pathFinding.Grid;
@@ -20,9 +19,6 @@ import flash.utils.Dictionary;
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
-
-    public static var TREES: int = 30;
-    public static var ZOMBIES: int = 30;
 
     private var _width: int;
     public function get width():int {
@@ -44,8 +40,6 @@ public class Field extends EventDispatcher {
 
     private var _grid: Grid;
 
-    private var _zombies: Vector.<Zombie>;
-
     public function Field($width: int, $height: int) {
         _width = $width;
         _height = $height;
@@ -58,28 +52,10 @@ public class Field extends EventDispatcher {
 
         createField();
         createObjects();
-        createPersonages();
     }
 
     public function step($delta: Number):void {
         updateDepths();
-
-        var len: int = _zombies.length;
-        var zombie:Zombie;
-
-        var cell: Cell;
-        for (var i:int = 0; i < len; i++) {
-            zombie = _zombies[i];
-            if (zombie.alive && !zombie.target) {
-                while (!cell || cell.locked) {
-                    cell = getRandomCell();
-                }
-                zombie.walk(getWay(zombie.cell, cell));
-                cell = null;
-            }
-            zombie.step($delta);
-        }
-        dispatchEventWith(GameEvent.UPDATE);
     }
 
     private function updateDepths():void {
@@ -145,15 +121,15 @@ public class Field extends EventDispatcher {
     }
 
     private function createObjects():void {
-        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-testcar"));
+        createObject(_width/2, _height/2, _objectsStorage.getObjectData ("so-testcar"));
 
         var cell: Cell;
-        for (var i: int = 0; i < TREES; i++) {
-            while (!cell || cell.locked || cell.object) {
-                cell = getRandomCell();
-            }
-            createObject(cell.x, cell.y, _objectsStorage.getObjectData("so-tree-01"));
-        }
+//        for (var i: int = 0; i < TREES; i++) {
+//            while (!cell || cell.locked || cell.object) {
+//                cell = getRandomCell();
+//            }
+//            createObject(cell.x, cell.y, _objects["so-tree-01"]);
+//        }
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
@@ -175,24 +151,6 @@ public class Field extends EventDispatcher {
         object.place(getCell($x, $y));
     }
 
-    private function createPersonages():void {
-        _zombies = new <Zombie>[];
-
-        var zombie: Zombie;
-        var cell: Cell;
-        for (var i:int = 0; i < ZOMBIES; i++) {
-            zombie = new Zombie(_objectsStorage.getObjectData("zombie"));
-            while (!cell || cell.locked) {
-                cell = getRandomCell();
-            }
-            cell.lock();
-            cell.object = zombie;
-            zombie.place(cell);
-            cell = null;
-            _zombies.push(zombie);
-        }
-    }
-
     public function destroy():void {
         while (_field.length>0) {
             _field.pop().destroy();
@@ -206,11 +164,6 @@ public class Field extends EventDispatcher {
 
         _grid.destroy();
         _grid = null;
-
-        while (_zombies.length>0) {
-            _zombies.pop().destroy();
-        }
-        _zombies = null;
     }
 }
 }
