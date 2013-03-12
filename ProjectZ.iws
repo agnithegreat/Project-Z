@@ -2,15 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f733001-a71b-4ea2-be07-434055d24b2b" name="Default" comment="">
-      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\src\com\projectz\utils\levelEditor\model\Game.as" afterPath="" />
-      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\src\com\projectz\utils\levelEditor\view\GameScreen.as" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" />
+      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\build\Main-app-desktop.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\build\Main-app-levelEditor.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\build\Main-app-mobile.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\Flash\zombieGame\build\build\Main-app-objectEditor.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProjectZ.iws" afterPath="$PROJECT_DIR$/ProjectZ.iws" />
     </list>
     <ignored path="ProjectZ.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363015728849" ignored="false" />
-    <file path="/fragment.js2" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363003513408" ignored="false" />
+    <file path="/fragment.js2" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363022641160" ignored="false" />
     <file path="/PersonageView.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362509868054" ignored="false" />
     <file path="/Main.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362645187565" ignored="false" />
     <file path="/fragment.java" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362590376969" ignored="false" />
@@ -22,7 +24,7 @@
     <file path="/a.dummy" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362987094241" ignored="false" />
     <file path="/PositionView.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362987099581" ignored="false" />
     <file path="/Cell.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362992448931" ignored="false" />
-    <file path="/Field.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363008221355" ignored="false" />
+    <file path="/Field.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1363018301862" ignored="false" />
     <file path="/Zombie.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362994188826" ignored="false" />
     <file path="/Personage.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362994207893" ignored="false" />
     <file path="/LevelData.as" changelist="2f733001-a71b-4ea2-be07-434055d24b2b" time="1362994809786" ignored="false" />
@@ -114,6 +116,17 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="LevelData.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/data/LevelData.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="54" selection-start="197" selection-end="197" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="FieldView.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/view/FieldView.as">
           <provider selected="true" editor-type-id="text-editor">
@@ -123,10 +136,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Field.as" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Field.as" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="48" selection-start="1270" selection-end="1270" vertical-scroll-proportion="0.0">
+            <state line="116" column="62" selection-start="3055" selection-end="3055" vertical-scroll-proportion="0.2393736">
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#201#265#0" expanded="true" />
@@ -135,10 +148,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LevelEditorApp.as" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="LevelEditorApp.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="38" selection-start="539" selection-end="539" vertical-scroll-proportion="0.13310961">
+            <state line="55" column="24" selection-start="1767" selection-end="1767" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -175,12 +188,12 @@
         <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/view/PositionView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/model/Game.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/App.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as" />
       </list>
     </option>
   </component>
@@ -521,6 +534,40 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="event" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ProjectZ" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="build" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="projectz" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="levelEditor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1027,27 +1074,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="40" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/view/FieldView.as">
       <provider selected="true" editor-type-id="text-editor">
         <state line="19" column="25" selection-start="502" selection-end="502" vertical-scroll-proportion="0.0">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="48" selection-start="1270" selection-end="1270" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#201#265#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1058,10 +1088,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="40" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/data/LevelData.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="54" selection-start="197" selection-end="197" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/LevelEditorApp.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="38" selection-start="539" selection-end="539" vertical-scroll-proportion="0.13310961">
+        <state line="55" column="24" selection-start="1767" selection-end="1767" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/levelEditor/model/Field.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="116" column="62" selection-start="3055" selection-end="3055" vertical-scroll-proportion="0.2393736">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#201#265#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1118,7 +1174,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>LevelEditor|ProjectZ</last-edited>
+          <last-edited>ProjectZ|ProjectZ</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -10,41 +10,43 @@ package com.projectz.utils.levelEditor.model {
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.pathFinding.Grid;
-import com.projectz.utils.pathFinding.Path;
-import com.projectz.utils.pathFinding.PathFinder;
-
-import flash.utils.Dictionary;
 
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
     private var _width: int;
-    public function get width():int {
-        return _width;
-    }
-
     private var _height: int;
-    public function get height():int {
-        return _height;
-    }
 
     private var _objectsStorage: ObjectsStorage;
 
     private var _fieldObj: Object;
     private var _field: Vector.<Cell>;
-    public function get field():Vector.<Cell> {
-        return _field;
-    }
 
-    private var _grid: Grid;
-
-    public function Field($width: int, $height: int) {
+    public function Field ($width: int, $height: int) {
         _width = $width;
         _height = $height;
+    }
 
-        _grid = new Grid(_width, _height);
+/////////////////////////////////////////////
+//PUBLIC:
+/////////////////////////////////////////////
+
+    public function get width():int {
+        return _width;
+    }
+
+    public function set width(value:int):void {
+        _width = value;
+
+    }
+
+    public function get height():int {
+        return _height;
+    }
+
+    public function get field():Vector.<Cell> {
+        return _field;
     }
 
     public function init($objectsStorage: ObjectsStorage):void {
@@ -57,6 +59,26 @@ public class Field extends EventDispatcher {
     public function step($delta: Number):void {
         updateDepths();
     }
+
+    public function destroy():void {
+        while (_field.length>0) {
+            _field.pop().destroy();
+        }
+        _field = null;
+
+        for (var id: String in _fieldObj) {
+            delete _fieldObj[id];
+        }
+        _fieldObj = null;
+    }
+
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
+
+    /////////////////////////////////////////////
+    //MAP:
+    /////////////////////////////////////////////
 
     private function updateDepths():void {
         var len: int = _field.length;
@@ -81,18 +103,6 @@ public class Field extends EventDispatcher {
                 }
             }
         }
-    }
-
-    private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
-        var way: Vector.<Cell> = new <Cell>[];
-        _grid.setStartNode($start.x, $start.y);
-        _grid.setEndNode($end.x, $end.y);
-        var path: Path = PathFinder.findPath(_grid);
-        var len: int = path.path.length;
-        for (var i:int = 1; i < len; i++) {
-            way.push(getCell(path.path[i].x, path.path[i].y));
-        }
-        return way;
     }
 
     private function createField():void {
@@ -120,6 +130,10 @@ public class Field extends EventDispatcher {
         return _field[rand];
     }
 
+    /////////////////////////////////////////////
+    //OBJECTS:
+    /////////////////////////////////////////////
+
     private function createObjects():void {
         createObject(_width/2, _height/2, _objectsStorage.getObjectData ("so-testcar"));
 
@@ -142,7 +156,6 @@ public class Field extends EventDispatcher {
                 if (cell) {
                     if (object.data.mask[i][j]==1) {
                         cell.lock();
-                        _grid.setWalkable(cell.x, cell.y, false);
                     }
                     cell.object = object;
                 }
@@ -151,19 +164,5 @@ public class Field extends EventDispatcher {
         object.place(getCell($x, $y));
     }
 
-    public function destroy():void {
-        while (_field.length>0) {
-            _field.pop().destroy();
-        }
-        _field = null;
-
-        for (var id: String in _fieldObj) {
-            delete _fieldObj[id];
-        }
-        _fieldObj = null;
-
-        _grid.destroy();
-        _grid = null;
-    }
 }
 }
