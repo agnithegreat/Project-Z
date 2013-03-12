@@ -6,9 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
+import com.projectz.utils.objectEditor.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
-
-import flash.utils.Dictionary;
 
 import starling.display.Quad;
 import starling.display.Sprite;
@@ -31,9 +30,9 @@ public class FilesPanel extends Sprite {
         addChild(_filesList);
     }
 
-    public function showFiles($names: Dictionary):void {
+    public function showFiles($names: ObjectsStorage):void {
         var object: ObjectData;
-        for each (object in $names) {
+        for each (object in $names.getFolder("level_elements")) {
             _files.push(new FileLine(object));
         }
         _files.sortOn("name");

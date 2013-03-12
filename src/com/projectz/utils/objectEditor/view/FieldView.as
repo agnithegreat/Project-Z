@@ -9,10 +9,14 @@ package com.projectz.utils.objectEditor.view {
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 
+import flash.geom.Point;
 import flash.ui.Keyboard;
 
 import starling.display.Sprite;
 import starling.events.KeyboardEvent;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
@@ -38,6 +42,7 @@ public class FieldView extends Sprite {
         _container.addChild(_cells);
 
         _objects = new Sprite();
+        _objects.touchable = false;
         _objects.alpha = 0.5;
         _container.addChild(_objects);
     }
@@ -53,7 +58,7 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < _currentObject.width; i++) {
             for (var j:int = 0; j < _currentObject.height; j++) {
                 cell = new CellView(_assets.getTexture("so-cell"));
-                cell.x = (j-i)*PositionView.cellWidth*0.5;
+                cell.x = (j-i)*PositionView.cellWidth*0.5;   // TODO: WTF? {x=0, y=0}
                 cell.y = (j+i)*PositionView.cellHeight*0.5;
                 _cells.addChild(cell);
             }
@@ -74,13 +79,29 @@ public class FieldView extends Sprite {
         _currentObject = $object;
         var part: PartData;
         for each (part in _currentObject.parts) {
-            _currentPart = new ObjectView(part);
-            _objects.addChild(_currentPart);
+            _objects.addChild(new ObjectView(part));
         }
 
         showField();
 
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+        stage.addEventListener(TouchEvent.TOUCH, handleTouch);
+    }
+
+    public function showPart($part: PartData):void {
+        _currentPart = null;
+        var len: int = _objects.numChildren;
+        var child: ObjectView;
+        for (var i:int = 0; i < len; i++) {
+            child = _objects.getChildAt(i) as ObjectView;
+            child.visible = $part==child.partData || !$part;
+            if ($part==child.partData) {
+                _currentPart = child;
+            }
+        }
+        if (_currentPart) {
+            _currentPart.update();
+        }
     }
 
     public function addX():void {
@@ -121,22 +142,44 @@ public class FieldView extends Sprite {
     private function handleKeyDown($event: KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.LEFT:
-                _currentPart.partData.place(_currentPart.partData.pivotX+1, _currentPart.partData.pivotY);
+                moveParts(-1, 0);
                 break;
             case Keyboard.RIGHT:
-                _currentPart.partData.place(_currentPart.partData.pivotX-1, _currentPart.partData.pivotY);
+                moveParts(1, 0);
                 break;
             case Keyboard.UP:
-                _currentPart.partData.place(_currentPart.partData.pivotX, _currentPart.partData.pivotY+1);
+                moveParts(0, -1);
                 break;
             case Keyboard.DOWN:
-                _currentPart.partData.place(_currentPart.partData.pivotX, _currentPart.partData.pivotY-1);
-                break;
-            case Keyboard.TAB:
-                _currentPart = _objects.getChildAt((_objects.getChildIndex(_currentPart)+1)%_objects.numChildren) as ObjectView;
+                moveParts(0, 1);
                 break;
         }
-        _currentPart.update();
+    }
+
+    private function handleTouch($event: TouchEvent):void {
+        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
+        if (touch) {
+            var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
+            if (_currentPart) {
+                var tx: Number = pos.x/PositionView.cellWidth;
+                var ty: Number = pos.y/PositionView.cellHeight;
+                var cx: int = Math.round(ty-tx);
+                var cy: int = Math.round(cx+tx*2);
+                _currentPart.partData.invertCellState(cx, cy);
+            }
+        }
+    }
+
+    private function moveParts($dx: int, $dy: int):void {
+        var len: int = _objects.numChildren;
+        var child: ObjectView;
+        for (var i:int = 0; i < len; i++) {
+            child = _objects.getChildAt(i) as ObjectView;
+            if (_currentPart==child || !_currentPart) {
+                child.partData.place(child.partData.pivotX-$dx, child.partData.pivotY-$dy);
+                child.update();
+            }
+        }
     }
 
     public function destroy():void {

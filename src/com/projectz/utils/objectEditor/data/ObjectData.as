@@ -18,7 +18,7 @@ public class ObjectData {
         return _name;
     }
 
-    private var _mask: Array = [[1]];
+    private var _mask: Array;
     public function get mask():Array {
         return _mask;
     }
@@ -63,10 +63,10 @@ public class ObjectData {
                 _mask[i][j] = 1;
             }
         }
-    }
 
-    public function invertCellState($x: int, $y: int):void {
-        _mask[$x][$y] = _mask[$x][$y] ? 0 : 1;
+        for each (var part:PartData in parts) {
+            part.size($width, $height);
+        }
     }
 
     private function getParts():Object {
@@ -81,6 +81,7 @@ public class ObjectData {
     public function parse($data: String):void {
         var data: Object = JSON.parse($data);
 
+        size(data.mask.length, data.mask[0].length);
         _mask = data.mask;
 
         var index: String;

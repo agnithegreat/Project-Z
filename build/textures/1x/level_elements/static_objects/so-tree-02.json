@@ -1,1 +1,1 @@
-{"mask":[[1]],"parts":{"":{"pivotY":71,"pivotX":3,"x":0,"mask":[[true]],"y":0,"name":""},"shadow":{"pivotY":17,"pivotX":-34,"x":0,"mask":[[true]],"y":0,"name":"shadow"}},"name":"so-tree-02"}
+{"mask":[[1]],"parts":{"shadow":{"y":0,"x":0,"mask":[[1]],"pivotY":16,"pivotX":-35,"name":"shadow"},"":{"y":0,"x":0,"mask":[[1]],"pivotY":71,"pivotX":3,"name":""}},"name":"so-tree-02"}

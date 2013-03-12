@@ -7,53 +7,73 @@
  */
 package com.projectz.utils.objectEditor {
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 
-import starling.textures.Texture;
+import starling.utils.AssetManager;
 
 public class ObjectParser {
 
-    public static function parseDirectory($path: File, $animated: Boolean):Dictionary {
+    public static function parseDirectory($path: File, $assets: AssetManager):Dictionary {
         var listing: Vector.<File> = getFilesRecursive($path);
-        return filterFiles(listing, $animated);
+        return filterFiles(listing, $assets);
     }
 
-    private static function filterFiles($files: Vector.<File>, $animated: Boolean):Dictionary {
-        var names: Object = {};
-        var fileNames: Object = {};
-        var parts: Object = {};
+    private static function filterFiles($files: Vector.<File>, $assets: AssetManager):Dictionary {
+        // Список всех файлов со всеми расширениями
+        var files: Dictionary = new Dictionary();
+
+        // Список всех родительских директорий для всех файлов
+        var directories: Dictionary = new Dictionary();
+
+        // Список объектов без расширений, объединенных по общему префиксу
+        var objects: Dictionary = new Dictionary();
+
+        // Список имен частей объектов
+        var parts: Dictionary = new Dictionary();
 
         var len: int = $files.length;
+        var file: File;
+
+        // Части имени файла
+        var nameParts: Array;
         var name: String;
-        var nameParts: Array = [];
         for (var i:int = 0; i < len; i++) {
-            nameParts = getFileName($files[i].name).split("_");
+            file = $files[i];
+            files[file.name] = file;
+            nameParts = getFileName(file.name).split("_");
             name = nameParts.shift();
-            names[name] = name;
-            fileNames[name] = $files[i];
+            directories[name] = file.parent;
+            objects[name] = name;
+
             if (!parts[name]) {
                 parts[name] = [];
             }
             parts[name].push(nameParts.join("_"));
         }
 
-        var files: Dictionary = new Dictionary();
-        var file: File;
-        for (name in names) {
-            file = fileNames[name] as File;
-            files[name] = new ObjectData(name, file.parent.resolvePath(name+".json"));
+        var animated: Boolean;
+        var partName: String;
+        var part: PartData;
+        for (name in objects) {
+            file = files[name+".json"];
+            objects[name] = new ObjectData(name, file ? file : directories[name].resolvePath(name+".json"));
             len = parts[name].length;
             for (i = 0; i < len; i++) {
-                if ($animated) {
-                    files[name].getPart().states[parts[name][i]] = new <Texture>[];
+                partName = parts[name][i];
+                animated = files[name+"_"+partName+".xml"] && files[name+"_"+partName+".png"];
+                if (animated) {
+                    part = objects[name].getPart();
+                    part.addTextures(partName, $assets.getTextures(name+"_"+partName));
                 } else {
-                    files[name].getPart(parts[name][i]);
+                    part = objects[name].getPart(partName);
+                    part.addTextures(partName, $assets.getTexture(part.name ? name+"_"+part.name : name));
                 }
             }
         }
-        return files;
+        return objects;
     }
 
     private static function getFileName($name: String):String {

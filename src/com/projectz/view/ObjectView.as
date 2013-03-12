@@ -16,6 +16,14 @@ public class ObjectView extends CellView {
     protected var _object: FieldObject;
     private var _part: String;
 
+    public function get offsetX():int {
+        return (_object.data.top.y-_object.data.top.x)*PositionView.cellWidth*0.5;
+    }
+
+    public function get offsetY():int {
+        return (_object.data.top.y+_object.data.top.x)*PositionView.cellHeight*0.5;
+    }
+
     override public function get depth():Number {
         return _object.depth;
     }
@@ -24,22 +32,13 @@ public class ObjectView extends CellView {
         _object = $object;
         _part = $part;
 
-        var textures:Vector.<Texture> = _object.data.getPart(_part).textures;
-        var texture:Texture;
-        if (textures.length == 0) {
-            trace ("WARNING! Не находим текстуры для ассета " + _object.data.name);
-        }
-        else {
-            texture = textures [0];
-//            trace ("Всё хорошо, нашли текстуру для ассета " + _object.data.name);
-        }
-        super(_object.cell, texture);
+        super(_object.cell, _object.data.states[_part]);
     }
 
     override protected function setView($texture: Texture):void {
         _bg = new Image($texture);
-        _bg.pivotX = _bg.width/2+_object.data.getPart(_part).pivotX;
-        _bg.pivotY = _bg.height/2+_object.data.getPart(_part).pivotY;
+        _bg.pivotX = _bg.width/2+_object.data.pivotX+offsetX;
+        _bg.pivotY = _bg.height/2+_object.data.pivotY+offsetY;
         addChild(_bg);
     }
 

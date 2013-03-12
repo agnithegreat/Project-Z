@@ -63,21 +63,22 @@ public class FieldView extends Sprite {
         _container.addChild(_objects);
 
         var object: PositionView;
-        var shadow: ShadowView;
         var fieldObject: FieldObject;
+        len = _field.objects.length;
         for (i = 0; i < len; i++) {
-            fieldObject = _field.field[i].object;
-            if (fieldObject is Personage) {
-                object = new ZombieView(fieldObject as Personage);
-                _objects.addChild(object);
-            } else if (fieldObject && fieldObject.cell==_field.field[i]) {
-                if (fieldObject.data.name == "shadow") {
-                    shadow = new ShadowView(fieldObject);
-                    _shadows.addChild(shadow);
+            fieldObject = _field.objects[i];
+            if (fieldObject) {
+                if (fieldObject is Personage) {
+                    object = new ZombieView(fieldObject as Personage);
+                    _objects.addChild(object);
                 } else {
                     object = new ObjectView(fieldObject, fieldObject.data.name);
                     _objects.addChild(object);
                 }
+            }
+            if (fieldObject.cell.shadow) {
+                object = new ObjectView(fieldObject.cell.shadow, "shadow");
+                _shadows.addChild(object);
             }
         }
 
@@ -129,15 +130,6 @@ public class FieldView extends Sprite {
         _cells.removeFromParent(true);
         _cells = null;
 
-        var shadow: ShadowView;
-        while (_shadows.numChildren>0) {
-            shadow = _shadows.getChildAt(0) as ShadowView;
-            shadow.destroy();
-            shadow.removeFromParent(true);
-        }
-        _shadows.removeFromParent(true);
-        _shadows = null;
-
         var object: ObjectView;
         while (_objects.numChildren>0) {
             object = _objects.removeChildAt(0, true) as ObjectView;
@@ -147,6 +139,15 @@ public class FieldView extends Sprite {
         }
         _objects.removeFromParent(true);
         _objects = null;
+
+        while (_shadows.numChildren>0) {
+            object = _shadows.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
+            }
+        }
+        _shadows.removeFromParent(true);
+        _shadows = null;
 
         _container.removeFromParent(true);
         _container = null;

@@ -6,83 +6,87 @@
   <component name="ChangeListManager">
     <list default="true" id="8c933f08-d488-4e85-ab36-c7b573905d7d" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/App.as" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\build\textures\1x\level_elements\static_objects\so-testhome-downlayer.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\Cell.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Tree.as" afterPath="" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\House.as" afterPath="" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\build\textures\1x\level_elements\static_objects\so-testhome-uplayer.png" afterPath="" />
       <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\build\textures\1x\level_elements\static_objects\so-shadow-tree-01.png" afterPath="" />
       <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\FieldObject.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\build\textures\1x\level_elements\static_objects\so-testhome-uplayer.png" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\House.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\Field.as" afterPath="" />
       <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Car.as" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\Personage.as" afterPath="" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\Field.as" afterPath="" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\Cell.as" afterPath="" />
       <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\ObjectsEditorApp.as" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Project-Z.iml" afterPath="$PROJECT_DIR$/Project-Z.iml" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\build\textures\1x\level_elements\static_objects\so-testhome-downlayer.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\Personage.as" afterPath="" />
+      <change type="DELETED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Tree.as" afterPath="" />
       <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\model\FieldObject.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/objects/FieldObject.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FilesPanel.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FilesPanel.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ShadowView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ShadowView.as" />
-      <change type="MODIFICATION" beforePath="C:\projects\Idea\Project-Z\build\Main-app-desktop.xml" afterPath="C:\projects\Idea\Project-Z\build\Main-app-desktop.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Game.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Game.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/ObjectData.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/ObjectData.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.as" afterPath="$PROJECT_DIR$/src/Main.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/UI.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/UI.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FileLine.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FileLine.as" />
-      <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\App.as" afterPath="$PROJECT_DIR$/src/com/projectz/App.as" />
-      <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Zombie.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" />
-      <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Personage.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/objects/Personage.as" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Field.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" />
-      <change type="MODIFICATION" beforePath="C:\projects\Idea\Project-Z\build\ObjectEditor.swf" afterPath="C:\projects\Idea\Project-Z\build\ObjectEditor.swf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FileLine.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FileLine.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
+      <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Personage.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/objects/Personage.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/CellView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/Main-app-desktop.xml" afterPath="$PROJECT_DIR$/build/Main-app-desktop.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Project-Z.iml" afterPath="$PROJECT_DIR$/Project-Z.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FilesPanel.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/FilesPanel.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Game.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Game.as" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ObjectsEditor.as" afterPath="$PROJECT_DIR$/src/ObjectsEditor.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/ObjectData.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/ObjectData.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/ObjectEditor.swf" afterPath="$PROJECT_DIR$/build/ObjectEditor.swf" />
+      <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\model\Zombie.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/GameScreen.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" afterPath="$PROJECT_DIR$/src/com/projectz/model/Cell.as" />
+      <change type="MODIFICATION" beforePath="C:\projects\Idea\Project-Z\src\com\projectz\view\ShadowView.as" afterPath="C:\projects\Idea\Project-Z\src\com\projectz\view\ShadowView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/PersonageView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.as" afterPath="$PROJECT_DIR$/src/Main.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" afterPath="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/UI.as" afterPath="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/UI.as" />
+      <change type="MOVED" beforePath="C:\projects\Idea\Project-Z\src\App.as" afterPath="$PROJECT_DIR$/src/com/projectz/App.as" />
     </list>
     <ignored path="Project-Z.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362635917174" ignored="false" />
-    <file path="/fragment.js2" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362968951500" ignored="false" />
+    <file path="/fragment.js2" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111575567" ignored="false" />
     <file path="/Main.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362914019356" ignored="false" />
-    <file path="/App.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363020833011" ignored="false" />
+    <file path="/App.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363089904933" ignored="false" />
     <file path="/Main-app.xml" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362473396660" ignored="false" />
-    <file path="/CellView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362848255634" ignored="false" />
-    <file path="/FieldView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362976155255" ignored="false" />
-    <file path="/ObjectView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362977940735" ignored="false" />
-    <file path="/ShadowView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362977979716" ignored="false" />
-    <file path="/Field.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363019959963" ignored="false" />
-    <file path="/Cell.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362548877464" ignored="false" />
+    <file path="/CellView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363107213295" ignored="false" />
+    <file path="/FieldView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363110708382" ignored="false" />
+    <file path="/ObjectView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363105174824" ignored="false" />
+    <file path="/ShadowView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363063929733" ignored="false" />
+    <file path="/Field.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111873078" ignored="false" />
+    <file path="/Cell.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111754715" ignored="false" />
     <file path="/Personage.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362977912699" ignored="false" />
-    <file path="/Zombie.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362975946791" ignored="false" />
+    <file path="/Zombie.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111856768" ignored="false" />
     <file path="/ZombieView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362978028638" ignored="false" />
     <file path="/StaticView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362458149496" ignored="false" />
     <file path="/PersonageView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362850852917" ignored="false" />
     <file path="/GameEvent.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362483574323" ignored="false" />
     <file path="/PositionView.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362543539937" ignored="false" />
-    <file path="/FieldObject.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362977865678" ignored="false" />
+    <file path="/FieldObject.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111765001" ignored="false" />
     <file path="/Tree.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362469711656" ignored="false" />
-    <file path="/Game.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362636360125" ignored="false" />
+    <file path="/Game.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111917365" ignored="false" />
     <file path="/Main-app-desktop.xml" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362473704208" ignored="false" />
     <file path="/House.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362493820775" ignored="false" />
     <file path="/PathFinder.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362506258374" ignored="false" />
     <file path="/GameScreen.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362637703219" ignored="false" />
     <file path="/Grid.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362537841456" ignored="false" />
     <file path="/Node.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362537859908" ignored="false" />
-    <file path="/UI.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362630405307" ignored="false" />
-    <file path="/FilesPanel.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362645459861" ignored="false" />
+    <file path="/UI.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363065694722" ignored="false" />
+    <file path="/FilesPanel.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363023886544" ignored="false" />
     <file path="/FileLine.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362636620322" ignored="false" />
     <file path="/ObjectsEditorApp.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362636014634" ignored="false" />
-    <file path="/ObjectData.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362914189780" ignored="false" />
-    <file path="/ObjectParser.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363020797859" ignored="false" />
+    <file path="/ObjectData.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363097444313" ignored="false" />
+    <file path="/ObjectParser.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363063897744" ignored="false" />
     <file path="/AnimationData.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362639335159" ignored="false" />
     <file path="/StaticObject.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362638850942" ignored="false" />
     <file path="/ViewDta.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362822561013" ignored="false" />
-    <file path="/PartData.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362977735085" ignored="false" />
-    <file path="$PROJECT_DIR$/build/Main-app-desktop.xml" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1362977801867" ignored="false" />
+    <file path="/PartData.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363111514429" ignored="false" />
+    <file path="/ObjectsStorage.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363023882624" ignored="false" />
+    <file path="$PROJECT_DIR$/build/Main-app-desktop.xml" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363059789331" ignored="false" />
+    <file path="$PROJECT_DIR$/build/Main-app-objectEditor.xml" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363097890673" ignored="false" />
+    <file path="/PartsPanel.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363066084468" ignored="false" />
+    <file path="/PartLine.as" changelist="8c933f08-d488-4e85-ab36-c7b573905d7d" time="1363089749164" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,32 +146,41 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="App.as" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/projectz/App.as">
+      <file leaf-file-name="Field.as" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Field.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="37" selection-start="2616" selection-end="2616" vertical-scroll-proportion="0.8487874">
-              <folding>
-                <element signature="e#182#213#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ObjectParser.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="82" selection-start="1675" selection-end="1675" vertical-scroll-proportion="0.0">
+            <state line="23" column="38" selection-start="775" selection-end="775" vertical-scroll-proportion="0.25757575">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Field.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Field.as">
+      <file leaf-file-name="Game.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Game.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="196" column="58" selection-start="5905" selection-end="5905" vertical-scroll-proportion="0.0">
+            <state line="25" column="42" selection-start="583" selection-end="583" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#182#218#0" expanded="true" />
+                <element signature="e#181#235#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Zombie.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="74" column="36" selection-start="1938" selection-end="1938" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cell.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Cell.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="71" column="24" selection-start="1606" selection-end="1606" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -176,33 +189,8 @@
       <file leaf-file-name="FieldObject.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/FieldObject.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="29" selection-start="1295" selection-end="1295" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#196#232#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="App.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/App.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="47" selection-start="3068" selection-end="3068" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#201#256#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ObjectView.as" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/ObjectView.as">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="48" selection-start="864" selection-end="864" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-                <element signature="e#206#259#0" expanded="true" />
-              </folding>
+            <state line="80" column="12" selection-start="2246" selection-end="2246" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -210,9 +198,9 @@
       <file leaf-file-name="PartData.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/PartData.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="20" selection-start="1322" selection-end="1322" vertical-scroll-proportion="0.0">
+            <state line="87" column="20" selection-start="2205" selection-end="2205" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#206#236#0" expanded="true" />
+                <element signature="e#206#230#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -221,10 +209,30 @@
       <file leaf-file-name="FieldView.as" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/projectz/view/FieldView.as">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="78" selection-start="2551" selection-end="2551" vertical-scroll-proportion="0.0">
+            <state line="79" column="63" selection-start="2545" selection-end="2545" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="e#180#216#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectView.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ObjectView.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="34" column="41" selection-start="932" selection-end="932" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#187#233#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CellView.as" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/projectz/view/CellView.as">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="46" column="22" selection-start="1121" selection-end="1121" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -247,22 +255,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/projectz/view/CellView.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/PartLine.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/App.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ui/UI.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/ObjectData.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/ObjectView.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/PartData.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/model/objects/FieldObject.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/model/objects/Personage.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/view/ShadowView.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/view/ObjectView.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/view/ZombieView.as" />
+        <option value="$PROJECT_DIR$/src/Main.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/view/CellView.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/view/FieldView.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/PartData.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/ObjectsStorage.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/model/Cell.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/model/objects/FieldObject.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as" />
+        <option value="$PROJECT_DIR$/src/com/projectz/model/Game.as" />
         <option value="$PROJECT_DIR$/src/com/projectz/model/Field.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as" />
-        <option value="$PROJECT_DIR$/src/com/projectz/App.as" />
       </list>
     </option>
   </component>
@@ -366,6 +374,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Project-Z" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Project-Z" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="projectz" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -446,8 +476,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -458,7 +488,7 @@
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/build/sounds" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/build/Main-app-mobile.xml" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -470,11 +500,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateActionScriptClassDialog.DESTINATION_PACKAGE_RECENT_KEY">
+      <recent name="com.projectz.utils.objectEditor.view" />
       <recent name="com.projectz.utils.objectEditor.data" />
+      <recent name="com.projectz.utils.objectEditor.ui" />
       <recent name="com.projectz.model" />
       <recent name="com.projectz.utils.objectEditor" />
-      <recent name="com.projectz.utils.objectEditor.view" />
-      <recent name="com.projectz.utils.objectEditor.ui" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor\view" />
@@ -484,9 +514,9 @@
       <recent name="C:\projects\Idea\Project-Z" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor" />
       <recent name="C:\projects\Idea\Project-Z\src\com\projectz\model\objects" />
       <recent name="C:\projects\Idea\Project-Z\src\com\projectz" />
-      <recent name="C:\projects\Idea\Project-Z\src\com\projectz\utils\objectEditor" />
       <recent name="C:\projects\Idea\Project-Z\src" />
     </key>
   </component>
@@ -722,24 +752,24 @@
     <frame x="-8" y="-8" width="1616" height="886" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26254827" sideWeight="0.6712517" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27027026" sideWeight="0.6712517" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39889959" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3287483" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947233" sideWeight="0.6712517" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287483" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39889959" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -806,138 +836,133 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/CellView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="0" selection-start="228" selection-end="228" vertical-scroll-proportion="0.02425107">
+        <state line="21" column="12" selection-start="524" selection-end="524" vertical-scroll-proportion="0.33951497">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/FieldView.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/FieldView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="78" selection-start="2551" selection-end="2551" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#180#216#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/PersonageView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="41" selection-start="1276" selection-end="1276" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#187#223#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/starling.swc!/library.swf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="355" column="13" selection-start="18224" selection-end="18224" vertical-scroll-proportion="0.33284885">
+        <state line="159" column="49" selection-start="4726" selection-end="4726" vertical-scroll-proportion="0.6362339">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/App.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="47" selection-start="3068" selection-end="3068" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#201#256#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/Personage.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="21" selection-start="1184" selection-end="1184" vertical-scroll-proportion="0.56348073">
-          <folding>
-            <element signature="e#196#227#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ShadowView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="57" selection-start="526" selection-end="526" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#187#233#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/view/ObjectView.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="48" selection-start="864" selection-end="864" vertical-scroll-proportion="0.0">
+        <state line="96" column="25" selection-start="3483" selection-end="3483" vertical-scroll-proportion="0.5820257">
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <element signature="e#206#259#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ZombieView.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/PositionView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="49" selection-start="1046" selection-end="1046" vertical-scroll-proportion="0.29243937">
+        <state line="28" column="20" selection-start="615" selection-end="615" vertical-scroll-proportion="0.46647647">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="26" selection-start="2235" selection-end="2235" vertical-scroll-proportion="0.5820257">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/CellView.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="22" selection-start="1121" selection-end="1121" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/view/ObjectView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="54" selection-start="684" selection-end="684" vertical-scroll-proportion="0.4422254">
+        <state line="34" column="41" selection-start="932" selection-end="932" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#187#233#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Field.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/Personage.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="196" column="58" selection-start="5905" selection-end="5905" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#182#218#0" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/FieldObject.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/view/FieldView.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="29" selection-start="1295" selection-end="1295" vertical-scroll-proportion="0.0">
+        <state line="79" column="63" selection-start="2545" selection-end="2545" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#196#232#0" expanded="true" />
+            <element signature="e#180#216#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/PartData.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="20" selection-start="1322" selection-end="1322" vertical-scroll-proportion="0.0">
+        <state line="87" column="20" selection-start="2205" selection-end="2205" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#206#236#0" expanded="true" />
+            <element signature="e#206#230#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/data/ObjectData.as">
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectsStorage.as">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="35" selection-start="941" selection-end="941" vertical-scroll-proportion="0.089871615">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/utils/objectEditor/ObjectParser.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="82" selection-start="1675" selection-end="1675" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/projectz/App.as">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="37" selection-start="2616" selection-end="2616" vertical-scroll-proportion="0.8487874">
+        <state line="67" column="0" selection-start="2117" selection-end="2117" vertical-scroll-proportion="0.95149785">
           <folding>
-            <element signature="e#182#213#0" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Cell.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="24" selection-start="1606" selection-end="1606" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/FieldObject.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="12" selection-start="2246" selection-end="2246" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/objects/Zombie.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="36" selection-start="1938" selection-end="1938" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Game.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="42" selection-start="583" selection-end="583" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#181#235#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/projectz/model/Field.as">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="38" selection-start="775" selection-end="775" vertical-scroll-proportion="0.25757575">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -982,7 +1007,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>ObjectEditor|Project-Z</last-edited>
+          <last-edited>Project-Z Mobile|Project-Z</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

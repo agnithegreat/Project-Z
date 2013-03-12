@@ -11,18 +11,17 @@ import com.projectz.model.objects.FieldObject;
 import com.projectz.model.objects.Zombie;
 import com.projectz.utils.objectEditor.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
-
-import flash.utils.Dictionary;
 
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var TREES: int = 30;
-    public static var ZOMBIES: int = 30;
+    public static var TREES: int = 0;
+    public static var ZOMBIES: int = 50;
 
     private var _width: int;
     public function get width():int {
@@ -40,6 +39,11 @@ public class Field extends EventDispatcher {
     private var _field: Vector.<Cell>;
     public function get field():Vector.<Cell> {
         return _field;
+    }
+
+    private var _objects: Vector.<FieldObject>;
+    public function get objects():Vector.<FieldObject> {
+        return _objects;
     }
 
     private var _grid: Grid;
@@ -85,22 +89,27 @@ public class Field extends EventDispatcher {
     private function updateDepths():void {
         var len: int = _field.length;
         var cell: Cell;
-        for (var i:int = 0; i < len; i++) {
-            cell = _field[i];
-            if (cell && cell.object) {
-                cell.object.depth = 0;
-                cell.object.clearSize();
-            }
+        for (var k:int = 0; k < _objects.length; k++) {
+            object = _objects[k];
+            object.clearSize();
+            object.depth = 0;
         }
 
         var index: int = 0;
-        for (i = 0; i < _width+_height; i++) {
+        var object: FieldObject;
+        for (var i: int = 0; i < _width+_height; i++) {
             for (var j:int = 0; j <= i; j++) {
                 cell = getCell(i-j, j);
-                if (cell && cell.object && !cell.object.depth) {
-                    cell.object.markSize(cell.x, cell.y);
-                    if (cell.object.sizeChecked) {
-                        cell.object.depth = ++index;
+                if (cell) {
+                    len = cell.objects.length;
+                    for (k = 0; k < len; k++) {
+                        object = cell.objects[k];
+                        if (!object.depth) {
+                            object.markSize(cell.x, cell.y);
+                            if (object.sizeChecked) {
+                                object.depth = ++index;
+                            }
+                        }
                     }
                 }
             }
@@ -145,18 +154,30 @@ public class Field extends EventDispatcher {
     }
 
     private function createObjects():void {
-        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-testcar"));
+        _objects = new <FieldObject>[];
+
+        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
 
         var cell: Cell;
         for (var i: int = 0; i < TREES; i++) {
-            while (!cell || cell.locked || cell.object) {
+            while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
-            createObject(cell.x, cell.y, _objectsStorage.getObjectData("so-tree-01"));
+            createObject(cell.x, cell.y, _objectsStorage.getObjectData("so-tree-0"+int(Math.random()*2+1)));
         }
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
+        for each (var part: PartData in $data.parts) {
+            if (part.name!="shadow") {
+                createPart($x, $y, part);
+            } else {
+                createShadow($x, $y, part);
+            }
+        }
+    }
+
+    private function createPart($x: int, $y: int, $data: PartData):void {
         var object: FieldObject = new FieldObject($data);
 
         var cell: Cell;
@@ -167,30 +188,46 @@ public class Field extends EventDispatcher {
                     if (object.data.mask[i][j]==1) {
                         cell.lock();
                         _grid.setWalkable(cell.x, cell.y, false);
+                        cell.addObject(object);
                     }
-                    cell.object = object;
                 }
             }
         }
-        object.place(getCell($x, $y));
+        object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
+        _objects.push(object);
+    }
+
+    private function createShadow($x: int, $y: int, $data: PartData):void {
+        var shadow: FieldObject = new FieldObject($data);
+        var cell: Cell = getCell($x, $y);
+        cell.shadow = shadow;
+        shadow.place(cell);
     }
 
     private function createPersonages():void {
         _zombies = new <Zombie>[];
 
-        var zombie: Zombie;
+        createZombie(_width/2+1, _height/2+1, _objectsStorage.getObjectData("zombie").parts[""]);
+
         var cell: Cell;
         for (var i:int = 0; i < ZOMBIES; i++) {
-            zombie = new Zombie(_objectsStorage.getObjectData("zombie"));
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
-            cell.lock();
-            cell.object = zombie;
-            zombie.place(cell);
+            createZombie(cell.x, cell.y, _objectsStorage.getObjectData("zombie").parts[""]);
             cell = null;
-            _zombies.push(zombie);
         }
+    }
+
+    private function createZombie($x: int, $y: int, $data: PartData):void {
+        var zombie: Zombie = new Zombie($data);
+        _objects.push(zombie);
+
+        var cell: Cell = getCell($x, $y);
+        cell.lock();
+        cell.addObject(zombie);
+        zombie.place(cell);
+        _zombies.push(zombie);
     }
 
     public function destroy():void {

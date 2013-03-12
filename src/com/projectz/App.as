@@ -7,22 +7,14 @@
  */
 package com.projectz {
 import com.projectz.model.Game;
-import com.projectz.utils.objectEditor.ObjectParser;
 import com.projectz.utils.objectEditor.ObjectsStorage;
-import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.view.GameScreen;
-
-import flash.filesystem.File;
-import flash.utils.Dictionary;
 
 import starling.core.Starling;
 import starling.display.Sprite;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 import starling.utils.AssetManager;
-import starling.utils.formatString;
-
 public class App extends Sprite {
 
     private var _assets: AssetManager;
@@ -50,12 +42,11 @@ public class App extends Sprite {
     }
 
     private function initStart():void {
-        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/anim_object", true, _assets);
-        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/defenders", true, _assets);
-        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/enemies", true, _assets);
-        _objectsStorage.parseDirectory ("textures/{0}x/level_elements/static_objects", false, _assets);
-
-        trace(_assets.getTextureNames());
+        _objectsStorage.parseDirectory("textures/{0}x/level_elements", _assets);
+//        _objectsStorage.parseDirectory("textures/{0}x/level_elements/anim_object", true, _assets);
+//        _objectsStorage.parseDirectory("textures/{0}x/level_elements/defenders", true, _assets);
+//        _objectsStorage.parseDirectory("textures/{0}x/level_elements/enemies", true, _assets);
+//        _objectsStorage.parseDirectory("textures/{0}x/level_elements/static_objects", false, _assets);
 
         Starling.juggler.delayCall(startGame, 0.15);
     }

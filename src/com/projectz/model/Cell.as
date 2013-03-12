@@ -22,12 +22,12 @@ public class Cell extends EventDispatcher {
         return _y;
     }
 
-    private var _object: FieldObject;
-    public function get object():FieldObject {
-        return _object;
+    private var _shadow: FieldObject;
+    public function get shadow():FieldObject {
+        return _shadow;
     }
-    public function set object(value: FieldObject):void {
-        _object = value;
+    public function set shadow(value: FieldObject):void {
+        _shadow = value;
     }
 
     private var _locked: Boolean;
@@ -35,9 +35,29 @@ public class Cell extends EventDispatcher {
         return _locked;
     }
 
+    private var _objects: Vector.<FieldObject>;
+    public function get objects():Vector.<FieldObject> {
+        return _objects;
+    }
+
     public function Cell($x: int, $y: int) {
         _x = $x;
         _y = $y;
+
+        _objects = new <FieldObject>[];
+    }
+
+    public function addObject($object: FieldObject):void {
+        if (_objects.indexOf($object)<0) {
+            _objects.push($object);
+        }
+    }
+
+    public function removeObject($object: FieldObject):void {
+        var index: int = _objects.indexOf($object);
+        if (index>=0) {
+            _objects.splice(index, 1);
+        }
     }
 
     public function lock():void {
@@ -49,7 +69,8 @@ public class Cell extends EventDispatcher {
     }
 
     public function destroy():void {
-        _object = null;
+        _objects = null;
+        _shadow = null;
     }
 }
 }

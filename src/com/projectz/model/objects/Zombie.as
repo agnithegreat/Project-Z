@@ -68,11 +68,11 @@ public class Zombie extends Personage {
 
         if (_progress>=1) {
             _cell.unlock();
-            _cell.object = null;
+            _cell.removeObject(this);
 
             place(_target);
             _target.lock();
-            _target.object = this;
+            _target.addObject(this);
 
             _target = null;
 

@@ -8,8 +8,6 @@
 package com.projectz.model {
 import com.projectz.utils.objectEditor.ObjectsStorage;
 
-import flash.utils.Dictionary;
-
 import starling.core.Starling;
 
 import starling.events.EventDispatcher;

@@ -69,7 +69,7 @@ public class Main extends Sprite {
 
         CONFIG::desktop {
             var appDir:File = File.applicationDirectory;
-//            _assets.verbose = false;
+            _assets.verbose = false;
             _assets.enqueue(
                 appDir.resolvePath("sounds"),
 //                appDir.resolvePath("fonts"),

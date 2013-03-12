@@ -9,10 +9,10 @@ package com.projectz.utils.objectEditor {
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.objectEditor.ui.FileLine;
+import com.projectz.utils.objectEditor.ui.PartLine;
 import com.projectz.utils.objectEditor.ui.UI;
 import com.projectz.utils.objectEditor.view.FieldView;
 
-import flash.filesystem.File;
 import flash.utils.Dictionary;
 
 import starling.core.Starling;
@@ -23,13 +23,13 @@ import starling.utils.AssetManager;
 public class App extends Sprite {
 
     private var _assets: AssetManager;
-    private var _folders: Dictionary;
+    private var _objectsStorage: ObjectsStorage;
 
     private var _view: FieldView;
     private var _ui: UI;
 
     public function App() {
-        _folders = new Dictionary();
+        _objectsStorage = new ObjectsStorage();
     }
 
     public function start($assets: AssetManager):void {
@@ -39,21 +39,11 @@ public class App extends Sprite {
 
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
-            var folder: File = File.applicationDirectory.resolvePath("textures/1x/level_elements/anim_object");
-            _folders[folder.name] = ObjectParser.parseDirectory(folder);
-            parseObjects(_folders[folder.name], true);
-
-            folder = File.applicationDirectory.resolvePath("textures/1x/level_elements/defenders");
-            _folders[folder.name] = ObjectParser.parseDirectory(folder);
-            parseObjects(_folders[folder.name], true);
-
-            folder = File.applicationDirectory.resolvePath("textures/1x/level_elements/enemies");
-            _folders[folder.name] = ObjectParser.parseDirectory(folder);
-            parseObjects(_folders[folder.name], true);
-
-            folder = File.applicationDirectory.resolvePath("textures/1x/level_elements/static_objects");
-            _folders[folder.name] = ObjectParser.parseDirectory(folder);
-            parseObjects(_folders[folder.name], false);
+            _objectsStorage.parseDirectory("textures/{0}x/level_elements", _assets);
+//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/anim_object", true, _assets);
+//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/defenders", true, _assets);
+//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/enemies", true, _assets);
+//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/static_objects", false, _assets);
 
             Starling.juggler.delayCall(edit, 0.15);
         }
@@ -65,6 +55,7 @@ public class App extends Sprite {
 
         _ui = new UI(_assets);
         _ui.addEventListener(FileLine.SELECT_FILE, handleOperation);
+        _ui.addEventListener(PartLine.SELECT_PART, handleOperation);
         _ui.addEventListener(UI.ADD_X, handleOperation);
         _ui.addEventListener(UI.SUB_X, handleOperation);
         _ui.addEventListener(UI.ADD_Y, handleOperation);
@@ -72,7 +63,7 @@ public class App extends Sprite {
         _ui.addEventListener(UI.SAVE, handleOperation);
         addChild(_ui);
 
-        _ui.filesPanel.showFiles(_folders["static_objects"]);
+        _ui.filesPanel.showFiles(_objectsStorage);
     }
 
     private function parseObjects($objects: Dictionary, $animated: Boolean):void {
@@ -96,6 +87,11 @@ public class App extends Sprite {
             case FileLine.SELECT_FILE:
                 var data: ObjectData = $event.data as ObjectData;
                 _view.addObject(data);
+                _ui.partsPanel.showParts(data.parts);
+                break;
+            case PartLine.SELECT_PART:
+                var part: PartData = $event.data as PartData;
+                _view.showPart(part);
                 break;
             case UI.ADD_X:
                 _view.addX();

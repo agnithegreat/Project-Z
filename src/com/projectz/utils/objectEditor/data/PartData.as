@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+import flash.geom.Point;
 import flash.utils.Dictionary;
 
 import starling.textures.Texture;
@@ -26,15 +27,6 @@ public class PartData {
     }
     public function get height():int {
         return _mask[0].length;
-    }
-
-    private var _offsetX: int = 0;
-    public function get offsetX():int {
-        return _offsetX;
-    }
-    private var _offsetY: int = 0;
-    public function get offsetY():int {
-        return _offsetY;
     }
 
     private var _pivotX: int = 0;
@@ -75,11 +67,6 @@ public class PartData {
         _pivotY = $y;
     }
 
-    public function offset($x: int, $y: int):void {
-        _offsetX = $x;
-        _offsetY = $y;
-    }
-
     public function size($width: int, $height: int):void {
         _mask = [];
         for (var i:int = 0; i < $width; i++) {
@@ -90,20 +77,88 @@ public class PartData {
         }
     }
 
+    private function getDepthNextCell($x: int, $y: int):Point {
+        for (var i: int = 0; i < width+height; i++) {
+            for (var j:int = 0; j <= i; j++) {
+                if ($x+(i-j)<width && $y+j<height && _mask[$x+(i-j)][$y+j]) {
+                    return new Point($x+(i-j), $y+j);
+                }
+            }
+        }
+        return null;
+    }
+
+    private var _top: Point;
+    public function get top():Point {
+        if (!_top && width==height==1) {
+            _top = new Point(0, 0);
+        }
+        if (!_top) {
+            _top = getDepthNextCell(0, 0);
+        }
+        return _top;
+    }
+
+    private var _left: Point;
+    public function get left():Point {
+        if (!_left && width==height==1) {
+            _left = new Point(0, 0);
+        }
+        if (!_left) {
+            var x: int = width-1;
+            var y: int = 0;
+            var i: int = 0;
+            var j: int = 0;
+            while (x+i<0 || y+i<0 || !_mask[x+i][y+i]) {
+                if (i>=j) {
+                    x--;
+                    i = 0;
+                    j++;
+                } else {
+                    i++;
+                }
+            }
+            _left = getDepthNextCell(x-y+top.y, top.y);
+        }
+        return _left;
+    }
+
+    private var _right: Point;
+    public function get right():Point {
+        if (!_right && width==height==1) {
+            _right = new Point(0, 0);
+        }
+        if (!_right) {
+            var x: int = 0;
+            var y: int = height-1;
+            var i: int = 0;
+            var j: int = 0;
+            while (x+i<0 || y+i<0 || !_mask[x+i][y+i]) {
+                if (i>=j) {
+                    y--;
+                    i = 0;
+                    j++;
+                } else {
+                    i++;
+                }
+            }
+            _right = getDepthNextCell(top.x, y-x+top.x);
+        }
+        return _right;
+    }
+
     public function invertCellState($x: int, $y: int):void {
         _mask[$x][$y] = _mask[$x][$y] ? 0 : 1;
     }
 
     public function parse($data: Object):void {
-        _offsetX = $data.x;
-        _offsetY = $data.y;
         _pivotX = $data.pivotX;
         _pivotY = $data.pivotY;
         _mask = $data.mask;
     }
 
     public function export():Object {
-        return {'name': _name, 'x': _offsetX, 'y': _offsetY, 'pivotX': _pivotX, 'pivotY': _pivotY, 'mask': _mask};
+        return {'name': _name, 'pivotX': _pivotX, 'pivotY': _pivotY, 'mask': _mask};
     }
 }
 }
