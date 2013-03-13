@@ -202,7 +202,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../ProjectZ.iml" filepath="$PROJECT_DIR$/../ProjectZ.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProjectZ.iml" filepath="$PROJECT_DIR$/ProjectZ.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="apache_flex_4.9" project-jdk-type="Flex SDK Type (new)">

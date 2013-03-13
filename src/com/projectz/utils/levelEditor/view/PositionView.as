@@ -12,8 +12,8 @@ import starling.display.Sprite;
 
 public class PositionView extends Sprite {
 
-    public static var cellWidth: int = 72;
-    public static var cellHeight: int = 36;
+    public static var CELL_WIDTH: int = 72;
+    public static var CELL_HEIGHT: int = 36;
 
     public function get positionX():Number {
         return 0;
@@ -27,11 +27,11 @@ public class PositionView extends Sprite {
     }
 
     public function PositionView() {
-        x = (positionY-positionX)*cellWidth*0.5;
-        y = (positionY+positionX)*cellHeight*0.5;
+        x = (positionY-positionX)*CELL_WIDTH*0.5;
+        y = (positionY+positionX)*CELL_HEIGHT*0.5;
 
-        pivotX = cellWidth/2;
-        pivotY = cellHeight/2;
+        pivotX = CELL_WIDTH/2;
+        pivotY = CELL_HEIGHT/2;
     }
 
     protected function dispatchDestroy():void {

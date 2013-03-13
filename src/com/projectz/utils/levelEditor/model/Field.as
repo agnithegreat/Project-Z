@@ -7,46 +7,42 @@
  */
 package com.projectz.utils.levelEditor.model {
 
+import com.projectz.utils.levelEditor.event.GameEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
     private var _width: int;
+    public function get width():int {
+        return _width;
+    }
+
     private var _height: int;
+    public function get height():int {
+        return _height;
+    }
 
     private var _objectsStorage: ObjectsStorage;
 
     private var _fieldObj: Object;
     private var _field: Vector.<Cell>;
-
-    public function Field ($width: int, $height: int) {
-        _width = $width;
-        _height = $height;
-    }
-
-/////////////////////////////////////////////
-//PUBLIC:
-/////////////////////////////////////////////
-
-    public function get width():int {
-        return _width;
-    }
-
-    public function set width(value:int):void {
-        _width = value;
-
-    }
-
-    public function get height():int {
-        return _height;
-    }
-
     public function get field():Vector.<Cell> {
         return _field;
+    }
+
+    private var _objects: Vector.<FieldObject>;
+    public function get objects():Vector.<FieldObject> {
+        return _objects;
+    }
+
+    public function Field($width: int, $height: int) {
+        _width = $width;
+        _height = $height;
     }
 
     public function init($objectsStorage: ObjectsStorage):void {
@@ -58,47 +54,33 @@ public class Field extends EventDispatcher {
 
     public function step($delta: Number):void {
         updateDepths();
+        dispatchEventWith(GameEvent.UPDATE);
     }
-
-    public function destroy():void {
-        while (_field.length>0) {
-            _field.pop().destroy();
-        }
-        _field = null;
-
-        for (var id: String in _fieldObj) {
-            delete _fieldObj[id];
-        }
-        _fieldObj = null;
-    }
-
-/////////////////////////////////////////////
-//PRIVATE:
-/////////////////////////////////////////////
-
-    /////////////////////////////////////////////
-    //MAP:
-    /////////////////////////////////////////////
 
     private function updateDepths():void {
         var len: int = _field.length;
         var cell: Cell;
-        for (var i:int = 0; i < len; i++) {
-            cell = _field[i];
-            if (cell && cell.object) {
-                cell.object.depth = 0;
-                cell.object.clearSize();
-            }
+        for (var k:int = 0; k < _objects.length; k++) {
+            object = _objects[k];
+            object.clearSize();
+            object.depth = 0;
         }
 
         var index: int = 0;
-        for (i = 0; i < _width+_height; i++) {
+        var object: FieldObject;
+        for (var i: int = 0; i < _width+_height; i++) {
             for (var j:int = 0; j <= i; j++) {
                 cell = getCell(i-j, j);
-                if (cell && cell.object && !cell.object.depth) {
-                    cell.object.markSize(cell.x, cell.y);
-                    if (cell.object.sizeChecked) {
-                        cell.object.depth = ++index;
+                if (cell) {
+                    len = cell.objects.length;
+                    for (k = 0; k < len; k++) {
+                        object = cell.objects[k];
+                        if (!object.depth) {
+                            object.markSize(cell.x, cell.y);
+                            if (object.sizeChecked) {
+                                object.depth = ++index;
+                            }
+                        }
                     }
                 }
             }
@@ -130,23 +112,31 @@ public class Field extends EventDispatcher {
         return _field[rand];
     }
 
-    /////////////////////////////////////////////
-    //OBJECTS:
-    /////////////////////////////////////////////
-
     private function createObjects():void {
-        createObject(_width/2, _height/2, _objectsStorage.getObjectData ("so-testcar"));
+        _objects = new <FieldObject>[];
+
+        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
 
         var cell: Cell;
 //        for (var i: int = 0; i < TREES; i++) {
-//            while (!cell || cell.locked || cell.object) {
+//            while (!cell || cell.locked) {
 //                cell = getRandomCell();
 //            }
-//            createObject(cell.x, cell.y, _objects["so-tree-01"]);
+//            createObject(cell.x, cell.y, _objectsStorage.getObjectData("so-tree-0"+int(Math.random()*2+1)));
 //        }
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
+        for each (var part: PartData in $data.parts) {
+            if (part.name!="shadow") {
+                createPart($x, $y, part);
+            } else {
+                createShadow($x, $y, part);
+            }
+        }
+    }
+
+    private function createPart($x: int, $y: int, $data: PartData):void {
         var object: FieldObject = new FieldObject($data);
 
         var cell: Cell;
@@ -156,13 +146,33 @@ public class Field extends EventDispatcher {
                 if (cell) {
                     if (object.data.mask[i][j]==1) {
                         cell.lock();
+//                        _grid.setWalkable(cell.x, cell.y, false);
+                        cell.addObject(object);
                     }
-                    cell.object = object;
                 }
             }
         }
-        object.place(getCell($x, $y));
+        object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
+        _objects.push(object);
     }
 
+    private function createShadow($x: int, $y: int, $data: PartData):void {
+        var shadow: FieldObject = new FieldObject($data);
+        var cell: Cell = getCell($x, $y);
+        cell.shadow = shadow;
+        shadow.place(cell);
+    }
+
+    public function destroy():void {
+        while (_field.length>0) {
+            _field.pop().destroy();
+        }
+        _field = null;
+
+        for (var id: String in _fieldObj) {
+            delete _fieldObj[id];
+        }
+        _fieldObj = null;
+    }
 }
 }

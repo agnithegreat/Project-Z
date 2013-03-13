@@ -9,7 +9,7 @@ package com.projectz.utils.levelEditor.model.objects {
 
 import com.projectz.utils.levelEditor.event.GameEvent;
 import com.projectz.utils.levelEditor.model.Cell;
-import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.events.EventDispatcher;
 
@@ -28,7 +28,12 @@ public class FieldObject extends EventDispatcher {
 
     protected var _size: Array;
     public function get sizeChecked():Boolean {
-        return _size[0][_size[0].length-1] && _size[_size.length-1][0];
+//        if (_data.width>1 && _data.height>1) {
+//            trace(_size);
+//            trace(_data.mask);
+//            trace(_size[_data.left.x][_data.left.y] && _size[_data.right.x][_data.right.y]);
+//        }
+        return _size[_data.left.x][_data.left.y] && _size[_data.right.x][_data.right.y];
     }
 
     private var _depth: int;
@@ -39,12 +44,12 @@ public class FieldObject extends EventDispatcher {
         _depth = value;
     }
 
-    protected var _data: ObjectData;
-    public function get data():ObjectData {
+    protected var _data: PartData;
+    public function get data():PartData {
         return _data;
     }
 
-    public function FieldObject($data:ObjectData) {
+    public function FieldObject($data:PartData) {
         _data = $data;
         createSize();
     }
@@ -54,21 +59,23 @@ public class FieldObject extends EventDispatcher {
         for (var i:int = 0; i < _data.mask.length; i++) {
             _size[i] = [];
             for (var j:int = 0; j < _data.mask[i].length; j++) {
-                _size[i][j] = false;
+                _size[i][j] = 0;
             }
         }
     }
     public function clearSize():void {
         for (var i:int = 0; i < _size.length; i++) {
             for (var j:int = 0; j < _size[i].length; j++) {
-                _size[i][j] = false;
+                _size[i][j] = 0;
             }
         }
     }
     public function markSize($x: int, $y: int):void {
-        var tx: int = $x-_cell.x;
-        var ty: int = $y-_cell.y;
-        _size[tx][ty] = true;
+        var tx: int = $x-_cell.x+_data.top.x;
+        var ty: int = $y-_cell.y+_data.top.y;
+        if (tx>=0 && ty>=0 && tx<_data.width && ty<data.height) {
+            _size[tx][ty] = 1;
+        }
     }
 
     public function place($cell: Cell):void {

@@ -9,8 +9,10 @@ package com.projectz.utils.levelEditor.view {
 
 import com.projectz.utils.levelEditor.event.GameEvent;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.levelEditor.model.objects.FieldObject;
 
 import starling.display.Image;
+
 import starling.display.Sprite;
 import starling.events.Event;
 import starling.utils.AssetManager;
@@ -22,9 +24,9 @@ public class FieldView extends Sprite {
     private var _bg: Image;
     private var _container: Sprite;
 
-    private var _cells: Sprite;
-    private var _shadows: Sprite;
-    private var _objects: Sprite;
+    private var _cellsContainer: Sprite;
+    private var _shadowsContainer: Sprite;
+    private var _objectsContainer: Sprite;
 
     public function FieldView($field: Field, $assets: AssetManager) {
         _field = $field;
@@ -37,46 +39,45 @@ public class FieldView extends Sprite {
         _container = new Sprite();
         addChild(_container);
 
-        _cells = new Sprite();
-        _cells.alpha = 0.1;
-        _container.addChild(_cells);
+        _cellsContainer = new Sprite();
+//        _cellsContainer.alpha = 0.1;
+        _container.addChild(_cellsContainer);
 
         var len: int = _field.field.length;
         var cell: CellView;
         for (var i:int = 0; i < len; i++) {
             cell = new CellView(_field.field[i], $assets.getTexture("so-cell"));
-            _cells.addChild(cell);
+            _cellsContainer.addChild(cell);
         }
-        _cells.flatten();
+//        _cellsContainer.flatten();
 
-//        _container.x = (Constants.WIDTH+(1-(_field.width+_field.height)*0.5)*CellView.cellWidth)*0.5;
-//        _container.y = (Constants.HEIGHT+CellView.cellHeight)*0.5;
-        _container.x = (Constants.WIDTH+PositionView.cellWidth)*0.5;
-        _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
+        _container.x = (Constants.WIDTH+PositionView.CELL_WIDTH)*0.5;
+        _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.CELL_HEIGHT)*0.5;
 
-        _shadows = new Sprite();
-        _shadows.touchable = false;
-        _container.addChild(_shadows);
+        _shadowsContainer = new Sprite();
+        _shadowsContainer.touchable = false;
+        _container.addChild(_shadowsContainer);
 
-        _objects = new Sprite();
-        _objects.touchable = false;
-        _container.addChild(_objects);
+        _objectsContainer = new Sprite();
+        _objectsContainer.touchable = false;
+        _container.addChild(_objectsContainer);
 
         var object: PositionView;
-        var shadow: ShadowView;
+        var fieldObject: FieldObject;
+        len = _field.objects.length;
         for (i = 0; i < len; i++) {
-            if (_field.field[i].object && _field.field[i].object.cell==_field.field[i]) {
-                object = new ObjectView(_field.field[i].object);
-                _objects.addChild(object);
-
-                if (_field.field[i].object.data.getPart("shadow").textures.length>0) {
-                    shadow = new ShadowView(_field.field[i].object);
-                    _shadows.addChild(shadow);
-                }
+            fieldObject = _field.objects[i];
+            if (fieldObject) {
+                object = new ObjectView(fieldObject, fieldObject.data.name);
+                _objectsContainer.addChild(object);
+            }
+            if (fieldObject.cell.shadow) {
+                object = new ObjectView(fieldObject.cell.shadow, "shadow");
+                _shadowsContainer.addChild(object);
             }
         }
 
-        _shadows.flatten();
+        _shadowsContainer.flatten();
 
         addEventListener(GameEvent.DESTROY, handleDestroy);
 
@@ -94,7 +95,7 @@ public class FieldView extends Sprite {
     }
 
     public function update():void {
-        _objects.sortChildren(sortByDepth);
+        _objectsContainer.sortChildren(sortByDepth);
     }
 
     private function sortByDepth($child1: PositionView, $child2: PositionView):int {
@@ -116,32 +117,32 @@ public class FieldView extends Sprite {
         _bg = null;
 
         var cell: CellView;
-        while (_cells.numChildren>0) {
-            cell = _cells.getChildAt(0) as CellView;
+        while (_cellsContainer.numChildren>0) {
+            cell = _cellsContainer.getChildAt(0) as CellView;
             cell.destroy();
             cell.removeFromParent(true);
         }
-        _cells.removeFromParent(true);
-        _cells = null;
-
-        var shadow: ShadowView;
-        while (_shadows.numChildren>0) {
-            shadow = _shadows.getChildAt(0) as ShadowView;
-            shadow.destroy();
-            shadow.removeFromParent(true);
-        }
-        _shadows.removeFromParent(true);
-        _shadows = null;
+        _cellsContainer.removeFromParent(true);
+        _cellsContainer = null;
 
         var object: ObjectView;
-        while (_objects.numChildren>0) {
-            object = _objects.removeChildAt(0, true) as ObjectView;
+        while (_objectsContainer.numChildren>0) {
+            object = _objectsContainer.removeChildAt(0, true) as ObjectView;
             if (object) {
                 object.destroy();
             }
         }
-        _objects.removeFromParent(true);
-        _objects = null;
+        _objectsContainer.removeFromParent(true);
+        _objectsContainer = null;
+
+        while (_shadowsContainer.numChildren>0) {
+            object = _shadowsContainer.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
+            }
+        }
+        _shadowsContainer.removeFromParent(true);
+        _shadowsContainer = null;
 
         _container.removeFromParent(true);
         _container = null;

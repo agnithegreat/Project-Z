@@ -52,6 +52,8 @@ public class LevelEditor extends Sprite {
         _starling.removeEventListener(Event.ROOT_CREATED, handleRootCreated);
 
         app.startLoading(_assets);
+
+        trace ("START STARLING!!!");
         _starling.start();
     }
 

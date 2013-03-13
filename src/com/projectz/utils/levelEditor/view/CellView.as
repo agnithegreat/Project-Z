@@ -8,11 +8,15 @@
 package com.projectz.utils.levelEditor.view {
 import com.projectz.utils.levelEditor.model.Cell;
 
+import flash.display.Shape;
+import flash.events.MouseEvent;
+
 import starling.display.DisplayObject;
 import starling.display.Image;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
+import starling.text.TextField;
 import starling.textures.Texture;
 
 public class CellView extends PositionView {
@@ -36,7 +40,11 @@ public class CellView extends PositionView {
             setView($texture);
         }
 
-//        addEventListener(TouchEvent.TOUCH, handleTouch);
+        addEventListener(TouchEvent.TOUCH, handleTouch);
+    }
+
+    override public function set x (value:Number):void {
+        super.x = value;
     }
 
     protected function setView($texture: Texture):void {
@@ -48,7 +56,9 @@ public class CellView extends PositionView {
 
     private function handleTouch(event:TouchEvent):void {
         var touch: Touch = event.getTouch(event.target as DisplayObject, TouchPhase.MOVED);
+        trace ("CELL (" + positionX + ":" + positionY + ") INFO: x = " + x + "; y = " + y);
         _bg.color = touch ? 0x00FF00 : 0x000000;
+        _bg.alpha = .3;
     }
 
     override public function destroy():void {
