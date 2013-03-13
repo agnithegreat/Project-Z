@@ -78,10 +78,11 @@ public class PartData {
     }
 
     private function getDepthNextCell($x: int, $y: int):Point {
-        for (var i: int = 0; i < width+height; i++) {
-            for (var j:int = 0; j <= i; j++) {
-                if ($x+(i-j)<width && $y+j<height && _mask[$x+(i-j)][$y+j]) {
-                    return new Point($x+(i-j), $y+j);
+        // TODO: какая-то хуйня, их хер выровняешь правильно. надо искать новые методы индексации
+        for (var i: int = $x+$y; i < width+height; i++) {
+            for (var j:int = $y; j <= i; j++) {
+                if (i-j<width && j<height && _mask[i-j][j]) {
+                    return new Point(i-j, j);
                 }
             }
         }

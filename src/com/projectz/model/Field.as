@@ -97,23 +97,35 @@ public class Field extends EventDispatcher {
 
         var index: int = 0;
         var object: FieldObject;
-        for (var i: int = 0; i < _width+_height; i++) {
-            for (var j:int = 0; j <= i; j++) {
-                cell = getCell(i-j, j);
+        for (var j:int = 0; j < _height; j++) {
+            for (var i: int = 0; i < _width; i++) {
+                cell = getCell(i, j);
                 if (cell) {
                     len = cell.objects.length;
                     for (k = 0; k < len; k++) {
                         object = cell.objects[k];
-                        if (!object.depth) {
-                            object.markSize(cell.x, cell.y);
-                            if (object.sizeChecked) {
-                                object.depth = ++index;
-                            }
-                        }
+                        object.depth = ++index;
                     }
                 }
             }
         }
+//        for (var i: int = 0; i < _width+_height; i++) {
+//            for (var j:int = 0; j <= i; j++) {
+//                cell = getCell(i-j, j);
+//                if (cell) {
+//                    len = cell.objects.length;
+//                    for (k = 0; k < len; k++) {
+//                        object = cell.objects[k];
+//                        if (!object.depth) {
+//                            object.markSize(cell.x, cell.y);
+//                            if (object.sizeChecked) {
+//                                object.depth = ++index;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
