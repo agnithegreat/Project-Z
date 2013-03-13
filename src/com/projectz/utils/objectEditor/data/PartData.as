@@ -72,7 +72,7 @@ public class PartData {
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];
             for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = 1;
+                _mask[i][j] = _name=="shadow" ? 0 : 1;
             }
         }
     }
@@ -91,7 +91,7 @@ public class PartData {
 
     private var _top: Point;
     public function get top():Point {
-        if (!_top && width==height==1) {
+        if (!_top && (width==height==1 || _name=="shadow")) {
             _top = new Point(0, 0);
         }
         if (!_top) {

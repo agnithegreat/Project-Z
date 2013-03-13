@@ -8,6 +8,8 @@
 package com.projectz.utils.objectEditor.view {
 import com.projectz.utils.objectEditor.data.PartData;
 
+import flash.geom.Point;
+
 import starling.core.Starling;
 import starling.display.Image;
 import starling.display.MovieClip;
@@ -23,6 +25,8 @@ public class ObjectView extends PositionView {
 
     public function ObjectView($data: PartData) {
         _partData = $data;
+
+        super(new Point(0,0));
 
         if (_partData.animated) {
             _bg = new MovieClip(_partData.states["attack_01"]);

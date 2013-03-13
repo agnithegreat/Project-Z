@@ -57,15 +57,24 @@ public class FieldView extends Sprite {
 
         for (var i:int = 0; i < _currentObject.width; i++) {
             for (var j:int = 0; j < _currentObject.height; j++) {
-                cell = new CellView(_assets.getTexture("so-cell"));
-                cell.x = (j-i)*PositionView.cellWidth*0.5;   // TODO: WTF? {x=0, y=0}
-                cell.y = (j+i)*PositionView.cellHeight*0.5;
+                cell = new CellView(new Point(i, j), _assets.getTexture("so-cell"));
                 _cells.addChild(cell);
             }
         }
 
         _container.x = (Constants.WIDTH-200+PositionView.cellWidth)*0.5;
         _container.y = (Constants.HEIGHT+200+(1-(_currentObject.height+_currentObject.width)*0.5)*PositionView.cellHeight)*0.5;
+
+        updateField();
+    }
+
+    private function updateField():void {
+        var cell: CellView;
+        var len: int = _cells.numChildren;
+        for (var i:int = 0; i < len; i++) {
+            cell = _cells.getChildAt(i) as CellView;
+            cell.alpha = _currentPart ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _currentObject.mask[cell.position.x][cell.position.y];
+        }
     }
 
     public function addObject($object: ObjectData):void {
@@ -77,6 +86,7 @@ public class FieldView extends Sprite {
         }
 
         _currentObject = $object;
+        _currentPart = null;
         var part: PartData;
         for each (part in _currentObject.parts) {
             _objects.addChild(new ObjectView(part));
@@ -102,6 +112,7 @@ public class FieldView extends Sprite {
         if (_currentPart) {
             _currentPart.update();
         }
+        updateField();
     }
 
     public function addX():void {
@@ -139,6 +150,21 @@ public class FieldView extends Sprite {
         _currentObject.save();
     }
 
+    private function handleTouch($event: TouchEvent):void {
+        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
+        if (touch) {
+            var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
+            if (_currentPart) {
+                var tx: Number = pos.x/PositionView.cellWidth;
+                var ty: Number = pos.y/PositionView.cellHeight;
+                var cx: int = Math.round(ty-tx);
+                var cy: int = Math.round(cx+tx*2);
+                _currentPart.partData.invertCellState(cx, cy);
+                updateField();
+            }
+        }
+    }
+
     private function handleKeyDown($event: KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.LEFT:
@@ -153,20 +179,6 @@ public class FieldView extends Sprite {
             case Keyboard.DOWN:
                 moveParts(0, 1);
                 break;
-        }
-    }
-
-    private function handleTouch($event: TouchEvent):void {
-        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
-        if (touch) {
-            var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
-            if (_currentPart) {
-                var tx: Number = pos.x/PositionView.cellWidth;
-                var ty: Number = pos.y/PositionView.cellHeight;
-                var cx: int = Math.round(ty-tx);
-                var cy: int = Math.round(cx+tx*2);
-                _currentPart.partData.invertCellState(cx, cy);
-            }
         }
     }
 

@@ -20,7 +20,7 @@ import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var TREES: int = 0;
+    public static var TREES: int = 30;
     public static var ZOMBIES: int = 50;
 
     private var _width: int;
@@ -165,17 +165,31 @@ public class Field extends EventDispatcher {
         return _field[rand];
     }
 
+    private function getRandomObject():String {
+        var rand: int = Math.random()*3;
+        switch (rand) {
+            case 0:
+                return "so-tree-01";
+            case 1:
+                return "so-tree-02";
+            case 2:
+                return "so-barrel-01";
+        }
+        return "";
+    }
+
     private function createObjects():void {
         _objects = new <FieldObject>[];
 
         createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
+        createObject(_width/3, _height/3, _objectsStorage.getObjectData("so-testcar"));
 
         var cell: Cell;
         for (var i: int = 0; i < TREES; i++) {
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
-            createObject(cell.x, cell.y, _objectsStorage.getObjectData("so-tree-0"+int(Math.random()*2+1)));
+            createObject(cell.x, cell.y, _objectsStorage.getObjectData(getRandomObject()));
         }
     }
 
@@ -197,8 +211,8 @@ public class Field extends EventDispatcher {
             for (var j:int = 0; j < object.data.mask[i].length; j++) {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
+                    cell.lock();
                     if (object.data.mask[i][j]==1) {
-                        cell.lock();
                         _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject(object);
                     }
