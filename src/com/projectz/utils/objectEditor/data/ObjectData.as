@@ -18,15 +18,31 @@ public class ObjectData {
         return _name;
     }
 
-    private var _mask: Array;
     public function get mask():Array {
-        return _mask;
+        var m: Array = [];
+        for each (var part:PartData in _parts) {
+            for (var i:int = 0; i < part.width; i++) {
+                while (m.length<=i) {
+                    m.push([]);
+                }
+                for (var j:int = 0; j < part.height; j++) {
+                    while (m[i].length<=i) {
+                        m[i].push(0);
+                    }
+                    if (part.mask[i][j]) {
+                        m[i][j] = 1;
+                    }
+                }
+            }
+        }
+
+        return m;
     }
     public function get width():int {
-        return _mask.length;
+        return mask.length;
     }
     public function get height():int {
-        return _mask[0].length;
+        return mask[0].length;
     }
 
     private var _parts: Dictionary;
@@ -56,14 +72,6 @@ public class ObjectData {
     }
 
     public function size($width: int, $height: int):void {
-        _mask = [];
-        for (var i:int = 0; i < $width; i++) {
-            _mask[i] = [];
-            for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = 1;
-            }
-        }
-
         for each (var part:PartData in parts) {
             part.size($width, $height);
         }
@@ -82,7 +90,6 @@ public class ObjectData {
         var data: Object = JSON.parse($data);
 
         size(data.mask.length, data.mask[0].length);
-        _mask = data.mask;
 
         var index: String;
         var part: Object;
@@ -98,7 +105,7 @@ public class ObjectData {
     }
 
     public function export():Object {
-        return {'name': _name, 'mask': _mask, 'parts': getParts()};
+        return {'name': _name, 'mask': mask, 'parts': getParts()};
     }
 
     private function load():void {

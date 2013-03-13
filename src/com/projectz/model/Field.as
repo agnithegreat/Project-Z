@@ -20,8 +20,8 @@ import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var TREES: int = 0;
-    public static var ZOMBIES: int = 50;
+    public static var TREES: int = 30;
+    public static var ZOMBIES: int = 0;
 
     private var _width: int;
     public function get width():int {
@@ -55,12 +55,13 @@ public class Field extends EventDispatcher {
         _height = $height;
 
         _grid = new Grid(_width, _height);
+
+        createField();
     }
 
     public function init($objectsStorage: ObjectsStorage):void {
         _objectsStorage = $objectsStorage;
 
-        createField();
         createObjects();
         createPersonages();
     }
@@ -97,23 +98,35 @@ public class Field extends EventDispatcher {
 
         var index: int = 0;
         var object: FieldObject;
-        for (var i: int = 0; i < _width+_height; i++) {
-            for (var j:int = 0; j <= i; j++) {
-                cell = getCell(i-j, j);
+        for (var j:int = 0; j < _height; j++) {
+            for (var i: int = 0; i < _width; i++) {
+                cell = getCell(i, j);
                 if (cell) {
                     len = cell.objects.length;
                     for (k = 0; k < len; k++) {
                         object = cell.objects[k];
-                        if (!object.depth) {
-                            object.markSize(cell.x, cell.y);
-                            if (object.sizeChecked) {
-                                object.depth = ++index;
-                            }
-                        }
+                        object.depth = ++index;
                     }
                 }
             }
         }
+//        for (var i: int = 0; i < _width+_height; i++) {
+//            for (var j:int = 0; j <= i; j++) {
+//                cell = getCell(i-j, j);
+//                if (cell) {
+//                    len = cell.objects.length;
+//                    for (k = 0; k < len; k++) {
+//                        object = cell.objects[k];
+//                        if (!object.depth) {
+//                            object.markSize(cell.x, cell.y);
+//                            if (object.sizeChecked) {
+//                                object.depth = ++index;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
@@ -153,17 +166,31 @@ public class Field extends EventDispatcher {
         return _field[rand];
     }
 
+    private function getRandomObject():String {
+        var rand: int = Math.random()*3;
+        switch (rand) {
+            case 0:
+                return "so-tree-01";
+            case 1:
+                return "so-tree-02";
+            case 2:
+                return "so-barrel-01";
+        }
+        return "";
+    }
+
     private function createObjects():void {
         _objects = new <FieldObject>[];
 
         createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
+        createObject(_width/3, _height/3, _objectsStorage.getObjectData("so-testcar"));
 
         var cell: Cell;
         for (var i: int = 0; i < TREES; i++) {
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
-            createObject(cell.x, cell.y, _objectsStorage.getObjectData("so-tree-0"+int(Math.random()*2+1)));
+            createObject(cell.x, cell.y, _objectsStorage.getObjectData(getRandomObject()));
         }
     }
 
@@ -185,8 +212,8 @@ public class Field extends EventDispatcher {
             for (var j:int = 0; j < object.data.mask[i].length; j++) {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
+                    cell.lock();
                     if (object.data.mask[i][j]==1) {
-                        cell.lock();
                         _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject(object);
                     }
@@ -195,6 +222,8 @@ public class Field extends EventDispatcher {
         }
         object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
         _objects.push(object);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
     }
 
     private function createShadow($x: int, $y: int, $data: PartData):void {
@@ -202,24 +231,30 @@ public class Field extends EventDispatcher {
         var cell: Cell = getCell($x, $y);
         cell.shadow = shadow;
         shadow.place(cell);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, shadow);
+    }
+
+    public function createZombie($x: int, $y: int):void {
+        createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
     }
 
     private function createPersonages():void {
         _zombies = new <Zombie>[];
 
-        createZombie(_width/2+1, _height/2+1, _objectsStorage.getObjectData("zombie").parts[""]);
+        createPersonage(_width/2+1, _height/2+1, _objectsStorage.getObjectData("zombie").parts[""]);
 
         var cell: Cell;
         for (var i:int = 0; i < ZOMBIES; i++) {
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
-            createZombie(cell.x, cell.y, _objectsStorage.getObjectData("zombie").parts[""]);
+            createPersonage(cell.x, cell.y, _objectsStorage.getObjectData("zombie").parts[""]);
             cell = null;
         }
     }
 
-    private function createZombie($x: int, $y: int, $data: PartData):void {
+    private function createPersonage($x: int, $y: int, $data: PartData):void {
         var zombie: Zombie = new Zombie($data);
         _objects.push(zombie);
 
@@ -228,6 +263,8 @@ public class Field extends EventDispatcher {
         cell.addObject(zombie);
         zombie.place(cell);
         _zombies.push(zombie);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
     }
 
     public function destroy():void {

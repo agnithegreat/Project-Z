@@ -53,7 +53,25 @@
           <sdk name="flex_sdk_4.9" />
         </dependencies>
         <compiler-options />
-        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/build/Main-app-objectEditor.xml" package-file-name="ObjectEditor">
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-objectEditor.xml" package-file-name="ObjectEditor">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/textures" path-in-package="textures" />
+          </files-to-package>
+        </packaging-air-desktop>
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
+      <configuration name="LevelEditor" target-platform="Desktop" pure-as="true" main-class="LevelEditor" output-file="LevelEditor.swf" output-folder="$MODULE_DIR$/build">
+        <dependencies>
+          <entries>
+            <entry library-name="starling" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="flex_sdk_4.9" />
+        </dependencies>
+        <compiler-options />
+        <packaging-air-desktop use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/Main-app-levelEditor.xml" package-file-name="LevelEditor">
           <files-to-package>
             <FilePathAndPathInPackage file-path="$MODULE_DIR$/build/textures" path-in-package="textures" />
           </files-to-package>

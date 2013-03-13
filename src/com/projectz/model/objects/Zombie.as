@@ -18,10 +18,15 @@ public class Zombie extends Personage {
 
     private var _way: Vector.<Cell>;
 
+    override public function get cell():Cell {
+        return _halfWay ? _target : _cell;
+    }
+
     protected var _progress: Number;
     public function get progress():Number {
         return _progress;
     }
+    private var _halfWay: Boolean;
 
     override public function get positionX():Number {
         return _target ? _cell.x+(_target.x-_cell.x)*_progress : _cell.x;
@@ -37,6 +42,7 @@ public class Zombie extends Personage {
     override public function place($cell: Cell):void {
         super.place($cell);
         _progress = 0;
+        _halfWay = false;
     }
 
     public function walk($cells: Vector.<Cell>):void {
@@ -66,14 +72,16 @@ public class Zombie extends Personage {
             update();
         }
 
-        if (_progress>=1) {
+        if (!_halfWay && _progress>=0.5) {
             _cell.unlock();
             _cell.removeObject(this);
-
-            place(_target);
-            _target.lock();
             _target.addObject(this);
+            _target.lock();
+            _halfWay = true;
+        }
 
+        if (_progress>=1) {
+            place(_target);
             _target = null;
 
             walk(_way);

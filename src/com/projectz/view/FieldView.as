@@ -10,11 +10,15 @@ import com.projectz.event.GameEvent;
 import com.projectz.model.Field;
 import com.projectz.model.objects.FieldObject;
 import com.projectz.model.objects.Personage;
-import com.projectz.utils.objectEditor.data.PartData;
+
+import flash.geom.Point;
 
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.events.Event;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
@@ -31,6 +35,7 @@ public class FieldView extends Sprite {
     public function FieldView($field: Field, $assets: AssetManager) {
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
+        _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
 
         _bg = new Image($assets.getTexture("bg-test"));
         _bg.touchable = false;
@@ -62,35 +67,47 @@ public class FieldView extends Sprite {
         _objects.touchable = false;
         _container.addChild(_objects);
 
-        var object: PositionView;
-        var fieldObject: FieldObject;
-        len = _field.objects.length;
-        for (i = 0; i < len; i++) {
-            fieldObject = _field.objects[i];
-            if (fieldObject) {
-                if (fieldObject is Personage) {
-                    object = new ZombieView(fieldObject as Personage);
-                    _objects.addChild(object);
-                } else {
-                    object = new ObjectView(fieldObject, fieldObject.data.name);
-                    _objects.addChild(object);
-                }
-            }
-            if (fieldObject.cell.shadow) {
-                object = new ObjectView(fieldObject.cell.shadow, "shadow");
-                _shadows.addChild(object);
-            }
-        }
-
-        _shadows.flatten();
-
         addEventListener(GameEvent.DESTROY, handleDestroy);
 
-        update();
+        addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+    }
+
+    private function handleAddedToStage($event: Event):void {
+        stage.addEventListener(TouchEvent.TOUCH, handleTouch);
+    }
+
+    private function handleAddObject($event: Event):void {
+        var object: PositionView;
+        var fieldObject: FieldObject = $event.data as FieldObject;
+        if (fieldObject is Personage) {
+            object = new ZombieView(fieldObject as Personage);
+            _objects.addChild(object);
+        } else {
+            object = new ObjectView(fieldObject, fieldObject.data.name);
+            _objects.addChild(object);
+        }
+        if (fieldObject.cell.shadow) {
+            object = new ObjectView(fieldObject.cell.shadow, "shadow");
+            _shadows.addChild(object);
+        }
     }
 
     private function handleUpdate($event: Event):void {
         update();
+    }
+
+    private function handleTouch($event: TouchEvent):void {
+        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
+        if (touch) {
+            var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
+            var tx: Number = pos.x/PositionView.cellWidth;
+            var ty: Number = pos.y/PositionView.cellHeight;
+            var cx: int = Math.round(ty-tx);
+            var cy: int = Math.round(cx+tx*2);
+
+            // TODO: через контроллер
+            _field.createZombie(cx, cy);
+        }
     }
 
     private function handleDestroy($event: Event):void {

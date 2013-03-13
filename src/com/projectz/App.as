@@ -53,10 +53,11 @@ public class App extends Sprite {
 
     private function startGame():void {
         _game = new Game(_objectsStorage);
-        _game.init();
 
         _view = new GameScreen(_game, _assets);
         addChild(_view);
+
+        _game.init();
     }
 
     private function endGame():void {
@@ -70,10 +71,10 @@ public class App extends Sprite {
 
     private function handleTouch($event: TouchEvent):void {
         if ($event.getTouch(stage, TouchPhase.ENDED)) {
-            if (_game) {
-                endGame();
-                startGame();
-            }
+//            if (_game) {
+//                endGame();
+//                startGame();
+//            }
         }
     }
 }

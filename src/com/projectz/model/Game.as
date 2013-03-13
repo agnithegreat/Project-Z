@@ -25,10 +25,11 @@ public class Game extends EventDispatcher {
 
     public function Game($objectsStorage: ObjectsStorage) {
         _objectsStorage = $objectsStorage;
+
+        _field = new Field(36, 36);
     }
 
     public function init():void {
-        _field = new Field(36, 36);
         _field.init(_objectsStorage);
 
         start();
