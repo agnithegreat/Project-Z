@@ -13,6 +13,7 @@ import flash.geom.Point;
 import flash.ui.Keyboard;
 
 import starling.display.Sprite;
+import starling.events.Event;
 import starling.events.KeyboardEvent;
 import starling.events.Touch;
 import starling.events.TouchEvent;
@@ -45,6 +46,13 @@ public class FieldView extends Sprite {
         _objects.touchable = false;
         _objects.alpha = 0.5;
         _container.addChild(_objects);
+
+        addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+    }
+
+    private function handleAddedToStage($event: Event):void {
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+        stage.addEventListener(TouchEvent.TOUCH, handleTouch);
     }
 
     private function showField():void {
@@ -93,9 +101,6 @@ public class FieldView extends Sprite {
         }
 
         showField();
-
-        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
-        stage.addEventListener(TouchEvent.TOUCH, handleTouch);
     }
 
     public function showPart($part: PartData):void {

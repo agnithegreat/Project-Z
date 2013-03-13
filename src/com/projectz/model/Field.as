@@ -21,7 +21,7 @@ import starling.events.EventDispatcher;
 public class Field extends EventDispatcher {
 
     public static var TREES: int = 30;
-    public static var ZOMBIES: int = 50;
+    public static var ZOMBIES: int = 0;
 
     private var _width: int;
     public function get width():int {
@@ -55,12 +55,13 @@ public class Field extends EventDispatcher {
         _height = $height;
 
         _grid = new Grid(_width, _height);
+
+        createField();
     }
 
     public function init($objectsStorage: ObjectsStorage):void {
         _objectsStorage = $objectsStorage;
 
-        createField();
         createObjects();
         createPersonages();
     }
@@ -221,6 +222,8 @@ public class Field extends EventDispatcher {
         }
         object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
         _objects.push(object);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
     }
 
     private function createShadow($x: int, $y: int, $data: PartData):void {
@@ -228,24 +231,30 @@ public class Field extends EventDispatcher {
         var cell: Cell = getCell($x, $y);
         cell.shadow = shadow;
         shadow.place(cell);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, shadow);
+    }
+
+    public function createZombie($x: int, $y: int):void {
+        createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
     }
 
     private function createPersonages():void {
         _zombies = new <Zombie>[];
 
-        createZombie(_width/2+1, _height/2+1, _objectsStorage.getObjectData("zombie").parts[""]);
+        createPersonage(_width/2+1, _height/2+1, _objectsStorage.getObjectData("zombie").parts[""]);
 
         var cell: Cell;
         for (var i:int = 0; i < ZOMBIES; i++) {
             while (!cell || cell.locked) {
                 cell = getRandomCell();
             }
-            createZombie(cell.x, cell.y, _objectsStorage.getObjectData("zombie").parts[""]);
+            createPersonage(cell.x, cell.y, _objectsStorage.getObjectData("zombie").parts[""]);
             cell = null;
         }
     }
 
-    private function createZombie($x: int, $y: int, $data: PartData):void {
+    private function createPersonage($x: int, $y: int, $data: PartData):void {
         var zombie: Zombie = new Zombie($data);
         _objects.push(zombie);
 
@@ -254,6 +263,8 @@ public class Field extends EventDispatcher {
         cell.addObject(zombie);
         zombie.place(cell);
         _zombies.push(zombie);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
     }
 
     public function destroy():void {
