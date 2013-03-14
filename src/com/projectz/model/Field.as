@@ -98,6 +98,7 @@ public class Field extends EventDispatcher {
             toCheck.push(_field[i]);
         }
 
+        // TODO: optimize that
         var index: int = 0;
         var mark: Array;
         var ind: int;
