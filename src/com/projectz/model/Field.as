@@ -20,7 +20,7 @@ import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var TREES: int = 30;
+    public static var TREES: int = 0;
     public static var ZOMBIES: int = 0;
 
     private var _width: int;
@@ -50,26 +50,24 @@ public class Field extends EventDispatcher {
 
     private var _zombies: Vector.<Zombie>;
 
-    public function Field($width: int, $height: int) {
+    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage) {
         _width = $width;
         _height = $height;
 
         _grid = new Grid(_width, _height);
 
+        _objectsStorage = $objectsStorage;
+
         createField();
     }
 
-    public function init($objectsStorage: ObjectsStorage):void {
-        _objectsStorage = $objectsStorage;
-
+    public function init():void {
         createObjects();
         createPersonages();
         updateDepths();
     }
 
     public function step($delta: Number):void {
-//        updateDepths();
-
         var len: int = _zombies.length;
         var zombie:Zombie;
 

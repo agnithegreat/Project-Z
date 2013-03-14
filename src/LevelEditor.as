@@ -19,6 +19,7 @@ import starling.events.Event;
 import starling.utils.AssetManager;
 import starling.utils.formatString;
 
+[SWF(frameRate="60")]
 public class LevelEditor extends Sprite {
 
     private var _assets: AssetManager;
