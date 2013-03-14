@@ -13,6 +13,7 @@ import com.projectz.utils.objectEditor.ui.PartLine;
 import com.projectz.utils.objectEditor.ui.UI;
 import com.projectz.utils.objectEditor.view.FieldView;
 
+import flash.filesystem.File;
 import flash.utils.Dictionary;
 
 import starling.core.Starling;
@@ -40,10 +41,6 @@ public class App extends Sprite {
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
             _objectsStorage.parseDirectory("textures/{0}x/level_elements", _assets);
-//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/anim_object", true, _assets);
-//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/defenders", true, _assets);
-//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/enemies", true, _assets);
-//            _objectsStorage.parseDirectory("textures/{0}x/level_elements/static_objects", false, _assets);
 
             Starling.juggler.delayCall(edit, 0.15);
         }
@@ -61,6 +58,7 @@ public class App extends Sprite {
         _ui.addEventListener(UI.ADD_Y, handleOperation);
         _ui.addEventListener(UI.SUB_Y, handleOperation);
         _ui.addEventListener(UI.SAVE, handleOperation);
+        _ui.addEventListener(UI.EXPORT, handleOperation);
         addChild(_ui);
 
         _ui.filesPanel.showFiles(_objectsStorage);
@@ -80,6 +78,13 @@ public class App extends Sprite {
                 }
             }
         }
+    }
+
+    private function saveObjectsList($list: Object):void {
+        var data: String = JSON.stringify($list);
+
+        var file: File = File.applicationDirectory.resolvePath("textures");
+        file.save(data, "filesList.json");
     }
 
     private function handleOperation($event: Event):void {
@@ -107,6 +112,9 @@ public class App extends Sprite {
                 break;
             case UI.SAVE:
                 _view.save();
+                break;
+            case UI.EXPORT:
+                saveObjectsList(_objectsStorage.objectsList);
                 break;
         }
     }

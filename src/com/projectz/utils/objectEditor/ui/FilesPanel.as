@@ -87,7 +87,7 @@ public class FilesPanel extends Sprite {
         _filesList.removeChildren();
 
         var len: int = _files.length;
-        trace(_tab, len);        var line: FileLine;
+        var line: FileLine;
         for (var i:int = 0; i < len; i++) {
             line = _files[i];
             line.y = i*25;

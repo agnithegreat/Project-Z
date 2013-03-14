@@ -22,6 +22,11 @@ public class ObjectsStorage {
     private var _objects: Dictionary; //хранит ссылки на все ассеты игры (в виде обектов ObjectData)
     private var _types: Dictionary;
 
+    private var _objectsList: Object = {files: []};
+    public function get objectsList():Object {
+        return _objectsList;
+    }
+
     public function getType($type: String):Dictionary {
         return _types[$type];
     }
@@ -39,7 +44,7 @@ public class ObjectsStorage {
      */
     public function parseDirectory ($path:String, $assets: AssetManager):void {
         var folder: File = File.applicationDirectory.resolvePath(formatString($path, $assets.scaleFactor));
-        _objects = ObjectParser.parseDirectory(folder, $assets);
+        _objects = ObjectParser.parseDirectory(folder, $assets, _objectsList);
 
         for each (var object:ObjectData in _objects) {
             if (!_types[object.type]) {

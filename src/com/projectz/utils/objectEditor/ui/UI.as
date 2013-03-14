@@ -18,6 +18,7 @@ public class UI extends Sprite {
     public static const ADD_Y: String = "add_y_UI";
     public static const SUB_Y: String = "sub_y_UI";
     public static const SAVE: String = "save_UI";
+    public static const EXPORT: String = "export_UI";
 
     private var _filesPanel: FilesPanel;
     public function get filesPanel():FilesPanel {
@@ -36,6 +37,8 @@ public class UI extends Sprite {
 
     private var _addY: Button;
     private var _subY: Button;
+
+    private var _export: Button;
 
     public function UI($assets: AssetManager) {
         _filesPanel = new FilesPanel();
@@ -76,6 +79,12 @@ public class UI extends Sprite {
         _save.y = 10;
         addChild(_save);
         _save.addEventListener(Event.TRIGGERED, handleClick);
+
+        _export = new Button($assets.getTexture("Save"));
+        _export.x = Constants.WIDTH-_export.width*2;
+        _export.y = Constants.HEIGHT-_export.height*2;
+        addChild(_export);
+        _export.addEventListener(Event.TRIGGERED, handleClick);
     }
 
     private function handleClick($event: Event):void {
@@ -94,6 +103,9 @@ public class UI extends Sprite {
                 break;
             case _save:
                 dispatchEventWith(SAVE);
+                break;
+            case _export:
+                dispatchEventWith(EXPORT);
                 break;
         }
     }

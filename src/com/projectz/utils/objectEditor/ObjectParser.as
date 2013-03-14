@@ -16,8 +16,11 @@ import starling.utils.AssetManager;
 
 public class ObjectParser {
 
-    public static function parseDirectory($path: File, $assets: AssetManager):Dictionary {
+    public static function parseDirectory($path: File, $assets: AssetManager, $objectList: Object):Dictionary {
         var listing: Vector.<File> = getFilesRecursive($path);
+        for (var i:int = 0; i < listing.length; i++) {
+            $objectList.files.push($path.getRelativePath(listing[i]));
+        }
         return filterFiles(listing, $assets);
     }
 
