@@ -7,7 +7,6 @@
  */
 package com.projectz.utils.objectEditor {
 import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.data.PartData;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
@@ -21,15 +20,14 @@ import starling.utils.formatString;
 public class ObjectsStorage {
 
     private var _objects: Dictionary; //хранит ссылки на все ассеты игры (в виде обектов ObjectData)
-    private var _folders: Dictionary;
+    private var _types: Dictionary;
 
-    public function getFolder($id: String):Dictionary {
-        return _folders[$id];
+    public function getType($type: String):Dictionary {
+        return _types[$type];
     }
 
     public function ObjectsStorage() {
-        _objects = new Dictionary();
-        _folders = new Dictionary();
+        _types = new Dictionary();
     }
 
     /**
@@ -41,10 +39,13 @@ public class ObjectsStorage {
      */
     public function parseDirectory ($path:String, $assets: AssetManager):void {
         var folder: File = File.applicationDirectory.resolvePath(formatString($path, $assets.scaleFactor));
-        _folders[folder.name] = ObjectParser.parseDirectory(folder, $assets);
+        _objects = ObjectParser.parseDirectory(folder, $assets);
 
-        for (var o:String in _folders[folder.name]) {
-            _objects[o] = _folders[folder.name][o];
+        for each (var object:ObjectData in _objects) {
+            if (!_types[object.type]) {
+                _types[object.type] = new Dictionary();
+            }
+            _types[object.type][object.name] = object;
         }
     }
 

@@ -13,7 +13,11 @@ import flash.utils.Dictionary;
 
 public class ObjectData {
 
-//    public static var STATIC_OBJECT: String = "";
+    public static var STATIC_OBJECT: String = "so";
+    public static var ANIMATED_OBJECT: String = "ao";
+    public static var DEFENDER: String = "de";
+    public static var ENEMY: String = "en";
+    public static var BACKGROUND: String = "bg";
 
     private var _name: String;
     public function get name():String {
@@ -70,7 +74,7 @@ public class ObjectData {
 
     public function ObjectData($name: String, $config: File = null) {
         _name = $name;
-        _type = $name;
+        _type = _name.split("-")[0];
         _config = $config;
         _parts = new Dictionary();
 
