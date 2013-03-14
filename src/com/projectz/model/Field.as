@@ -88,45 +88,73 @@ public class Field extends EventDispatcher {
     }
 
     private function updateDepths():void {
-        var len: int = _field.length;
+        var toCheck: Vector.<Cell> = new <Cell>[];
+
+        var object: FieldObject;
         var cell: Cell;
-        for (var k:int = 0; k < _objects.length; k++) {
-            object = _objects[k];
-            object.clearSize();
-            object.depth = 0;
+        var len: int = _field.length;
+        for (var i:int = 0; i < len; i++) {
+            _field[i].depth = 0;
+            toCheck.push(_field[i]);
         }
 
         var index: int = 0;
-        var object: FieldObject;
-        for (var j:int = 0; j < _height; j++) {
-            for (var i: int = 0; i < _width; i++) {
-                cell = getCell(i, j);
-                if (cell) {
-                    len = cell.objects.length;
-                    for (k = 0; k < len; k++) {
-                        object = cell.objects[k];
-                        object.depth = ++index;
+        var mark: Array;
+        var ind: int;
+        var tries: int = 20;
+        while (len && tries-->0) {
+            for (i = 0; i < len; i++) {
+                cell = toCheck[i];
+                if (cell && checkUpperCells(cell)) {
+                    mark = [];
+                    object = cell.object;
+                    if (object && object.data.width>1 && object.data.height>1) {
+                        object.markSize(cell.x, cell.y);
+                        if (object.sizeChecked) {
+                            mark = mark.concat(getObjectCells(object));
+                            object.clearSize();
+                        }
+                    } else {
+                        mark.push(cell);
+                    }
+                    var markLen: int = mark.length;
+                    for (var k: int = 0; k < markLen; k++) {
+                        mark[k].depth = ++index;
                     }
                 }
             }
+            for (k = 0; k < len; k++) {
+                if (toCheck[k].depth) {
+                    toCheck.splice(k--, 1);
+                    len--;
+                }
+            }
         }
-//        for (var i: int = 0; i < _width+_height; i++) {
-//            for (var j:int = 0; j <= i; j++) {
-//                cell = getCell(i-j, j);
-//                if (cell) {
-//                    len = cell.objects.length;
-//                    for (k = 0; k < len; k++) {
-//                        object = cell.objects[k];
-//                        if (!object.depth) {
-//                            object.markSize(cell.x, cell.y);
-//                            if (object.sizeChecked) {
-//                                object.depth = ++index;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+    }
+
+    private function getObjectCells($object: FieldObject):Array {
+        var cells: Array = [];
+        for (var i:int = 0; i < $object.data.width; i++) {
+            for (var j:int = 0; j < $object.data.height; j++) {
+                if ($object.data.mask[i][j]) {
+                    cells.push(getCell($object.cell.x+i-$object.data.top.x, $object.cell.y+j-$object.data.top.y));
+                }
+            }
+        }
+        return cells;
+    }
+
+    private function checkUpperCells($cell: Cell):Boolean {
+        var object: FieldObject = $cell.object;
+        var cell: Cell = getCell($cell.x, $cell.y-1);
+        if (cell && !cell.depth && (!object || cell.object!=object)) {
+            return false;
+        }
+        cell = getCell($cell.x-1, $cell.y);
+        if (cell && !cell.depth && (!object || cell.object!=object)) {
+            return false;
+        }
+        return true;
     }
 
     private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
@@ -155,6 +183,16 @@ public class Field extends EventDispatcher {
                 }
             }
         }
+        _field.sort(sortField);
+    }
+
+    private function sortField($cell1: Cell, $cell2: Cell):int {
+        if ($cell1.sorter>$cell2.sorter) {
+            return 1;
+        } else if ($cell1.sorter<$cell2.sorter) {
+            return -1;
+        }
+        return 0;
     }
 
     private function getCell(x: int, y: int):Cell {
@@ -182,8 +220,8 @@ public class Field extends EventDispatcher {
     private function createObjects():void {
         _objects = new <FieldObject>[];
 
-        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
         createObject(_width/3, _height/3, _objectsStorage.getObjectData("so-testcar"));
+        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
 
         var cell: Cell;
         for (var i: int = 0; i < TREES; i++) {
@@ -232,11 +270,14 @@ public class Field extends EventDispatcher {
         cell.shadow = shadow;
         shadow.place(cell);
 
-        dispatchEventWith(GameEvent.OBJECT_ADDED, false, shadow);
+        dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
     }
 
     public function createZombie($x: int, $y: int):void {
-        createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
+        var cell: Cell = getCell($x, $y);
+        if (cell && !cell.object) {
+            createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
+        }
     }
 
     private function createPersonages():void {

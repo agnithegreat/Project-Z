@@ -27,20 +27,10 @@ public class FieldObject extends EventDispatcher {
 
     protected var _size: Array;
     public function get sizeChecked():Boolean {
-//        if (_data.width>1 && _data.height>1) {
-//            trace(_size);
-//            trace(_data.mask);
-//            trace(_size[_data.left.x][_data.left.y] && _size[_data.right.x][_data.right.y]);
-//        }
+        if (_data.width==_data.height==1) {
+            return true;
+        }
         return _size[_data.left.x][_data.left.y] && _size[_data.right.x][_data.right.y];
-    }
-
-    private var _depth: int;
-    public function get depth():int {
-        return _depth;
-    }
-    public function set depth(value:int):void {
-        _depth = value;
     }
 
     protected var _data: PartData;

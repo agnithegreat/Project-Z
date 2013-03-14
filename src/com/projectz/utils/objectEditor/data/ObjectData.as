@@ -13,9 +13,16 @@ import flash.utils.Dictionary;
 
 public class ObjectData {
 
+//    public static var STATIC_OBJECT: String = "";
+
     private var _name: String;
     public function get name():String {
         return _name;
+    }
+
+    private var _type: String;
+    public function get type():String {
+        return _type;
     }
 
     public function get mask():Array {
@@ -63,6 +70,7 @@ public class ObjectData {
 
     public function ObjectData($name: String, $config: File = null) {
         _name = $name;
+        _type = $name;
         _config = $config;
         _parts = new Dictionary();
 

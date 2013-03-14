@@ -25,7 +25,7 @@ public class ObjectView extends CellView {
     }
 
     override public function get depth():Number {
-        return _object.depth;
+        return _object.cell.depth;
     }
 
     public function ObjectView($object: FieldObject, $part: String = "") {

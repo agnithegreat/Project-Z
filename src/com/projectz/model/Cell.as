@@ -22,6 +22,10 @@ public class Cell extends EventDispatcher {
         return _y;
     }
 
+    public function get sorter():int {
+        return x+y;
+    }
+
     private var _shadow: FieldObject;
     public function get shadow():FieldObject {
         return _shadow;
@@ -40,6 +44,19 @@ public class Cell extends EventDispatcher {
         return _objects;
     }
 
+    private var _object: FieldObject;
+    public function get object():FieldObject {
+        return _object;
+    }
+
+    private var _depth: int;
+    public function get depth():int {
+        return _depth;
+    }
+    public function set depth(value:int):void {
+        _depth = value;
+    }
+
     public function Cell($x: int, $y: int) {
         _x = $x;
         _y = $y;
@@ -50,6 +67,7 @@ public class Cell extends EventDispatcher {
     public function addObject($object: FieldObject):void {
         if (_objects.indexOf($object)<0) {
             _objects.push($object);
+            _object = $object;
         }
     }
 
@@ -57,6 +75,7 @@ public class Cell extends EventDispatcher {
         var index: int = _objects.indexOf($object);
         if (index>=0) {
             _objects.splice(index, 1);
+            _object = null;
         }
     }
 
@@ -66,6 +85,10 @@ public class Cell extends EventDispatcher {
 
     public function unlock():void {
         _locked = false;
+    }
+
+    public function toString():String {
+        return "{x: "+_x+", y: "+_y+"}";
     }
 
     public function destroy():void {
