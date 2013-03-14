@@ -20,9 +20,6 @@ import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    public static var TREES: int = 0;
-    public static var ZOMBIES: int = 0;
-
     private var _width: int;
     public function get width():int {
         return _width;
@@ -41,12 +38,12 @@ public class Field extends EventDispatcher {
         return _field;
     }
 
+    private var _grid: Grid;
+
     private var _objects: Vector.<FieldObject>;
     public function get objects():Vector.<FieldObject> {
         return _objects;
     }
-
-    private var _grid: Grid;
 
     private var _zombies: Vector.<Zombie>;
 
@@ -57,33 +54,15 @@ public class Field extends EventDispatcher {
         _grid = new Grid(_width, _height);
 
         _objectsStorage = $objectsStorage;
+        _objects = new <FieldObject>[];
+        _zombies = new <Zombie>[];
 
         createField();
     }
 
     public function init():void {
-        createObjects();
-        createPersonages();
+        createObjects(new <ObjectData>[]);
         updateDepths();
-    }
-
-    public function step($delta: Number):void {
-        var len: int = _zombies.length;
-        var zombie:Zombie;
-
-        var cell: Cell;
-        for (var i:int = 0; i < len; i++) {
-            zombie = _zombies[i];
-            if (zombie.alive && !zombie.target) {
-                while (!cell || cell.locked) {
-                    cell = getRandomCell();
-                }
-                zombie.walk(getWay(zombie.cell, cell));
-                cell = null;
-            }
-            zombie.step($delta);
-        }
-        dispatchEventWith(GameEvent.UPDATE);
     }
 
     private function updateDepths():void {
@@ -156,6 +135,25 @@ public class Field extends EventDispatcher {
         return true;
     }
 
+    public function step($delta: Number):void {
+        var len: int = _zombies.length;
+        var zombie:Zombie;
+
+        var cell: Cell;
+        for (var i:int = 0; i < len; i++) {
+            zombie = _zombies[i];
+//            if (zombie.alive && !zombie.target) {
+//                while (!cell || cell.locked) {
+//                    cell = getRandomCell();
+//                }
+//                zombie.walk(getWay(zombie.cell, cell));
+//                cell = null;
+//            }
+            zombie.step($delta);
+        }
+        dispatchEventWith(GameEvent.UPDATE);
+    }
+
     private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
         var way: Vector.<Cell> = new <Cell>[];
         _grid.setStartNode($start.x, $start.y);
@@ -198,36 +196,13 @@ public class Field extends EventDispatcher {
         return _fieldObj[x+"."+y];
     }
 
-    private function getRandomCell():Cell {
-        var rand: int = Math.random()*_field.length;
-        return _field[rand];
-    }
-
-    private function getRandomObject():String {
-        var rand: int = Math.random()*3;
-        switch (rand) {
-            case 0:
-                return "so-tree-01";
-            case 1:
-                return "so-tree-02";
-            case 2:
-                return "so-barrel-01";
-        }
-        return "";
-    }
-
-    private function createObjects():void {
+    private function createObjects($objects: Vector.<ObjectData>):void {
         _objects = new <FieldObject>[];
 
-        createObject(_width/3, _height/3, _objectsStorage.getObjectData("so-testcar"));
-        createObject(_width/2, _height/2, _objectsStorage.getObjectData("so-test-ambar"));
-
-        var cell: Cell;
-        for (var i: int = 0; i < TREES; i++) {
-            while (!cell || cell.locked) {
-                cell = getRandomCell();
-            }
-            createObject(cell.x, cell.y, _objectsStorage.getObjectData(getRandomObject()));
+        var len: int = $objects.length;
+        for (var i: int = 0; i < len; i++) {
+            // TODO: запаковать объекты в объекты с позицией
+            createObject(0, 0, $objects[i]);
         }
     }
 
@@ -276,21 +251,6 @@ public class Field extends EventDispatcher {
         var cell: Cell = getCell($x, $y);
         if (cell && !cell.object) {
             createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
-        }
-    }
-
-    private function createPersonages():void {
-        _zombies = new <Zombie>[];
-
-        createPersonage(_width/2+1, _height/2+1, _objectsStorage.getObjectData("zombie").parts[""]);
-
-        var cell: Cell;
-        for (var i:int = 0; i < ZOMBIES; i++) {
-            while (!cell || cell.locked) {
-                cell = getRandomCell();
-            }
-            createPersonage(cell.x, cell.y, _objectsStorage.getObjectData("zombie").parts[""]);
-            cell = null;
         }
     }
 

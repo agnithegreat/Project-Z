@@ -112,7 +112,7 @@ public class FieldView extends Sprite {
             var cy: int = Math.round(cx+tx*2);
 
             // TODO: через контроллер
-            _field.createZombie(cx, cy);
+//            _field.createZombie(cx, cy);
         }
     }
 

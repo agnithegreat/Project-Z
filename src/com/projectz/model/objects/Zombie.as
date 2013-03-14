@@ -52,7 +52,7 @@ public class Zombie extends Personage {
             dispatchEventWith(WALK);
         } else {
             // TODO: remove this test
-            die();
+//            die();
         }
     }
 
