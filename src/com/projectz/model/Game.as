@@ -46,9 +46,9 @@ public class Game extends EventDispatcher {
 
     private function handleTimer():void {
         if (_field && _active) {
-            _field.step(0.03);
+            _field.step(0.02);
 
-            Starling.juggler.delayCall(handleTimer, 1/40);
+            Starling.juggler.delayCall(handleTimer, 1/60);
         }
     }
 

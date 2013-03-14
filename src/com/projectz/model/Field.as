@@ -64,10 +64,11 @@ public class Field extends EventDispatcher {
 
         createObjects();
         createPersonages();
+        updateDepths();
     }
 
     public function step($delta: Number):void {
-        updateDepths();
+//        updateDepths();
 
         var len: int = _zombies.length;
         var zombie:Zombie;
@@ -98,7 +99,6 @@ public class Field extends EventDispatcher {
             toCheck.push(_field[i]);
         }
 
-        // TODO: optimize that
         var index: int = 0;
         var mark: Array;
         var ind: int;
