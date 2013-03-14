@@ -5,10 +5,10 @@
  * Time: 19:06
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz {
-import com.projectz.model.Game;
-import com.projectz.utils.objectEditor.ObjectsStorage;
-import com.projectz.view.GameScreen;
+package com.projectz.game {
+import com.projectz.game.model.Game;
+import com.projectz.utils.data.ObjectsStorage;
+import com.projectz.game.view.GameScreen;
 
 import starling.core.Starling;
 import starling.display.Sprite;

@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
-import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.data.ObjectData;
 
 import starling.display.Sprite;
 import starling.events.TouchEvent;

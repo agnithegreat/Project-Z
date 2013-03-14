@@ -5,8 +5,8 @@
  * Time: 0:48
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.model {
-import com.projectz.utils.objectEditor.ObjectsStorage;
+package com.projectz.game.model {
+import com.projectz.utils.data.ObjectsStorage;
 
 import starling.core.Starling;
 

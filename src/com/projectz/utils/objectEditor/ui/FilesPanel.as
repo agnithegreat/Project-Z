@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
-import com.projectz.utils.objectEditor.ObjectsStorage;
-import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.data.ObjectsStorage;
+import com.projectz.utils.data.ObjectData;
 
 import flash.utils.Dictionary;
 

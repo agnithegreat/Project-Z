@@ -5,8 +5,8 @@
  * Time: 23:16
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.model {
-import com.projectz.model.objects.FieldObject;
+package com.projectz.game.model {
+import com.projectz.game.model.objects.FieldObject;
 
 import starling.events.EventDispatcher;
 

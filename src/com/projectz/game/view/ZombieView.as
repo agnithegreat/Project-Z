@@ -5,9 +5,9 @@
  * Time: 11:31
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.view {
-import com.projectz.model.objects.Personage;
-import com.projectz.model.objects.Zombie;
+package com.projectz.game.view {
+import com.projectz.game.model.objects.Personage;
+import com.projectz.game.model.objects.Zombie;
 
 import starling.core.Starling;
 

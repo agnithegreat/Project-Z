@@ -5,10 +5,10 @@
  * Time: 11:45
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.model.objects {
-import com.projectz.model.Cell;
-import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.data.PartData;
+package com.projectz.game.model.objects {
+import com.projectz.game.model.Cell;
+import com.projectz.utils.data.ObjectData;
+import com.projectz.utils.data.PartData;
 
 import flash.geom.Point;
 

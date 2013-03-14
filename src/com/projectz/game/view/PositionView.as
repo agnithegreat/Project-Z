@@ -5,7 +5,7 @@
  * Time: 12:16
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.view {
+package com.projectz.game.view {
 import com.projectz.event.GameEvent;
 
 import starling.display.Sprite;

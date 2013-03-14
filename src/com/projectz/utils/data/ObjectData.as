@@ -5,7 +5,8 @@
  * Time: 0:41
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.objectEditor.data {
+package com.projectz.utils.data {
+
 import flash.events.Event;
 import flash.filesystem.File;
 import flash.utils.ByteArray;

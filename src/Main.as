@@ -7,7 +7,7 @@
  */
 package {
 
-import com.projectz.App;
+import com.projectz.game.App;
 
 import flash.net.URLLoader;
 import flash.net.URLRequest;

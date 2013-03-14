@@ -6,15 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor {
-import com.projectz.model.Game;
-import com.projectz.utils.objectEditor.ObjectsStorage;
-import com.projectz.view.FieldView;
+import com.projectz.game.model.Game;
+import com.projectz.utils.data.ObjectsStorage;
+import com.projectz.game.view.FieldView;
 
 import starling.core.Starling;
 import starling.display.Sprite;
 import starling.utils.AssetManager;
 
-public class LevelEditorApp extends Sprite {
+public class App extends Sprite {
 
     private var _assets: AssetManager;
     private var _objectsStorage: ObjectsStorage;
@@ -22,7 +22,7 @@ public class LevelEditorApp extends Sprite {
     private var _model: Game;
     private var _view: FieldView;
 
-    public function LevelEditorApp() {
+    public function App() {
         _objectsStorage = new ObjectsStorage();
     }
 

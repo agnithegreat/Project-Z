@@ -5,13 +5,13 @@
  * Time: 23:15
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.model {
+package com.projectz.game.model {
 import com.projectz.event.GameEvent;
-import com.projectz.model.objects.FieldObject;
-import com.projectz.model.objects.Zombie;
-import com.projectz.utils.objectEditor.ObjectsStorage;
-import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.game.model.objects.FieldObject;
+import com.projectz.game.model.objects.Zombie;
+import com.projectz.utils.data.ObjectsStorage;
+import com.projectz.utils.data.ObjectData;
+import com.projectz.utils.data.PartData;
 import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;

@@ -5,8 +5,8 @@
  * Time: 0:54
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.view {
-import com.projectz.model.Game;
+package com.projectz.game.view {
+import com.projectz.game.model.Game;
 
 import starling.display.Sprite;
 import starling.utils.AssetManager;

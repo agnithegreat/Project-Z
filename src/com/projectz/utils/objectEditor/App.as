@@ -6,12 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor {
-import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.data.ObjectData;
+import com.projectz.utils.data.PartData;
 import com.projectz.utils.objectEditor.ui.FileLine;
 import com.projectz.utils.objectEditor.ui.PartLine;
 import com.projectz.utils.objectEditor.ui.UI;
 import com.projectz.utils.objectEditor.view.FieldView;
+import com.projectz.utils.data.ObjectsStorage;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;

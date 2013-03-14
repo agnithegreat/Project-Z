@@ -5,11 +5,11 @@
  * Time: 0:55
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.view {
+package com.projectz.game.view {
 import com.projectz.event.GameEvent;
-import com.projectz.model.Field;
-import com.projectz.model.objects.FieldObject;
-import com.projectz.model.objects.Personage;
+import com.projectz.game.model.Field;
+import com.projectz.game.model.objects.FieldObject;
+import com.projectz.game.model.objects.Personage;
 
 import flash.geom.Point;
 

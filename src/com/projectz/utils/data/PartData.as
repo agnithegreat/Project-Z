@@ -5,7 +5,7 @@
  * Time: 16:49
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.objectEditor.data {
+package com.projectz.utils.data {
 import flash.geom.Point;
 import flash.utils.Dictionary;
 

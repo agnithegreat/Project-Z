@@ -5,9 +5,9 @@
  * Time: 11:43
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.view {
+package com.projectz.game.view {
 import com.projectz.event.GameEvent;
-import com.projectz.model.objects.Personage;
+import com.projectz.game.model.objects.Personage;
 
 import flash.utils.Dictionary;
 

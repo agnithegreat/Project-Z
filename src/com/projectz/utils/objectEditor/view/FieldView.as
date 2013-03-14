@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.view {
-import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.data.ObjectData;
+import com.projectz.utils.data.PartData;
 
 import flash.geom.Point;
 import flash.ui.Keyboard;
