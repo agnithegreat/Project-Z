@@ -8,11 +8,15 @@
 package com.projectz.utils.levelEditor {
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.levelEditor.ui.FileLine;
+import com.projectz.utils.levelEditor.ui.UI;
 import com.projectz.utils.levelEditor.view.FieldView;
+import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import starling.core.Starling;
 import starling.display.Sprite;
+import starling.events.Event;
 import starling.utils.AssetManager;
 import starling.utils.formatString;
 
@@ -24,6 +28,7 @@ public class App extends Sprite {
 
     private var _model: Field;
     private var _view: FieldView;
+    private var _ui: UI;
 
     public function App() {
         _objectsStorage = new ObjectsStorage();
@@ -53,12 +58,22 @@ public class App extends Sprite {
     }
 
     private function startGame():void {
-        _model = new Field(36, 36, _objectsStorage)
+        _model = new Field(36, 36, _objectsStorage, _levelsStorage.getLevelData("level_01"));
 
         _view = new FieldView(_model, _assets);
         addChild(_view);
 
-        _model.init(_levelsStorage.getLevelData("level_01"));
+        _model.init();
+
+        _ui = new UI(_assets);
+        _ui.addEventListener(FileLine.SELECT_FILE, handleOperation);
+        addChild(_ui);
+
+        _ui.filesPanel.showFiles(_objectsStorage);
+    }
+
+    private function handleOperation($event: Event):void {
+        _view.selectFile($event.data as ObjectData);
     }
 }
 }

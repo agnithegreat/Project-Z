@@ -29,7 +29,7 @@ public class LevelEditor extends Sprite {
         Starling.multitouchEnabled = true;
         Starling.handleLostContext = false;
 
-        var viewPort:Rectangle = new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT);
+        var viewPort:Rectangle = new Rectangle(0, 0, Constants.WIDTH+200, Constants.HEIGHT);
 
         var appDir:File = File.applicationDirectory;
         _assets = new AssetManager();
@@ -41,7 +41,7 @@ public class LevelEditor extends Sprite {
         );
 
         _starling = new Starling(App, this.stage, viewPort);
-        _starling.stage.stageWidth  = Constants.WIDTH;
+        _starling.stage.stageWidth  = Constants.WIDTH+200;
         _starling.stage.stageHeight = Constants.HEIGHT;
         _starling.showStats = true;
         _starling.simulateMultitouch = false;

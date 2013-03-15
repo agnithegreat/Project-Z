@@ -56,7 +56,9 @@ public class Field extends EventDispatcher {
     private var _enemies: Vector.<Enemy>;
     private var _defenders: Vector.<Defender>;
 
-    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage) {
+    private var _selectedObject: ObjectData;
+
+    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData) {
         _width = $width;
         _height = $height;
 
@@ -67,11 +69,11 @@ public class Field extends EventDispatcher {
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
 
+        _level = $level;
         createField();
     }
 
-    public function init($level: LevelData):void {
-        _level = $level;
+    public function init():void {
 
         createObjects(_level.objects);
         updateDepths();
@@ -206,6 +208,15 @@ public class Field extends EventDispatcher {
 
     private function getCell(x: int, y: int):Cell {
         return _fieldObj[x+"."+y];
+    }
+
+    public function selectObject($object: ObjectData):void {
+        _selectedObject = $object;
+        if (_selectedObject.type == ObjectData.ENEMY) {
+            createPersonage(_width/2, _height/2, _selectedObject.getPart(""));
+        } else {
+            createObject(_width/2, _height/2, _selectedObject);
+        }
     }
 
     private function createObjects($objects: Vector.<PlaceData>):void {

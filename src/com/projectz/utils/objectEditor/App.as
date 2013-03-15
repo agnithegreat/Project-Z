@@ -15,7 +15,6 @@ import com.projectz.utils.objectEditor.view.FieldView;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import flash.filesystem.File;
-import flash.utils.Dictionary;
 
 import starling.core.Starling;
 import starling.display.Sprite;
@@ -63,22 +62,6 @@ public class App extends Sprite {
         addChild(_ui);
 
         _ui.filesPanel.showFiles(_objectsStorage);
-    }
-
-    private function parseObjects($objects: Dictionary, $animated: Boolean):void {
-        var name: String;
-        var obj: ObjectData;
-        var part: PartData;
-        for (name in $objects) {
-            obj = $objects[name] as ObjectData;
-            for each (part in obj.parts) {
-                if ($animated) {
-                    part.addTextures(part.name, _assets.getTextures(part.name));
-                } else {
-                    part.addTextures(part.name, _assets.getTexture(part.name ? name+"_"+part.name : name));
-                }
-            }
-        }
     }
 
     private function saveObjectsList($list: Object):void {

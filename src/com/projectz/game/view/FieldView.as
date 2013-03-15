@@ -38,7 +38,7 @@ public class FieldView extends Sprite {
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
         _field.addEventListener(GameEvent.SHADOW_ADDED, handleAddShadow);
 
-        _bg = new Image($assets.getTexture("bg-test"));
+        _bg = new Image($assets.getTexture(_field.level.bg));
         _bg.touchable = false;
         addChild(_bg);
 

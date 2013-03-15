@@ -54,12 +54,12 @@ public class App extends Sprite {
     }
 
     private function startGame():void {
-        _game = new Game(_objectsStorage);
+        _game = new Game(_objectsStorage,_levelsStorage.getLevelData("level_01"));
 
         _view = new GameScreen(_game, _assets);
         addChild(_view);
 
-        _game.init(_levelsStorage.getLevelData("level_01"));
+        _game.init();
     }
 
     private function endGame():void {

@@ -21,6 +21,9 @@ public class LevelData {
     public function get bg():String {
         return _bg;
     }
+    public function set bg($value: String):void {
+        _bg = $value;
+    }
 
     private var _objects: Vector.<PlaceData>;
     public function get objects():Vector.<PlaceData> {

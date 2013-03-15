@@ -24,14 +24,14 @@ public class Game extends EventDispatcher {
 
     private var _active: Boolean;
 
-    public function Game($objectsStorage: ObjectsStorage) {
+    public function Game($objectsStorage: ObjectsStorage, $level: LevelData) {
         _objectsStorage = $objectsStorage;
 
-        _field = new Field(36, 36, _objectsStorage);
+        _field = new Field(36, 36, _objectsStorage, $level);
     }
 
-    public function init($level: LevelData):void {
-        _field.init($level);
+    public function init():void {
+        _field.init();
 
         start();
     }

@@ -10,6 +10,7 @@ import com.projectz.event.GameEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.levelEditor.model.objects.Personage;
+import com.projectz.utils.objectEditor.data.ObjectData;
 
 import flash.geom.Point;
 
@@ -23,6 +24,8 @@ import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
 
+    private var _assets: AssetManager;
+
     private var _field: Field;
 
     private var _bg: Image;
@@ -33,12 +36,14 @@ public class FieldView extends Sprite {
     private var _objects: Sprite;
 
     public function FieldView($field: Field, $assets: AssetManager) {
+        _assets = $assets;
+
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
         _field.addEventListener(GameEvent.SHADOW_ADDED, handleAddShadow);
 
-        _bg = new Image($assets.getTexture("bg-test"));
+        _bg = new Image(_assets.getTexture(_field.level.bg));
         _bg.touchable = false;
         addChild(_bg);
 
@@ -77,6 +82,15 @@ public class FieldView extends Sprite {
         stage.addEventListener(TouchEvent.TOUCH, handleTouch);
     }
 
+    public function selectFile($file: ObjectData):void {
+        if ($file.type == ObjectData.BACKGROUND) {
+            _field.level.bg = $file.name;
+            _bg.texture = _assets.getTexture(_field.level.bg);
+        } else {
+            _field.selectObject($file);
+        }
+    }
+
     private function handleAddObject($event: Event):void {
         var object: PositionView;
         var fieldObject: FieldObject = $event.data as FieldObject;
@@ -110,9 +124,6 @@ public class FieldView extends Sprite {
             var ty: Number = pos.y/PositionView.cellHeight;
             var cx: int = Math.round(ty-tx);
             var cy: int = Math.round(cx+tx*2);
-
-            // TODO: через контроллер
-//            _field.createZombie(cx, cy);
         }
     }
 
