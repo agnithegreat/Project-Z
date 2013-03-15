@@ -5,11 +5,11 @@
  * Time: 11:24
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.model.objects {
-import com.projectz.game.model.Cell;
-import com.projectz.utils.data.PartData;
+package com.projectz.utils.levelEditor.model.objects {
+import com.projectz.utils.levelEditor.model.Cell;
+import com.projectz.utils.objectEditor.data.PartData;
 
-public class Zombie extends Personage {
+public class Enemy extends Personage {
 
     public static const WALK: String = "walk";
     public static const ATTACK: String = "attack";
@@ -35,7 +35,7 @@ public class Zombie extends Personage {
         return _target ? _cell.y+(_target.y-_cell.y)*_progress : _cell.y;
     }
 
-    public function Zombie($data: PartData) {
+    public function Enemy($data: PartData) {
         super($data);
     }
 

@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model {
-import com.projectz.utils.data.ObjectsStorage;
+import com.projectz.utils.levelEditor.data.LevelData;
+import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import starling.core.Starling;
 
@@ -29,8 +30,8 @@ public class Game extends EventDispatcher {
         _field = new Field(36, 36, _objectsStorage);
     }
 
-    public function init():void {
-        _field.init();
+    public function init($level: LevelData):void {
+        _field.init($level);
 
         start();
     }

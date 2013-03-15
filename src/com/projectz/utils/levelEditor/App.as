@@ -6,24 +6,28 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor {
-import com.projectz.game.model.Game;
-import com.projectz.utils.data.ObjectsStorage;
-import com.projectz.game.view.FieldView;
+import com.projectz.utils.levelEditor.data.LevelStorage;
+import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.levelEditor.view.FieldView;
+import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import starling.core.Starling;
 import starling.display.Sprite;
 import starling.utils.AssetManager;
+import starling.utils.formatString;
 
 public class App extends Sprite {
 
     private var _assets: AssetManager;
     private var _objectsStorage: ObjectsStorage;
+    private var _levelsStorage: LevelStorage;
 
-    private var _model: Game;
+    private var _model: Field;
     private var _view: FieldView;
 
     public function App() {
         _objectsStorage = new ObjectsStorage();
+        _levelsStorage = new LevelStorage();
     }
 
     //Запустаем приложение, начав загрузку ассетов:
@@ -42,18 +46,19 @@ public class App extends Sprite {
 
     //Запускаем приложение после загрузки всех ассетов:
     private function startApp():void {
-        _objectsStorage.parseDirectory("textures/{0}x/level_elements", _assets);
+        _objectsStorage.parseDirectory(formatString("textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _levelsStorage.parseDirectory("levels");
 
         Starling.juggler.delayCall(startGame, 0.15);
     }
 
     private function startGame():void {
-        _model = new Game(_objectsStorage)
+        _model = new Field(36, 36, _objectsStorage)
 
-        _view = new FieldView(_model.field, _assets);
+        _view = new FieldView(_model, _assets);
         addChild(_view);
 
-        _model.init();
+        _model.init(_levelsStorage.getLevelData("level_01"));
     }
 }
 }

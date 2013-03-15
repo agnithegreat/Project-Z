@@ -5,7 +5,7 @@
  * Time: 0:41
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.data {
+package com.projectz.utils.objectEditor.data {
 
 import flash.events.Event;
 import flash.filesystem.File;
@@ -17,7 +17,7 @@ public class ObjectData {
     public static var STATIC_OBJECT: String = "so";
     public static var ANIMATED_OBJECT: String = "ao";
     public static var DEFENDER: String = "de";
-    public static var ENEMY: String = "en";
+    public static var ENEMY: String = "zombie";
     public static var BACKGROUND: String = "bg";
 
     private var _name: String;

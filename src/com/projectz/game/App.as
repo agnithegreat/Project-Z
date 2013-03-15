@@ -7,7 +7,8 @@
  */
 package com.projectz.game {
 import com.projectz.game.model.Game;
-import com.projectz.utils.data.ObjectsStorage;
+import com.projectz.utils.levelEditor.data.LevelStorage;
+import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.game.view.GameScreen;
 
 import starling.core.Starling;
@@ -15,10 +16,13 @@ import starling.display.Sprite;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 import starling.utils.AssetManager;
+import starling.utils.formatString;
+
 public class App extends Sprite {
 
     private var _assets: AssetManager;
     private var _objectsStorage: ObjectsStorage;
+    private var _levelsStorage: LevelStorage;
 
     private var _game: Game;
     private var _view: GameScreen;
@@ -26,6 +30,7 @@ public class App extends Sprite {
 
     public function App() {
         _objectsStorage = new ObjectsStorage();
+        _levelsStorage = new LevelStorage();
     }
 
     public function start($assets: AssetManager):void {
@@ -42,7 +47,8 @@ public class App extends Sprite {
     }
 
     private function initStart():void {
-        _objectsStorage.parseDirectory("textures/{0}x/level_elements", _assets);
+        _objectsStorage.parseDirectory(formatString("textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _levelsStorage.parseDirectory("levels");
 
         Starling.juggler.delayCall(startGame, 0.15);
     }
@@ -53,7 +59,7 @@ public class App extends Sprite {
         _view = new GameScreen(_game, _assets);
         addChild(_view);
 
-        _game.init();
+        _game.init(_levelsStorage.getLevelData("level_01"));
     }
 
     private function endGame():void {

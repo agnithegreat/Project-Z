@@ -5,12 +5,12 @@
  * Time: 23:15
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.model {
+package com.projectz.utils.levelEditor.model {
 import com.projectz.event.GameEvent;
-import com.projectz.game.model.objects.Defender;
-import com.projectz.game.model.objects.FieldObject;
-import com.projectz.game.model.objects.Enemy;
 import com.projectz.utils.levelEditor.data.LevelData;
+import com.projectz.utils.levelEditor.model.objects.Defender;
+import com.projectz.utils.levelEditor.model.objects.Enemy;
+import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;

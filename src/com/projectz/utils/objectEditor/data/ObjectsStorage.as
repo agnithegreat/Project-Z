@@ -5,14 +5,11 @@
  * Time: 15:05
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.data {
-import com.projectz.utils.data.ObjectData;
-
+package com.projectz.utils.objectEditor.data {
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 
 import starling.utils.AssetManager;
-import starling.utils.formatString;
 
 /**
  * Класс, предназначенный для хранения массива обектов ObjectData и получения конкретного ObjectData по его id.
@@ -43,7 +40,7 @@ public class ObjectsStorage {
      * @param $assets AssetManager с заранее загруженными ассетами
      */
     public function parseDirectory ($path:String, $assets: AssetManager):void {
-        var folder: File = File.applicationDirectory.resolvePath(formatString($path, $assets.scaleFactor));
+        var folder: File = File.applicationDirectory.resolvePath($path);
         _objects = ObjectParser.parseDirectory(folder, $assets, _objectsList);
 
         for each (var object:ObjectData in _objects) {

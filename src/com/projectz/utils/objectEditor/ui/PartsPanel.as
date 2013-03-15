@@ -10,7 +10,7 @@ import flash.utils.Dictionary;
 
 import starling.display.Sprite;
 
-import com.projectz.utils.data.PartData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 public class PartsPanel extends Sprite {
 

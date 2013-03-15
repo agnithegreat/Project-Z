@@ -5,10 +5,7 @@
  * Time: 12:52
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.data {
-import com.projectz.utils.data.ObjectData;
-import com.projectz.utils.data.PartData;
-
+package com.projectz.utils.objectEditor.data {
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 

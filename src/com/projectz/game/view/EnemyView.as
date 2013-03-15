@@ -7,24 +7,24 @@
  */
 package com.projectz.game.view {
 import com.projectz.game.model.objects.Personage;
-import com.projectz.game.model.objects.Zombie;
+import com.projectz.game.model.objects.Enemy;
 
 import starling.core.Starling;
 
 import starling.events.Event;
 
-public class ZombieView extends PersonageView {
+public class EnemyView extends PersonageView {
 
     public static const WALK: String = "walk_0";
     public static const ATTACK: String = "attack_0";
     public static const DIE: String = "die";
 
-    public function ZombieView($personage: Personage) {
+    public function EnemyView($personage: Personage) {
         super($personage);
 
-        _personage.addEventListener(Zombie.WALK, handleWalk);
-        _personage.addEventListener(Zombie.ATTACK, handleAttack);
-        _personage.addEventListener(Zombie.DIE, handleDie);
+        _personage.addEventListener(Enemy.WALK, handleWalk);
+        _personage.addEventListener(Enemy.ATTACK, handleAttack);
+        _personage.addEventListener(Enemy.DIE, handleDie);
 
         for (var i:int = 1; i <= 5; i++) {
             addState(WALK+i, _personage.data.states[WALK+i], 12);

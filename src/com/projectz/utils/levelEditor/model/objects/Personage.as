@@ -5,9 +5,8 @@
  * Time: 11:45
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.model.objects {
-import com.projectz.game.model.Cell;
-import com.projectz.utils.objectEditor.data.ObjectData;
+package com.projectz.utils.levelEditor.model.objects {
+import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 
 import flash.geom.Point;
