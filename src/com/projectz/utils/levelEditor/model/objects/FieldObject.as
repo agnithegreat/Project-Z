@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor.model.objects {
 import com.projectz.event.GameEvent;
+import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 
@@ -33,13 +34,19 @@ public class FieldObject extends EventDispatcher {
         return _size[_data.left.x][_data.left.y] && _size[_data.right.x][_data.right.y];
     }
 
+    private var _placeData: PlaceData;
+    public function get placeData():PlaceData {
+        return _placeData;
+    }
+
     protected var _data: PartData;
     public function get data():PartData {
         return _data;
     }
 
-    public function FieldObject($data:PartData) {
+    public function FieldObject($data:PartData, $placeData: PlaceData) {
         _data = $data;
+        _placeData = $placeData;
         createSize();
     }
 

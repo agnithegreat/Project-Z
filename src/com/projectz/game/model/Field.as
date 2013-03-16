@@ -153,13 +153,13 @@ public class Field extends EventDispatcher {
         var cell: Cell;
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
-//            if (zombie.alive && !zombie.target) {
-//                while (!cell || cell.locked) {
-//                    cell = getRandomCell();
-//                }
-//                zombie.walk(getWay(zombie.cell, cell));
-//                cell = null;
-//            }
+            if (zombie.alive && !zombie.target) {
+                while (!cell || cell.locked) {
+                    cell = getRandomCell();
+                }
+                zombie.walk(getWay(zombie.cell, cell));
+                cell = null;
+            }
             zombie.step($delta);
         }
         dispatchEventWith(GameEvent.UPDATE);
@@ -205,6 +205,12 @@ public class Field extends EventDispatcher {
 
     private function getCell(x: int, y: int):Cell {
         return _fieldObj[x+"."+y];
+    }
+
+    // TODO: удалить
+    private function getRandomCell():Cell {
+        var rand: int = Math.random()*_field.length;
+        return _field[rand];
     }
 
     private function createObjects($objects: Vector.<PlaceData>):void {
@@ -261,13 +267,6 @@ public class Field extends EventDispatcher {
         shadow.place(cell);
 
         dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
-    }
-
-    public function createZombie($x: int, $y: int):void {
-        var cell: Cell = getCell($x, $y);
-        if (cell && !cell.object) {
-            createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
-        }
     }
 
     private function createPersonage($x: int, $y: int, $data: PartData):void {

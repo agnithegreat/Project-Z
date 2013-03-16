@@ -7,9 +7,11 @@
  */
 package com.projectz.utils.levelEditor.view {
 
+import com.projectz.event.GameEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 
 import starling.display.Image;
+import starling.events.Event;
 import starling.textures.Texture;
 
 public class ObjectView extends CellView {
@@ -33,6 +35,8 @@ public class ObjectView extends CellView {
         _object = $object;
         _part = $part;
 
+        _object.addEventListener(GameEvent.DESTROY, handleDestroy);
+
         super(_object.cell, _object.data.states[_part]);
     }
 
@@ -43,9 +47,14 @@ public class ObjectView extends CellView {
         addChild(_bg);
     }
 
+    private function handleDestroy($event: Event):void {
+        dispatchDestroy();
+    }
+
     override public function destroy():void {
         super.destroy();
 
+        _object.removeEventListeners();
         _object = null;
     }
 }

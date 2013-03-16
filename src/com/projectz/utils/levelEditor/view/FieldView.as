@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor.view {
 import com.projectz.event.GameEvent;
+import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.levelEditor.model.objects.Personage;
@@ -87,7 +88,9 @@ public class FieldView extends Sprite {
             _field.level.bg = $file.name;
             _bg.texture = _assets.getTexture(_field.level.bg);
         } else {
-            _field.selectObject($file);
+            var placeData: PlaceData = new PlaceData();
+            placeData.object = $file.name;
+            _field.selectObject(placeData);
         }
     }
 

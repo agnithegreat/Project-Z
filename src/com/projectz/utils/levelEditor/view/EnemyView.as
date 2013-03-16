@@ -32,6 +32,8 @@ public class EnemyView extends PersonageView {
             addState(ATTACK+i, _personage.data.states[ATTACK+i], 12);
         }
         addState(DIE, _personage.data.states[DIE], 12, false);
+
+        stay();
     }
 
     private function handleWalk($event: Event):void {
@@ -44,6 +46,11 @@ public class EnemyView extends PersonageView {
 
     private function handleDie($event: Event):void {
         die();
+    }
+
+    public function stay():void {
+        walk();
+        stop();
     }
 
     public function walk(dir: int = 0):void {

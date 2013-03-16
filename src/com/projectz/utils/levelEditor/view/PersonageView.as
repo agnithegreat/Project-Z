@@ -67,6 +67,10 @@ public class PersonageView extends PositionView {
         Starling.juggler.add(_currentState);
     }
 
+    protected function stop():void {
+        _currentState.stop();
+    }
+
     private function handleUpdate($event: Event):void {
         x = (positionY-positionX)*cellWidth*0.5;
         y = (positionY+positionX)*cellHeight*0.5;

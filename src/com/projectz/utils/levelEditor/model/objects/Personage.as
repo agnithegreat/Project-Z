@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.model.objects {
+import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 
@@ -39,8 +40,8 @@ public class Personage extends FieldObject {
         return _alive;
     }
 
-    public function Personage($data: PartData) {
-        super($data);
+    public function Personage($data: PartData, $placeData: PlaceData) {
+        super($data, $placeData);
 
         _alive = true;
     }

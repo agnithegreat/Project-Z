@@ -6,11 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.model.objects {
+import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.objectEditor.data.PartData;
 
 public class Defender extends Personage {
-    public function Defender($data:PartData) {
-        super($data);
+
+    public function Defender($data:PartData, $placeData: PlaceData) {
+        super($data, $placeData);
     }
 }
 }

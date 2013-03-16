@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.model.objects {
+import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 
@@ -35,8 +36,8 @@ public class Enemy extends Personage {
         return _target ? _cell.y+(_target.y-_cell.y)*_progress : _cell.y;
     }
 
-    public function Enemy($data: PartData) {
-        super($data);
+    public function Enemy($data: PartData, $placeData: PlaceData) {
+        super($data, $placeData);
     }
 
     override public function place($cell: Cell):void {

@@ -1,1 +1,1 @@
-{"id":1,"bg":"bg-test","objects":[{"x":12,"y":12,"object":"so-test-ambar"},{"x":13,"y":20,"object":"so-testcar"},{"x":13,"y":13,"object":"zombie"}]}
+{"id":1,"bg":"bg-test","objects":[{"x":12,"y":12,"object":"so-test-ambar"},{"x":13,"y":20,"object":"so-testcar"},{"x":13,"y":13,"object":"zombie"},{"x":14,"y":13,"object":"zombie"},{"x":15,"y":13,"object":"zombie"},{"x":16,"y":13,"object":"zombie"},{"x":17,"y":13,"object":"zombie"}]}

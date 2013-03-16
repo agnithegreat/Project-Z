@@ -56,7 +56,8 @@ public class Field extends EventDispatcher {
     private var _enemies: Vector.<Enemy>;
     private var _defenders: Vector.<Defender>;
 
-    private var _selectedObject: ObjectData;
+    private var _placeObjects: Vector.<PlaceData>;
+    private var _selectedObject: PlaceData;
 
     public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData) {
         _width = $width;
@@ -69,14 +70,14 @@ public class Field extends EventDispatcher {
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
 
+        _placeObjects = new <PlaceData>[];
+
         _level = $level;
         createField();
     }
 
     public function init():void {
-
         createObjects(_level.objects);
-        updateDepths();
     }
 
     private function updateDepths():void {
@@ -210,42 +211,51 @@ public class Field extends EventDispatcher {
         return _fieldObj[x+"."+y];
     }
 
-    public function selectObject($object: ObjectData):void {
+    public function selectObject($object: PlaceData):void {
         _selectedObject = $object;
-        if (_selectedObject.type == ObjectData.ENEMY) {
-            createPersonage(_width/2, _height/2, _selectedObject.getPart(""));
-        } else {
-            createObject(_width/2, _height/2, _selectedObject);
+
+        var index: int = _placeObjects.indexOf(_selectedObject);
+        if (index>=0) {
+            _placeObjects.splice(index, 1);
+            updateDepths();
+            dispatchEventWith(GameEvent.UPDATE);
         }
     }
 
-    private function createObjects($objects: Vector.<PlaceData>):void {
-        _objects = new <FieldObject>[];
+    public function placeSelected($x: int, $y: int):void {
+        _selectedObject.place($x, $y);
+        updateDepths();
+        dispatchEventWith(GameEvent.UPDATE);
+    }
 
+    private function createObjects($objects: Vector.<PlaceData>):void {
         var len: int = $objects.length;
         for (var i: int = 0; i < len; i++) {
             var obj: PlaceData = $objects[i];
             var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
             if (objData.type == ObjectData.ENEMY) {
-                createPersonage(obj.x, obj.y, objData.getPart(""));
+                createPersonage(obj.x, obj.y, objData.getPart(""), obj);
             } else {
-                createObject(obj.x, obj.y, objData);
+                createObject(obj.x, obj.y, objData, obj);
             }
+            _placeObjects.push(obj);
         }
+        updateDepths();
+        dispatchEventWith(GameEvent.UPDATE);
     }
 
-    private function createObject($x: int, $y: int, $data: ObjectData):void {
+    private function createObject($x: int, $y: int, $data: ObjectData, $placeData: PlaceData):void {
         for each (var part: PartData in $data.parts) {
             if (part.name!="shadow") {
-                createPart($x, $y, part);
+                createPart($x, $y, part, $placeData);
             } else {
-                createShadow($x, $y, part);
+                createShadow($x, $y, part, $placeData);
             }
         }
     }
 
-    private function createPart($x: int, $y: int, $data: PartData):void {
-        var object: FieldObject = new FieldObject($data);
+    private function createPart($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
+        var object: FieldObject = new FieldObject($data, $placeData);
 
         var cell: Cell;
         for (var i:int = 0; i < object.data.mask.length; i++) {
@@ -266,8 +276,8 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
     }
 
-    private function createShadow($x: int, $y: int, $data: PartData):void {
-        var shadow: FieldObject = new FieldObject($data);
+    private function createShadow($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
+        var shadow: FieldObject = new FieldObject($data, $placeData);
         var cell: Cell = getCell($x, $y);
         cell.shadow = shadow;
         shadow.place(cell);
@@ -275,15 +285,8 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
     }
 
-    public function createZombie($x: int, $y: int):void {
-        var cell: Cell = getCell($x, $y);
-        if (cell && !cell.object) {
-            createPersonage($x, $y, _objectsStorage.getObjectData("zombie").parts[""]);
-        }
-    }
-
-    private function createPersonage($x: int, $y: int, $data: PartData):void {
-        var zombie: Enemy = new Enemy($data);
+    private function createPersonage($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
+        var zombie: Enemy = new Enemy($data, $placeData);
         _objects.push(zombie);
 
         var cell: Cell = getCell($x, $y);
