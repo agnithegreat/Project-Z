@@ -7,7 +7,7 @@
  */
 package com.projectz.utils.levelEditor.model.objects {
 
-import com.projectz.utils.levelEditor.event.GameEvent;
+import com.projectz.event.GameEvent;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 

@@ -17,11 +17,11 @@ public class ObjectView extends CellView {
     private var _part: String;
 
     public function get offsetX():int {
-        return (_object.data.top.y-_object.data.top.x)*PositionView.CELL_WIDTH*0.5;
+        return (_object.data.top.y-_object.data.top.x)*PositionView.cellWidth*0.5;
     }
 
     public function get offsetY():int {
-        return (_object.data.top.y+_object.data.top.x)*PositionView.CELL_HEIGHT*0.5;
+        return (_object.data.top.y+_object.data.top.x)*PositionView.cellHeight*0.5;
     }
 
     override public function get depth():Number {

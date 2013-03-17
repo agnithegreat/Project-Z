@@ -7,14 +7,20 @@
  */
 package com.projectz.utils.levelEditor.view {
 
-import com.projectz.utils.levelEditor.event.GameEvent;
+import com.projectz.event.GameEvent;
+import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
+
+import flash.geom.Point;
 
 import starling.display.Image;
 
 import starling.display.Sprite;
 import starling.events.Event;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
@@ -31,6 +37,7 @@ public class FieldView extends Sprite {
     public function FieldView($field: Field, $assets: AssetManager) {
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
+        _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
 
         _bg = new Image($assets.getTexture("bg-test"));
         _bg.touchable = false;
@@ -49,10 +56,10 @@ public class FieldView extends Sprite {
             cell = new CellView(_field.field[i], $assets.getTexture("so-cell"));
             _cellsContainer.addChild(cell);
         }
-//        _cellsContainer.flatten();
+        _cellsContainer.flatten();
 
-        _container.x = (Constants.WIDTH+PositionView.CELL_WIDTH)*0.5;
-        _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.CELL_HEIGHT)*0.5;
+        _container.x = (Constants.WIDTH+PositionView.cellWidth)*0.5;
+        _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
 
         _shadowsContainer = new Sprite();
         _shadowsContainer.touchable = false;
@@ -62,30 +69,57 @@ public class FieldView extends Sprite {
         _objectsContainer.touchable = false;
         _container.addChild(_objectsContainer);
 
-        var object: PositionView;
-        var fieldObject: FieldObject;
-        len = _field.objects.length;
-        for (i = 0; i < len; i++) {
-            fieldObject = _field.objects[i];
-            if (fieldObject) {
-                object = new ObjectView(fieldObject, fieldObject.data.name);
-                _objectsContainer.addChild(object);
-            }
-            if (fieldObject.cell.shadow) {
-                object = new ObjectView(fieldObject.cell.shadow, "shadow");
-                _shadowsContainer.addChild(object);
-            }
-        }
-
-        _shadowsContainer.flatten();
-
         addEventListener(GameEvent.DESTROY, handleDestroy);
 
-        update();
+        addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+    }
+
+    private function getCell(cx:int, cy:int):CellView {
+        var numCells:int = _cellsContainer.numChildren;
+        for (var i:int = 0; i < numCells; i++) {
+            var $cellView:CellView = CellView(_cellsContainer.getChildAt(i));
+            if (($cellView.positionX == cx) && ($cellView.positionY == cy)) {
+                return $cellView;
+            }
+        }
+        return null;
+    }
+
+    private function handleAddedToStage($event: Event):void {
+        stage.addEventListener(TouchEvent.TOUCH, handleTouch);
+    }
+
+    private function handleAddObject($event: Event):void {
+        var object: PositionView;
+        var fieldObject: FieldObject = $event.data as FieldObject;
+        object = new ObjectView(fieldObject, fieldObject.data.name);
+        _objectsContainer.addChild(object);
+        if (fieldObject.cell.shadow) {
+            object = new ObjectView(fieldObject.cell.shadow, "shadow");
+            _shadowsContainer.addChild(object);
+        }
     }
 
     private function handleUpdate($event: Event):void {
         update();
+    }
+
+    private function handleTouch($event: TouchEvent):void {
+        var touch: Touch = $event.getTouch(_cellsContainer, TouchPhase.BEGAN);
+        if (touch) {
+            var pos: Point = touch.getLocation(_cellsContainer).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
+            var tx: Number = pos.x/PositionView.cellWidth;
+            var ty: Number = pos.y/PositionView.cellHeight;
+            var cx: int = Math.round(ty-tx);
+            var cy: int = Math.round(cx+tx*2);
+
+            // TODO: через контроллер
+            var cell:CellView = getCell(cx, cy);
+            trace ("cell = " + cell);
+            if (cell) {
+                cell.alpha = .1;
+            }
+        }
     }
 
     private function handleDestroy($event: Event):void {
