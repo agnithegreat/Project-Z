@@ -52,11 +52,11 @@ public class CellView extends PositionView {
 /////////////////////////////////////////////
 
     public function get color():uint {
-        return _color;
+        return _bg.color;
     }
 
     public function set color(value:uint):void {
-        _color = value;
+        _bg.color = value;
     }
 
     public function setAlpha(value:Number):void {
