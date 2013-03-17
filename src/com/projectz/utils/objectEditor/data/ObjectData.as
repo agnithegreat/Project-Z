@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+
 import flash.events.Event;
 import flash.filesystem.File;
 import flash.utils.ByteArray;
@@ -13,9 +14,20 @@ import flash.utils.Dictionary;
 
 public class ObjectData {
 
+    public static var STATIC_OBJECT: String = "so";
+    public static var ANIMATED_OBJECT: String = "ao";
+    public static var DEFENDER: String = "de";
+    public static var ENEMY: String = "zombie";
+    public static var BACKGROUND: String = "bg";
+
     private var _name: String;
     public function get name():String {
         return _name;
+    }
+
+    private var _type: String;
+    public function get type():String {
+        return _type;
     }
 
     public function get mask():Array {
@@ -63,6 +75,7 @@ public class ObjectData {
 
     public function ObjectData($name: String, $config: File = null) {
         _name = $name;
+        _type = _name.split("-")[0];
         _config = $config;
         _parts = new Dictionary();
 

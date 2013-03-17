@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import com.projectz.utils.levelEditor.LevelEditorApp;
+import com.projectz.utils.levelEditor.App;
 
 import flash.display.Sprite;
 
@@ -19,6 +19,7 @@ import starling.events.Event;
 import starling.utils.AssetManager;
 import starling.utils.formatString;
 
+[SWF(frameRate="60")]
 public class LevelEditor extends Sprite {
 
     private var _assets: AssetManager;
@@ -28,7 +29,7 @@ public class LevelEditor extends Sprite {
         Starling.multitouchEnabled = true;
         Starling.handleLostContext = false;
 
-        var viewPort:Rectangle = new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT);
+        var viewPort:Rectangle = new Rectangle(0, 0, Constants.WIDTH+200, Constants.HEIGHT);
 
         var appDir:File = File.applicationDirectory;
         _assets = new AssetManager();
@@ -39,8 +40,8 @@ public class LevelEditor extends Sprite {
                 appDir.resolvePath(formatString("textures/{0}x", 1))
         );
 
-        _starling = new Starling(LevelEditorApp, this.stage, viewPort);
-        _starling.stage.stageWidth  = Constants.WIDTH;
+        _starling = new Starling(App, this.stage, viewPort);
+        _starling.stage.stageWidth  = Constants.WIDTH+200;
         _starling.stage.stageHeight = Constants.HEIGHT;
         _starling.showStats = true;
         _starling.simulateMultitouch = false;
@@ -48,7 +49,7 @@ public class LevelEditor extends Sprite {
         _starling.addEventListener(Event.ROOT_CREATED, handleRootCreated);
     }
 
-    private function handleRootCreated(event: Object,  app: LevelEditorApp):void {
+    private function handleRootCreated(event: Object,  app: App):void {
         _starling.removeEventListener(Event.ROOT_CREATED, handleRootCreated);
 
         app.startLoading(_assets);

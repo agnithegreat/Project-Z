@@ -22,11 +22,13 @@ public class PartData {
     public function get mask():Array {
         return _mask;
     }
+    private var _width: int;
     public function get width():int {
-        return _mask.length;
+        return _width;
     }
+    private var _height: int;
     public function get height():int {
-        return _mask[0].length;
+        return _height;
     }
 
     private var _pivotX: int = 0;
@@ -75,12 +77,13 @@ public class PartData {
                 _mask[i][j] = _name=="shadow" ? 0 : 1;
             }
         }
+        _width = _mask.length;
+        _height = _mask[0].length;
     }
 
-    private function getDepthNextCell($x: int, $y: int):Point {
-        // TODO: какая-то хуйня, их хер выровняешь правильно. надо искать новые методы индексации
-        for (var i: int = $x+$y; i < width+height; i++) {
-            for (var j:int = $y; j <= i; j++) {
+    private function getTop():Point {
+        for (var i: int = 0; i < width+height; i++) {
+            for (var j:int = 0; j <= i; j++) {
                 if (i-j<width && j<height && _mask[i-j][j]) {
                     return new Point(i-j, j);
                 }
@@ -95,55 +98,29 @@ public class PartData {
             _top = new Point(0, 0);
         }
         if (!_top) {
-            _top = getDepthNextCell(0, 0);
+            _top = getTop();
         }
         return _top;
     }
 
     private var _left: Point;
     public function get left():Point {
-        if (!_left && width==height==1) {
-            _left = new Point(0, 0);
-        }
         if (!_left) {
-            var x: int = width-1;
-            var y: int = 0;
-            var i: int = 0;
-            var j: int = 0;
-            while (x+i<0 || y+i<0 || !_mask[x+i][y+i]) {
-                if (i>=j) {
-                    x--;
-                    i = 0;
-                    j++;
-                } else {
-                    i++;
-                }
+            _left = new Point(width-1, top.y);
+            while (!_mask[_left.x][_left.y]) {
+                _left.x--;
             }
-            _left = getDepthNextCell(x-y+top.y, top.y);
         }
         return _left;
     }
 
     private var _right: Point;
     public function get right():Point {
-        if (!_right && width==height==1) {
-            _right = new Point(0, 0);
-        }
         if (!_right) {
-            var x: int = 0;
-            var y: int = height-1;
-            var i: int = 0;
-            var j: int = 0;
-            while (x+i<0 || y+i<0 || !_mask[x+i][y+i]) {
-                if (i>=j) {
-                    y--;
-                    i = 0;
-                    j++;
-                } else {
-                    i++;
-                }
+            _right = new Point(top.x, height-1);
+            while (!_mask[_right.x][_right.y]) {
+                _right.y--;
             }
-            _right = getDepthNextCell(top.x, y-x+top.x);
         }
         return _right;
     }
@@ -156,6 +133,8 @@ public class PartData {
         _pivotX = $data.pivotX;
         _pivotY = $data.pivotY;
         _mask = $data.mask;
+        _width = _mask.length;
+        _height = _mask[0].length;
     }
 
     public function export():Object {

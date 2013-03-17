@@ -7,7 +7,7 @@
  */
 package {
 
-import com.projectz.App;
+import com.projectz.game.App;
 
 import flash.net.URLLoader;
 import flash.net.URLRequest;
@@ -61,7 +61,9 @@ public class Main extends Sprite {
                 iOS ? new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight) : new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT),
                 ScaleMode.SHOW_ALL);
 
-        _scaleFactor = viewPort.width < 1152 ? 1 : 2;
+        // TODO: подготовить графику для retina
+//        _scaleFactor = viewPort.width < 1152 ? 1 : 2;
+        _scaleFactor = 1;
         _assets = new AssetManager(_scaleFactor);
         basicAssetsPath = formatString("textures/{0}x", _scaleFactor);
 

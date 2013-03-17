@@ -5,10 +5,9 @@
  * Time: 14:42
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.model.objects {
+package com.projectz.game.model.objects {
 import com.projectz.event.GameEvent;
-import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.levelEditor.model.Cell;
+import com.projectz.game.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.events.EventDispatcher;
@@ -34,19 +33,13 @@ public class FieldObject extends EventDispatcher {
         return _size[_data.left.x][_data.left.y] && _size[_data.right.x][_data.right.y];
     }
 
-    private var _placeData: PlaceData;
-    public function get placeData():PlaceData {
-        return _placeData;
-    }
-
     protected var _data: PartData;
     public function get data():PartData {
         return _data;
     }
 
-    public function FieldObject($data:PartData, $placeData: PlaceData) {
+    public function FieldObject($data:PartData) {
         _data = $data;
-        _placeData = $placeData;
         createSize();
     }
 
