@@ -21,6 +21,8 @@ import starling.textures.Texture;
 
 public class CellView extends PositionView {
 
+    private var _color:uint;
+
     protected var _cell:Cell;
 
     override public function get positionX():Number {
@@ -45,11 +47,31 @@ public class CellView extends PositionView {
 //        addEventListener(TouchEvent.TOUCH, handleTouch);
     }
 
+/////////////////////////////////////////////
+//PUBLIC:
+/////////////////////////////////////////////
+
+    public function get color():uint {
+        return _color;
+    }
+
+    public function set color(value:uint):void {
+        _color = value;
+    }
+
+    public function setAlpha(value:Number):void {
+        _bg.alpha = value;
+    }
+
+/////////////////////////////////////////////
+//PROTECTED:
+/////////////////////////////////////////////
+
     protected function setView($texture:Texture):void {
         _bg = new Image($texture);
         _bg.pivotX = _bg.width / 2;
         _bg.pivotY = _bg.height / 2;
-//        _bg.alpha = .1;
+        _bg.alpha = .1;
         addChild(_bg);
     }
 

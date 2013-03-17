@@ -14,7 +14,7 @@ import flash.utils.Dictionary;
  */
 public class LevelStorage {
 
-    private var _levels: Dictionary; //хранит ссылки на все ассеты игры (в виде обектов LevelData)
+    private var _levels: Dictionary; //хранит ссылки на все уровни игры (в виде обектов LevelData)
 
     private var _levelsList: Object = {levels: []};
     public function get levelsList():Object {
