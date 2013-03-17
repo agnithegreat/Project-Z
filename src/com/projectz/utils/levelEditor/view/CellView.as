@@ -35,6 +35,11 @@ public class CellView extends PositionView {
 
     protected var _bg:Image;
 
+    private static const ROLL_OUT_ALPHA:Number = .3;
+    private static const ROLL_OVER_ALPHA:Number = .5;
+    private static const ROLL_MOUSE_DOWN:Number = .6;
+    private static const ROLL_CLICK:Number = .7;
+
     public function CellView($cell:Cell, $texture:Texture) {
         _cell = $cell;
 
@@ -59,8 +64,20 @@ public class CellView extends PositionView {
         _bg.color = value;
     }
 
-    public function setAlpha(value:Number):void {
-        _bg.alpha = value;
+    public function onRollOver ():void {
+        _bg.alpha = ROLL_OVER_ALPHA;
+    }
+
+    public function onRollOut ():void {
+        _bg.alpha = ROLL_OUT_ALPHA;
+    }
+
+    public function onMouseDown ():void {
+        _bg.alpha = ROLL_MOUSE_DOWN;
+    }
+
+    public function onClick ():void {
+        _bg.alpha = ROLL_CLICK;
     }
 
 /////////////////////////////////////////////
@@ -71,29 +88,8 @@ public class CellView extends PositionView {
         _bg = new Image($texture);
         _bg.pivotX = _bg.width / 2;
         _bg.pivotY = _bg.height / 2;
-        _bg.alpha = .1;
+        _bg.alpha = ROLL_OUT_ALPHA;
         addChild(_bg);
-    }
-
-    private function handleTouch(event:TouchEvent):void {
-//        var touch: Touch = event.getTouch(event.target as DisplayObject, TouchPhase.MOVED);
-//        trace ("CELL (" + positionX + ":" + positionY + ") INFO: x = " + x + "; y = " + y);
-//        _bg.color = touch ? 0x00FF00 : 0x000000;
-//        _bg.alpha = .3;
-
-        if (event.getTouch(this, TouchPhase.HOVER)) {
-            // rollover code goes here
-            _bg.alpha = .3;
-        }
-        else {
-            // rollout code goes here
-            _bg.alpha = .1;
-        }
-
-        if (event.getTouch(this, TouchPhase.ENDED)) {
-            // click code goes here
-            _bg.alpha = .5;
-        }
     }
 
     override public function destroy():void {

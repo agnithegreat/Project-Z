@@ -7,21 +7,13 @@
  */
 package com.projectz.utils.levelEditor.view {
 import com.projectz.event.GameEvent;
-import com.projectz.game.model.Cell;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.levelEditor.model.objects.Personage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
-import flash.display.Stage;
-
-import flash.events.MouseEvent;
-
 import flash.geom.Point;
-import flash.geom.Rectangle;
-
-import starling.core.Starling;
 
 import starling.display.Image;
 import starling.display.Sprite;
@@ -71,7 +63,7 @@ public class FieldView extends Sprite {
         var len:int = _field.field.length;
         var cell:CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], $assets.getTexture("so-cell"));
+            cell = new CellView(_field.field[i], $assets.getTexture("so-cell-levelEditor"));
             _cellsContainer.addChild(cell);
         }
 //        _cellsContainer.flatten();
@@ -154,9 +146,7 @@ public class FieldView extends Sprite {
                         if (_isPressed) {
                             return;
                         }
-
                         _isPressed = true;
-
                         onCellMouseDown(cell);
                         break;
                     }
@@ -164,7 +154,6 @@ public class FieldView extends Sprite {
                     case TouchPhase.ENDED:                                      // click
                     {
                         _isPressed = false;
-
                         onCellClick(cell);
                         break;
                     }
@@ -184,33 +173,33 @@ public class FieldView extends Sprite {
 
     private function onCellRollOver(cellView:CellView):void {
         if (cellView) {
-            cellView.setAlpha(.3);
+            cellView.onRollOver();
         }
     }
 
     private function onCellRollOut(cellView:CellView):void {
         if (cellView) {
-            cellView.setAlpha(.1);
+            cellView.onRollOut();
+        }
+    }
+
+    private function onCellMouseDown(cellView:CellView):void {
+        if (cellView) {
+            cellView.onMouseDown();
+        }
+    }
+
+    private function onCellClick(cellView:CellView):void {
+        if (cellView) {
+            cellView.onClick();
+            cellView.color = Math.random() * uint.MAX_VALUE;
         }
     }
 
     private function rollOutAllCells ():void {
         for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
             var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
-            _cellView.setAlpha(.1);
-        }
-    }
-
-    private function onCellMouseDown(cellView:CellView):void {
-        if (cellView) {
-            cellView.setAlpha(.5);
-        }
-    }
-
-    private function onCellClick(cellView:CellView):void {
-        if (cellView) {
-            cellView.setAlpha(.7);
-            cellView.color = 0x00ff00;
+            _cellView.onRollOut();
         }
     }
 
