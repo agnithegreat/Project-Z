@@ -19,7 +19,7 @@ public class Enemy extends Personage {
     private var _way: Vector.<Cell>;
 
     override public function get cell():Cell {
-        return _progress>0.5 && _target.sorter<_cell.sorter ? _target : _cell;
+        return _progress>0 && _target.depth>_cell.depth ? _target : _cell;
     }
 
     protected var _progress: Number;

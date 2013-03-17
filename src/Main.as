@@ -7,15 +7,18 @@
  */
 package {
 
-import com.projectz.game.App;
-
-import flash.net.URLLoader;
-import flash.net.URLRequest;
+CONFIG::web {
+    import flash.net.URLLoader;
+    import flash.net.URLRequest;
+}
 
 CONFIG::desktop {
     import flash.desktop.NativeApplication;
     import flash.filesystem.File;
 }
+
+import com.projectz.game.App;
+
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -130,6 +133,7 @@ public class Main extends Sprite {
         _starling.start();
     }
 
+CONFIG::web {
     private function completeListener_loadTexturesListXml (event:flash.events.Event):void {
         var urlLoader:URLLoader = URLLoader (event.currentTarget);
         urlLoader.removeEventListener (flash.events.Event.COMPLETE, completeListener_loadTexturesListXml);
@@ -144,5 +148,7 @@ public class Main extends Sprite {
 
         initApp ();
     }
+}
+
 }
 }
