@@ -120,14 +120,18 @@ public class FieldView extends Sprite {
     }
 
     private function handleTouch($event: TouchEvent):void {
-        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
-        if (touch) {
-            var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
-            var tx: Number = pos.x/PositionView.cellWidth;
-            var ty: Number = pos.y/PositionView.cellHeight;
-            var cx: int = Math.round(ty-tx);
-            var cy: int = Math.round(cx+tx*2);
+        var touch: Touch = $event.getTouch(_cells);
+        switch (touch.phase) {
+            case TouchPhase.BEGAN:
+                break;
+            case TouchPhase.HOVER:
+                break;
         }
+//        var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
+//        var tx: Number = pos.x/PositionView.cellWidth;
+//        var ty: Number = pos.y/PositionView.cellHeight;
+//        var cx: int = Math.round(ty-tx);
+//        var cy: int = Math.round(cx+tx*2);
     }
 
     private function handleDestroy($event: Event):void {
