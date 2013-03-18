@@ -9,7 +9,7 @@ package com.projectz.utils.levelEditor {
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.FileLine;
-import com.projectz.utils.levelEditor.ui.LevelEditorUI;
+import com.projectz.utils.levelEditor.ui.hogarLevelEditor.LevelEditorUI;
 import com.projectz.utils.levelEditor.ui.UI;
 import com.projectz.utils.levelEditor.view.FieldView;
 import com.projectz.utils.objectEditor.data.ObjectData;

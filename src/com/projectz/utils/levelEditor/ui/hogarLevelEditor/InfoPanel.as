@@ -6,8 +6,14 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
-public class InfoPanel {
-    public function InfoPanel() {
+import com.hogargames.display.GraphicStorage;
+
+import flash.display.MovieClip;
+
+public class InfoPanel extends GraphicStorage {
+
+    public function InfoPanel(mc:MovieClip) {
+        super (mc);
     }
 }
 }

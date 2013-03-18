@@ -6,9 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.controller {
+
 public class LevelEditorMode {
 
-    public static var EDIT_PATHS:String = "edit paths";
+    public static var EDIT_OBJECTS:String = "edit objects";//режим редактирования объектов
+    public static var EDIT_PATHS:String = "edit paths";//режим редактирования путей
+    public static var EDIT_ZONES:String = "edit zones";//режим редактирования зон, в которых находятся защитники
+    public static var EDIT_LEVELS:String = "edit levels";//режим редактирования файлов уровней
 
 }
 }

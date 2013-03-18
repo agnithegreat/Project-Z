@@ -7,6 +7,9 @@
  */
 package com.projectz.utils.levelEditor.controller {
 import com.hogargames.errors.SingletonError;
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+
+import flash.events.Event;
 
 import flash.events.EventDispatcher;
 
@@ -17,7 +20,8 @@ public class LevelEditorController extends EventDispatcher {
 
     private static var _instance:LevelEditorController;
 
-    private var _editionMode:String;
+    private var _mode:String;
+    private var _action:String;
 
     public function LevelEditorController(key:SingletonKey = null) {
         if (!key) {
@@ -36,12 +40,21 @@ public class LevelEditorController extends EventDispatcher {
 //PUBLIC:
 /////////////////////////////////////////////
 
-    public function get editionMode():String {
-        return _editionMode;
+    public function get mode():String {
+        return _mode;
     }
 
-    public function set editionMode(value:String):void {
-        _editionMode = value;
+    public function set mode(value:String):void {
+        _mode = value;
+        dispatchEvent (new Event (LevelEditorEvent.SELECT_EDITOR_MODE));
+    }
+
+    public function get action():String {
+        return _action;
+    }
+
+    public function set action(value:String):void {
+        _action = value;
     }
 }
 }

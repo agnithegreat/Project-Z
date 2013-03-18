@@ -7,7 +7,9 @@
  */
 package com.projectz.utils.levelEditor.controller {
 public class LevelEditorAction {
-    public function LevelEditorAction() {
-    }
+
+    public static var ADD:String = "add";//режим добавление (объектов, клеток поля и т.д.);
+    public static var REMOVE:String = "remove";//режим добавление (объектов, клеток поля и т.д.);
+
 }
 }
