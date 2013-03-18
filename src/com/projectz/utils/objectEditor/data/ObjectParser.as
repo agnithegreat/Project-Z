@@ -87,8 +87,8 @@ public class ObjectParser {
         var file: File;
         for (var i:int = 0; i < len; i++) {
             file = $file.resolvePath(files[i].name);
-            if (files[i].isDirectory) {
-                if (files[i].name !="." && files[i].name !="..") {
+            if (file.isDirectory) {
+                if (file.name !="." && file.name !="..") {
                     fileList = fileList.concat(getFilesRecursive(file));
                 }
             } else {

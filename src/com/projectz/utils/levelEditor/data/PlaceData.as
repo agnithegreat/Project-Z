@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.data {
+import com.projectz.utils.objectEditor.data.ObjectData;
+
 public class PlaceData {
 
     private var _x: int;
@@ -25,6 +27,8 @@ public class PlaceData {
     public function set object($value: String):void {
         _object = $value;
     }
+
+    public var realObject: ObjectData;
 
     public function place($x: int, $y: int):void {
         _x = $x;
