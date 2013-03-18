@@ -9,6 +9,7 @@ package com.projectz.utils.levelEditor {
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.FileLine;
+import com.projectz.utils.levelEditor.ui.LevelEditorUI;
 import com.projectz.utils.levelEditor.ui.UI;
 import com.projectz.utils.levelEditor.view.FieldView;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -28,6 +29,7 @@ public class App extends Sprite {
 
     private var _model: Field;
     private var _view: FieldView;
+    private var _levelEditorUI: LevelEditorUI;
     private var _ui: UI;
 
     public function App() {
@@ -71,11 +73,9 @@ public class App extends Sprite {
 
         _ui.filesPanel.showFiles(_objectsStorage);
 
-//        var sprite:flash.display.Sprite = new flash.display.Sprite();
-//        sprite.graphics.beginFill(0x00ff00);
-//        sprite.graphics.drawRect(100, 100, 400, 250);
-//        sprite.graphics.endFill();
-//        Starling.current.nativeStage.addChild (sprite);
+        _levelEditorUI = new LevelEditorUI();
+        _levelEditorUI.y = Constants.HEIGHT;
+        Starling.current.nativeStage.addChild(_levelEditorUI);
     }
 
     private function handleOperation($event: Event):void {

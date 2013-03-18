@@ -8,7 +8,7 @@
 package com.projectz.utils.levelEditor.controller {
 public class LevelEditorMode {
 
-    public static var EDIT_PATH:String = "edit path";
+    public static var EDIT_PATHS:String = "edit paths";
 
 }
 }

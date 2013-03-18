@@ -8,10 +8,12 @@
 package com.projectz.utils.levelEditor.controller {
 import com.hogargames.errors.SingletonError;
 
+import flash.events.EventDispatcher;
+
 /**
  * Класс-контроллер, предназначенный редактирования карты уровня. Получая команды от view (представления) изменяет данные в модели.
  */
-public class LevelEditorController {
+public class LevelEditorController extends EventDispatcher {
 
     private static var _instance:LevelEditorController;
 

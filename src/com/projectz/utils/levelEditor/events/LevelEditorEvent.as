@@ -10,6 +10,7 @@ package com.projectz.utils.levelEditor.events {
 public class LevelEditorEvent {
 
     public static const SELECT_PATH:String = "select_path";
+    public static const SELECT_MODE:String = "select mode";
 
 }
 }
