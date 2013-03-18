@@ -70,6 +70,12 @@ public class App extends Sprite {
         addChild(_ui);
 
         _ui.filesPanel.showFiles(_objectsStorage);
+
+//        var sprite:flash.display.Sprite = new flash.display.Sprite();
+//        sprite.graphics.beginFill(0x00ff00);
+//        sprite.graphics.drawRect(100, 100, 400, 250);
+//        sprite.graphics.endFill();
+//        Starling.current.nativeStage.addChild (sprite);
     }
 
     private function handleOperation($event: Event):void {
