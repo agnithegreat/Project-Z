@@ -10,8 +10,8 @@ import com.projectz.event.GameEvent;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
-import com.projectz.utils.levelEditor.model.objects.Personage;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.geom.Point;
 
@@ -35,6 +35,8 @@ public class FieldView extends Sprite {
     private var _cellsContainer:Sprite;
     private var _shadowsContainer:Sprite;
     private var _objectsContainer:Sprite;
+
+    private var _currentObject: FieldObjectView;
 
     protected var _isPressed:Boolean;
     protected var _isRolledOver:Boolean;
@@ -66,7 +68,7 @@ public class FieldView extends Sprite {
             cell = new CellView(_field.field[i], $assets.getTexture("so-cell-levelEditor"));
             _cellsContainer.addChild(cell);
         }
-//        _cellsContainer.flatten();
+        _cellsContainer.flatten();
 
         _container.x = (Constants.WIDTH + PositionView.cellWidth) * 0.5;
         _container.y = (Constants.HEIGHT + (1 - (_field.height + _field.height) * 0.5) * PositionView.cellHeight) * 0.5;
@@ -93,29 +95,33 @@ public class FieldView extends Sprite {
             _field.level.bg = $file.name;
             _bg.texture = _assets.getTexture(_field.level.bg);
         } else {
-            var placeData:PlaceData = new PlaceData();
-            placeData.object = $file.name;
-            _field.selectObject(placeData);
+            addObject($file);
+        }
+    }
+
+    public function addObject($data: ObjectData):void {
+        if (_currentObject) {
+            _currentObject.destroy();
+            _currentObject.removeFromParent(true);
+            _currentObject = null;
+        }
+
+        if ($data) {
+            _currentObject = new FieldObjectView($data, _assets);
+            _objectsContainer.addChild(_currentObject);
         }
     }
 
     private function handleAddObject($event:Event):void {
-        var object:PositionView;
         var fieldObject:FieldObject = $event.data as FieldObject;
-        if (fieldObject is Personage) {
-            object = new EnemyView(fieldObject as Personage);
-            _objectsContainer.addChild(object);
-        } else {
-            object = new ObjectView(fieldObject, fieldObject.data.name);
-            _objectsContainer.addChild(object);
-        }
+        var object:ObjectView = new ObjectView(fieldObject, fieldObject.data.name);
+        _objectsContainer.addChild(object);
     }
 
     private function handleAddShadow($event:Event):void {
-        var object:PositionView;
         var fieldObject:FieldObject = $event.data as FieldObject;
         if (fieldObject.cell.shadow) {
-            object = new ObjectView(fieldObject.cell.shadow, "shadow");
+            var object:PositionView = new ObjectView(fieldObject.cell.shadow, "shadow");
             _shadowsContainer.addChild(object);
         }
     }
@@ -153,6 +159,17 @@ public class FieldView extends Sprite {
 
                     case TouchPhase.ENDED:                                      // click
                     {
+                        if (_currentObject) {
+                            var place: PlaceData = new PlaceData();
+                            place.place(cell.positionX, cell.positionY);
+                            place.object = _currentObject.object.name;
+                            place.realObject = _currentObject.object;
+
+                            addObject(null);
+
+                            _field.addObject(place);
+                        }
+
                         _isPressed = false;
                         onCellClick(cell);
                         break;
@@ -160,7 +177,10 @@ public class FieldView extends Sprite {
 
                     default :
                     {
-
+                        if (_currentObject) {
+                            _currentObject.x = cell.x;
+                            _currentObject.y = cell.y;
+                        }
                     }
                 }
             }
@@ -192,7 +212,6 @@ public class FieldView extends Sprite {
     private function onCellClick(cellView:CellView):void {
         if (cellView) {
             cellView.onClick();
-            cellView.color = Math.random() * uint.MAX_VALUE;
         }
     }
 
@@ -230,12 +249,6 @@ public class FieldView extends Sprite {
         return point;
     }
 
-    private function handleDestroy($event:Event):void {
-        var obj:PositionView = $event.target as PositionView;
-        obj.destroy();
-        obj.removeFromParent(true);
-    }
-
     public function update():void {
         _objectsContainer.sortChildren(sortByDepth);
     }
@@ -247,6 +260,12 @@ public class FieldView extends Sprite {
             return -1;
         }
         return 0;
+    }
+
+    private function handleDestroy($event:Event):void {
+        var obj:PositionView = $event.target as PositionView;
+        obj.destroy();
+        obj.removeFromParent(true);
     }
 
     public function destroy():void {

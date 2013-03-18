@@ -24,178 +24,48 @@ public class FieldView extends Sprite {
 
     private var _assets: AssetManager;
 
-    private var _container: Sprite;
-
-    private var _cells: Sprite;
-    private var _objects: Sprite;
-
-    private var _currentObject: ObjectData;
-    private var _currentPart: ObjectView;
+    private var _currentObject: FieldObjectView;
+    public function get currentObject():FieldObjectView {
+        return _currentObject;
+    }
 
     public function FieldView($assets: AssetManager) {
         _assets = $assets;
-
-        _container = new Sprite();
-        addChild(_container);
-
-        _cells = new Sprite();
-        _cells.alpha = 0.3;
-        _container.addChild(_cells);
-
-        _objects = new Sprite();
-        _objects.touchable = false;
-        _objects.alpha = 0.5;
-        _container.addChild(_objects);
 
         addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
     }
 
     private function handleAddedToStage($event: Event):void {
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
-        stage.addEventListener(TouchEvent.TOUCH, handleTouch);
-    }
-
-    private function showField():void {
-        var cell: CellView;
-        while (_cells.numChildren>0) {
-            cell = _cells.getChildAt(0) as CellView;
-            cell.destroy();
-            cell.removeFromParent(true);
-        }
-
-        for (var i:int = 0; i < _currentObject.width; i++) {
-            for (var j:int = 0; j < _currentObject.height; j++) {
-                cell = new CellView(new Point(i, j), _assets.getTexture("so-cell"));
-                _cells.addChild(cell);
-            }
-        }
-
-        _container.x = (Constants.WIDTH-200+PositionView.cellWidth)*0.5;
-        _container.y = (Constants.HEIGHT+200+(1-(_currentObject.height+_currentObject.width)*0.5)*PositionView.cellHeight)*0.5;
-
-        updateField();
-    }
-
-    private function updateField():void {
-        var cell: CellView;
-        var len: int = _cells.numChildren;
-        for (var i:int = 0; i < len; i++) {
-            cell = _cells.getChildAt(i) as CellView;
-            cell.alpha = _currentPart ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _currentObject.mask[cell.position.x][cell.position.y];
-        }
     }
 
     public function addObject($object: ObjectData):void {
-        var obj: ObjectView;
-        while (_objects.numChildren>0) {
-            obj = _objects.getChildAt(0) as ObjectView;
-            obj.destroy();
-            obj.removeFromParent(true);
+        if (_currentObject) {
+            _currentObject.destroy();
+            _currentObject.removeFromParent(true);
+            _currentObject = null;
         }
 
-        _currentObject = $object;
-        _currentPart = null;
-        var part: PartData;
-        for each (part in _currentObject.parts) {
-            _objects.addChild(new ObjectView(part));
-        }
-
-        showField();
-    }
-
-    public function showPart($part: PartData):void {
-        _currentPart = null;
-        var len: int = _objects.numChildren;
-        var child: ObjectView;
-        for (var i:int = 0; i < len; i++) {
-            child = _objects.getChildAt(i) as ObjectView;
-            child.visible = $part==child.partData || !$part;
-            if ($part==child.partData) {
-                _currentPart = child;
-            }
-        }
-        if (_currentPart) {
-            _currentPart.update();
-        }
-        updateField();
-    }
-
-    public function addX():void {
-        if (!_currentObject) {
-            return;
-        }
-        _currentObject.size(_currentObject.width+1, _currentObject.height);
-        showField();
-    }
-    public function subX():void {
-        if (!_currentObject) {
-            return;
-        }
-        _currentObject.size(Math.max(1, _currentObject.width-1), _currentObject.height);
-        showField();
-    }
-    public function addY():void {
-        if (!_currentObject) {
-            return;
-        }
-        _currentObject.size(_currentObject.width, _currentObject.height+1);
-        showField();
-    }
-    public function subY():void {
-        if (!_currentObject) {
-            return;
-        }
-        _currentObject.size(_currentObject.width, Math.max(1, _currentObject.height-1));
-        showField();
-    }
-    public function save():void {
-        if (!_currentObject) {
-            return;
-        }
-        _currentObject.save();
-    }
-
-    private function handleTouch($event: TouchEvent):void {
-        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
-        if (touch) {
-            var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
-            if (_currentPart) {
-                var tx: Number = pos.x/PositionView.cellWidth;
-                var ty: Number = pos.y/PositionView.cellHeight;
-                var cx: int = Math.round(ty-tx);
-                var cy: int = Math.round(cx+tx*2);
-                _currentPart.partData.invertCellState(cx, cy);
-                updateField();
-            }
-        }
+        _currentObject = new FieldObjectView($object, _assets);
+        _currentObject.x = (Constants.WIDTH-200+PositionView.cellWidth)*0.5;
+        _currentObject.y = (Constants.HEIGHT+200+(1-($object.height+$object.width)*0.5)*PositionView.cellHeight)*0.5;
+        addChild(_currentObject);
     }
 
     private function handleKeyDown($event: KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.LEFT:
-                moveParts(-1, 0);
+                _currentObject.moveParts(-1, 0);
                 break;
             case Keyboard.RIGHT:
-                moveParts(1, 0);
+                _currentObject.moveParts(1, 0);
                 break;
             case Keyboard.UP:
-                moveParts(0, -1);
+                _currentObject.moveParts(0, -1);
                 break;
             case Keyboard.DOWN:
-                moveParts(0, 1);
+                _currentObject.moveParts(0, 1);
                 break;
-        }
-    }
-
-    private function moveParts($dx: int, $dy: int):void {
-        var len: int = _objects.numChildren;
-        var child: ObjectView;
-        for (var i:int = 0; i < len; i++) {
-            child = _objects.getChildAt(i) as ObjectView;
-            if (_currentPart==child || !_currentPart) {
-                child.partData.place(child.partData.pivotX-$dx, child.partData.pivotY-$dy);
-                child.update();
-            }
         }
     }
 
@@ -203,28 +73,6 @@ public class FieldView extends Sprite {
         removeEventListeners();
 
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
-
-        var cell: CellView;
-        while (_cells.numChildren>0) {
-            cell = _cells.getChildAt(0) as CellView;
-            cell.destroy();
-            cell.removeFromParent(true);
-        }
-        _cells.removeFromParent(true);
-        _cells = null;
-
-        var object: ObjectView;
-        while (_objects.numChildren>0) {
-            object = _objects.removeChildAt(0, true) as ObjectView;
-            if (object) {
-                object.destroy();
-            }
-        }
-        _objects.removeFromParent(true);
-        _objects = null;
-
-        _container.removeFromParent(true);
-        _container = null;
     }
 }
 }

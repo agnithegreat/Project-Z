@@ -31,7 +31,7 @@ public class ObjectData {
     }
 
     public function get mask():Array {
-        var m: Array = [];
+        var m: Array = [[1]];
         for each (var part:PartData in _parts) {
             for (var i:int = 0; i < part.width; i++) {
                 while (m.length<=i) {

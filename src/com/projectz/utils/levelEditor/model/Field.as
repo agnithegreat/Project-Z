@@ -8,8 +8,6 @@
 package com.projectz.utils.levelEditor.model {
 import com.projectz.event.GameEvent;
 import com.projectz.utils.levelEditor.data.LevelData;
-import com.projectz.utils.levelEditor.model.objects.Defender;
-import com.projectz.utils.levelEditor.model.objects.Enemy;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -53,9 +51,6 @@ public class Field extends EventDispatcher {
         return _objects;
     }
 
-    private var _enemies: Vector.<Enemy>;
-    private var _defenders: Vector.<Defender>;
-
     private var _placeObjects: Vector.<PlaceData>;
     private var _selectedObject: PlaceData;
 
@@ -67,8 +62,6 @@ public class Field extends EventDispatcher {
 
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
-        _enemies = new <Enemy>[];
-        _defenders = new <Defender>[];
 
         _placeObjects = new <PlaceData>[];
 
@@ -150,25 +143,6 @@ public class Field extends EventDispatcher {
         return true;
     }
 
-    public function step($delta: Number):void {
-        var len: int = _enemies.length;
-        var zombie:Enemy;
-
-        var cell: Cell;
-        for (var i:int = 0; i < len; i++) {
-            zombie = _enemies[i];
-//            if (zombie.alive && !zombie.target) {
-//                while (!cell || cell.locked) {
-//                    cell = getRandomCell();
-//                }
-//                zombie.walk(getWay(zombie.cell, cell));
-//                cell = null;
-//            }
-            zombie.step($delta);
-        }
-        dispatchEventWith(GameEvent.UPDATE);
-    }
-
     private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
         var way: Vector.<Cell> = new <Cell>[];
         _grid.setStartNode($start.x, $start.y);
@@ -211,6 +185,13 @@ public class Field extends EventDispatcher {
         return _fieldObj[x+"."+y];
     }
 
+    public function addObject($placeData: PlaceData):void {
+        _placeObjects.push($placeData);
+        createObject($placeData.x, $placeData.y, $placeData.realObject, $placeData);
+        updateDepths();
+        dispatchEventWith(GameEvent.UPDATE);
+    }
+
     public function selectObject($object: PlaceData):void {
         _selectedObject = $object;
 
@@ -233,11 +214,7 @@ public class Field extends EventDispatcher {
         for (var i: int = 0; i < len; i++) {
             var obj: PlaceData = $objects[i];
             var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
-            if (objData.type == ObjectData.ENEMY) {
-                createPersonage(obj.x, obj.y, objData.getPart(""), obj);
-            } else {
-                createObject(obj.x, obj.y, objData, obj);
-            }
+            createObject(obj.x, obj.y, objData, obj);
             _placeObjects.push(obj);
         }
         updateDepths();
@@ -285,19 +262,6 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
     }
 
-    private function createPersonage($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
-        var zombie: Enemy = new Enemy($data, $placeData);
-        _objects.push(zombie);
-
-        var cell: Cell = getCell($x, $y);
-        cell.lock();
-        cell.addObject(zombie);
-        zombie.place(cell);
-        _enemies.push(zombie);
-
-        dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
-    }
-
     public function destroy():void {
         while (_field.length>0) {
             _field.pop().destroy();
@@ -311,16 +275,6 @@ public class Field extends EventDispatcher {
 
         _grid.destroy();
         _grid = null;
-
-        while (_enemies.length>0) {
-            _enemies.pop().destroy();
-        }
-        _enemies = null;
-
-        while (_defenders.length>0) {
-            _defenders.pop().destroy();
-        }
-        _defenders = null;
     }
 }
 }

@@ -20,6 +20,7 @@ import starling.core.Starling;
 import starling.display.Sprite;
 import starling.events.Event;
 import starling.utils.AssetManager;
+import starling.utils.formatString;
 
 public class App extends Sprite {
 
@@ -40,7 +41,7 @@ public class App extends Sprite {
 
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
-            _objectsStorage.parseDirectory("textures/{0}x/level_elements", _assets);
+            _objectsStorage.parseDirectory(formatString("textures/{0}x/level_elements", _assets.scaleFactor), _assets);
 
             Starling.juggler.delayCall(edit, 0.15);
         }
@@ -80,22 +81,22 @@ public class App extends Sprite {
                 break;
             case PartLine.SELECT_PART:
                 var part: PartData = $event.data as PartData;
-                _view.showPart(part);
+                _view.currentObject.showPart(part);
                 break;
             case UI.ADD_X:
-                _view.addX();
+                _view.currentObject.addX();
                 break;
             case UI.SUB_X:
-                _view.subX();
+                _view.currentObject.subX();
                 break;
             case UI.ADD_Y:
-                _view.addY()
+                _view.currentObject.addY()
                 break;
             case UI.SUB_Y:
-                _view.subY();
+                _view.currentObject.subY();
                 break;
             case UI.SAVE:
-                _view.save();
+                _view.currentObject.save();
                 break;
             case UI.EXPORT:
                 saveObjectsList(_objectsStorage.objectsList);
