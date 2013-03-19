@@ -61,7 +61,7 @@ public class LevelEditorUI extends GraphicStorage {
 
         //панели:
         infoPanel = new InfoPanel (mc["mcInfoPanel"]);
-        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"]);
+        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], controller);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"]);
 
         panels.push(editObjectsPanel);

@@ -8,18 +8,22 @@
 package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
+import com.projectz.utils.levelEditor.controller.LevelEditorController;
 
 import flash.display.MovieClip;
 import flash.events.MouseEvent;
 
 public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
+    private var controller:LevelEditorController;
+
     private var btnAdd:ButtonWithText;
     private var btnRemove:ButtonWithText;
     private var btnSave:ButtonWithText;
     private var btnClear:ButtonWithText;
 
-    public function EditObjectsPanel(mc:MovieClip) {
+    public function EditObjectsPanel(mc:MovieClip, controller:LevelEditorController) {
+        this.controller = controller;
         super (mc);
     }
 
