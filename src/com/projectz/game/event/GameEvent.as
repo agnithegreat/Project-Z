@@ -5,14 +5,11 @@
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.event {
+package com.projectz.game.event {
 public class GameEvent {
 
     public static const OBJECT_ADDED: String = "object_added_GameEvent";
     public static const SHADOW_ADDED: String = "shadow_added_GameEvent";
-    public static const OBJECT_REMOVED: String = "object_removed_GameEvent";
-
-    public static const PLACE_ADDED: String = "place_added_GameEvent";
 
     public static const UPDATE: String = "update_GameEvent";
     public static const DESTROY: String = "destroy_GameEvent";

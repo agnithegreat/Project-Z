@@ -7,7 +7,7 @@
  */
 package com.projectz.utils.levelEditor.view {
 
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 
 import starling.display.Image;

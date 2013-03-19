@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model.objects {
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Cell;
 import com.projectz.utils.objectEditor.data.PartData;
 

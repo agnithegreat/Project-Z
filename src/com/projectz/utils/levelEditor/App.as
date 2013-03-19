@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor {
 import com.projectz.utils.levelEditor.data.LevelStorage;
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.FileLine;
 import com.projectz.utils.levelEditor.ui.hogarLevelEditor.LevelEditorUI;
@@ -68,6 +69,7 @@ public class App extends Sprite {
         _model.init();
 
         _ui = new UI(_assets);
+        _ui.addEventListener(LevelEditorEvent.SELECT_TAB, handleOperation);
         _ui.addEventListener(FileLine.SELECT_FILE, handleOperation);
         _ui.addEventListener(UI.SAVE, handleOperation);
         _ui.addEventListener(UI.EXPORT, handleOperation);
@@ -82,6 +84,9 @@ public class App extends Sprite {
 
     private function handleOperation($event: Event):void {
         switch ($event.type) {
+            case LevelEditorEvent.SELECT_TAB:
+                _view.selectTab($event.data as String);
+                break;
             case FileLine.SELECT_FILE:
                 _view.selectFile($event.data as ObjectData);
                 break;

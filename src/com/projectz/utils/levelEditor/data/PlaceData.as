@@ -42,7 +42,7 @@ public class PlaceData {
     }
 
     public function hitTest($x: int, $y: int):Boolean {
-        if ($x < _x || $y < _y || $x >= _x + realObject.width || $y >= _y + realObject.height) {
+        if ($x < _x || $y < _y || $x-_x >= realObject.width || $y-_y >= realObject.height || realObject.mask[$x-_x][$y-_y]==0) {
             return false;
         }
         return true;

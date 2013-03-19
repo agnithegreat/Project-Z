@@ -17,6 +17,7 @@ public class ObjectData {
     public static var STATIC_OBJECT: String = "so";
     public static var ANIMATED_OBJECT: String = "ao";
     public static var DEFENDER: String = "de";
+    // TODO: replace with "en"
     public static var ENEMY: String = "zombie";
     public static var BACKGROUND: String = "bg";
 
@@ -38,11 +39,11 @@ public class ObjectData {
                     m.push([]);
                 }
                 for (var j:int = 0; j < part.height; j++) {
-                    while (m[i].length<=i) {
+                    while (m[i].length<=j) {
                         m[i].push(0);
                     }
-                    if (part.mask[i][j]) {
-                        m[i][j] = 1;
+                    if (part.mask[i-part.top.x][j-part.top.y]) {
+                        m[i][j] = part.mask[i-part.top.x][j-part.top.y];
                     }
                 }
             }

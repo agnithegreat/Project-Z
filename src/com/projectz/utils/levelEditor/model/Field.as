@@ -6,8 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.model {
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.data.LevelData;
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
@@ -205,7 +206,7 @@ public class Field extends EventDispatcher {
 
         if (object) {
             removeObject(object);
-            dispatchEventWith(GameEvent.PLACE_ADDED, false, _objectsStorage.getObjectData(object.object));
+            dispatchEventWith(LevelEditorEvent.PLACE_ADDED, false, _objectsStorage.getObjectData(object.object));
         }
     }
 
@@ -217,7 +218,7 @@ public class Field extends EventDispatcher {
             if (obj.placeData == $object) {
                 _objects.splice(i--, 1);
                 len--;
-                dispatchEventWith(GameEvent.OBJECT_REMOVED, false, obj);
+                dispatchEventWith(LevelEditorEvent.OBJECT_REMOVED, false, obj);
             }
         }
     }
@@ -262,7 +263,7 @@ public class Field extends EventDispatcher {
         object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
         _objects.push(object);
 
-        dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
+        dispatchEventWith(LevelEditorEvent.OBJECT_ADDED, false, object);
     }
 
     private function createShadow($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
@@ -271,7 +272,7 @@ public class Field extends EventDispatcher {
         cell.shadow = shadow;
         shadow.place(cell);
 
-        dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
+        dispatchEventWith(LevelEditorEvent.SHADOW_ADDED, false, shadow);
     }
 
     public function destroy():void {

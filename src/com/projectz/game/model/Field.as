@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model {
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
@@ -76,11 +76,6 @@ public class Field extends EventDispatcher {
 
     public function init():void {
         createObjects(_level.objects);
-
-        // TODO: убрать
-        _generators.push(new Generator(13, 13, "zombie", 80, 15));
-        _generators.push(new Generator(13, 17, "zombie", 120, 10));
-
         updateDepths();
     }
 
@@ -238,11 +233,16 @@ public class Field extends EventDispatcher {
             var obj: PlaceData = $objects[i];
             var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
             if (objData.type == ObjectData.ENEMY) {
-                createPersonage(obj.x, obj.y, objData.getPart(""));
+                addGenerator(obj);
             } else {
                 createObject(obj.x, obj.y, objData);
             }
         }
+    }
+
+    private function addGenerator($data: PlaceData):void {
+        // TODO: Вынести параметры частоты и количества в редактор
+        _generators.push(new Generator($data.x, $data.y, $data.object, 60, 10));
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
