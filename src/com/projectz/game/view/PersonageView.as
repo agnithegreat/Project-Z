@@ -54,7 +54,7 @@ public class PersonageView extends PositionView {
     public function setState($id: String):void {
         var frame: int = 0;
         if (_currentState) {
-            frame = _currentState.currentFrame;
+            frame = (_currentState.currentFrame+1)%_currentState.numFrames;
             Starling.juggler.remove(_currentState);
             _currentState.stop();
             removeChild(_currentState);

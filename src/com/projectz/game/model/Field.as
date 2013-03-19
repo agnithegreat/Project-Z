@@ -53,6 +53,8 @@ public class Field extends EventDispatcher {
         return _objects;
     }
 
+    private var _generators: Vector.<Generator>;
+
     private var _enemies: Vector.<Enemy>;
     private var _defenders: Vector.<Defender>;
 
@@ -64,6 +66,7 @@ public class Field extends EventDispatcher {
 
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
+        _generators = new <Generator>[];
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
 
@@ -73,6 +76,11 @@ public class Field extends EventDispatcher {
 
     public function init():void {
         createObjects(_level.objects);
+
+        // TODO: убрать
+        _generators.push(new Generator(13, 13, "zombie", 80, 15));
+        _generators.push(new Generator(13, 17, "zombie", 120, 10));
+
         updateDepths();
     }
 
@@ -90,7 +98,7 @@ public class Field extends EventDispatcher {
         var index: int = 0;
         var mark: Array;
         var ind: int;
-        var tries: int = 20;
+        var tries: int = 100;
         while (len && tries-->0) {
             for (i = 0; i < len; i++) {
                 cell = toCheck[i];
@@ -162,6 +170,15 @@ public class Field extends EventDispatcher {
             }
             zombie.step($delta);
         }
+
+        len = _generators.length;
+        for (i = 0; i < len; i++) {
+            var enemy: PlaceData = _generators[i].createEnemy();
+            if (enemy) {
+                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object).parts[""]);
+            }
+        }
+
         dispatchEventWith(GameEvent.UPDATE);
     }
 
