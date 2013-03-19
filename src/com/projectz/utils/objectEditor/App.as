@@ -90,7 +90,7 @@ public class App extends Sprite {
                 _view.currentObject.subX();
                 break;
             case UI.ADD_Y:
-                _view.currentObject.addY()
+                _view.currentObject.addY();
                 break;
             case UI.SUB_Y:
                 _view.currentObject.subY();
