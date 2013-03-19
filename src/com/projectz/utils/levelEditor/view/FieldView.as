@@ -50,6 +50,8 @@ public class FieldView extends Sprite {
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
         _field.addEventListener(GameEvent.SHADOW_ADDED, handleAddShadow);
+        _field.addEventListener(GameEvent.OBJECT_REMOVED, handleRemoveObject);
+        _field.addEventListener(GameEvent.PLACE_ADDED, handleAddPlace);
 
         _bg = new Image(_assets.getTexture(_field.level.bg));
         _bg.touchable = false;
@@ -99,6 +101,10 @@ public class FieldView extends Sprite {
         }
     }
 
+    private function handleAddPlace($event: Event):void {
+        addObject($event.data as ObjectData);
+    }
+
     public function addObject($data: ObjectData):void {
         if (_currentObject) {
             _currentObject.destroy();
@@ -108,7 +114,7 @@ public class FieldView extends Sprite {
 
         if ($data) {
             _currentObject = new FieldObjectView($data, _assets);
-            _objectsContainer.addChild(_currentObject);
+            _container.addChild(_currentObject);
         }
     }
 
@@ -121,8 +127,36 @@ public class FieldView extends Sprite {
     private function handleAddShadow($event:Event):void {
         var fieldObject:FieldObject = $event.data as FieldObject;
         if (fieldObject.cell.shadow) {
-            var object:PositionView = new ObjectView(fieldObject.cell.shadow, "shadow");
+            var object:ObjectView = new ObjectView(fieldObject.cell.shadow, "shadow");
             _shadowsContainer.addChild(object);
+        }
+    }
+
+    private function handleRemoveObject($event: Event):void {
+        var object: FieldObject = $event.data as FieldObject;
+
+        var len: int = _objectsContainer.numChildren;
+        for (var i:int = 0; i < len; i++) {
+            var obj: ObjectView = _objectsContainer.getChildAt(i) as ObjectView;
+            if (obj.object == object) {
+                obj.destroy();
+                obj.removeFromParent(true);
+                i--;
+                len--;
+            }
+
+        }
+
+        len = _shadowsContainer.numChildren;
+        for (i = 0; i < len; i++) {
+            obj = _shadowsContainer.getChildAt(i) as ObjectView;
+            if (obj.object == object.cell.shadow) {
+                obj.destroy();
+                obj.removeFromParent(true);
+                i--;
+                len--;
+            }
+
         }
     }
 
@@ -165,9 +199,12 @@ public class FieldView extends Sprite {
                             place.object = _currentObject.object.name;
                             place.realObject = _currentObject.object;
 
-                            addObject(null);
-
                             _field.addObject(place);
+
+                            addObject(null);
+//                            addObject(_currentObject.object);
+                        } else {
+                            _field.selectObject(cell.positionX, cell.positionY);
                         }
 
                         _isPressed = false;

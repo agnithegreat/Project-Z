@@ -69,6 +69,8 @@ public class App extends Sprite {
 
         _ui = new UI(_assets);
         _ui.addEventListener(FileLine.SELECT_FILE, handleOperation);
+        _ui.addEventListener(UI.SAVE, handleOperation);
+        _ui.addEventListener(UI.EXPORT, handleOperation);
         addChild(_ui);
 
         _ui.filesPanel.showFiles(_objectsStorage);
@@ -79,7 +81,17 @@ public class App extends Sprite {
     }
 
     private function handleOperation($event: Event):void {
-        _view.selectFile($event.data as ObjectData);
+        switch ($event.type) {
+            case FileLine.SELECT_FILE:
+                _view.selectFile($event.data as ObjectData);
+                break;
+            case UI.SAVE:
+                _model.level.save();
+                break;
+            case UI.EXPORT:
+//                _view.selectFile($event.data as ObjectData);
+                break;
+        }
     }
 }
 }

@@ -17,6 +17,10 @@ import starling.textures.Texture;
 public class ObjectView extends CellView {
 
     protected var _object: FieldObject;
+    public function get object():FieldObject {
+        return _object;
+    }
+
     private var _part: String;
 
     public function get offsetX():int {

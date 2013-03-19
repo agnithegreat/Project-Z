@@ -41,6 +41,13 @@ public class PlaceData {
         _object = $data.object;
     }
 
+    public function hitTest($x: int, $y: int):Boolean {
+        if ($x < _x || $y < _y || $x >= _x + realObject.width || $y >= _y + realObject.height) {
+            return false;
+        }
+        return true;
+    }
+
     public function export():Object {
         return {"x": _x, "y": _y, "object": _object};
     }
