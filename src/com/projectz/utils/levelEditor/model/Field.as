@@ -9,6 +9,7 @@ package com.projectz.utils.levelEditor.model {
 import com.projectz.event.GameEvent;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
+import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
@@ -50,8 +51,6 @@ public class Field extends EventDispatcher {
     public function get objects():Vector.<FieldObject> {
         return _objects;
     }
-
-    private var _selectedObject: PlaceData;
 
     public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData) {
         _width = $width;
@@ -183,31 +182,52 @@ public class Field extends EventDispatcher {
     }
 
     public function addObject($placeData: PlaceData):void {
+        // TODO: implement check addObjectTest
+
         _level.addObject($placeData);
         createObject($placeData.x, $placeData.y, $placeData.realObject, $placeData);
         updateDepths();
         dispatchEventWith(GameEvent.UPDATE);
     }
 
-    public function selectObject($object: PlaceData):void {
-        _selectedObject = $object;
-        _level.removeObject($object);
-        updateDepths();
-        dispatchEventWith(GameEvent.UPDATE);
+    public function selectObject($x: int,  $y: int):void {
+        var object: PlaceData;
+
+        var len: int = _level.objects.length;
+        for (var i:int = 0; i < len; i++) {
+            object = _level.objects[i];
+            if (object.hitTest($x, $y)) {
+                break;
+            } else {
+                object = null;
+            }
+        }
+
+        if (object) {
+            removeObject(object);
+            dispatchEventWith(GameEvent.PLACE_ADDED, false, _objectsStorage.getObjectData(object.object));
+        }
     }
 
-    public function placeSelected($x: int, $y: int):void {
-        _selectedObject.place($x, $y);
-        updateDepths();
-        dispatchEventWith(GameEvent.UPDATE);
+    private function removeObject($object: PlaceData):void {
+        _level.removeObject($object);
+        var len: int = _objects.length;
+        for (var i:int = 0; i < len; i++) {
+            var obj: FieldObject = _objects[i];
+            if (obj.placeData == $object) {
+                _objects.splice(i--, 1);
+                len--;
+                dispatchEventWith(GameEvent.OBJECT_REMOVED, false, obj);
+            }
+        }
     }
 
     private function createObjects($objects: Vector.<PlaceData>):void {
         var len: int = $objects.length;
         for (var i: int = 0; i < len; i++) {
             var obj: PlaceData = $objects[i];
-            var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
-            createObject(obj.x, obj.y, objData, obj);
+            obj.realObject = _objectsStorage.getObjectData(obj.object);
+            createObject(obj.x, obj.y, obj.realObject, obj);
         }
         updateDepths();
         dispatchEventWith(GameEvent.UPDATE);
