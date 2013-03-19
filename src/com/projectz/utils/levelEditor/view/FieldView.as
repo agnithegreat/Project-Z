@@ -14,10 +14,12 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.geom.Point;
+import flash.ui.Keyboard;
 
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.events.Event;
+import starling.events.KeyboardEvent;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
@@ -37,6 +39,9 @@ public class FieldView extends Sprite {
     private var _objectsContainer:Sprite;
 
     private var _currentObject: FieldObjectView;
+    private var _currentCell: CellView;
+
+    private var _shift: Boolean;
 
     protected var _isPressed:Boolean;
     protected var _isRolledOver:Boolean;
@@ -90,6 +95,8 @@ public class FieldView extends Sprite {
 
     private function handleAddedToStage($event:Event):void {
         stage.addEventListener(TouchEvent.TOUCH, onTouchHandler);
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+        stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
     }
 
     public function selectFile($file:ObjectData):void {
@@ -115,6 +122,11 @@ public class FieldView extends Sprite {
         if ($data) {
             _currentObject = new FieldObjectView($data, _assets);
             _container.addChild(_currentObject);
+
+            if (_currentCell) {
+                _currentObject.x = _currentCell.x;
+                _currentObject.y = _currentCell.y;
+            }
         }
     }
 
@@ -167,19 +179,19 @@ public class FieldView extends Sprite {
     protected function onTouchHandler(event:TouchEvent):void {
         var touch:Touch = event.getTouch(this);
         if (touch) {
-            var cell:CellView = getCellViewByPosition(getPositionByTouchEvent(touch));
-            if (cell) {
-                if ((cell.positionX != _lastCellX) || (cell.positionY != _lastCellY)) {
+            _currentCell = getCellViewByPosition(getPositionByTouchEvent(touch));
+            if (_currentCell) {
+                if ((_currentCell.positionX != _lastCellX) || (_currentCell.positionY != _lastCellY)) {
 //                    trace("!!! " +
 //                            "(cell.positionX (" + cell.positionX + ") != _lastCellX (" + _lastCellX + ")) = " +
 //                            (cell.positionX != _lastCellX) +
 //                            "; (cell.positionY (" + cell.positionY + ") != _lastCellY (" + _lastCellY + ")) = " +
 //                            (cell.positionY != _lastCellY));
                     onCellRollOut(getCellViewByPosition(new Point (_lastCellX, _lastCellY)));
-                    onCellRollOver(cell);
+                    onCellRollOver(_currentCell);
                 }
-                _lastCellX = cell.positionX;
-                _lastCellY = cell.positionY;
+                _lastCellX = _currentCell.positionX;
+                _lastCellY = _currentCell.positionY;
                 switch (touch.phase) {
                     case TouchPhase.BEGAN:                                      // press
                     {
@@ -187,7 +199,7 @@ public class FieldView extends Sprite {
                             return;
                         }
                         _isPressed = true;
-                        onCellMouseDown(cell);
+                        onCellMouseDown(_currentCell);
                         break;
                     }
 
@@ -195,28 +207,31 @@ public class FieldView extends Sprite {
                     {
                         if (_currentObject) {
                             var place: PlaceData = new PlaceData();
-                            place.place(cell.positionX, cell.positionY);
+                            place.place(_currentCell.positionX, _currentCell.positionY);
                             place.object = _currentObject.object.name;
                             place.realObject = _currentObject.object;
 
                             _field.addObject(place);
 
-                            addObject(null);
-//                            addObject(_currentObject.object);
+                            if (_shift) {
+                                addObject(_currentObject.object);
+                            } else {
+                                addObject(null);
+                            }
                         } else {
-                            _field.selectObject(cell.positionX, cell.positionY);
+                            _field.selectObject(_currentCell.positionX, _currentCell.positionY);
                         }
 
                         _isPressed = false;
-                        onCellClick(cell);
+                        onCellClick(_currentCell);
                         break;
                     }
 
                     default :
                     {
                         if (_currentObject) {
-                            _currentObject.x = cell.x;
-                            _currentObject.y = cell.y;
+                            _currentObject.x = _currentCell.x;
+                            _currentObject.y = _currentCell.y;
                         }
                     }
                 }
@@ -299,6 +314,25 @@ public class FieldView extends Sprite {
         return 0;
     }
 
+    private function handleKeyDown($event: KeyboardEvent):void {
+        switch ($event.keyCode) {
+            case Keyboard.ESCAPE:
+                addObject(null);
+                break;
+            case Keyboard.SHIFT:
+                _shift = true;
+                break;
+        }
+    }
+
+    private function handleKeyUp($event: KeyboardEvent):void {
+        switch ($event.keyCode) {
+            case Keyboard.SHIFT:
+                _shift = false;
+                break;
+        }
+    }
+
     private function handleDestroy($event:Event):void {
         var obj:PositionView = $event.target as PositionView;
         obj.destroy();
@@ -306,6 +340,10 @@ public class FieldView extends Sprite {
     }
 
     public function destroy():void {
+        stage.removeEventListener(TouchEvent.TOUCH, onTouchHandler);
+        stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+        stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+
         removeEventListeners();
 
         _field.removeEventListeners();
