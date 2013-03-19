@@ -56,6 +56,19 @@ public class LevelData {
 //PUBLIC:
 /////////////////////////////////////////////
 
+    public function addObject($object: PlaceData):void {
+        if (_objects.indexOf($object)<0) {
+            _objects.push($object);
+        }
+    }
+
+    public function removeObject($object: PlaceData):void {
+        var index: int = _objects.indexOf($object);
+        if (index >= 0) {
+            _objects.splice(index, 1);
+        }
+    }
+
     public function addPath (id:String):PathData {
         var pathData:PathData = new PathData ();
         pathData.id = id;

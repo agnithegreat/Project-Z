@@ -73,6 +73,9 @@ public class Field extends EventDispatcher {
 
     public function init():void {
         createObjects(_level.objects);
+
+        createPersonage(13, 13, _objectsStorage.getObjectData("zombie").parts[""]);
+
         updateDepths();
     }
 

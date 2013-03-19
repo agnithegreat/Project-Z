@@ -51,7 +51,6 @@ public class Field extends EventDispatcher {
         return _objects;
     }
 
-    private var _placeObjects: Vector.<PlaceData>;
     private var _selectedObject: PlaceData;
 
     public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData) {
@@ -62,8 +61,6 @@ public class Field extends EventDispatcher {
 
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
-
-        _placeObjects = new <PlaceData>[];
 
         _level = $level;
         createField();
@@ -186,7 +183,7 @@ public class Field extends EventDispatcher {
     }
 
     public function addObject($placeData: PlaceData):void {
-        _placeObjects.push($placeData);
+        _level.addObject($placeData);
         createObject($placeData.x, $placeData.y, $placeData.realObject, $placeData);
         updateDepths();
         dispatchEventWith(GameEvent.UPDATE);
@@ -194,13 +191,9 @@ public class Field extends EventDispatcher {
 
     public function selectObject($object: PlaceData):void {
         _selectedObject = $object;
-
-        var index: int = _placeObjects.indexOf(_selectedObject);
-        if (index>=0) {
-            _placeObjects.splice(index, 1);
-            updateDepths();
-            dispatchEventWith(GameEvent.UPDATE);
-        }
+        _level.removeObject($object);
+        updateDepths();
+        dispatchEventWith(GameEvent.UPDATE);
     }
 
     public function placeSelected($x: int, $y: int):void {
@@ -215,7 +208,6 @@ public class Field extends EventDispatcher {
             var obj: PlaceData = $objects[i];
             var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
             createObject(obj.x, obj.y, objData, obj);
-            _placeObjects.push(obj);
         }
         updateDepths();
         dispatchEventWith(GameEvent.UPDATE);

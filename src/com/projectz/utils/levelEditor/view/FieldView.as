@@ -108,7 +108,7 @@ public class FieldView extends Sprite {
 
         if ($data) {
             _currentObject = new FieldObjectView($data, _assets);
-            _objectsContainer.addChild(_currentObject);
+            _container.addChild(_currentObject);
         }
     }
 
@@ -165,9 +165,11 @@ public class FieldView extends Sprite {
                             place.object = _currentObject.object.name;
                             place.realObject = _currentObject.object;
 
-                            addObject(null);
-
                             _field.addObject(place);
+
+                            addObject(_currentObject.object);
+                        } else {
+//                            _field.selectObject();
                         }
 
                         _isPressed = false;
