@@ -28,12 +28,16 @@ public class App extends Sprite {
     private var _view: GameScreen;
 //    private var _ui: UI;
 
+    private var _path: String;
+
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
     }
 
-    public function start($assets: AssetManager):void {
+    public function start($assets: AssetManager, $path: String):void {
+        _path = $path;
+
         _assets = $assets;
         _assets.loadQueue(handleProgress);
     }
@@ -47,8 +51,9 @@ public class App extends Sprite {
     }
 
     private function initStart():void {
-        _objectsStorage.parseDirectory(formatString("textures/{0}x/level_elements", _assets.scaleFactor), _assets);
-        _levelsStorage.parseDirectory("levels");
+        trace(_path);
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _levelsStorage.parseDirectory(_path+"/levels");
 
         Starling.juggler.delayCall(startGame, 0.15);
     }

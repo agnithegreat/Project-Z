@@ -35,6 +35,8 @@ public class Enemy extends Personage {
         return _target ? _cell.y+(_target.y-_cell.y)*_progress : _cell.y;
     }
 
+    protected var _state: String;
+
     public function Enemy($data: PartData) {
         super($data);
     }
@@ -49,7 +51,8 @@ public class Enemy extends Personage {
         _way = $cells;
         if (_way.length>0) {
             _target = _way.shift();
-            dispatchEventWith(WALK);
+            _state = WALK;
+            dispatchEventWith(_state);
         } else {
             // TODO: remove this test
 //            die();
@@ -58,12 +61,14 @@ public class Enemy extends Personage {
 
     public function attack($cell: Cell):void {
         _target = $cell;
-        dispatchEventWith(ATTACK);
+        _state = ATTACK;
+        dispatchEventWith(_state);
     }
 
     public function die():void {
         _alive = false;
-        dispatchEventWith(DIE);
+        _state = DIE;
+        dispatchEventWith(_state);
     }
 
     public function step($delta: Number):void {

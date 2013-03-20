@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor {
 import com.projectz.utils.levelEditor.data.LevelStorage;
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.FileLine;
 import com.projectz.utils.levelEditor.ui.hogarLevelEditor.LevelEditorUI;
@@ -32,13 +33,16 @@ public class App extends Sprite {
     private var _levelEditorUI: LevelEditorUI;
     private var _ui: UI;
 
+    private var _path: String;
+
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
     }
 
     //Запустаем приложение, начав загрузку ассетов:
-    public function startLoading($assets: AssetManager):void {
+    public function startLoading($assets: AssetManager, $path: String):void {
+        _path = $path;
         _assets = $assets;
         _assets.loadQueue(handleProgress);
     }
@@ -53,8 +57,8 @@ public class App extends Sprite {
 
     //Запускаем приложение после загрузки всех ассетов:
     private function startApp():void {
-        _objectsStorage.parseDirectory(formatString("textures/{0}x/level_elements", _assets.scaleFactor), _assets);
-        _levelsStorage.parseDirectory("levels");
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _levelsStorage.parseDirectory(_path+"/levels");
 
         Starling.juggler.delayCall(startGame, 0.15);
     }
@@ -68,6 +72,7 @@ public class App extends Sprite {
         _model.init();
 
         _ui = new UI(_assets);
+        _ui.addEventListener(LevelEditorEvent.SELECT_TAB, handleOperation);
         _ui.addEventListener(FileLine.SELECT_FILE, handleOperation);
         _ui.addEventListener(UI.SAVE, handleOperation);
         _ui.addEventListener(UI.EXPORT, handleOperation);
@@ -82,11 +87,14 @@ public class App extends Sprite {
 
     private function handleOperation($event: Event):void {
         switch ($event.type) {
+            case LevelEditorEvent.SELECT_TAB:
+                _view.selectTab($event.data as String);
+                break;
             case FileLine.SELECT_FILE:
                 _view.selectFile($event.data as ObjectData);
                 break;
             case UI.SAVE:
-                _model.level.save();
+                _model.level.save(_model.level.export());
                 break;
             case UI.EXPORT:
 //                _view.selectFile($event.data as ObjectData);

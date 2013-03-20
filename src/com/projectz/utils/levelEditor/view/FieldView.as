@@ -6,8 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.view {
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.data.PlaceData;
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -53,10 +54,10 @@ public class FieldView extends Sprite {
 
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
-        _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
-        _field.addEventListener(GameEvent.SHADOW_ADDED, handleAddShadow);
-        _field.addEventListener(GameEvent.OBJECT_REMOVED, handleRemoveObject);
-        _field.addEventListener(GameEvent.PLACE_ADDED, handleAddPlace);
+        _field.addEventListener(LevelEditorEvent.OBJECT_ADDED, handleAddObject);
+        _field.addEventListener(LevelEditorEvent.SHADOW_ADDED, handleAddShadow);
+        _field.addEventListener(LevelEditorEvent.OBJECT_REMOVED, handleRemoveObject);
+        _field.addEventListener(LevelEditorEvent.PLACE_ADDED, handleAddPlace);
 
         _bg = new Image(_assets.getTexture(_field.level.bg));
         _bg.touchable = false;
@@ -66,7 +67,6 @@ public class FieldView extends Sprite {
         addChild(_container);
 
         _cellsContainer = new Sprite();
-//        _cellsContainer.alpha = 0.1;
         _container.addChild(_cellsContainer);
 
         var len:int = _field.field.length;
@@ -75,7 +75,6 @@ public class FieldView extends Sprite {
             cell = new CellView(_field.field[i], $assets.getTexture("so-cell-levelEditor"));
             _cellsContainer.addChild(cell);
         }
-        _cellsContainer.flatten();
 
         _container.x = (Constants.WIDTH + PositionView.cellWidth) * 0.5;
         _container.y = (Constants.HEIGHT + (1 - (_field.height + _field.height) * 0.5) * PositionView.cellHeight) * 0.5;
@@ -97,6 +96,11 @@ public class FieldView extends Sprite {
         stage.addEventListener(TouchEvent.TOUCH, onTouchHandler);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
         stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+    }
+
+    public function selectTab($tab: String):void {
+        _objectsContainer.visible = _shadowsContainer.visible = $tab != ObjectData.ENEMY;
+        addObject(null);
     }
 
     public function selectFile($file:ObjectData):void {
@@ -134,6 +138,14 @@ public class FieldView extends Sprite {
         var fieldObject:FieldObject = $event.data as FieldObject;
         var object:ObjectView = new ObjectView(fieldObject, fieldObject.data.name);
         _objectsContainer.addChild(object);
+
+        for (var i:int = 0; i < fieldObject.data.width; i++) {
+            for (var j:int = 0; j < fieldObject.data.height; j++) {
+                if (fieldObject.data.mask[i][j]) {
+                    getCellViewByPosition(fieldObject.cell.x-fieldObject.data.top.x+i, fieldObject.cell.y-fieldObject.data.top.y+j).color = 0;
+                }
+            }
+        }
     }
 
     private function handleAddShadow($event:Event):void {
@@ -147,6 +159,12 @@ public class FieldView extends Sprite {
     private function handleRemoveObject($event: Event):void {
         var object: FieldObject = $event.data as FieldObject;
 
+        for (i = 0; i < object.data.width; i++) {
+            for (var j:int = 0; j < object.data.height; j++) {
+                getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j).color = 0;
+            }
+        }
+
         var len: int = _objectsContainer.numChildren;
         for (var i:int = 0; i < len; i++) {
             var obj: ObjectView = _objectsContainer.getChildAt(i) as ObjectView;
@@ -156,7 +174,6 @@ public class FieldView extends Sprite {
                 i--;
                 len--;
             }
-
         }
 
         len = _shadowsContainer.numChildren;
@@ -168,7 +185,6 @@ public class FieldView extends Sprite {
                 i--;
                 len--;
             }
-
         }
     }
 
@@ -179,7 +195,8 @@ public class FieldView extends Sprite {
     protected function onTouchHandler(event:TouchEvent):void {
         var touch:Touch = event.getTouch(this);
         if (touch) {
-            _currentCell = getCellViewByPosition(getPositionByTouchEvent(touch));
+            var pos: Point = getPositionByTouchEvent(touch);
+            _currentCell = getCellViewByPosition(pos.x, pos.y);
             if (_currentCell) {
                 if ((_currentCell.positionX != _lastCellX) || (_currentCell.positionY != _lastCellY)) {
 //                    trace("!!! " +
@@ -187,7 +204,7 @@ public class FieldView extends Sprite {
 //                            (cell.positionX != _lastCellX) +
 //                            "; (cell.positionY (" + cell.positionY + ") != _lastCellY (" + _lastCellY + ")) = " +
 //                            (cell.positionY != _lastCellY));
-                    onCellRollOut(getCellViewByPosition(new Point (_lastCellX, _lastCellY)));
+                    onCellRollOut(getCellViewByPosition(_lastCellX, _lastCellY));
                     onCellRollOver(_currentCell);
                 }
                 _lastCellX = _currentCell.positionX;
@@ -239,7 +256,7 @@ public class FieldView extends Sprite {
         } else {
             _isRolledOver = false;
 
-            onCellRollOut(getCellViewByPosition(new Point(_lastCellX, _lastCellY)));
+            onCellRollOut(getCellViewByPosition(_lastCellX, _lastCellY));
         }
     }
 
@@ -274,15 +291,13 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function getCellViewByPosition(point:Point):CellView {
+    private function getCellViewByPosition($x: int, $y: int):CellView {
         var cellView:CellView;
-        if (point) {
-            for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-                var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
-                if ((_cellView.positionX == point.x) && (_cellView.positionY == point.y)) {
-                    cellView = _cellView;
-                    break;
-                }
+        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
+            var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
+            if ((_cellView.positionX == $x) && (_cellView.positionY == $y)) {
+                cellView = _cellView;
+                break;
             }
         }
         return cellView;
@@ -317,6 +332,7 @@ public class FieldView extends Sprite {
     private function handleKeyDown($event: KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.ESCAPE:
+            case Keyboard.DELETE:
                 addObject(null);
                 break;
             case Keyboard.SHIFT:

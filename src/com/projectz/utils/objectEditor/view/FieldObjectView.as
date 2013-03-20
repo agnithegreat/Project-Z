@@ -139,7 +139,7 @@ public class FieldObjectView extends Sprite {
         showField();
     }
     public function save():void {
-        _object.save();
+        _object.save(_object.export());
     }
 
     private function handleTouch($event: TouchEvent):void {

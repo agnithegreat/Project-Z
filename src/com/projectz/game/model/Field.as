@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model {
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
@@ -53,6 +53,8 @@ public class Field extends EventDispatcher {
         return _objects;
     }
 
+    private var _generators: Vector.<Generator>;
+
     private var _enemies: Vector.<Enemy>;
     private var _defenders: Vector.<Defender>;
 
@@ -64,6 +66,7 @@ public class Field extends EventDispatcher {
 
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
+        _generators = new <Generator>[];
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
 
@@ -90,7 +93,7 @@ public class Field extends EventDispatcher {
         var index: int = 0;
         var mark: Array;
         var ind: int;
-        var tries: int = 20;
+        var tries: int = 100;
         while (len && tries-->0) {
             for (i = 0; i < len; i++) {
                 cell = toCheck[i];
@@ -162,6 +165,15 @@ public class Field extends EventDispatcher {
             }
             zombie.step($delta);
         }
+
+        len = _generators.length;
+        for (i = 0; i < len; i++) {
+            var enemy: PlaceData = _generators[i].createEnemy();
+            if (enemy) {
+                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object).parts[""]);
+            }
+        }
+
         dispatchEventWith(GameEvent.UPDATE);
     }
 
@@ -221,11 +233,16 @@ public class Field extends EventDispatcher {
             var obj: PlaceData = $objects[i];
             var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
             if (objData.type == ObjectData.ENEMY) {
-                createPersonage(obj.x, obj.y, objData.getPart(""));
+                addGenerator(obj);
             } else {
                 createObject(obj.x, obj.y, objData);
             }
         }
+    }
+
+    private function addGenerator($data: PlaceData):void {
+        // TODO: Вынести параметры частоты и количества в редактор
+        _generators.push(new Generator($data.x, $data.y, $data.object, 60, 10));
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {

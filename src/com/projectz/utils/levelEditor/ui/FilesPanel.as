@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.ui {
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -29,6 +30,7 @@ public class FilesPanel extends Sprite {
     private var _bgTab: Button;
     private var _staticTab: Button;
     private var _animatedTab: Button;
+    private var _enemiesTab: Button;
 
     private var _files: Array;
 
@@ -52,6 +54,11 @@ public class FilesPanel extends Sprite {
         _animatedTab.x = 80;
         addChild(_animatedTab);
 
+        _enemiesTab = new Button(texture, "en");
+        _enemiesTab.addEventListener(Event.TRIGGERED, handleClick);
+        _enemiesTab.x = 120;
+        addChild(_enemiesTab);
+
         _filesList = new Sprite();
         _filesList.y = 50;
         addChild(_filesList);
@@ -74,6 +81,8 @@ public class FilesPanel extends Sprite {
         _files.sortOn("name");
 
         showPage();
+
+        dispatchEventWith(LevelEditorEvent.SELECT_TAB, true, _tab);
     }
 
     private function showPage():void {
@@ -98,6 +107,9 @@ public class FilesPanel extends Sprite {
                 break;
             case _animatedTab:
                 showTab(ObjectData.ANIMATED_OBJECT);
+                break;
+            case _enemiesTab:
+                showTab(ObjectData.ENEMY);
                 break;
         }
     }

@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
-import com.projectz.event.GameEvent;
+import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.objects.Personage;
 
 import flash.utils.Dictionary;
@@ -54,7 +54,7 @@ public class PersonageView extends PositionView {
     public function setState($id: String):void {
         var frame: int = 0;
         if (_currentState) {
-            frame = _currentState.currentFrame;
+            frame = (_currentState.currentFrame+1)%_currentState.numFrames;
             Starling.juggler.remove(_currentState);
             _currentState.stop();
             removeChild(_currentState);
