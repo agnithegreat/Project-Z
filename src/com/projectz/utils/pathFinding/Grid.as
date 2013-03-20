@@ -56,6 +56,10 @@ package com.projectz.utils.pathFinding {
 			(_nodes[x][y] as Node).walkable = value;
 		}
 
+        public function setPath(x:int, y:int, path: int):void {
+            (_nodes[x][y] as Node).paths[path] = path;
+        }
+
         public function destroy():void {
             _startNode = null;
             _endNode = null;

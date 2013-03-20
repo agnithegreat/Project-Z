@@ -9,7 +9,8 @@ package com.projectz.utils.pathFinding {
 		public var f:Number;
 		public var g:Number;
 		public var h:Number;
-		
+
+        public var paths: Object = {};
 		public var walkable:Boolean = true;
 		
 		public var parent:Node;
@@ -19,6 +20,10 @@ package com.projectz.utils.pathFinding {
 		public function Node($x:int, $y:int) {
 			super($x,$y);
 		}
+
+        public function getWalkable(path: int = 0):Boolean {
+            return walkable && (!path || paths[path]);
+        }
 
         public function destroy():void {
             parent = null;

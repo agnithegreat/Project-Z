@@ -11,7 +11,7 @@ import flash.geom.Point;
 
 public class PathData {
 
-    private var _id: String;
+    private var _id: Number;
     private var _color: uint = 0x00ff00;//цвет нужен только для редактора путей в LevelEditor'е.
     private var _points:Vector.<Point>;//массив точек, образующих путь, по которому перемещаются враги.
 
@@ -23,11 +23,11 @@ public class PathData {
 //PUBLIC:
 /////////////////////////////////////////////
 
-    public function get id():String {
+    public function get id():Number {
         return _id;
     }
 
-    public function set id(value:String):void {
+    public function set id(value:Number):void {
         value = _id;
     }
 
@@ -56,14 +56,7 @@ public class PathData {
     }
 
     public function export():Object {
-        //Преобраховываем Vector из точек в строковое представление:
-        var arrPointsAsObjects:Array/*of Objects {"x":x,"y":y}*/ = new Array()/*of Objects {"x":x,"y":y}*/;
-        var len: int = _points.length;
-        for (var i:int = 0; i < len; i++) {
-            var point:Point = _points [i];
-            arrPointsAsObjects[i] = {"x":point.x, "y":point.y};
-        }
-        return {"id": _id, "color": _color, "points": arrPointsAsObjects};
+        return {"id": _id, "color": _color, "points": _points.toString()};
     }
 
     public function get points():Vector.<Point> {

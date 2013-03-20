@@ -11,6 +11,7 @@ import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.utils.levelEditor.data.LevelData;
+import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
@@ -18,6 +19,8 @@ import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
+
+import flash.geom.Point;
 
 import starling.events.EventDispatcher;
 
@@ -75,6 +78,7 @@ public class Field extends EventDispatcher {
     }
 
     public function init():void {
+        createPaths(_level.paths);
         createObjects(_level.objects);
         updateDepths();
     }
@@ -156,13 +160,13 @@ public class Field extends EventDispatcher {
         var cell: Cell;
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
-            if (zombie.alive && !zombie.target) {
-                while (!cell || cell.locked) {
-                    cell = getRandomCell();
-                }
-                zombie.walk(getWay(zombie.cell, cell));
-                cell = null;
-            }
+//            if (zombie.alive && !zombie.target) {
+//                while (!cell || cell.locked) {
+//                    cell = getRandomCell();
+//                }
+//                zombie.walk(getWay(zombie.cell, cell));
+//                cell = null;
+//            }
             zombie.step($delta);
         }
 
@@ -177,11 +181,11 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.UPDATE);
     }
 
-    private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
+    private function getWay($start: Cell, $end: Cell, $path: int = 0):Vector.<Cell> {
         var way: Vector.<Cell> = new <Cell>[];
         _grid.setStartNode($start.x, $start.y);
         _grid.setEndNode($end.x, $end.y);
-        var path: Path = PathFinder.findPath(_grid);
+        var path: Path = PathFinder.findPath(_grid, $path);
         var len: int = path.path.length;
         for (var i:int = 1; i < len; i++) {
             way.push(getCell(path.path[i].x, path.path[i].y));
@@ -219,10 +223,15 @@ public class Field extends EventDispatcher {
         return _fieldObj[x+"."+y];
     }
 
-    // TODO: удалить
-    private function getRandomCell():Cell {
-        var rand: int = Math.random()*_field.length;
-        return _field[rand];
+    private function createPaths($paths: Vector.<PathData>):void {
+        var len: int = $paths.length;
+        for (var i: int = 0; i < len; i++) {
+            var path: PathData = $paths[i];
+            for (var j:int = 0; j < path.points.length; j++) {
+                var point: Point = path.points[j];
+                _grid.setPath(point.x, point.y, path.id);
+            }
+        }
     }
 
     private function createObjects($objects: Vector.<PlaceData>):void {

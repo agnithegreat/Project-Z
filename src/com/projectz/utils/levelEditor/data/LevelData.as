@@ -65,7 +65,7 @@ public class LevelData extends JSONLoader {
         }
     }
 
-    public function addPath (id:String):PathData {
+    public function addPath (id:int):PathData {
         var pathData:PathData = new PathData ();
         pathData.id = id;
         paths.push (pathData);
