@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.ui {
-import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+import com.projectz.utils.levelEditor.controller.LevelEditorController;
+import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -19,6 +20,8 @@ import starling.events.Event;
 import starling.textures.Texture;
 
 public class FilesPanel extends Sprite {
+
+    private var _controller:LevelEditorController;
 
     private var _storage: ObjectsStorage;
     private var _tab:String;
@@ -35,6 +38,9 @@ public class FilesPanel extends Sprite {
     private var _files: Array;
 
     public function FilesPanel() {
+        _controller = LevelEditorController.getInstance();
+        _controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+
         _bg = new Quad(200, Constants.HEIGHT, 0xCCCCCC);
         addChild(_bg);
 
@@ -81,8 +87,6 @@ public class FilesPanel extends Sprite {
         _files.sortOn("name");
 
         showPage();
-
-        dispatchEventWith(LevelEditorEvent.SELECT_TAB, true, _tab);
     }
 
     private function showPage():void {
@@ -100,18 +104,22 @@ public class FilesPanel extends Sprite {
     private function handleClick($event: Event):void {
         switch ($event.currentTarget) {
             case _bgTab:
-                showTab(ObjectData.BACKGROUND);
+                _controller.selectObjectType(ObjectData.BACKGROUND);
                 break;
             case _staticTab:
-                showTab(ObjectData.STATIC_OBJECT);
+                _controller.selectObjectType(ObjectData.STATIC_OBJECT);
                 break;
             case _animatedTab:
-                showTab(ObjectData.ANIMATED_OBJECT);
+                _controller.selectObjectType(ObjectData.ANIMATED_OBJECT);
                 break;
             case _enemiesTab:
-                showTab(ObjectData.ENEMY);
+                _controller.selectObjectType(ObjectData.ENEMY);
                 break;
         }
+    }
+
+    private function selectObjectsTypeListener (event:SelectObjectsTypeEvent):void {
+        showTab(event.objectsType);
     }
 }
 }

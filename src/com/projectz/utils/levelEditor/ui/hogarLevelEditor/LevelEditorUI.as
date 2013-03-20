@@ -12,14 +12,17 @@ import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.LevelEditorMode;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
-import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.text.TextField;
+
+import starling.events.Event;
 
 public class LevelEditorUI extends GraphicStorage {
 
     private var controller:LevelEditorController;
+    private var objectStorage:ObjectsStorage;
 
     //панели:
     private var infoPanel:InfoPanel;
@@ -39,12 +42,13 @@ public class LevelEditorUI extends GraphicStorage {
     //информационные сообщения:
     private var tfInfo:TextField;
 
-    public function LevelEditorUI() {
-        controller = LevelEditorController.getInstance();
+    public function LevelEditorUI(controller:LevelEditorController, objectStorage:ObjectsStorage) {
+        this.controller = controller;
+        this.objectStorage = objectStorage;
 
         super(new mcLevelEditorPanel);
 
-        LevelEditorController.getInstance().addEventListener(LevelEditorEvent.SELECT_EDITOR_MODE, selectModeListener);
+        controller.addEventListener(LevelEditorEvent.SELECT_EDITOR_MODE, selectModeListener);
 
         outputInfo("Добро пожаловать в редактор уровней! Выберите одну из вкладок сверху, чтобы задать режим работы редактора.");
         showPanel(null);
@@ -61,7 +65,7 @@ public class LevelEditorUI extends GraphicStorage {
 
         //панели:
         infoPanel = new InfoPanel (mc["mcInfoPanel"]);
-        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], controller);
+        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], controller, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"]);
 
         panels.push(editObjectsPanel);
@@ -138,7 +142,7 @@ public class LevelEditorUI extends GraphicStorage {
                 outputInfo(
                         "Кнопки:" +
                         "\n" +
-                        "SHIFT + клик по карте = многократная установка выбраного предмета." +
+                        "SHIFT + клик по карте = многократная установка предмета." +
                         "\n" +
                         "ESC + клик по карте = удаление объекта."
                 );

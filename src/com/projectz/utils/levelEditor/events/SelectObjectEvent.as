@@ -8,16 +8,18 @@
 package com.projectz.utils.levelEditor.events {
 import com.projectz.utils.objectEditor.data.ObjectData;
 
-import flash.events.Event;
+
+import starling.events.Event;
 
 public class SelectObjectEvent extends Event {
 
     private var _objectData:ObjectData;
 
-    public static const SELECT_OBJECT
+    public static const SELECT_OBJECT:String = "select object";
 
-    public function SelectObjectEvent() {
-
+    public function SelectObjectEvent(objectData:ObjectData, type:String = SELECT_OBJECT, bubbles:Boolean = false) {
+        this.objectData = objectData;
+        super (type, bubbles, objectData);
     }
 
     public function get objectData():ObjectData {

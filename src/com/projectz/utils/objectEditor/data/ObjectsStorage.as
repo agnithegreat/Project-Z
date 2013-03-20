@@ -17,7 +17,7 @@ import starling.utils.AssetManager;
 public class ObjectsStorage {
 
     private var _objects: Dictionary; //хранит ссылки на все ассеты игры (в виде обектов ObjectData)
-    private var _types: Dictionary;
+    private var _types: Dictionary; //хранит группы ассетов по типам (so, ao, de и т.д.);
 
     private var _objectsList: Object = {files: []};
     public function get objectsList():Object {

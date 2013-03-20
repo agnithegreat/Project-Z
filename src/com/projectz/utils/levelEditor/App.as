@@ -6,14 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor {
+import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.data.LevelStorage;
-import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.levelEditor.model.Field;
-import com.projectz.utils.levelEditor.ui.FileLine;
+import com.projectz.utils.levelEditor.ui.ObjectEditorUI;
 import com.projectz.utils.levelEditor.ui.hogarLevelEditor.LevelEditorUI;
-import com.projectz.utils.levelEditor.ui.UI;
 import com.projectz.utils.levelEditor.view.FieldView;
-import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import starling.core.Starling;
@@ -31,13 +29,15 @@ public class App extends Sprite {
     private var _model: Field;
     private var _view: FieldView;
     private var _levelEditorUI: LevelEditorUI;
-    private var _ui: UI;
+    private var _objectEditorUI: ObjectEditorUI;
+    private var _controller: LevelEditorController;
 
     private var _path: String;
 
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
+        _controller = LevelEditorController.getInstance();
     }
 
     //Запустаем приложение, начав загрузку ассетов:
@@ -66,37 +66,30 @@ public class App extends Sprite {
     private function startGame():void {
         _model = new Field(36, 36, _objectsStorage, _levelsStorage.getLevelData("level_01"));
 
-        _view = new FieldView(_model, _assets);
+        _view = new FieldView(_model, _assets, _controller);
         addChild(_view);
 
         _model.init();
 
-        _ui = new UI(_assets);
-        _ui.addEventListener(LevelEditorEvent.SELECT_TAB, handleOperation);
-        _ui.addEventListener(FileLine.SELECT_FILE, handleOperation);
-        _ui.addEventListener(UI.SAVE, handleOperation);
-        _ui.addEventListener(UI.EXPORT, handleOperation);
-        addChild(_ui);
+        _objectEditorUI = new ObjectEditorUI(_assets);
+        _objectEditorUI.addEventListener(ObjectEditorUI.SAVE, handleOperation);
+        _objectEditorUI.addEventListener(ObjectEditorUI.EXPORT, handleOperation);
+        addChild(_objectEditorUI);
 
-        _ui.filesPanel.showFiles(_objectsStorage);
+        _objectEditorUI.filesPanel.showFiles(_objectsStorage);
 
-        _levelEditorUI = new LevelEditorUI();
+
+        _levelEditorUI = new LevelEditorUI(_controller, _objectsStorage);
         _levelEditorUI.y = Constants.HEIGHT;
         Starling.current.nativeStage.addChild(_levelEditorUI);
     }
 
     private function handleOperation($event: Event):void {
         switch ($event.type) {
-            case LevelEditorEvent.SELECT_TAB:
-                _view.selectTab($event.data as String);
-                break;
-            case FileLine.SELECT_FILE:
-                _view.selectFile($event.data as ObjectData);
-                break;
-            case UI.SAVE:
+            case ObjectEditorUI.SAVE:
                 _model.level.save(_model.level.export());
                 break;
-            case UI.EXPORT:
+            case ObjectEditorUI.EXPORT:
 //                _view.selectFile($event.data as ObjectData);
                 break;
         }

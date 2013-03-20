@@ -7,8 +7,12 @@
  */
 package com.projectz.utils.levelEditor.view {
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+import com.projectz.utils.levelEditor.events.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.events.SelectObjectEvent;
+import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -27,6 +31,8 @@ import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
+
+    private var _controller:LevelEditorController;
 
     private var _assets:AssetManager;
 
@@ -49,9 +55,12 @@ public class FieldView extends Sprite {
     protected var _lastCellX:int;
     protected var _lastCellY:int;
 
-    public function FieldView($field:Field, $assets:AssetManager) {
+    public function FieldView($field:Field, $assets:AssetManager, $controller:LevelEditorController) {
         _assets = $assets;
-
+        _controller = $controller;
+        _controller.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        _controller.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        _controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(LevelEditorEvent.OBJECT_ADDED, handleAddObject);
@@ -103,12 +112,16 @@ public class FieldView extends Sprite {
         addObject(null);
     }
 
-    public function selectFile($file:ObjectData):void {
+    private function selectFile($file:ObjectData):void {
+        if ($file.type != ObjectData.BACKGROUND) {
+            addObject($file);
+        }
+    }
+
+    private function selectBackground($file:ObjectData):void {
         if ($file.type == ObjectData.BACKGROUND) {
             _field.level.bg = $file.name;
             _bg.texture = _assets.getTexture(_field.level.bg);
-        } else {
-            addObject($file);
         }
     }
 
@@ -398,6 +411,18 @@ public class FieldView extends Sprite {
 
         _container.removeFromParent(true);
         _container = null;
+    }
+
+    private function selectObjectListener (event:SelectObjectEvent):void {
+        selectFile (event.objectData);
+    }
+
+    private function selectBackGroundListener (event:SelectBackGroundEvent):void {
+        selectFile (event.objectData);
+    }
+
+    private function selectObjectsTypeListener (event:SelectObjectsTypeEvent):void {
+        selectTab (event.objectsType);
     }
 }
 }

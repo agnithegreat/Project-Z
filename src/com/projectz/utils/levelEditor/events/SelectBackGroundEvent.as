@@ -6,8 +6,27 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.events {
-public class SelectBackGroundEvent {
-    public function SelectBackGroundEvent() {
+import com.projectz.utils.objectEditor.data.ObjectData;
+
+import starling.events.Event;
+
+public class SelectBackGroundEvent extends Event {
+
+    private var _objectData:ObjectData;
+
+    public static const SELECT_BACKGROUND:String = "select background";
+
+    public function SelectBackGroundEvent(objectData:ObjectData, type:String = SELECT_BACKGROUND, bubbles:Boolean = false) {
+        this.objectData = objectData;
+        super(type, bubbles, objectData);
+    }
+
+    public function get objectData():ObjectData {
+        return _objectData;
+    }
+
+    public function set objectData(value:ObjectData):void {
+        _objectData = value;
     }
 }
 }

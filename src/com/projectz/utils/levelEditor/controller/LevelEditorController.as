@@ -8,19 +8,21 @@
 package com.projectz.utils.levelEditor.controller {
 import com.hogargames.errors.SingletonError;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+import com.projectz.utils.levelEditor.events.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.events.SelectObjectEvent;
+import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
+import com.projectz.utils.objectEditor.data.ObjectData;
 
-import flash.events.Event;
-
-import flash.events.EventDispatcher;
+import starling.events.EventDispatcher;
 
 /**
- * Класс-контроллер, предназначенный редактирования карты уровня. Получая команды от view (представления) изменяет данные в модели.
+ * Класс-контроллер, предназначенный редактирования карты уровня. Получая команды, диспатчит события.
  */
 public class LevelEditorController extends EventDispatcher {
 
     private static var _instance:LevelEditorController;
 
-    private var _mode:String;
+    private var _mode:String;//режим работы редактора (редактор объектов, редактор путей и т.д.);
     private var _action:String;
 
     public function LevelEditorController(key:SingletonKey = null) {
@@ -40,13 +42,17 @@ public class LevelEditorController extends EventDispatcher {
 //PUBLIC:
 /////////////////////////////////////////////
 
+    /////////////////////////////////////////////
+    //GET, SET:
+    /////////////////////////////////////////////
+
     public function get mode():String {
         return _mode;
     }
 
     public function set mode(value:String):void {
         _mode = value;
-        dispatchEvent (new Event (LevelEditorEvent.SELECT_EDITOR_MODE));
+        dispatchEventWith(LevelEditorEvent.SELECT_EDITOR_MODE);
     }
 
     public function get action():String {
@@ -55,6 +61,28 @@ public class LevelEditorController extends EventDispatcher {
 
     public function set action(value:String):void {
         _action = value;
+    }
+
+    /////////////////////////////////////////////
+    //OTHER:
+    /////////////////////////////////////////////
+
+    public function selectObject (objectData:ObjectData):void {
+        if (mode == LevelEditorMode.EDIT_OBJECTS) {
+            dispatchEvent(new SelectObjectEvent(objectData));
+        }
+    }
+
+    public function selectObjectType (objectsType:String):void {
+        if (mode == LevelEditorMode.EDIT_OBJECTS) {
+            dispatchEvent(new SelectObjectsTypeEvent(objectsType));
+        }
+    }
+
+    public function selectBackground (objectData:ObjectData):void {
+        if (mode == LevelEditorMode.EDIT_OBJECTS) {
+            dispatchEvent(new SelectBackGroundEvent(objectData));
+        }
     }
 }
 }
