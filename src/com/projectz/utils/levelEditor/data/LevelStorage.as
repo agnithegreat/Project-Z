@@ -30,7 +30,7 @@ public class LevelStorage {
      * @param $path Путь к директории
      */
     public function parseDirectory ($path:String):void {
-        var folder: File = File.applicationDirectory.resolvePath($path);
+        var folder: File = new File($path);
         _levels = LevelParser.parseDirectory(folder, _levelsList);
     }
 

@@ -30,18 +30,22 @@ public class App extends Sprite {
     private var _view: FieldView;
     private var _ui: UI;
 
+    private var _path: String;
+
     public function App() {
         _objectsStorage = new ObjectsStorage();
     }
 
-    public function start($assets: AssetManager):void {
+    public function start($assets: AssetManager, $path: String):void {
+        _path = $path;
+
         _assets = $assets;
         _assets.loadQueue(handleProgress);
     }
 
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
-            _objectsStorage.parseDirectory(formatString("textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+            _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
 
             Starling.juggler.delayCall(edit, 0.15);
         }
@@ -68,7 +72,7 @@ public class App extends Sprite {
     private function saveObjectsList($list: Object):void {
         var data: String = JSON.stringify($list);
 
-        var file: File = File.applicationDirectory.resolvePath("textures");
+        var file: File = new File(_path+"/textures");
         file.save(data, "filesList.json");
     }
 

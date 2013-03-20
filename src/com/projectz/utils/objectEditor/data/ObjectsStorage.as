@@ -40,7 +40,7 @@ public class ObjectsStorage {
      * @param $assets AssetManager с заранее загруженными ассетами
      */
     public function parseDirectory ($path:String, $assets: AssetManager):void {
-        var folder: File = File.applicationDirectory.resolvePath($path);
+        var folder: File = new File($path);
         _objects = ObjectParser.parseDirectory(folder, $assets, _objectsList);
 
         for each (var object:ObjectData in _objects) {
