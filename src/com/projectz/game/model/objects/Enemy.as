@@ -37,8 +37,18 @@ public class Enemy extends Personage {
 
     protected var _state: String;
 
+    protected var _hp: int;
+    protected var _speed: int;
+    protected var _strength: int;
+    protected var _reward: int;
+
     public function Enemy($data: PartData) {
         super($data);
+
+        _hp = 100;
+        _speed = 10;
+        _strength = 10;
+        _reward = 10;
     }
 
     override public function place($cell: Cell):void {
@@ -73,7 +83,7 @@ public class Enemy extends Personage {
 
     public function step($delta: Number):void {
         if (_target) {
-            _progress += $delta/distance;
+            _progress += _speed/10 * $delta/distance;
             update();
         }
 
