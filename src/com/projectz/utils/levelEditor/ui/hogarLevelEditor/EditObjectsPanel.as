@@ -17,10 +17,8 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
     private var controller:LevelEditorController;
 
-    private var btnAdd:ButtonWithText;
-    private var btnRemove:ButtonWithText;
     private var btnSave:ButtonWithText;
-    private var btnClear:ButtonWithText;
+    private var btnClearAll:ButtonWithText;
 
     public function EditObjectsPanel(mc:MovieClip, controller:LevelEditorController) {
         this.controller = controller;
@@ -43,15 +41,11 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         super.initGraphicElements();
 
         //создание кнопок:
-        btnAdd = new ButtonWithText (mc["btnAdd"]);
-        btnRemove = new ButtonWithText (mc["btnRemove"]);
         btnSave = new ButtonWithText (mc["btnSave"]);
-        btnClear = new ButtonWithText (mc["btnClear"]);
+        btnClearAll = new ButtonWithText (mc["btnClearAll"]);
 
-        btnAdd.text = "добавление";
-        btnRemove.text = "удаление";
         btnSave.text = "сохранить";
-        btnClear.text = "очистить";
+        btnClearAll.text = "очистить";
 
     }
 
@@ -61,16 +55,10 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
     private function clickListener (event:MouseEvent):void {
         switch (event.currentTarget) {
-            case (btnAdd):
-                //действие
-                break;
-            case (btnRemove):
-                //действие
-                break;
             case (btnSave):
                 //действие
                 break;
-            case (btnClear):
+            case (btnClearAll):
                 //действие
                 break;
         }

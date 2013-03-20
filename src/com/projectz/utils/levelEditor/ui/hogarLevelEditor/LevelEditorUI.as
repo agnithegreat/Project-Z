@@ -136,9 +136,11 @@ public class LevelEditorUI extends GraphicStorage {
                 selectTab(btnTabEditObjects);
                 showPanel(editObjectsPanel);
                 outputInfo(
-                        "1. Добавление объектов: Нажмите кнопку 'добавление'. Выберите объект в списке объектов. Нажмите на клекту поля." +
+                        "Кнопки:" +
                         "\n" +
-                        "2. Удаление обекта: Нажмите кнопку 'удаление'. Нажмите на клекту поля."
+                        "SHIFT + клик по карте = многократная установка выбраного предмета." +
+                        "\n" +
+                        "ESC + клик по карте = удаление объекта."
                 );
                 break;
             case (LevelEditorMode.EDIT_PATHS):
