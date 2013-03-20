@@ -18,6 +18,7 @@ CONFIG::desktop {
 }
 
 import com.projectz.game.App;
+import com.projectz.utils.JSONLoader;
 
 import flash.display.Bitmap;
 import flash.display.Sprite;
@@ -54,7 +55,22 @@ public class Main extends Sprite {
 
     private var _starling: Starling;
 
+    private var _config: JSONLoader;
+
     public function Main() {
+        _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
+        _config.addEventListener(JSONLoader.LOADED, handleLoaded);
+        _config.load();
+    }
+
+    private function handleLoaded(event:starling.events.Event):void {
+        if (!_config.data.path) {
+            _config.data.path = File.applicationDirectory.nativePath;
+        }
+        init();
+    }
+
+    private function init():void {
         var iOS:Boolean = Capabilities.manufacturer.indexOf("iOS") != -1;
         Starling.multitouchEnabled = true;
         Starling.handleLostContext = !iOS;
@@ -73,12 +89,12 @@ public class Main extends Sprite {
         _assets.verbose = Capabilities.isDebugger;
 
         CONFIG::desktop {
-            var appDir:File = File.applicationDirectory;
+            var dir: File = new File(_config.data.path);
             _assets.verbose = false;
             _assets.enqueue(
-                appDir.resolvePath("sounds"),
+                dir.resolvePath("sounds"),
 //                appDir.resolvePath("fonts"),
-                appDir.resolvePath(basicAssetsPath)
+                    dir.resolvePath(basicAssetsPath)
             );
             initApp ();
         }
@@ -129,7 +145,7 @@ public class Main extends Sprite {
 
 //        var bgTexture:Texture = Texture.fromBitmap(_background, false, false, _scaleFactor);
 
-        app.start(_assets);
+        app.start(_assets, _config.data.path);
         _starling.start();
     }
 

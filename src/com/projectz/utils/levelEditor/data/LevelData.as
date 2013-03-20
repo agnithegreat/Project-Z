@@ -6,11 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.data {
-import flash.events.Event;
-import flash.filesystem.File;
-import flash.utils.ByteArray;
+import com.projectz.utils.JSONLoader;
 
-public class LevelData {
+import flash.filesystem.File;
+
+public class LevelData extends JSONLoader {
 
     private var _id: int;
     public function get id():int {
@@ -30,11 +30,6 @@ public class LevelData {
         return _objects;
     }
 
-    private var _config: File;
-    public function get exists():Boolean {
-        return _config.exists;
-    }
-
     private var _paths: Vector.<PathData>;//вектор путей, по которым перемещаются враги.
     public function get paths():Vector.<PathData> {
         return _paths;
@@ -43,11 +38,12 @@ public class LevelData {
     //TODO:добавить генераторы, которые генерируют волны, привязывают к путям, задают задержки по времни и т.д.
 
     public function LevelData($config: File = null) {
+        super($config);
+
         _objects = new <PlaceData>[];
         _paths = new <PathData>[];
 
-        _config = $config;
-        if (_config && exists) {
+        if (_file && exists) {
             load();
         }
     }
@@ -85,31 +81,24 @@ public class LevelData {
         return false;
     }
 
-    public function parse($data: String):void {
-        var data: Object = JSON.parse($data);
+    override public function parse($data: Object):void {
+        _id = $data.id;
+        _bg = $data.bg;
 
-        _id = data.id;
-        _bg = data.bg;
-
-        var len: int = data.objects.length;
+        var len: int = $data.objects.length;
         var i:int;
         for (i = 0; i < len; i++) {
             var object: PlaceData = new PlaceData();
-            object.parse(data.objects[i]);
+            object.parse($data.objects[i]);
             _objects.push(object);
         }
 
-        len = data.paths.length;
+        len = $data.paths.length;
         for (i = 0; i < len; i++) {
             var pathData: PathData = new PathData();
-            pathData.parse(data.paths[i]);
+            pathData.parse($data.paths[i]);
             _paths.push(pathData);
         }
-    }
-
-    public function save():void {
-        var data: String = JSON.stringify(export());
-        _config.save(data);
     }
 
     public function export():Object {
@@ -136,18 +125,6 @@ public class LevelData {
             paths[i] = _paths[i].export();
         }
         return paths;
-    }
-
-    private function load():void {
-        _config.addEventListener(Event.COMPLETE, handleLoad);
-        _config.load();
-    }
-
-    private function handleLoad($event: Event):void {
-        _config.removeEventListener(Event.COMPLETE, handleLoad);
-
-        var bytes: ByteArray = _config.data;
-        parse(bytes.readUTFBytes(bytes.length));
     }
 }
 }

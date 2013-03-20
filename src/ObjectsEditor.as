@@ -6,12 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
+import com.projectz.utils.JSONLoader;
 import com.projectz.utils.objectEditor.App;
 
 import flash.display.Sprite;
 import flash.filesystem.File;
 import flash.geom.Rectangle;
-import flash.net.SharedObject;
 import flash.system.Capabilities;
 
 import starling.core.Starling;
@@ -23,20 +23,20 @@ import starling.utils.formatString;
 public class ObjectsEditor extends Sprite {
 
     private var _assets: AssetManager;
-
     private var _starling: Starling;
 
-    private var _so: SharedObject;
+    private var _config: JSONLoader;
     private var _directory: File;
 
     public function ObjectsEditor() {
-        checkPath();
+        _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
+        _config.addEventListener(JSONLoader.LOADED, handleLoaded);
+        _config.load();
     }
 
-    private function checkPath():void {
-        _so = SharedObject.getLocal("dropbox", "/");
-        if (_so.data.path) {
-            _directory = new File(_so.data.path);
+    private function handleLoaded(event:Event):void {
+        if (_config.data.path) {
+            _directory = new File(_config.data.path);
             init();
         } else {
             _directory = new File();
@@ -46,7 +46,9 @@ public class ObjectsEditor extends Sprite {
     }
 
     private function handleSelect(event:Object):void {
-        _so.data.path = _directory.nativePath;
+        _config.data.path = _directory.nativePath;
+        _config.save(_config.data);
+
         init();
     }
 
@@ -75,7 +77,7 @@ public class ObjectsEditor extends Sprite {
     private function handleRootCreated(event: Object,  app: App):void {
         _starling.removeEventListener(Event.ROOT_CREATED, handleRootCreated);
 
-        app.start(_assets, _so.data.path);
+        app.start(_assets, _config.data.path);
         _starling.start();
     }
 }

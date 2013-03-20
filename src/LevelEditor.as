@@ -6,13 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
+import com.projectz.utils.JSONLoader;
 import com.projectz.utils.levelEditor.App;
 
 import flash.display.Sprite;
 
 import flash.filesystem.File;
 import flash.geom.Rectangle;
-import flash.net.SharedObject;
 import flash.system.Capabilities;
 
 import starling.core.Starling;
@@ -26,17 +26,18 @@ public class LevelEditor extends Sprite {
     private var _assets: AssetManager;
     private var _starling: Starling;
 
-    private var _so: SharedObject;
+    private var _config: JSONLoader;
     private var _directory: File;
 
     public function LevelEditor() {
-        checkPath();
+        _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
+        _config.addEventListener(JSONLoader.LOADED, handleLoaded);
+        _config.load();
     }
 
-    private function checkPath():void {
-        _so = SharedObject.getLocal("dropbox", "/");
-        if (_so.data.path) {
-            _directory = new File(_so.data.path);
+    private function handleLoaded(event:Event):void {
+        if (_config.data.path) {
+            _directory = new File(_config.data.path);
             init();
         } else {
             _directory = new File();
@@ -46,7 +47,9 @@ public class LevelEditor extends Sprite {
     }
 
     private function handleSelect(event:Object):void {
-        _so.data.path = _directory.nativePath;
+        _config.data.path = _directory.nativePath;
+        _config.save(_config.data);
+
         init();
     }
 
@@ -64,10 +67,9 @@ public class LevelEditor extends Sprite {
                 _directory.resolvePath(formatString("textures/{0}x", 1))
         );
 
-        _starling = new Starling(App, this.stage, viewPort);
+        _starling = new Starling(App, stage, viewPort);
         _starling.stage.stageWidth  = Constants.WIDTH+200;
         _starling.stage.stageHeight = Constants.HEIGHT;
-        _starling.showStats = true;
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
         _starling.addEventListener(Event.ROOT_CREATED, handleRootCreated);
@@ -76,7 +78,7 @@ public class LevelEditor extends Sprite {
     private function handleRootCreated(event: Object,  app: App):void {
         _starling.removeEventListener(Event.ROOT_CREATED, handleRootCreated);
 
-        app.startLoading(_assets, _so.data.path);
+        app.startLoading(_assets, _config.data.path);
         _starling.start();
     }
 

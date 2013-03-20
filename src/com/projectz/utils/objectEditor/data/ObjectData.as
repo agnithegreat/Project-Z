@@ -6,13 +6,12 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+import com.projectz.utils.JSONLoader;
 
-import flash.events.Event;
 import flash.filesystem.File;
-import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 
-public class ObjectData {
+public class ObjectData extends JSONLoader {
 
     public static var STATIC_OBJECT: String = "so";
     public static var ANIMATED_OBJECT: String = "ao";
@@ -69,18 +68,14 @@ public class ObjectData {
         return _parts[$name];
     }
 
-    private var _config: File;
-    public function get exists():Boolean {
-        return _config.exists;
-    }
-
     public function ObjectData($name: String, $config: File = null) {
+        super($config);
+
         _name = $name;
         _type = _name.split("-")[0];
-        _config = $config;
         _parts = new Dictionary();
 
-        if (_config && exists) {
+        if (_file && exists) {
             load();
         }
     }
@@ -100,38 +95,19 @@ public class ObjectData {
         return pts;
     }
 
-    public function parse($data: String):void {
-        var data: Object = JSON.parse($data);
-
-        size(data.mask.length, data.mask[0].length);
+    override public function parse($data: Object):void {
+        size($data.mask.length, $data.mask[0].length);
 
         var index: String;
         var part: Object;
-        for (index in data.parts) {
+        for (index in $data.parts) {
             part = getPart(index);
-            part.parse(data.parts[index]);
+            part.parse($data.parts[index]);
         }
-    }
-
-    public function save():void {
-        var data: String = JSON.stringify(export());
-        _config.save(data);
     }
 
     public function export():Object {
         return {'name': _name, 'mask': mask, 'parts': getParts()};
-    }
-
-    private function load():void {
-        _config.addEventListener(Event.COMPLETE, handleLoad);
-        _config.load();
-    }
-
-    private function handleLoad($event: Event):void {
-        _config.removeEventListener(Event.COMPLETE, handleLoad);
-
-        var bytes: ByteArray = _config.data;
-        parse(bytes.readUTFBytes(bytes.length));
     }
 }
 }

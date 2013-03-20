@@ -58,7 +58,7 @@ public class App extends Sprite {
     //Запускаем приложение после загрузки всех ассетов:
     private function startApp():void {
         _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
-        _levelsStorage.parseDirectory("levels");
+        _levelsStorage.parseDirectory(_path+"/levels");
 
         Starling.juggler.delayCall(startGame, 0.15);
     }
@@ -94,7 +94,7 @@ public class App extends Sprite {
                 _view.selectFile($event.data as ObjectData);
                 break;
             case UI.SAVE:
-                _model.level.save();
+                _model.level.save(_model.level.export());
                 break;
             case UI.EXPORT:
 //                _view.selectFile($event.data as ObjectData);
