@@ -25,7 +25,7 @@ package com.projectz.utils.pathFinding {
 		private static var _straightCost : Number = 1.0;
 		private static var _diagCost : Number = Math.SQRT2;
 
-		public static function findPath(grid : Grid) : Path {
+		public static function findPath(grid : Grid, path: int = 0) : Path {
 			_grid = grid;
 			_open = new Array();
 			_closed = new Array();
@@ -37,12 +37,12 @@ package com.projectz.utils.pathFinding {
 			_startNode.h = _heuristic(_startNode);
 			_startNode.f = _startNode.g + _startNode.h;
 
-            search();
+            search(path);
 
 			return _path;
 		}
 
-		private static function search() : Boolean {
+		private static function search(path: int = 0) : Boolean {
 			var node : Node = _startNode;
 			while (node != _endNode) {
 //			while (node) {
@@ -54,7 +54,7 @@ package com.projectz.utils.pathFinding {
 				for (var i : int = startX; i <= endX; i++) {
 					for (var j : int = startY; j <= endY; j++) {
 						var test : Node = _grid.getNode(i, j);
-						if (test == node || !test.walkable || !_grid.getNode(node.x, test.y).walkable || !_grid.getNode(test.x, node.y).walkable) {
+						if (test == node || !test.getWalkable(path) || !_grid.getNode(node.x, test.y).getWalkable(path) || !_grid.getNode(test.x, node.y).getWalkable(path)) {
 							continue;
 						}
 
