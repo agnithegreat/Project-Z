@@ -11,7 +11,7 @@ import starling.display.Sprite;
 import starling.events.Event;
 import starling.utils.AssetManager;
 
-public class UI extends Sprite {
+public class ObjectEditorUI extends Sprite {
 
     public static const SAVE: String = "save_UI";
     public static const EXPORT: String = "export_UI";
@@ -25,7 +25,7 @@ public class UI extends Sprite {
 
     private var _export: Button;
 
-    public function UI($assets: AssetManager) {
+    public function ObjectEditorUI($assets: AssetManager) {
         _filesPanel = new FilesPanel();
         _filesPanel.x = Constants.WIDTH;
         addChild(_filesPanel);
