@@ -65,10 +65,6 @@ public class LevelData extends JSONLoader {
         }
     }
 
-    public function removeAllObject():void {
-        _objects = new <PlaceData>[];
-    }
-
     public function addPath (id:int):PathData {
         var pathData:PathData = new PathData ();
         pathData.id = id;

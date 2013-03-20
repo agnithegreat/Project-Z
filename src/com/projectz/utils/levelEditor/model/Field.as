@@ -232,8 +232,12 @@ public class Field extends EventDispatcher {
     }
 
     private function removeAllObject():void {
-        _level.removeAllObject();
-        _objects = new <FieldObject>[];
+        var placeData: PlaceData;
+        var len: int = _level.objects.length;
+        while (_level.objects.length > 0) {
+            placeData = _level.objects[0];
+            removeObject(placeData);
+        }
         dispatchEventWith(LevelEditorEvent.ALL_OBJECTS_REMOVED, false);
     }
 

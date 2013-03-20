@@ -161,7 +161,10 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < fieldObject.data.width; i++) {
             for (var j:int = 0; j < fieldObject.data.height; j++) {
                 if (fieldObject.data.mask[i][j]) {
-                    getCellViewByPosition(fieldObject.cell.x-fieldObject.data.top.x+i, fieldObject.cell.y-fieldObject.data.top.y+j).color = 0;
+                    var cellView:CellView = getCellViewByPosition(fieldObject.cell.x-fieldObject.data.top.x+i, fieldObject.cell.y-fieldObject.data.top.y+j);
+                    if (cellView){
+                        cellView.color = 0x000000;
+                    }
                 }
             }
         }
@@ -185,7 +188,10 @@ public class FieldView extends Sprite {
 
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
-                getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j).color = 0;
+                var cellView:CellView = getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j);
+                if (cellView){
+                    cellView.color = 0xffffff;
+                }
             }
         }
 
@@ -213,20 +219,20 @@ public class FieldView extends Sprite {
     }
 
     private function handleAllObjectRemoved($event: Event):void {
-        while (_objectsContainer.numChildren > 0) {
-            var objectView:ObjectView = ObjectView (_objectsContainer.getChildAt(0));
-            _objectsContainer.removeChild(objectView);
-            objectView.destroy();
-        }
-        while (_shadowsContainer.numChildren > 0) {
-            var shadowView:ObjectView = ObjectView (_shadowsContainer.getChildAt(0));
-            _shadowsContainer.removeChild(shadowView);
-            shadowView.destroy();
-        }
-        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-            var cellView:CellView = CellView(_cellsContainer.getChildAt(0));
-            cellView.color = 0xffffff;
-        }
+//        while (_objectsContainer.numChildren > 0) {
+//            var objectView:ObjectView = ObjectView (_objectsContainer.getChildAt(0));
+//            _objectsContainer.removeChild(objectView);
+//            objectView.destroy();
+//        }
+//        while (_shadowsContainer.numChildren > 0) {
+//            var shadowView:ObjectView = ObjectView (_shadowsContainer.getChildAt(0));
+//            _shadowsContainer.removeChild(shadowView);
+//            shadowView.destroy();
+//        }
+//        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
+//            var cellView:CellView = CellView(_cellsContainer.getChildAt(0));
+//            cellView.color = 0xffffff;
+//        }
     }
 
     private function handleUpdate($event:Event):void {
