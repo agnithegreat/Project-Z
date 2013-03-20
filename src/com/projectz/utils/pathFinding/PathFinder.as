@@ -54,7 +54,7 @@ package com.projectz.utils.pathFinding {
 				for (var i : int = startX; i <= endX; i++) {
 					for (var j : int = startY; j <= endY; j++) {
 						var test : Node = _grid.getNode(i, j);
-						if (test == node || !test.getWalkable(path) || !_grid.getNode(node.x, test.y).getWalkable(path) || !_grid.getNode(test.x, node.y).getWalkable(path)) {
+						if (test == node || !test.getWalkable(path) || !_grid.getNode(node.x, test.y).walkable || !_grid.getNode(test.x, node.y).walkable) {
 							continue;
 						}
 
