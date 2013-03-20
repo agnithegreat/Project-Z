@@ -21,7 +21,7 @@ import starling.textures.Texture;
 
 public class FilesPanel extends Sprite {
 
-    private var _controller:LevelEditorController;
+    private var controller:LevelEditorController;
 
     private var _storage: ObjectsStorage;
     private var _tab:String;
@@ -37,9 +37,9 @@ public class FilesPanel extends Sprite {
 
     private var _files: Array;
 
-    public function FilesPanel() {
-        _controller = LevelEditorController.getInstance();
-        _controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+    public function FilesPanel($controller:LevelEditorController) {
+        controller = $controller;
+        controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         _bg = new Quad(200, Constants.HEIGHT, 0xCCCCCC);
         addChild(_bg);
@@ -82,7 +82,7 @@ public class FilesPanel extends Sprite {
         var object: ObjectData;
         var objects: Dictionary = _storage.getType(_tab);
         for each (object in objects) {
-            _files.push(new FileLine(object));
+            _files.push(new FileLine(object, controller));
         }
         _files.sortOn("name");
 
@@ -104,16 +104,16 @@ public class FilesPanel extends Sprite {
     private function handleClick($event: Event):void {
         switch ($event.currentTarget) {
             case _bgTab:
-                _controller.selectObjectType(ObjectData.BACKGROUND);
+                controller.selectObjectType(ObjectData.BACKGROUND);
                 break;
             case _staticTab:
-                _controller.selectObjectType(ObjectData.STATIC_OBJECT);
+                controller.selectObjectType(ObjectData.STATIC_OBJECT);
                 break;
             case _animatedTab:
-                _controller.selectObjectType(ObjectData.ANIMATED_OBJECT);
+                controller.selectObjectType(ObjectData.ANIMATED_OBJECT);
                 break;
             case _enemiesTab:
-                _controller.selectObjectType(ObjectData.ENEMY);
+                controller.selectObjectType(ObjectData.ENEMY);
                 break;
         }
     }

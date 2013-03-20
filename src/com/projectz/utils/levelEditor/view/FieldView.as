@@ -32,7 +32,7 @@ import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
 
-    private var _controller:LevelEditorController;
+    private var controller:LevelEditorController;
 
     private var _assets:AssetManager;
 
@@ -57,16 +57,17 @@ public class FieldView extends Sprite {
 
     public function FieldView($field:Field, $assets:AssetManager, $controller:LevelEditorController) {
         _assets = $assets;
-        _controller = $controller;
-        _controller.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        _controller.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
-        _controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+        controller = $controller;
+        controller.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        controller.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(LevelEditorEvent.OBJECT_ADDED, handleAddObject);
         _field.addEventListener(LevelEditorEvent.SHADOW_ADDED, handleAddShadow);
         _field.addEventListener(LevelEditorEvent.OBJECT_REMOVED, handleRemoveObject);
         _field.addEventListener(LevelEditorEvent.PLACE_ADDED, handleAddPlace);
+        _field.addEventListener(LevelEditorEvent.ALL_OBJECTS_REMOVED, handleAllObjectRemoved);
 
         _bg = new Image(_assets.getTexture(_field.level.bg));
         _bg.touchable = false;
@@ -113,8 +114,13 @@ public class FieldView extends Sprite {
     }
 
     private function selectFile($file:ObjectData):void {
-        if ($file.type != ObjectData.BACKGROUND) {
-            addObject($file);
+        if ($file) {
+            if ($file.type != ObjectData.BACKGROUND) {
+                addObject($file);
+            }
+        }
+        else {
+            addObject(null);
         }
     }
 
@@ -172,6 +178,11 @@ public class FieldView extends Sprite {
     private function handleRemoveObject($event: Event):void {
         var object: FieldObject = $event.data as FieldObject;
 
+        handleRemoveObjectByFieldObject (object);
+    }
+
+    private function handleRemoveObjectByFieldObject(object: FieldObject):void {
+
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
                 getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j).color = 0;
@@ -198,6 +209,23 @@ public class FieldView extends Sprite {
                 i--;
                 len--;
             }
+        }
+    }
+
+    private function handleAllObjectRemoved($event: Event):void {
+        while (_objectsContainer.numChildren > 0) {
+            var objectView:ObjectView = ObjectView (_objectsContainer.getChildAt(0));
+            _objectsContainer.removeChild(objectView);
+            objectView.destroy();
+        }
+        while (_shadowsContainer.numChildren > 0) {
+            var shadowView:ObjectView = ObjectView (_shadowsContainer.getChildAt(0));
+            _shadowsContainer.removeChild(shadowView);
+            shadowView.destroy();
+        }
+        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
+            var cellView:CellView = CellView(_cellsContainer.getChildAt(0));
+            cellView.color = 0xffffff;
         }
     }
 
@@ -276,6 +304,7 @@ public class FieldView extends Sprite {
     private function onCellRollOver(cellView:CellView):void {
         if (cellView) {
             cellView.onRollOver();
+            controller.showCellInfo(cellView.cell);
         }
     }
 
@@ -372,6 +401,10 @@ public class FieldView extends Sprite {
         stage.removeEventListener(TouchEvent.TOUCH, onTouchHandler);
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
         stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+
+        controller.removeEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        controller.removeEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        controller.removeEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         removeEventListeners();
 

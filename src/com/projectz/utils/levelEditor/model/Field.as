@@ -7,9 +7,9 @@
  */
 package com.projectz.utils.levelEditor.model {
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
-import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -19,9 +19,13 @@ import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
 
+import starling.events.Event;
+
 import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
+
+    private var controller:LevelEditorController;
 
     private var _width: int;
     public function get width():int {
@@ -53,7 +57,8 @@ public class Field extends EventDispatcher {
         return _objects;
     }
 
-    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData) {
+    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData, $controller:LevelEditorController) {
+        controller = $controller;
         _width = $width;
         _height = $height;
 
@@ -64,6 +69,9 @@ public class Field extends EventDispatcher {
 
         _level = $level;
         createField();
+
+        controller.addEventListener (LevelEditorEvent.SAVE, saveListener);
+        controller.addEventListener (LevelEditorEvent.REMOVE_ALL_OBJECTS, removeAllObjectListener);
     }
 
     public function init():void {
@@ -223,6 +231,12 @@ public class Field extends EventDispatcher {
         }
     }
 
+    private function removeAllObject():void {
+        _level.removeAllObject();
+        _objects = new <FieldObject>[];
+        dispatchEventWith(LevelEditorEvent.ALL_OBJECTS_REMOVED, false);
+    }
+
     private function createObjects($objects: Vector.<PlaceData>):void {
         var len: int = $objects.length;
         for (var i: int = 0; i < len; i++) {
@@ -288,6 +302,14 @@ public class Field extends EventDispatcher {
 
         _grid.destroy();
         _grid = null;
+    }
+
+    private function saveListener (event:Event):void {
+        level.save(level.export());
+    }
+
+    private function removeAllObjectListener (event:Event):void {
+        removeAllObject();
     }
 }
 }

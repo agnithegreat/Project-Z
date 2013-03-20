@@ -21,9 +21,10 @@ import starling.textures.Texture;
 
 public class CellView extends PositionView {
 
-    private var _color:uint;
-
-    protected var _cell:Cell;
+    private var _cell:Cell;
+    public function get cell():Cell {
+        return _cell;
+    }
 
     override public function get positionX():Number {
         return _cell.x;

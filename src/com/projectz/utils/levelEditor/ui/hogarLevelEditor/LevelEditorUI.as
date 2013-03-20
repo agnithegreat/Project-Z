@@ -64,7 +64,7 @@ public class LevelEditorUI extends GraphicStorage {
         //инициализируем графические элементы (парсим графику):
 
         //панели:
-        infoPanel = new InfoPanel (mc["mcInfoPanel"]);
+        infoPanel = new InfoPanel (mc["mcInfoPanel"], controller);
         editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], controller, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"]);
 
@@ -144,20 +144,23 @@ public class LevelEditorUI extends GraphicStorage {
                         "\n" +
                         "SHIFT + клик по карте = многократная установка предмета." +
                         "\n" +
-                        "ESC + клик по карте = удаление объекта."
+                        "ESC/DELETE + клик по карте = удаление объекта."
                 );
                 break;
             case (LevelEditorMode.EDIT_PATHS):
                 selectTab(btnTabEditPaths);
                 showPanel(editPathsPanel);
+                outputInfo("Редактирование путей времено не работает.");
                 break;
             case (LevelEditorMode.EDIT_ZONES):
                 selectTab(btnTabEditDefenderZones);
                 showPanel(null);
+                outputInfo("Редактирование зон защитников времено не работает.");
                 break;
             case (LevelEditorMode.EDIT_LEVELS):
                 selectTab(btnTabEditLevels);
                 showPanel(null);
+                outputInfo("Редактирование уровней времено не работает.");
                 break;
         }
     }

@@ -16,7 +16,7 @@ import starling.text.TextField;
 
 public class FileLine extends Sprite {
 
-    private var _controller:LevelEditorController;
+    private var controller:LevelEditorController;
 
     private var _data: ObjectData;
     override public function get name():String {
@@ -25,9 +25,9 @@ public class FileLine extends Sprite {
 
     private var _tf: TextField;
 
-    public function FileLine($data: ObjectData) {
+    public function FileLine($data: ObjectData, $controller: LevelEditorController) {
         _data = $data;
-        _controller = LevelEditorController.getInstance();
+        controller = $controller;
 
         _tf = new TextField(200, 20, _data.name);
         _tf.color = _data.exists ? 0x009900 : 0x990000;
@@ -41,10 +41,10 @@ public class FileLine extends Sprite {
     private function handleTouch($event: TouchEvent):void {
         if ($event.getTouch(this, TouchPhase.ENDED)) {
             if (_data.type == ObjectData.BACKGROUND) {
-                _controller.selectBackground(_data);
+                controller.selectBackground(_data);
             }
             else {
-                _controller.selectObject(_data);
+                controller.selectObject(_data);
             }
         }
     }

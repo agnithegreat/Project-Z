@@ -6,6 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.ui {
+import com.projectz.utils.levelEditor.controller.LevelEditorController;
+import com.projectz.utils.levelEditor.controller.LevelEditorMode;
+import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+
 import starling.display.Button;
 import starling.display.Sprite;
 import starling.events.Event;
@@ -13,8 +17,7 @@ import starling.utils.AssetManager;
 
 public class ObjectEditorUI extends Sprite {
 
-    public static const SAVE: String = "save_UI";
-    public static const EXPORT: String = "export_UI";
+    private var controller: LevelEditorController;
 
     private var _filesPanel: FilesPanel;
     public function get filesPanel():FilesPanel {
@@ -25,8 +28,10 @@ public class ObjectEditorUI extends Sprite {
 
     private var _export: Button;
 
-    public function ObjectEditorUI($assets: AssetManager) {
-        _filesPanel = new FilesPanel();
+    public function ObjectEditorUI($assets: AssetManager, $controller: LevelEditorController) {
+        controller = $controller;
+        controller.addEventListener(LevelEditorEvent.SELECT_EDITOR_MODE, selectEditorModeListener);
+        _filesPanel = new FilesPanel($controller);
         _filesPanel.x = Constants.WIDTH;
         addChild(_filesPanel);
 
@@ -46,12 +51,16 @@ public class ObjectEditorUI extends Sprite {
     private function handleClick($event: Event):void {
         switch ($event.currentTarget) {
             case _save:
-                dispatchEventWith(SAVE);
+                controller.save();
                 break;
             case _export:
-                dispatchEventWith(EXPORT);
+                controller.export();
                 break;
         }
+    }
+
+    private function selectEditorModeListener (event:Event):void {
+        visible = (controller.mode == LevelEditorMode.EDIT_OBJECTS);
     }
 }
 }

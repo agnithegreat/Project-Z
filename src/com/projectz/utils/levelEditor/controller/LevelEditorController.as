@@ -11,6 +11,8 @@ import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.levelEditor.events.SelectBackGroundEvent;
 import com.projectz.utils.levelEditor.events.SelectObjectEvent;
 import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.events.ShowCellInfoEvent;
+import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.EventDispatcher;
@@ -64,7 +66,7 @@ public class LevelEditorController extends EventDispatcher {
     }
 
     /////////////////////////////////////////////
-    //OTHER:
+    //OBJECTS:
     /////////////////////////////////////////////
 
     public function selectObject (objectData:ObjectData):void {
@@ -83,6 +85,32 @@ public class LevelEditorController extends EventDispatcher {
         if (mode == LevelEditorMode.EDIT_OBJECTS) {
             dispatchEvent(new SelectBackGroundEvent(objectData));
         }
+    }
+
+    public function clearAllObjects ():void {
+        if (mode == LevelEditorMode.EDIT_OBJECTS) {
+            dispatchEvent(new LevelEditorEvent(LevelEditorEvent.REMOVE_ALL_OBJECTS));
+        }
+    }
+
+    /////////////////////////////////////////////
+    //MAP:
+    /////////////////////////////////////////////
+
+    public function showCellInfo ($cell:Cell):void {
+        dispatchEvent(new ShowCellInfoEvent($cell));
+    }
+
+    /////////////////////////////////////////////
+    //OTHER:
+    /////////////////////////////////////////////
+
+    public function save ():void {
+        dispatchEvent(new LevelEditorEvent(LevelEditorEvent.SAVE));
+    }
+
+    public function export ():void {
+        dispatchEvent(new LevelEditorEvent(LevelEditorEvent.EXPORT));
     }
 }
 }
