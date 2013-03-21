@@ -7,7 +7,9 @@
  */
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.EventDispatcher;
 
@@ -25,6 +27,18 @@ public class LevelEditorController extends EventDispatcher {
 /////////////////////////////////////////////
 //PUBLIC:
 /////////////////////////////////////////////
+
+    public function addObject (placeData:PlaceData):void {
+        model.addObject(placeData);
+    }
+
+    public function selectObject ($x: int, $y: int):void {
+        model.selectObject($x,  $y);
+    }
+
+    public function changeBackground (objectData:ObjectData):void {
+        model.changeBackground (objectData.name);
+    }
 
     public function clearAllObjects ():void {
         model.removeAllObject();

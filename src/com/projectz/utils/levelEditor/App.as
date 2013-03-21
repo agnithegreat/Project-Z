@@ -67,8 +67,8 @@ public class App extends Sprite {
     }
 
     private function startGame():void {
+        //init mvc model:
         _model = new Field(36, 36, _objectsStorage);
-
 
         _controller = new LevelEditorController(_model);
         _uiController = new UIController(_controller);
@@ -77,18 +77,19 @@ public class App extends Sprite {
 
         addChild(_view);
 
-        _model.levelData = _levelsStorage.getLevelData("level_01");
+        //add ui:
+        _objectEditorUI = new ObjectEditorUI(_assets, _uiController);
 
-        _objectEditorUI = new ObjectEditorUI(_assets, _controller);
         addChild(_objectEditorUI);
-
         _objectEditorUI.filesPanel.showFiles(_objectsStorage);
 
-
         _levelEditorUI = new LevelEditorUI(_uiController, _objectsStorage);
-        _levelEditorUI.y = Constants.HEIGHT;
+
+        _levelEditorUI.x = Constants.WIDTH;
         Starling.current.nativeStage.addChild(_levelEditorUI);
 
+        //init application:
+        _model.levelData = _levelsStorage.getLevelData("level_01");
         _uiController.mode = UIControllerMode.EDIT_OBJECTS;
         _uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
         _uiController.selectCurrentObject(null);

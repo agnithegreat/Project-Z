@@ -6,13 +6,16 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.view {
+
 import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.levelEditor.events.LevelEditorEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.events.levelEditorController.EditObjectEvent;
+import com.projectz.utils.levelEditor.events.levelEditorController.BackgroundWasChangedEvent;
+import com.projectz.utils.levelEditor.events.levelEditorController.EditPlaceEvent;
 import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
 import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -45,10 +48,10 @@ public class FieldView extends Sprite {
     private var _shadowsContainer:Sprite;
     private var _objectsContainer:Sprite;
 
-    private var _currentObject: FieldObjectView;
-    private var _currentCell: CellView;
+    private var _currentObject:FieldObjectView;
+    private var _currentCell:CellView;
 
-    private var _shift: Boolean;
+    private var _shift:Boolean;
 
     protected var _isPressed:Boolean;
     protected var _isRolledOver:Boolean;
@@ -58,20 +61,18 @@ public class FieldView extends Sprite {
     public function FieldView($field:Field, $assets:AssetManager, uiController:UIController) {
         _assets = $assets;
         this.uiController = uiController;
-        uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        uiController.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
-        uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
-        _field = $field;
-        _field.addEventListener(GameEvent.UPDATE, handleUpdate);
-        _field.addEventListener(LevelEditorEvent.OBJECT_ADDED, handleAddObject);
-        _field.addEventListener(LevelEditorEvent.SHADOW_ADDED, handleAddShadow);
-        _field.addEventListener(LevelEditorEvent.OBJECT_REMOVED, handleRemoveObject);
-        _field.addEventListener(LevelEditorEvent.PLACE_ADDED, handleAddPlace);
-        _field.addEventListener(LevelEditorEvent.ALL_OBJECTS_REMOVED, handleAllObjectRemoved);
 
-        _bg = new Image(_assets.getTexture(_field.levelData.bg));
-        _bg.touchable = false;
-        addChild(_bg);
+        uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+
+        _field = $field;
+        _field.addEventListener(BackgroundWasChangedEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
+        _field.addEventListener(GameEvent.UPDATE, handleUpdate);
+        _field.addEventListener(EditObjectEvent.OBJECT_ADDED, handleAddObject);
+        _field.addEventListener(EditObjectEvent.SHADOW_ADDED, handleAddShadow);
+        _field.addEventListener(EditObjectEvent.OBJECT_REMOVED, handleRemoveObject);
+        _field.addEventListener(EditPlaceEvent.PLACE_ADDED, handleAddPlace);
 
         _container = new Sprite();
         addChild(_container);
@@ -102,40 +103,61 @@ public class FieldView extends Sprite {
         addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
     }
 
-    private function handleAddedToStage($event:Event):void {
-        stage.addEventListener(TouchEvent.TOUCH, onTouchHandler);
-        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
-        stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
-    }
+/////////////////////////////////////////////
+//PUBLIC:
+/////////////////////////////////////////////
 
-    public function selectTab($tab: String):void {
-        _objectsContainer.visible = _shadowsContainer.visible = $tab != ObjectData.ENEMY;
-        addObject(null);
-    }
+    public function destroy():void {
+        stage.removeEventListener(TouchEvent.TOUCH, onTouchHandler);
+        stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+        stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 
-    private function selectFile($file:ObjectData):void {
-        if ($file) {
-            if ($file.type != ObjectData.BACKGROUND) {
-                addObject($file);
+        removeEventListeners();
+
+        uiController.removeEventListeners();
+        _field.removeEventListeners();
+        _field = null;
+
+        _bg.removeFromParent(true);
+        _bg = null;
+
+        var cell:CellView;
+        while (_cellsContainer.numChildren > 0) {
+            cell = _cellsContainer.getChildAt(0) as CellView;
+            cell.destroy();
+            cell.removeFromParent(true);
+        }
+        _cellsContainer.removeFromParent(true);
+        _cellsContainer = null;
+
+        var object:ObjectView;
+        while (_objectsContainer.numChildren > 0) {
+            object = _objectsContainer.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
             }
         }
-        else {
-            addObject(null);
+        _objectsContainer.removeFromParent(true);
+        _objectsContainer = null;
+
+        while (_shadowsContainer.numChildren > 0) {
+            object = _shadowsContainer.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
+            }
         }
+        _shadowsContainer.removeFromParent(true);
+        _shadowsContainer = null;
+
+        _container.removeFromParent(true);
+        _container = null;
     }
 
-    private function selectBackground($file:ObjectData):void {
-        if ($file.type == ObjectData.BACKGROUND) {
-            _field.levelData.bg = $file.name;
-            _bg.texture = _assets.getTexture(_field.levelData.bg);
-        }
-    }
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
 
-    private function handleAddPlace($event: Event):void {
-        addObject($event.data as ObjectData);
-    }
-
-    public function addObject($data: ObjectData):void {
+    private function addObject($data:ObjectData):void {
         if (_currentObject) {
             _currentObject.destroy();
             _currentObject.removeFromParent(true);
@@ -153,16 +175,66 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function handleAddObject($event:Event):void {
-        var fieldObject:FieldObject = $event.data as FieldObject;
+    private function update():void {
+        _objectsContainer.sortChildren(sortByDepth);
+    }
+
+    private function selectObject($objectData:ObjectData):void {
+        if ($objectData) {
+            if ($objectData.type != ObjectData.BACKGROUND) {
+                addObject($objectData);
+            }
+        }
+        else {
+            addObject(null);
+        }
+    }
+
+    private function sortByDepth($child1:PositionView, $child2:PositionView):int {
+        if ($child1.depth > $child2.depth) {
+            return 1;
+        } else if ($child1.depth < $child2.depth) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private function getCellViewByPosition($x:int, $y:int):CellView {
+        var cellView:CellView;
+        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
+            var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
+            if ((_cellView.positionX == $x) && (_cellView.positionY == $y)) {
+                cellView = _cellView;
+                break;
+            }
+        }
+        return cellView;
+    }
+
+/////////////////////////////////////////////
+//LISTENERS:
+/////////////////////////////////////////////
+
+    private function handleAddedToStage($event:Event):void {
+        stage.addEventListener(TouchEvent.TOUCH, onTouchHandler);
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+        stage.addEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+    }
+
+    private function handleAddPlace($event:EditPlaceEvent):void {
+        addObject($event.objectData);
+    }
+
+    private function handleAddObject($event:EditObjectEvent):void {
+        var fieldObject:FieldObject = $event.fieldObject;
         var object:ObjectView = new ObjectView(fieldObject, fieldObject.data.name);
         _objectsContainer.addChild(object);
 
         for (var i:int = 0; i < fieldObject.data.width; i++) {
             for (var j:int = 0; j < fieldObject.data.height; j++) {
                 if (fieldObject.data.mask[i][j]) {
-                    var cellView:CellView = getCellViewByPosition(fieldObject.cell.x-fieldObject.data.top.x+i, fieldObject.cell.y-fieldObject.data.top.y+j);
-                    if (cellView){
+                    var cellView:CellView = getCellViewByPosition(fieldObject.cell.x - fieldObject.data.top.x + i, fieldObject.cell.y - fieldObject.data.top.y + j);
+                    if (cellView) {
                         cellView.color = 0x000000;
                     }
                 }
@@ -170,34 +242,29 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function handleAddShadow($event:Event):void {
-        var fieldObject:FieldObject = $event.data as FieldObject;
+    private function handleAddShadow($event:EditObjectEvent):void {
+        var fieldObject:FieldObject = $event.fieldObject;
         if (fieldObject.cell.shadow) {
             var object:ObjectView = new ObjectView(fieldObject.cell.shadow, "shadow");
             _shadowsContainer.addChild(object);
         }
     }
 
-    private function handleRemoveObject($event: Event):void {
-        var object: FieldObject = $event.data as FieldObject;
-
-        handleRemoveObjectByFieldObject (object);
-    }
-
-    private function handleRemoveObjectByFieldObject(object: FieldObject):void {
+    private function handleRemoveObject($event:EditObjectEvent):void {
+        var object:FieldObject = $event.fieldObject;
 
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
-                var cellView:CellView = getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j);
-                if (cellView){
+                var cellView:CellView = getCellViewByPosition(object.cell.x - object.data.top.x + i, object.cell.y - object.data.top.y + j);
+                if (cellView) {
                     cellView.color = 0xffffff;
                 }
             }
         }
 
-        var len: int = _objectsContainer.numChildren;
+        var len:int = _objectsContainer.numChildren;
         for (var i:int = 0; i < len; i++) {
-            var obj: ObjectView = _objectsContainer.getChildAt(i) as ObjectView;
+            var obj:ObjectView = _objectsContainer.getChildAt(i) as ObjectView;
             if (obj.object == object) {
                 obj.destroy();
                 obj.removeFromParent(true);
@@ -218,39 +285,21 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function handleAllObjectRemoved($event: Event):void {
-//        while (_objectsContainer.numChildren > 0) {
-//            var objectView:ObjectView = ObjectView (_objectsContainer.getChildAt(0));
-//            _objectsContainer.removeChild(objectView);
-//            objectView.destroy();
-//        }
-//        while (_shadowsContainer.numChildren > 0) {
-//            var shadowView:ObjectView = ObjectView (_shadowsContainer.getChildAt(0));
-//            _shadowsContainer.removeChild(shadowView);
-//            shadowView.destroy();
-//        }
-//        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-//            var cellView:CellView = CellView(_cellsContainer.getChildAt(0));
-//            cellView.color = 0xffffff;
-//        }
-    }
-
     private function handleUpdate($event:Event):void {
         update();
     }
 
     protected function onTouchHandler(event:TouchEvent):void {
-        var touch:Touch = event.getTouch(this);
+//        var touch:Touch = event.getTouch(stage);
+//        _cellsContainer = new Sprite();
+//        _cellsContainer.touchable = false;
+//        _container.addChild(_cellsContainer);
+        var touch:Touch = event.getTouch(stage);
         if (touch) {
-            var pos: Point = getPositionByTouchEvent(touch);
+            var pos:Point = getPositionByTouchEvent(touch);
             _currentCell = getCellViewByPosition(pos.x, pos.y);
             if (_currentCell) {
                 if ((_currentCell.positionX != _lastCellX) || (_currentCell.positionY != _lastCellY)) {
-//                    trace("!!! " +
-//                            "(cell.positionX (" + cell.positionX + ") != _lastCellX (" + _lastCellX + ")) = " +
-//                            (cell.positionX != _lastCellX) +
-//                            "; (cell.positionY (" + cell.positionY + ") != _lastCellY (" + _lastCellY + ")) = " +
-//                            (cell.positionY != _lastCellY));
                     onCellRollOut(getCellViewByPosition(_lastCellX, _lastCellY));
                     onCellRollOver(_currentCell);
                 }
@@ -270,12 +319,12 @@ public class FieldView extends Sprite {
                     case TouchPhase.ENDED:                                      // click
                     {
                         if (_currentObject) {
-                            var place: PlaceData = new PlaceData();
+                            var place:PlaceData = new PlaceData();
                             place.place(_currentCell.positionX, _currentCell.positionY);
                             place.object = _currentObject.object.name;
                             place.realObject = _currentObject.object;
 
-                            _field.addObject(place);
+                            uiController.addObject(place);
 
                             if (_shift) {
                                 addObject(_currentObject.object);
@@ -283,7 +332,7 @@ public class FieldView extends Sprite {
                                 addObject(null);
                             }
                         } else {
-                            _field.selectObject(_currentCell.positionX, _currentCell.positionY);
+                            uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
                         }
 
                         _isPressed = false;
@@ -332,25 +381,6 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function rollOutAllCells ():void {
-        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-            var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
-            _cellView.onRollOut();
-        }
-    }
-
-    private function getCellViewByPosition($x: int, $y: int):CellView {
-        var cellView:CellView;
-        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-            var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
-            if ((_cellView.positionX == $x) && (_cellView.positionY == $y)) {
-                cellView = _cellView;
-                break;
-            }
-        }
-        return cellView;
-    }
-
     private function getPositionByTouchEvent(touch:Touch):Point {
         var point:Point;
         if (touch) {
@@ -364,20 +394,7 @@ public class FieldView extends Sprite {
         return point;
     }
 
-    public function update():void {
-        _objectsContainer.sortChildren(sortByDepth);
-    }
-
-    private function sortByDepth($child1:PositionView, $child2:PositionView):int {
-        if ($child1.depth > $child2.depth) {
-            return 1;
-        } else if ($child1.depth < $child2.depth) {
-            return -1;
-        }
-        return 0;
-    }
-
-    private function handleKeyDown($event: KeyboardEvent):void {
+    private function handleKeyDown($event:KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.ESCAPE:
             case Keyboard.DELETE:
@@ -389,7 +406,7 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function handleKeyUp($event: KeyboardEvent):void {
+    private function handleKeyUp($event:KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.SHIFT:
                 _shift = false;
@@ -403,65 +420,32 @@ public class FieldView extends Sprite {
         obj.removeFromParent(true);
     }
 
-    public function destroy():void {
-        stage.removeEventListener(TouchEvent.TOUCH, onTouchHandler);
-        stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
-        stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
+    private function selectObjectListener(event:SelectObjectEvent):void {
+        selectObject(event.objectData);
+    }
 
-        uiController.removeEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        uiController.removeEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
-        uiController.removeEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
-
-        removeEventListeners();
-
-        _field.removeEventListeners();
-        _field = null;
-
-        _bg.removeFromParent(true);
-        _bg = null;
-
-        var cell:CellView;
-        while (_cellsContainer.numChildren > 0) {
-            cell = _cellsContainer.getChildAt(0) as CellView;
-            cell.destroy();
-            cell.removeFromParent(true);
-        }
-        _cellsContainer.removeFromParent(true);
-        _cellsContainer = null;
-
-        var object:ObjectView;
-        while (_objectsContainer.numChildren > 0) {
-            object = _objectsContainer.removeChildAt(0, true) as ObjectView;
-            if (object) {
-                object.destroy();
+    private function backgroundWasChangedListener(event:BackgroundWasChangedEvent):void {
+        var objectData:ObjectData = event.objectData;
+        if (objectData.type == ObjectData.BACKGROUND) {
+            if (_field.levelData) {
+                if (!_bg) {
+                    _bg = new Image(_assets.getTexture(_field.levelData.bg));
+                    _bg.touchable = false;
+                    addChildAt(_bg, 0);
+                }
+                _field.levelData.bg = objectData.name;
+                _bg.texture = _assets.getTexture(_field.levelData.bg);
             }
         }
-        _objectsContainer.removeFromParent(true);
-        _objectsContainer = null;
-
-        while (_shadowsContainer.numChildren > 0) {
-            object = _shadowsContainer.removeChildAt(0, true) as ObjectView;
-            if (object) {
-                object.destroy();
-            }
-        }
-        _shadowsContainer.removeFromParent(true);
-        _shadowsContainer = null;
-
-        _container.removeFromParent(true);
-        _container = null;
     }
 
-    private function selectObjectListener (event:SelectObjectEvent):void {
-        selectFile (event.objectData);
+    private function selectObjectsTypeListener(event:SelectObjectsTypeEvent):void {
+        _objectsContainer.visible = _shadowsContainer.visible = event.objectsType != ObjectData.ENEMY;
+        addObject(null);
     }
 
-    private function selectBackGroundListener (event:SelectBackGroundEvent):void {
-        selectFile (event.objectData);
-    }
-
-    private function selectObjectsTypeListener (event:SelectObjectsTypeEvent):void {
-        selectTab (event.objectsType);
+    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
+        addObject(null);
     }
 }
 }

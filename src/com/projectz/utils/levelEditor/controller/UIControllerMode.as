@@ -13,6 +13,7 @@ public class UIControllerMode {
     public static var EDIT_PATHS:String = "edit paths";//режим редактирования путей
     public static var EDIT_ZONES:String = "edit zones";//режим редактирования зон, в которых находятся защитники
     public static var EDIT_LEVELS:String = "edit levels";//режим редактирования файлов уровней
+    public static var EDIT_SETTINGS:String = "edit settings";//режим редактирования настроек
 
 }
 }

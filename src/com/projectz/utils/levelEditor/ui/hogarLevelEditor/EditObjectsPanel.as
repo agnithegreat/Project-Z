@@ -10,13 +10,14 @@ import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.events.uiController.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectBackgroundEvent;
 import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
 import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import fl.controls.ComboBox;
+import fl.controls.List;
 import fl.data.DataProvider;
 
 import flash.display.MovieClip;
@@ -27,7 +28,7 @@ import flash.utils.Dictionary;
 public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
     private var cbxObjectsType:ComboBox;
-    private var cbxObjects:ComboBox;
+    private var listObjects:List;
     private var cbxBackgrounds:ComboBox;
 
     private var uiController:UIController;
@@ -41,7 +42,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         this.objectStorage = objectStorage;
 
         uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        uiController.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        uiController.addEventListener(SelectBackgroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         super (mc);
@@ -63,12 +64,17 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         super.initGraphicElements();
 
         cbxObjectsType = ComboBox (getElement("cbxObjectsType"));
-        cbxObjects = ComboBox (getElement("cbxObjects"));
+        listObjects = List (getElement("listObjects"));
         cbxBackgrounds = ComboBox (getElement("cbxBackgrounds"));
+
+        cbxObjectsType.focusEnabled = false;
+        listObjects.focusEnabled = false;
+        cbxBackgrounds.focusEnabled = false;
 
         var dataProvider:DataProvider = new DataProvider();
         dataProvider.addItem({label:"animated object (" + ObjectData.ANIMATED_OBJECT + ")",data:ObjectData.ANIMATED_OBJECT});
         dataProvider.addItem({label:"static object (" + ObjectData.STATIC_OBJECT + ")",data:ObjectData.STATIC_OBJECT});
+        dataProvider.addItem({label:"enemies (" + ObjectData.ENEMY + ")",data:ObjectData.ENEMY});
         cbxObjectsType.dataProvider = dataProvider;
         dataProvider = new DataProvider ();
 
@@ -80,7 +86,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         }
         cbxBackgrounds.dataProvider = dataProvider;
 
-        cbxObjects.addEventListener (Event.CHANGE, changeListener_cbxObjects);
+        listObjects.addEventListener (Event.CHANGE, changeListener_cbxObjects);
         cbxObjectsType.addEventListener (Event.CHANGE, changeListener_cbxObjectsType);
         cbxBackgrounds.addEventListener (Event.CHANGE, changeListener_cbxBackgrounds);
 
@@ -113,11 +119,11 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
     private function selectObjectListener (event:SelectObjectEvent):void {
         //устанавливаем позицию комбобокса для выбранноо объекта:
-        var dataProvider:DataProvider = cbxObjects.dataProvider;
+        var dataProvider:DataProvider = listObjects.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);
             if (dataProviderItem.data == event.objectData) {
-                cbxObjects.selectedItem = dataProviderItem;
+                listObjects.selectedItem = dataProviderItem;
                 if (event.objectData) {
                     trace ("select object = " + event.objectData.name);
                 }
@@ -129,7 +135,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         }
     }
 
-    private function selectBackGroundListener (event:SelectBackGroundEvent):void {
+    private function selectBackGroundListener (event:SelectBackgroundEvent):void {
         //устанавливаем позицию комбобокса для выбранноо фона:
         var dataProvider:DataProvider = cbxBackgrounds.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
@@ -158,12 +164,12 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         dataProvider = new DataProvider ();
         var object: ObjectData;
         var objects: Dictionary = objectStorage.getType(event.objectsType);
-        dataProvider.addItem({label:"Выберете объект...",data:null});
+//        dataProvider.addItem({label:"Выберете объект...",data:null});
         for each (object in objects) {
             var objectData:ObjectData = ObjectData (object);
             dataProvider.addItem({label:objectData.name,data:objectData});
         }
-        cbxObjects.dataProvider = dataProvider;
+        listObjects.dataProvider = dataProvider;
     }
 
     private function changeListener_cbxObjectsType (event:Event):void {
@@ -171,7 +177,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
     }
 
     private function changeListener_cbxObjects (event:Event):void {
-        uiController.selectCurrentObject(ObjectData (cbxObjects.selectedItem.data));
+        uiController.selectCurrentObject(ObjectData (listObjects.selectedItem.data));
 
     }
 

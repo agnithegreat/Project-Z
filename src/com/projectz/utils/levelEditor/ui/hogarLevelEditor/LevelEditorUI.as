@@ -9,16 +9,13 @@ package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
-import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
-import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import flash.events.MouseEvent;
 import flash.text.TextField;
-
-import starling.events.Event;
 
 public class LevelEditorUI extends GraphicStorage {
 
@@ -37,6 +34,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var btnTabEditPaths:ButtonWithText;
     private var btnTabEditDefenderZones:ButtonWithText;
     private var btnTabEditLevels:ButtonWithText;
+    private var btnTabEditSettings:ButtonWithText;
 
     private var tabs:Vector.<ButtonWithText> = new <ButtonWithText>[];
 
@@ -49,7 +47,7 @@ public class LevelEditorUI extends GraphicStorage {
 
         super(new mcLevelEditorPanel);
 
-        uiController.addEventListener(LevelEditorEvent.SELECT_EDITOR_MODE, selectModeListener);
+        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
 
         outputInfo("Добро пожаловать в редактор уровней! Выберите одну из вкладок сверху, чтобы задать режим работы редактора.");
         showPanel(null);
@@ -65,7 +63,7 @@ public class LevelEditorUI extends GraphicStorage {
         //инициализируем графические элементы (парсим графику):
 
         //панели:
-        infoPanel = new InfoPanel (mc["mcInfoPanel"], uiController);
+        infoPanel = new InfoPanel(mc["mcInfoPanel"], uiController);
         editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"]);
 
@@ -77,15 +75,17 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditPaths = new ButtonWithText(mc["mcBtnTab2"]);
         btnTabEditDefenderZones = new ButtonWithText(mc["mcBtnTab3"]);
         btnTabEditLevels = new ButtonWithText(mc["mcBtnTab4"]);
-        mc["mcBtnTab5"].visible = false;//убираем видимость неиспользованных (запасных) табов:
+        btnTabEditSettings = new ButtonWithText(mc["mcBtnTab5"]);
+//        mc["mcBtnTab5"].visible = false;//убираем видимость неиспользованных (запасных) табов:
 
         tabs.push(btnTabEditObjects);
         tabs.push(btnTabEditPaths);
         tabs.push(btnTabEditDefenderZones);
         tabs.push(btnTabEditLevels);
+        tabs.push(btnTabEditSettings);
 
         //информационные сообщения:
-        tfInfo = TextField (getElement("tfInfo"));
+        tfInfo = TextField(getElement("tfInfo"));
 
         //добавляем тексты:
 
@@ -93,12 +93,14 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditPaths.text = "редактор путей";
         btnTabEditDefenderZones.text = "редактор зон защитников";
         btnTabEditLevels.text = "редактор уровней";
+        btnTabEditSettings.text = "настройки";
 
         //добавляем слушатели:
         btnTabEditObjects.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditPaths.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditDefenderZones.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditLevels.addEventListener(MouseEvent.CLICK, clickListener);
+        btnTabEditSettings.addEventListener(MouseEvent.CLICK, clickListener);
     }
 
 /////////////////////////////////////////////
@@ -112,7 +114,7 @@ public class LevelEditorUI extends GraphicStorage {
         }
     }
 
-    private function showPanel (panel:IPanel):void {
+    private function showPanel(panel:IPanel):void {
         for (var i:int; i < panels.length; i++) {
             var _panel:IPanel = panels [i];
             if (_panel == panel) {
@@ -124,7 +126,7 @@ public class LevelEditorUI extends GraphicStorage {
         }
     }
 
-    private function outputInfo (value:String = null):void {
+    private function outputInfo(value:String = null):void {
         if (value == null) {
             value = "";
         }
@@ -135,17 +137,17 @@ public class LevelEditorUI extends GraphicStorage {
 //LISTENERS:
 /////////////////////////////////////////////
 
-    private function selectModeListener (event:Event):void {
-        switch (uiController.mode) {
+    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
+        switch (event.mode) {
             case (UIControllerMode.EDIT_OBJECTS):
                 selectTab(btnTabEditObjects);
                 showPanel(editObjectsPanel);
                 outputInfo(
                         "Кнопки:" +
-                        "\n" +
-                        "SHIFT + клик по карте = многократная установка предмета." +
-                        "\n" +
-                        "ESC/DELETE + клик по карте = удаление объекта."
+                                "\n" +
+                                "1. SHIFT + клик по карте = многократная установка предмета." +
+                                "\n" +
+                                "2. ESC/DELETE + клик по карте = удаление объекта."
                 );
                 break;
             case (UIControllerMode.EDIT_PATHS):
@@ -163,10 +165,15 @@ public class LevelEditorUI extends GraphicStorage {
                 showPanel(null);
                 outputInfo("Редактирование уровней времено не работает.");
                 break;
+            case (UIControllerMode.EDIT_SETTINGS):
+                selectTab(btnTabEditSettings);
+                showPanel(null);
+                outputInfo("Редактирование настроек времено не работает.");
+                break;
         }
     }
 
-    private function clickListener (event:MouseEvent):void {
+    private function clickListener(event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnTabEditObjects):
                 uiController.mode = UIControllerMode.EDIT_OBJECTS;
@@ -179,6 +186,9 @@ public class LevelEditorUI extends GraphicStorage {
                 break;
             case (btnTabEditLevels):
                 uiController.mode = UIControllerMode.EDIT_LEVELS;
+                break;
+            case (btnTabEditSettings):
+                uiController.mode = UIControllerMode.EDIT_SETTINGS;
                 break;
         }
     }

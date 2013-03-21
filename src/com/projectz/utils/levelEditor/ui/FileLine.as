@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
+import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.display.Sprite;
@@ -16,7 +17,7 @@ import starling.text.TextField;
 
 public class FileLine extends Sprite {
 
-    private var controller:LevelEditorController;
+    private var uiController:UIController;
 
     private var _data: ObjectData;
     override public function get name():String {
@@ -25,9 +26,9 @@ public class FileLine extends Sprite {
 
     private var _tf: TextField;
 
-    public function FileLine($data: ObjectData, $controller: LevelEditorController) {
+    public function FileLine($data: ObjectData, uiController: UIController) {
         _data = $data;
-        controller = $controller;
+        this.uiController = uiController;
 
         _tf = new TextField(200, 20, _data.name);
         _tf.color = _data.exists ? 0x009900 : 0x990000;
@@ -41,10 +42,10 @@ public class FileLine extends Sprite {
     private function handleTouch($event: TouchEvent):void {
         if ($event.getTouch(this, TouchPhase.ENDED)) {
             if (_data.type == ObjectData.BACKGROUND) {
-                controller.selectLevelBackground(_data);
+                uiController.selectLevelBackground(_data);
             }
             else {
-                controller.selectCurrentObject(_data);
+                uiController.selectCurrentObject(_data);
             }
         }
     }

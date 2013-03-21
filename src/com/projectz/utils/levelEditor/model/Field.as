@@ -9,7 +9,9 @@ package com.projectz.utils.levelEditor.model {
 import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.data.LevelData;
-import com.projectz.utils.levelEditor.events.LevelEditorEvent;
+import com.projectz.utils.levelEditor.events.levelEditorController.EditObjectEvent;
+import com.projectz.utils.levelEditor.events.levelEditorController.BackgroundWasChangedEvent;
+import com.projectz.utils.levelEditor.events.levelEditorController.EditPlaceEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -66,7 +68,8 @@ public class Field extends EventDispatcher {
 
     public function set levelData(value:LevelData):void {
         _levelData = value;
-        init();
+        createObjects(_levelData.objects);
+        changeBackground(_levelData.bg);
     }
 
     public function get levelData():LevelData {
@@ -82,12 +85,6 @@ public class Field extends EventDispatcher {
     }
 
     /////////////////////////////////////////////
-
-    public function init():void {
-        if (_levelData) {
-            createObjects(_levelData.objects);
-        }
-    }
 
     public function addObject($placeData: PlaceData):void {
         // TODO: implement check addObjectTest
@@ -116,8 +113,16 @@ public class Field extends EventDispatcher {
 
             if (object) {
                 removeObject(object);
-                dispatchEventWith(LevelEditorEvent.PLACE_ADDED, false, _objectsStorage.getObjectData(object.object));
+                dispatchEvent(new EditPlaceEvent (_objectsStorage.getObjectData(object.object), EditPlaceEvent.PLACE_ADDED));
             }
+        }
+    }
+
+    public function changeBackground (backgroundId:String):void {
+        if (_levelData) {
+            _levelData.bg = backgroundId;
+            var objectData:ObjectData = _objectsStorage.getObjectData (backgroundId);
+            dispatchEvent(new BackgroundWasChangedEvent(objectData));
         }
     }
 
@@ -141,7 +146,6 @@ public class Field extends EventDispatcher {
                 placeData = _levelData.objects[0];
                 removeObject(placeData);
             }
-            dispatchEventWith(LevelEditorEvent.ALL_OBJECTS_REMOVED, false);
         }
     }
 
@@ -267,7 +271,7 @@ public class Field extends EventDispatcher {
                 if (obj.placeData == $object) {
                     _objects.splice(i--, 1);
                     len--;
-                    dispatchEventWith(LevelEditorEvent.OBJECT_REMOVED, false, obj);
+                    dispatchEvent(new EditObjectEvent(obj, EditObjectEvent.OBJECT_REMOVED));
                 }
             }
         }
@@ -309,10 +313,12 @@ public class Field extends EventDispatcher {
                 }
             }
         }
-        object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
-        _objects.push(object);
+        if (cell) {
+            object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
+            _objects.push(object);
 
-        dispatchEventWith(LevelEditorEvent.OBJECT_ADDED, false, object);
+            dispatchEvent(new EditObjectEvent (object, EditObjectEvent.OBJECT_ADDED));
+        }
     }
 
     private function createShadow($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
@@ -321,7 +327,7 @@ public class Field extends EventDispatcher {
         cell.shadow = shadow;
         shadow.place(cell);
 
-        dispatchEventWith(LevelEditorEvent.SHADOW_ADDED, false, shadow);
+        dispatchEvent(new EditObjectEvent(shadow, EditObjectEvent.SHADOW_ADDED));
     }
 
 }

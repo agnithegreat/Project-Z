@@ -7,8 +7,8 @@
  */
 
 package com.projectz.utils.levelEditor.controller {
-import com.projectz.utils.levelEditor.events.LevelEditorEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.data.PlaceData;
+import com.projectz.utils.levelEditor.events.uiController.SelectBackgroundEvent;
 import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
 import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
 import com.projectz.utils.levelEditor.events.uiController.ShowCellInfoEvent;
@@ -74,7 +74,8 @@ public class UIController extends EventDispatcher {
 
     public function selectLevelBackground(objectData:ObjectData):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
-            dispatchEvent(new SelectBackGroundEvent(objectData));
+            dispatchEvent(new SelectBackgroundEvent(objectData));
+            levelEditorController.changeBackground(objectData);
         }
     }
 
@@ -90,6 +91,14 @@ public class UIController extends EventDispatcher {
     //LEVEL EDITOR CONTROLLER:
     //Методы классического mvc контроллера
     /////////////////////////////////////////////
+
+    public function addObject (placeData:PlaceData):void {
+        levelEditorController.addObject(placeData);
+    }
+
+    public function selectObject ($x: int, $y: int):void {
+        levelEditorController.selectObject($x,  $y);
+    }
 
     public function clearAllObjects():void {
         levelEditorController.clearAllObjects();
