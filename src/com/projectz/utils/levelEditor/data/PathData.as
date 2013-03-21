@@ -49,14 +49,21 @@ public class PathData {
         _points = new Vector.<Point>();
         var len:int = $data.points.length;
         for (var i:int = 0; i < len; i++) {
-            var pointData:Object = $data.points [i];
+            var pointData:Object = $data.points[i];
             var point: Point = new Point(pointData.x, pointData.y);
             _points.push(point);
         }
     }
 
     public function export():Object {
-        return {"id": _id, "color": _color, "points": _points.toString()};
+        //Преобразовываем Vector из точек в строковое представление:
+        var arrPointsAsObjects:Array/*of Objects {"x":x,"y":y}*/ = new Array()/*of Objects {"x":x,"y":y}*/;
+        var len: int = _points.length;
+        for (var i:int = 0; i < len; i++) {
+            var point:Point = _points [i];
+            arrPointsAsObjects[i] = {"x":point.x, "y":point.y};
+        }
+        return {"id": _id, "color": _color, "points": arrPointsAsObjects};
     }
 
     public function get points():Vector.<Point> {
