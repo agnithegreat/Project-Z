@@ -7,7 +7,7 @@
  */
 package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -104,16 +104,16 @@ public class FilesPanel extends Sprite {
     private function handleClick($event: Event):void {
         switch ($event.currentTarget) {
             case _bgTab:
-                controller.selectObjectType(ObjectData.BACKGROUND);
+                controller.selectCurrentObjectType(ObjectData.BACKGROUND);
                 break;
             case _staticTab:
-                controller.selectObjectType(ObjectData.STATIC_OBJECT);
+                controller.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
                 break;
             case _animatedTab:
-                controller.selectObjectType(ObjectData.ANIMATED_OBJECT);
+                controller.selectCurrentObjectType(ObjectData.ANIMATED_OBJECT);
                 break;
             case _enemiesTab:
-                controller.selectObjectType(ObjectData.ENEMY);
+                controller.selectCurrentObjectType(ObjectData.ENEMY);
                 break;
         }
     }

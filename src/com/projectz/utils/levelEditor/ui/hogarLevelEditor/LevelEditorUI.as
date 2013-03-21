@@ -10,7 +10,8 @@ package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.controller.LevelEditorMode;
+import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -21,7 +22,7 @@ import starling.events.Event;
 
 public class LevelEditorUI extends GraphicStorage {
 
-    private var controller:LevelEditorController;
+    private var uiController:UIController;
     private var objectStorage:ObjectsStorage;
 
     //панели:
@@ -42,13 +43,13 @@ public class LevelEditorUI extends GraphicStorage {
     //информационные сообщения:
     private var tfInfo:TextField;
 
-    public function LevelEditorUI(controller:LevelEditorController, objectStorage:ObjectsStorage) {
-        this.controller = controller;
+    public function LevelEditorUI(uiController:UIController, objectStorage:ObjectsStorage) {
+        this.uiController = uiController;
         this.objectStorage = objectStorage;
 
         super(new mcLevelEditorPanel);
 
-        controller.addEventListener(LevelEditorEvent.SELECT_EDITOR_MODE, selectModeListener);
+        uiController.addEventListener(LevelEditorEvent.SELECT_EDITOR_MODE, selectModeListener);
 
         outputInfo("Добро пожаловать в редактор уровней! Выберите одну из вкладок сверху, чтобы задать режим работы редактора.");
         showPanel(null);
@@ -64,8 +65,8 @@ public class LevelEditorUI extends GraphicStorage {
         //инициализируем графические элементы (парсим графику):
 
         //панели:
-        infoPanel = new InfoPanel (mc["mcInfoPanel"], controller);
-        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], controller, objectStorage);
+        infoPanel = new InfoPanel (mc["mcInfoPanel"], uiController);
+        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"]);
 
         panels.push(editObjectsPanel);
@@ -135,8 +136,8 @@ public class LevelEditorUI extends GraphicStorage {
 /////////////////////////////////////////////
 
     private function selectModeListener (event:Event):void {
-        switch (controller.mode) {
-            case (LevelEditorMode.EDIT_OBJECTS):
+        switch (uiController.mode) {
+            case (UIControllerMode.EDIT_OBJECTS):
                 selectTab(btnTabEditObjects);
                 showPanel(editObjectsPanel);
                 outputInfo(
@@ -147,17 +148,17 @@ public class LevelEditorUI extends GraphicStorage {
                         "ESC/DELETE + клик по карте = удаление объекта."
                 );
                 break;
-            case (LevelEditorMode.EDIT_PATHS):
+            case (UIControllerMode.EDIT_PATHS):
                 selectTab(btnTabEditPaths);
                 showPanel(editPathsPanel);
                 outputInfo("Редактирование путей времено не работает.");
                 break;
-            case (LevelEditorMode.EDIT_ZONES):
+            case (UIControllerMode.EDIT_ZONES):
                 selectTab(btnTabEditDefenderZones);
                 showPanel(null);
                 outputInfo("Редактирование зон защитников времено не работает.");
                 break;
-            case (LevelEditorMode.EDIT_LEVELS):
+            case (UIControllerMode.EDIT_LEVELS):
                 selectTab(btnTabEditLevels);
                 showPanel(null);
                 outputInfo("Редактирование уровней времено не работает.");
@@ -168,16 +169,16 @@ public class LevelEditorUI extends GraphicStorage {
     private function clickListener (event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnTabEditObjects):
-                controller.mode = LevelEditorMode.EDIT_OBJECTS;
+                uiController.mode = UIControllerMode.EDIT_OBJECTS;
                 break;
             case (btnTabEditPaths):
-                controller.mode = LevelEditorMode.EDIT_PATHS;
+                uiController.mode = UIControllerMode.EDIT_PATHS;
                 break;
             case (btnTabEditDefenderZones):
-                controller.mode = LevelEditorMode.EDIT_ZONES;
+                uiController.mode = UIControllerMode.EDIT_ZONES;
                 break;
             case (btnTabEditLevels):
-                controller.mode = LevelEditorMode.EDIT_LEVELS;
+                uiController.mode = UIControllerMode.EDIT_LEVELS;
                 break;
         }
     }

@@ -41,10 +41,10 @@ public class FileLine extends Sprite {
     private function handleTouch($event: TouchEvent):void {
         if ($event.getTouch(this, TouchPhase.ENDED)) {
             if (_data.type == ObjectData.BACKGROUND) {
-                controller.selectBackground(_data);
+                controller.selectLevelBackground(_data);
             }
             else {
-                controller.selectObject(_data);
+                controller.selectCurrentObject(_data);
             }
         }
     }

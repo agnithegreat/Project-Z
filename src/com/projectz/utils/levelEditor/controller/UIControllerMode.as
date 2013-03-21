@@ -7,7 +7,7 @@
  */
 package com.projectz.utils.levelEditor.controller {
 
-public class LevelEditorMode {
+public class UIControllerMode {
 
     public static var EDIT_OBJECTS:String = "edit objects";//режим редактирования объектов
     public static var EDIT_PATHS:String = "edit paths";//режим редактирования путей

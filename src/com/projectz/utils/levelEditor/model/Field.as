@@ -25,58 +25,138 @@ import starling.events.EventDispatcher;
 
 public class Field extends EventDispatcher {
 
-    private var controller:LevelEditorController;
-
     private var _width: int;
-    public function get width():int {
-        return _width;
-    }
-
     private var _height: int;
-    public function get height():int {
-        return _height;
-    }
 
     private var _objectsStorage: ObjectsStorage;
 
-    private var _fieldObj: Object;
+    private var _fieldAsObj: Object;//представление поля клеток Cell в виде объекта. Ключом для получения служит строка с координатами клетки вида x_y
     private var _field: Vector.<Cell>;
-    public function get field():Vector.<Cell> {
-        return _field;
-    }
 
-    private var _grid: Grid;
-
-    private var _level: LevelData;
-    public function get level():LevelData {
-        return _level;
-    }
+    private var _levelData: LevelData;
 
     private var _objects: Vector.<FieldObject>;
-    public function get objects():Vector.<FieldObject> {
-        return _objects;
-    }
 
-    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData, $controller:LevelEditorController) {
-        controller = $controller;
+    public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage) {
         _width = $width;
         _height = $height;
-
-        _grid = new Grid(_width, _height);
 
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
 
-        _level = $level;
         createField();
 
-        controller.addEventListener (LevelEditorEvent.SAVE, saveListener);
-        controller.addEventListener (LevelEditorEvent.REMOVE_ALL_OBJECTS, removeAllObjectListener);
     }
 
-    public function init():void {
-        createObjects(_level.objects);
+/////////////////////////////////////////////
+//PUBLIC:
+/////////////////////////////////////////////
+
+    /////////////////////////////////////////////
+    //GET & SET:
+    /////////////////////////////////////////////
+
+    public function get width():int {
+        return _width;
     }
+
+    public function get height():int {
+        return _height;
+    }
+
+    public function set levelData(value:LevelData):void {
+        _levelData = value;
+        init();
+    }
+
+    public function get levelData():LevelData {
+        return _levelData;
+    }
+
+    public function get objects():Vector.<FieldObject> {
+        return _objects;
+    }
+
+    public function get field():Vector.<Cell> {
+        return _field;
+    }
+
+    /////////////////////////////////////////////
+
+    public function init():void {
+        if (_levelData) {
+            createObjects(_levelData.objects);
+        }
+    }
+
+    public function addObject($placeData: PlaceData):void {
+        // TODO: implement check addObjectTest
+
+        if (_levelData) {
+            _levelData.addObject($placeData);
+            createObject($placeData.x, $placeData.y, $placeData.realObject, $placeData);
+            updateDepths();
+            dispatchEventWith(GameEvent.UPDATE);
+        }
+    }
+
+    public function selectObject($x: int,  $y: int):void {
+        if (_levelData) {
+            var object: PlaceData;
+
+            var len: int = _levelData.objects.length;
+            for (var i:int = 0; i < len; i++) {
+                object = _levelData.objects[i];
+                if (object.hitTest($x, $y)) {
+                    break;
+                } else {
+                    object = null;
+                }
+            }
+
+            if (object) {
+                removeObject(object);
+                dispatchEventWith(LevelEditorEvent.PLACE_ADDED, false, _objectsStorage.getObjectData(object.object));
+            }
+        }
+    }
+
+    public function destroy():void {
+        while (_field.length>0) {
+            _field.pop().destroy();
+        }
+        _field = null;
+
+        for (var id: String in _fieldAsObj) {
+            delete _fieldAsObj[id];
+        }
+        _fieldAsObj = null;
+    }
+
+    public function removeAllObject():void {
+        if (_levelData) {
+            var placeData: PlaceData;
+            var len: int = _levelData.objects.length;
+            while (_levelData.objects.length > 0) {
+                placeData = _levelData.objects[0];
+                removeObject(placeData);
+            }
+            dispatchEventWith(LevelEditorEvent.ALL_OBJECTS_REMOVED, false);
+        }
+    }
+
+    public function save ():void {
+        levelData.save(levelData.export());
+    }
+
+    public function export ():void {
+        //
+    }
+
+
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
 
     private function updateDepths():void {
         var toCheck: Vector.<Cell> = new <Cell>[];
@@ -123,8 +203,8 @@ public class Field extends EventDispatcher {
         }
     }
 
-    private function getObjectCells($object: FieldObject):Array {
-        var cells: Array = [];
+    private function getObjectCells($object: FieldObject):Array/*of Cell*/ {
+        var cells: Array = []/*of Cell*/;
         for (var i:int = 0; i < $object.data.width; i++) {
             for (var j:int = 0; j < $object.data.height; j++) {
                 if ($object.data.mask[i][j]) {
@@ -148,21 +228,9 @@ public class Field extends EventDispatcher {
         return true;
     }
 
-    private function getWay($start: Cell, $end: Cell):Vector.<Cell> {
-        var way: Vector.<Cell> = new <Cell>[];
-        _grid.setStartNode($start.x, $start.y);
-        _grid.setEndNode($end.x, $end.y);
-        var path: Path = PathFinder.findPath(_grid);
-        var len: int = path.path.length;
-        for (var i:int = 1; i < len; i++) {
-            way.push(getCell(path.path[i].x, path.path[i].y));
-        }
-        return way;
-    }
-
     private function createField():void {
         _field = new <Cell>[];
-        _fieldObj = {};
+        _fieldAsObj = {};
 
         var cell: Cell;
         for (var j:int = 0; j < _height; j++) {
@@ -170,7 +238,7 @@ public class Field extends EventDispatcher {
                 if (i+j>0.4*_width && i+j<1.6*_width && Math.abs(i-j)<0.4*_height) {
                     cell = new Cell(i, j);
                     _field.push(cell);
-                    _fieldObj[i+"."+j] = cell;
+                    _fieldAsObj[i+"."+j] = cell;
                 }
             }
         }
@@ -187,58 +255,22 @@ public class Field extends EventDispatcher {
     }
 
     private function getCell(x: int, y: int):Cell {
-        return _fieldObj[x+"."+y];
-    }
-
-    public function addObject($placeData: PlaceData):void {
-        // TODO: implement check addObjectTest
-
-        _level.addObject($placeData);
-        createObject($placeData.x, $placeData.y, $placeData.realObject, $placeData);
-        updateDepths();
-        dispatchEventWith(GameEvent.UPDATE);
-    }
-
-    public function selectObject($x: int,  $y: int):void {
-        var object: PlaceData;
-
-        var len: int = _level.objects.length;
-        for (var i:int = 0; i < len; i++) {
-            object = _level.objects[i];
-            if (object.hitTest($x, $y)) {
-                break;
-            } else {
-                object = null;
-            }
-        }
-
-        if (object) {
-            removeObject(object);
-            dispatchEventWith(LevelEditorEvent.PLACE_ADDED, false, _objectsStorage.getObjectData(object.object));
-        }
+        return _fieldAsObj[x+"."+y];
     }
 
     private function removeObject($object: PlaceData):void {
-        _level.removeObject($object);
-        var len: int = _objects.length;
-        for (var i:int = 0; i < len; i++) {
-            var obj: FieldObject = _objects[i];
-            if (obj.placeData == $object) {
-                _objects.splice(i--, 1);
-                len--;
-                dispatchEventWith(LevelEditorEvent.OBJECT_REMOVED, false, obj);
+        if (_levelData) {
+            _levelData.removeObject($object);
+            var len: int = _objects.length;
+            for (var i:int = 0; i < len; i++) {
+                var obj: FieldObject = _objects[i];
+                if (obj.placeData == $object) {
+                    _objects.splice(i--, 1);
+                    len--;
+                    dispatchEventWith(LevelEditorEvent.OBJECT_REMOVED, false, obj);
+                }
             }
         }
-    }
-
-    private function removeAllObject():void {
-        var placeData: PlaceData;
-        var len: int = _level.objects.length;
-        while (_level.objects.length > 0) {
-            placeData = _level.objects[0];
-            removeObject(placeData);
-        }
-        dispatchEventWith(LevelEditorEvent.ALL_OBJECTS_REMOVED, false);
     }
 
     private function createObjects($objects: Vector.<PlaceData>):void {
@@ -272,7 +304,6 @@ public class Field extends EventDispatcher {
                 if (cell) {
                     cell.lock();
                     if (object.data.mask[i][j]==1) {
-                        _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject(object);
                     }
                 }
@@ -293,27 +324,5 @@ public class Field extends EventDispatcher {
         dispatchEventWith(LevelEditorEvent.SHADOW_ADDED, false, shadow);
     }
 
-    public function destroy():void {
-        while (_field.length>0) {
-            _field.pop().destroy();
-        }
-        _field = null;
-
-        for (var id: String in _fieldObj) {
-            delete _fieldObj[id];
-        }
-        _fieldObj = null;
-
-        _grid.destroy();
-        _grid = null;
-    }
-
-    private function saveListener (event:Event):void {
-        level.save(level.export());
-    }
-
-    private function removeAllObjectListener (event:Event):void {
-        removeAllObject();
-    }
 }
 }

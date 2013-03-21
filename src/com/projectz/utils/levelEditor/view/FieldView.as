@@ -7,12 +7,12 @@
  */
 package com.projectz.utils.levelEditor.view {
 import com.projectz.game.event.GameEvent;
-import com.projectz.utils.levelEditor.controller.LevelEditorController;
+import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
-import com.projectz.utils.levelEditor.events.SelectBackGroundEvent;
-import com.projectz.utils.levelEditor.events.SelectObjectEvent;
-import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
@@ -32,7 +32,7 @@ import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
 
-    private var controller:LevelEditorController;
+    private var uiController:UIController;
 
     private var _assets:AssetManager;
 
@@ -55,12 +55,12 @@ public class FieldView extends Sprite {
     protected var _lastCellX:int;
     protected var _lastCellY:int;
 
-    public function FieldView($field:Field, $assets:AssetManager, $controller:LevelEditorController) {
+    public function FieldView($field:Field, $assets:AssetManager, uiController:UIController) {
         _assets = $assets;
-        controller = $controller;
-        controller.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        controller.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
-        controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+        this.uiController = uiController;
+        uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        uiController.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(LevelEditorEvent.OBJECT_ADDED, handleAddObject);
@@ -69,7 +69,7 @@ public class FieldView extends Sprite {
         _field.addEventListener(LevelEditorEvent.PLACE_ADDED, handleAddPlace);
         _field.addEventListener(LevelEditorEvent.ALL_OBJECTS_REMOVED, handleAllObjectRemoved);
 
-        _bg = new Image(_assets.getTexture(_field.level.bg));
+        _bg = new Image(_assets.getTexture(_field.levelData.bg));
         _bg.touchable = false;
         addChild(_bg);
 
@@ -126,8 +126,8 @@ public class FieldView extends Sprite {
 
     private function selectBackground($file:ObjectData):void {
         if ($file.type == ObjectData.BACKGROUND) {
-            _field.level.bg = $file.name;
-            _bg.texture = _assets.getTexture(_field.level.bg);
+            _field.levelData.bg = $file.name;
+            _bg.texture = _assets.getTexture(_field.levelData.bg);
         }
     }
 
@@ -310,7 +310,7 @@ public class FieldView extends Sprite {
     private function onCellRollOver(cellView:CellView):void {
         if (cellView) {
             cellView.onRollOver();
-            controller.showCellInfo(cellView.cell);
+            uiController.showCellInfo(cellView.cell);
         }
     }
 
@@ -408,9 +408,9 @@ public class FieldView extends Sprite {
         stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
         stage.removeEventListener(KeyboardEvent.KEY_UP, handleKeyUp);
 
-        controller.removeEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        controller.removeEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
-        controller.removeEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+        uiController.removeEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        uiController.removeEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        uiController.removeEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         removeEventListeners();
 

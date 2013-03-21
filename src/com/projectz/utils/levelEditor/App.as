@@ -7,7 +7,8 @@
  */
 package com.projectz.utils.levelEditor {
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.controller.LevelEditorMode;
+import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.ObjectEditorUI;
@@ -29,16 +30,17 @@ public class App extends Sprite {
 
     private var _model: Field;
     private var _view: FieldView;
+    private var _controller: LevelEditorController;
+    private var _uiController: UIController;
+
     private var _levelEditorUI: LevelEditorUI;
     private var _objectEditorUI: ObjectEditorUI;
-    private var controller: LevelEditorController;
 
     private var _path: String;
 
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
-        controller = LevelEditorController.getInstance();
     }
 
     //Запустаем приложение, начав загрузку ассетов:
@@ -65,26 +67,31 @@ public class App extends Sprite {
     }
 
     private function startGame():void {
-        _model = new Field(36, 36, _objectsStorage, _levelsStorage.getLevelData("level_01"), controller);
+        _model = new Field(36, 36, _objectsStorage);
 
-        _view = new FieldView(_model, _assets, controller);
+
+        _controller = new LevelEditorController(_model);
+        _uiController = new UIController(_controller);
+
+        _view = new FieldView(_model, _assets, _uiController);
+
         addChild(_view);
 
-        _model.init();
+        _model.levelData = _levelsStorage.getLevelData("level_01");
 
-        _objectEditorUI = new ObjectEditorUI(_assets, controller);
+        _objectEditorUI = new ObjectEditorUI(_assets, _controller);
         addChild(_objectEditorUI);
 
         _objectEditorUI.filesPanel.showFiles(_objectsStorage);
 
 
-        _levelEditorUI = new LevelEditorUI(controller, _objectsStorage);
+        _levelEditorUI = new LevelEditorUI(_uiController, _objectsStorage);
         _levelEditorUI.y = Constants.HEIGHT;
         Starling.current.nativeStage.addChild(_levelEditorUI);
 
-        controller.mode = LevelEditorMode.EDIT_OBJECTS;
-        controller.selectObjectType(ObjectData.STATIC_OBJECT);
-        controller.selectObject(null);
+        _uiController.mode = UIControllerMode.EDIT_OBJECTS;
+        _uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
+        _uiController.selectCurrentObject(null);
     }
 }
 }

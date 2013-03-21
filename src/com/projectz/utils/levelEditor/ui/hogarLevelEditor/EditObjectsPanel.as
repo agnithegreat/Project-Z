@@ -9,9 +9,10 @@ package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.events.SelectBackGroundEvent;
-import com.projectz.utils.levelEditor.events.SelectObjectEvent;
-import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.events.uiController.SelectBackGroundEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
+import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -29,19 +30,19 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
     private var cbxObjects:ComboBox;
     private var cbxBackgrounds:ComboBox;
 
-    private var _controller:LevelEditorController;
+    private var uiController:UIController;
     private var objectStorage:ObjectsStorage;
 
     private var btnSave:ButtonWithText;
     private var btnClearAll:ButtonWithText;
 
-    public function EditObjectsPanel(mc:MovieClip, controller:LevelEditorController, objectStorage:ObjectsStorage) {
-        this._controller = controller;
+    public function EditObjectsPanel(mc:MovieClip, uiController:UIController, objectStorage:ObjectsStorage) {
+        this.uiController = uiController;
         this.objectStorage = objectStorage;
 
-        controller.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
-        controller.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
-        controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+        uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
+        uiController.addEventListener(SelectBackGroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
+        uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         super (mc);
     }
@@ -88,7 +89,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         btnClearAll = new ButtonWithText (mc["btnClearAll"]);
 
         btnSave.text = "сохранить";
-        btnClearAll.text = "очистить";
+        btnClearAll.text = "очистить всё";
 
         btnSave.addEventListener(MouseEvent.CLICK, clickListener);
         btnClearAll.addEventListener(MouseEvent.CLICK, clickListener);
@@ -102,10 +103,10 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
     private function clickListener (event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnSave):
-                _controller.save();
+                uiController.save();
                 break;
             case (btnClearAll):
-                _controller.clearAllObjects();
+                uiController.clearAllObjects();
                 break;
         }
     }
@@ -166,16 +167,16 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
     }
 
     private function changeListener_cbxObjectsType (event:Event):void {
-        _controller.selectObjectType(String (cbxObjectsType.selectedItem.data));
+        uiController.selectCurrentObjectType(String (cbxObjectsType.selectedItem.data));
     }
 
     private function changeListener_cbxObjects (event:Event):void {
-        _controller.selectObject(ObjectData (cbxObjects.selectedItem.data));
+        uiController.selectCurrentObject(ObjectData (cbxObjects.selectedItem.data));
 
     }
 
     private function changeListener_cbxBackgrounds (event:Event):void {
-        _controller.selectBackground(ObjectData (cbxBackgrounds.selectedItem.data));
+        uiController.selectLevelBackground(ObjectData (cbxBackgrounds.selectedItem.data));
     }
 
 }

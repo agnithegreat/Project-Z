@@ -7,7 +7,7 @@
  */
 package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.controller.LevelEditorMode;
+import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.events.LevelEditorEvent;
 
 import starling.display.Button;
@@ -60,7 +60,7 @@ public class ObjectEditorUI extends Sprite {
     }
 
     private function selectEditorModeListener (event:Event):void {
-        visible = (controller.mode == LevelEditorMode.EDIT_OBJECTS);
+        visible = (controller.mode == UIControllerMode.EDIT_OBJECTS);
     }
 }
 }
