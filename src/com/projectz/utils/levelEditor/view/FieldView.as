@@ -77,6 +77,7 @@ public class FieldView extends Sprite {
         addChild(_container);
 
         _cellsContainer = new Sprite();
+        _cellsContainer.touchable = false;
         _container.addChild(_cellsContainer);
 
         var len:int = _field.field.length;
@@ -185,7 +186,9 @@ public class FieldView extends Sprite {
 
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
-                getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j).color = 0;
+                if (object.data.mask[i][j]) {
+                    getCellViewByPosition(object.cell.x-object.data.top.x+i, object.cell.y-object.data.top.y+j).color = 0xFFFFFF;
+                }
             }
         }
 
@@ -224,7 +227,7 @@ public class FieldView extends Sprite {
             shadowView.destroy();
         }
         for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-            var cellView:CellView = CellView(_cellsContainer.getChildAt(0));
+            var cellView:CellView = CellView(_cellsContainer.getChildAt(i));
             cellView.color = 0xffffff;
         }
     }
@@ -234,7 +237,7 @@ public class FieldView extends Sprite {
     }
 
     protected function onTouchHandler(event:TouchEvent):void {
-        var touch:Touch = event.getTouch(this);
+        var touch:Touch = event.getTouch(stage);
         if (touch) {
             var pos: Point = getPositionByTouchEvent(touch);
             _currentCell = getCellViewByPosition(pos.x, pos.y);
@@ -297,7 +300,7 @@ public class FieldView extends Sprite {
         } else {
             _isRolledOver = false;
 
-            onCellRollOut(getCellViewByPosition(_lastCellX, _lastCellY));
+            onCellRollOut(_currentCell);
         }
     }
 
