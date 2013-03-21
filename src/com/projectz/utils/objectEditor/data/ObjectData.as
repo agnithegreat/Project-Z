@@ -41,8 +41,8 @@ public class ObjectData extends JSONLoader {
                     while (m[i].length<=j) {
                         m[i].push(0);
                     }
-                    if (part.mask[i-part.top.x][j-part.top.y]) {
-                        m[i][j] = part.mask[i-part.top.x][j-part.top.y];
+                    if (part.mask[i][j]) {
+                        m[i][j] = part.mask[i][j];
                     }
                 }
             }
