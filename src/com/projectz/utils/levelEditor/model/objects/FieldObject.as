@@ -28,6 +28,9 @@ public class FieldObject extends EventDispatcher {
     }
 
     protected var _size: Array;
+    public function get size():Array {
+        return _size;
+    }
     public function get sizeChecked():Boolean {
         if (_data.width==_data.height==1) {
             return true;

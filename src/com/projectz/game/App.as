@@ -51,7 +51,6 @@ public class App extends Sprite {
     }
 
     private function initStart():void {
-        trace(_path);
         _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
         _levelsStorage.parseDirectory(_path+"/levels");
 
