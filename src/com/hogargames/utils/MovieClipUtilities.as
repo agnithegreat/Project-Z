@@ -7,7 +7,6 @@
  */
 package com.hogargames.utils {
 
-    import flash.display.FrameLabel;
     import flash.display.MovieClip;
 
     /**

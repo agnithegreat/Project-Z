@@ -7,7 +7,8 @@
  */
 package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.events.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -21,7 +22,7 @@ import starling.textures.Texture;
 
 public class FilesPanel extends Sprite {
 
-    private var controller:LevelEditorController;
+    private var uiController:UIController;
 
     private var _storage: ObjectsStorage;
     private var _tab:String;
@@ -37,9 +38,9 @@ public class FilesPanel extends Sprite {
 
     private var _files: Array;
 
-    public function FilesPanel($controller:LevelEditorController) {
-        controller = $controller;
-        controller.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+    public function FilesPanel(uiController:UIController) {
+        this.uiController = uiController;
+        uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         _bg = new Quad(200, Constants.HEIGHT, 0xCCCCCC);
         addChild(_bg);
@@ -82,7 +83,7 @@ public class FilesPanel extends Sprite {
         var object: ObjectData;
         var objects: Dictionary = _storage.getType(_tab);
         for each (object in objects) {
-            _files.push(new FileLine(object, controller));
+            _files.push(new FileLine(object, uiController));
         }
         _files.sortOn("name");
 
@@ -104,16 +105,16 @@ public class FilesPanel extends Sprite {
     private function handleClick($event: Event):void {
         switch ($event.currentTarget) {
             case _bgTab:
-                controller.selectObjectType(ObjectData.BACKGROUND);
+                uiController.selectCurrentObjectType(ObjectData.BACKGROUND);
                 break;
             case _staticTab:
-                controller.selectObjectType(ObjectData.STATIC_OBJECT);
+                uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
                 break;
             case _animatedTab:
-                controller.selectObjectType(ObjectData.ANIMATED_OBJECT);
+                uiController.selectCurrentObjectType(ObjectData.ANIMATED_OBJECT);
                 break;
             case _enemiesTab:
-                controller.selectObjectType(ObjectData.ENEMY);
+                uiController.selectCurrentObjectType(ObjectData.ENEMY);
                 break;
         }
     }

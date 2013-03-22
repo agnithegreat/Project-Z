@@ -7,8 +7,8 @@
  */
 package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 import com.hogargames.display.GraphicStorage;
-import com.projectz.utils.levelEditor.controller.LevelEditorController;
-import com.projectz.utils.levelEditor.events.ShowCellInfoEvent;
+import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.events.uiController.ShowCellInfoEvent;
 import com.projectz.utils.levelEditor.model.Cell;
 
 import flash.display.MovieClip;
@@ -20,12 +20,12 @@ public class InfoPanel extends GraphicStorage {
     private var tfY:TextField;
     private var tfEnable:TextField;
 
-    private var controller:LevelEditorController;
+    private var uiController:UIController;
 
-    public function InfoPanel(mc:MovieClip, $controller:LevelEditorController) {
-        this.controller = $controller;
+    public function InfoPanel(mc:MovieClip, uiController:UIController) {
+        this.uiController = uiController;
         super (mc);
-        controller.addEventListener (ShowCellInfoEvent.SHOW_CELL_INFO, showCellInfoListener);
+        uiController.addEventListener (ShowCellInfoEvent.SHOW_CELL_INFO, showCellInfoListener);
     }
 
     private function showCellInfoListener (event:ShowCellInfoEvent):void {
