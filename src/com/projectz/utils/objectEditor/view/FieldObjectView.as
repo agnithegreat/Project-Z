@@ -88,7 +88,7 @@ public class FieldObjectView extends Sprite {
 
         for (var i:int = 0; i < _object.width; i++) {
             for (var j:int = 0; j < _object.height; j++) {
-                cell = new CellView(new Point(i, j), _assets.getTexture("so-cell"));
+                cell = new CellView(new Point(i, j), _assets.getTexture("ms-cell"));
                 _cells.addChild(cell);
             }
         }
