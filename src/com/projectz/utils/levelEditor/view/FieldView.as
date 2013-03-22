@@ -78,6 +78,7 @@ public class FieldView extends Sprite {
         addChild(_container);
 
         _cellsContainer = new Sprite();
+        _cellsContainer.touchable = false;
         _container.addChild(_cellsContainer);
 
         var len:int = _field.field.length;
@@ -91,10 +92,12 @@ public class FieldView extends Sprite {
         _container.y = (Constants.HEIGHT + (1 - (_field.height + _field.height) * 0.5) * PositionView.cellHeight) * 0.5;
 
         _shadowsContainer = new Sprite();
+        _shadowsContainer.alpha = 0.3;
         _shadowsContainer.touchable = false;
         _container.addChild(_shadowsContainer);
 
         _objectsContainer = new Sprite();
+        _objectsContainer.alpha = 0.3;
         _objectsContainer.touchable = false;
         _container.addChild(_objectsContainer);
 
@@ -255,9 +258,11 @@ public class FieldView extends Sprite {
 
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
-                var cellView:CellView = getCellViewByPosition(object.cell.x - object.data.top.x + i, object.cell.y - object.data.top.y + j);
-                if (cellView) {
-                    cellView.color = 0xffffff;
+                if (object.data.mask[i][j]) {
+                    var cellView:CellView = getCellViewByPosition(object.cell.x - object.data.top.x + i, object.cell.y - object.data.top.y + j);
+                    if (cellView) {
+                        cellView.color = 0xffffff;
+                    }
                 }
             }
         }
@@ -290,10 +295,6 @@ public class FieldView extends Sprite {
     }
 
     protected function onTouchHandler(event:TouchEvent):void {
-//        var touch:Touch = event.getTouch(stage);
-//        _cellsContainer = new Sprite();
-//        _cellsContainer.touchable = false;
-//        _container.addChild(_cellsContainer);
         var touch:Touch = event.getTouch(stage);
         if (touch) {
             var pos:Point = getPositionByTouchEvent(touch);
