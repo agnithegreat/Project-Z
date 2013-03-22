@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.view {
+import com.projectz.game.view.EnemyView;
 import com.projectz.utils.objectEditor.data.PartData;
 
 import flash.geom.Point;
@@ -29,7 +30,7 @@ public class ObjectView extends PositionView {
         super(new Point(0,0));
 
         if (_partData.animated) {
-            _bg = new MovieClip(_partData.states["attack_01"]);
+            _bg = new MovieClip(_partData.states[EnemyView.ATTACK+1]);
             addChild(_bg);
 
             Starling.juggler.add(_bg as MovieClip);

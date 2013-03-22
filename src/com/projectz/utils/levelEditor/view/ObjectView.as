@@ -41,7 +41,9 @@ public class ObjectView extends CellView {
 
         _object.addEventListener(GameEvent.DESTROY, handleDestroy);
 
-        super(_object.cell, _object.data.states[_part]);
+        var texture: Texture = _object.data.states[_part] is Vector.<Texture> ? _object.data.states[_part][0] : _object.data.states[_part];
+
+        super(_object.cell, texture);
     }
 
     override protected function setView($texture: Texture):void {

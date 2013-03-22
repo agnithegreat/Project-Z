@@ -152,13 +152,14 @@ public class Field extends EventDispatcher {
         var cell: Cell;
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
-//            if (zombie.alive && !zombie.target) {
-//                while (!cell || cell.locked) {
-//                    cell = getCell(22, 22);
-//                }
-//                zombie.walk(getWay(zombie.cell, cell));
-//                cell = null;
-//            }
+            if (zombie.alive && !zombie.target) {
+                while (!cell || cell.locked) {
+                    // TODO: убрать!
+                    cell = getRandomCell();
+                }
+                zombie.walk(getWay(zombie.cell, cell));
+                cell = null;
+            }
             zombie.step($delta);
         }
 
@@ -171,6 +172,11 @@ public class Field extends EventDispatcher {
         }
 
         dispatchEventWith(GameEvent.UPDATE);
+    }
+
+    private function getRandomCell():Cell {
+        var rand: int = _field.length*Math.random();
+        return _field[rand];
     }
 
     private function getWay($start: Cell, $end: Cell, $path: int = 0):Vector.<Cell> {

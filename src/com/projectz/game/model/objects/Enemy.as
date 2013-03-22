@@ -14,7 +14,6 @@ public class Enemy extends Personage {
     public static const WALK: String = "walk";
     public static const ATTACK: String = "attack";
     public static const DIE: String = "die";
-    public static const CAME: String = "came";
 
     private var _way: Vector.<Cell>;
 
@@ -34,8 +33,6 @@ public class Enemy extends Personage {
     override public function get positionY():Number {
         return _target ? _cell.y+(_target.y-_cell.y)*_progress : _cell.y;
     }
-
-    protected var _state: String;
 
     protected var _hp: int;
     protected var _speed: int;
@@ -63,6 +60,9 @@ public class Enemy extends Personage {
             _target = _way.shift();
             _state = WALK;
             dispatchEventWith(_state);
+        } else {
+            // TODO: убрать эту заглушку
+            die();
         }
     }
 

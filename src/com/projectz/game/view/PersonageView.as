@@ -44,11 +44,13 @@ public class PersonageView extends PositionView {
     }
 
     public function addState($id: String, $textures: Vector.<Texture>, $fps: int = 12, $loop: Boolean = true):void {
-        var state: MovieClip = new MovieClip($textures, $fps);
-        state.loop = $loop;
-        state.pivotX = state.width/2;
-        state.pivotY = state.height-PositionView.cellHeight*0.2;
-        _states[$id] = state;
+        if ($textures && $textures.length>0) {
+            var state: MovieClip = new MovieClip($textures, $fps);
+            state.loop = $loop;
+            state.pivotX = state.width/2;
+            state.pivotY = state.height-PositionView.cellHeight*0.2;
+            _states[$id] = state;
+        }
     }
 
     public function setState($id: String):void {
