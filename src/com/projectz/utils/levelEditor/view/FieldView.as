@@ -9,6 +9,7 @@ package com.projectz.utils.levelEditor.view {
 
 import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.events.levelEditorController.EditObjectEvent;
 import com.projectz.utils.levelEditor.events.levelEditorController.BackgroundWasChangedEvent;
@@ -83,7 +84,7 @@ public class FieldView extends Sprite {
         var len:int = _field.field.length;
         var cell:CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], $assets.getTexture("so-cell-levelEditor"));
+            cell = new CellView(_field.field[i], $assets.getTexture("so-cell-levelEditor"), $assets.getTexture("so-cell-levelEditor-lock"));
             _cellsContainer.addChild(cell);
         }
 
@@ -235,7 +236,7 @@ public class FieldView extends Sprite {
                 if (fieldObject.data.mask[i][j]) {
                     var cellView:CellView = getCellViewByPosition(fieldObject.cell.x - fieldObject.data.top.x + i, fieldObject.cell.y - fieldObject.data.top.y + j);
                     if (cellView) {
-                        cellView.color = 0x000000;
+                        cellView.showLock = true;
                     }
                 }
             }
@@ -257,7 +258,7 @@ public class FieldView extends Sprite {
             for (var j:int = 0; j < object.data.height; j++) {
                 var cellView:CellView = getCellViewByPosition(object.cell.x - object.data.top.x + i, object.cell.y - object.data.top.y + j);
                 if (cellView) {
-                    cellView.color = 0xffffff;
+                    cellView.showLock = false;
                 }
             }
         }
@@ -446,6 +447,12 @@ public class FieldView extends Sprite {
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         addObject(null);
+        switch (event.mode) {
+            case UIControllerMode.EDIT_OBJECTS:
+                _objectsContainer.visible = true;
+
+                break;
+        }
     }
 }
 }
