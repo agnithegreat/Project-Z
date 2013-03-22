@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+import com.projectz.game.model.objects.Defender;
+import com.projectz.game.model.objects.Enemy;
+
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 
@@ -63,10 +66,21 @@ public class ObjectParser {
             len = parts[name].length;
             for (i = 0; i < len; i++) {
                 partName = parts[name][i];
-                animated = files[name+"_"+partName+".xml"] && files[name+"_"+partName+".png"];
+                animated = files[name+".xml"] && files[name+".png"];
                 if (animated) {
                     part = objects[name].getPart();
-                    part.addTextures(partName, $assets.getTextures(name+"_"+partName));
+                    for (var j:int = 1; j <= 5; j++) {
+                        if (objects[name].type == ObjectData.ENEMY) {
+                            part.addTextures(Enemy.WALK+"-0"+j, $assets.getTextures(name+"-"+Enemy.WALK+"-0"+j));
+                            part.addTextures(Enemy.ATTACK+"-0"+j, $assets.getTextures(name+"-"+Enemy.ATTACK+"-0"+j));
+                            part.addTextures(Enemy.DIE+"-0"+j, $assets.getTextures(name+"-"+Enemy.DIE+"-0"+j));
+                        } else if (objects[name].type == ObjectData.DEFENDER) {
+                            part.addTextures(Defender.STATIC+"-0"+j, $assets.getTextures(name+"-"+Defender.STATIC+"-0"+j));
+                            part.addTextures(Defender.ATTACK+"-0"+j, $assets.getTextures(name+"-"+Defender.ATTACK+"-0"+j));
+                            part.addTextures(Defender.FIGHT+"-0"+j, $assets.getTextures(name+"-"+Defender.FIGHT+"-0"+j));
+                            part.addTextures(Defender.RELOAD+"-0"+j, $assets.getTextures(name+"-"+Defender.RELOAD+"-0"+j));
+                        }
+                    }
                 } else {
                     part = objects[name].getPart(partName);
                     part.addTextures(partName, $assets.getTexture(part.name ? name+"_"+part.name : name));

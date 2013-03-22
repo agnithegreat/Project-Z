@@ -10,6 +10,7 @@ import flash.geom.Point;
 import flash.utils.Dictionary;
 
 import starling.textures.Texture;
+import starling.utils.AssetManager;
 
 public class PartData {
 

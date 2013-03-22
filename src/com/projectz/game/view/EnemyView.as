@@ -15,9 +15,9 @@ import starling.events.Event;
 
 public class EnemyView extends PersonageView {
 
-    public static const WALK: String = "walk_0";
-    public static const ATTACK: String = "attack_0";
-    public static const DIE: String = "die";
+    public static const WALK: String = "walk-0";
+    public static const ATTACK: String = "attack-0";
+    public static const DIE: String = "die-0";
 
     public function EnemyView($personage: Personage) {
         super($personage);
@@ -29,8 +29,8 @@ public class EnemyView extends PersonageView {
         for (var i:int = 1; i <= 5; i++) {
             addState(WALK+i, _personage.data.states[WALK+i], 12);
             addState(ATTACK+i, _personage.data.states[ATTACK+i], 12);
+            addState(DIE+i, _personage.data.states[DIE+i], 12, false);
         }
-        addState(DIE, _personage.data.states[DIE], 12, false);
     }
 
     private function handleWalk($event: Event):void {
@@ -42,7 +42,7 @@ public class EnemyView extends PersonageView {
     }
 
     private function handleDie($event: Event):void {
-        die();
+        die(1);
     }
 
     public function walk(dir: int = 0):void {
@@ -55,8 +55,8 @@ public class EnemyView extends PersonageView {
         _currentState.scaleX = dir>0 ? 1 : -1;
     }
 
-    public function die():void {
-        setState(DIE);
+    public function die(dir: int = 0):void {
+        setState(DIE+(Math.abs(dir)+1));
         _currentState.currentFrame = 0;
         _currentState.scaleX = 1;
         _currentState.addEventListener(Event.COMPLETE, handleDied);
