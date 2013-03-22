@@ -52,7 +52,7 @@ public class FieldView extends Sprite {
         var len: int = _field.field.length;
         var cell: CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], $assets.getTexture("so-cell"));
+            cell = new CellView(_field.field[i], $assets.getTexture("ms-cell"));
             _cells.addChild(cell);
         }
         _cells.flatten();
