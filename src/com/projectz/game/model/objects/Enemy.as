@@ -63,9 +63,6 @@ public class Enemy extends Personage {
             _target = _way.shift();
             _state = WALK;
             dispatchEventWith(_state);
-        } else {
-            // TODO: remove this test
-//            die();
         }
     }
 
