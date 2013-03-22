@@ -16,8 +16,7 @@ public class ObjectData extends JSONLoader {
     public static var STATIC_OBJECT: String = "so";
     public static var ANIMATED_OBJECT: String = "ao";
     public static var DEFENDER: String = "de";
-    // TODO: replace with "en"
-    public static var ENEMY: String = "zombie";
+    public static var ENEMY: String = "en";
     public static var BACKGROUND: String = "bg";
 
     private var _name: String;

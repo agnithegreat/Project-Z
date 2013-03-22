@@ -174,29 +174,28 @@ public class Field extends EventDispatcher {
         }
 
         var index: int = 0;
-        var mark: Array;
         var tries: int = 100;
+        var checkedObjects: Array = [];
         while (len && tries-->0) {
             for (i = 0; i < len; i++) {
                 cell = toCheck[i];
-                if (cell && checkUpperCells(cell)) {
-                    mark = [];
+                if (checkUpperCells(cell)) {
                     object = cell.object;
                     if (object && object.data.width>1 && object.data.height>1) {
                         object.markSize(cell.x, cell.y);
+                        checkedObjects.push(object);
                         if (object.sizeChecked) {
-                            mark = mark.concat(getObjectCells(object));
+                            setObjectDepth(object, ++index);
                         }
                     } else {
-                        mark.push(cell);
-                    }
-                    var markLen: int = mark.length;
-                    for (var k: int = 0; k < markLen; k++) {
-                        mark[k].depth = ++index;
+                        cell.depth = ++index;
                     }
                 }
             }
-            for (k = 0; k < len; k++) {
+            while (checkedObjects.length>0) {
+                checkedObjects.pop().clearSize();
+            }
+            for (var k: int = 0; k < len; k++) {
                 if (toCheck[k].depth) {
                     toCheck.splice(k--, 1);
                     len--;
@@ -205,29 +204,24 @@ public class Field extends EventDispatcher {
         }
     }
 
-    private function getObjectCells($object: FieldObject):Array/*of Cell*/ {
-        var cells: Array = []/*of Cell*/;
+    private function setObjectDepth($object: FieldObject, $depth: int):void {
         for (var i:int = 0; i < $object.data.width; i++) {
             for (var j:int = 0; j < $object.data.height; j++) {
                 if ($object.data.mask[i][j]) {
-                    cells.push(getCell($object.cell.x+i-$object.data.top.x, $object.cell.y+j-$object.data.top.y));
+                    var cell: Cell = getCell($object.cell.x+i-$object.data.top.x, $object.cell.y+j-$object.data.top.y);
+                    cell.depth = $depth;
                 }
             }
         }
-        return cells;
     }
 
     private function checkUpperCells($cell: Cell):Boolean {
-        var object: FieldObject = $cell.object;
-        var cell: Cell = getCell($cell.x, $cell.y-1);
-        if (cell && !cell.depth && (!cell.object || cell.object!=object)) {
-            return false;
-        }
-        cell = getCell($cell.x-1, $cell.y);
-        if (cell && !cell.depth && (!cell.object || cell.object!=object)) {
-            return false;
-        }
-        return true;
+        return checkUpperCell( getCell($cell.x, $cell.y-1), $cell.object ) &&
+               checkUpperCell( getCell($cell.x-1, $cell.y), $cell.object );
+    }
+
+    private function checkUpperCell($cell: Cell, $object: FieldObject):Boolean {
+        return !$cell || $cell.depth || ($cell.object && $cell.object==$object);
     }
 
     private function createField():void {
@@ -253,6 +247,11 @@ public class Field extends EventDispatcher {
         } else if ($cell1.sorter<$cell2.sorter) {
             return -1;
         }
+        if ($cell1.y>$cell2.y) {
+            return 1;
+        } else if ($cell1.y<$cell2.y) {
+            return -1;
+        }
         return 0;
     }
 
@@ -267,9 +266,26 @@ public class Field extends EventDispatcher {
             for (var i:int = 0; i < len; i++) {
                 var obj: FieldObject = _objects[i];
                 if (obj.placeData == $object) {
+                    removePart(obj.placeData.x, obj.placeData.y, obj);
+
                     _objects.splice(i--, 1);
                     len--;
                     dispatchEvent(new EditObjectEvent(obj, EditObjectEvent.OBJECT_REMOVED));
+                }
+            }
+        }
+    }
+
+    private function removePart($x: int, $y: int, $object: FieldObject):void {
+        var cell: Cell;
+        for (var i:int = 0; i < $object.data.mask.length; i++) {
+            for (var j:int = 0; j < $object.data.mask[i].length; j++) {
+                cell = getCell($x+i, $y+j);
+                if (cell) {
+                    cell.unlock();
+                    if ($object.data.mask[i][j]==1) {
+                        cell.removeObject($object);
+                    }
                 }
             }
         }

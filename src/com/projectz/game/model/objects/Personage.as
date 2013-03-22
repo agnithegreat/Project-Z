@@ -40,6 +40,8 @@ public class Personage extends FieldObject {
         return _alive;
     }
 
+    protected var _state: String;
+
     public function Personage($data: PartData) {
         super($data);
 
