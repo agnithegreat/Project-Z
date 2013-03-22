@@ -91,8 +91,7 @@ public class Field extends EventDispatcher {
 
         var index: int = 0;
         var mark: Array;
-        var ind: int;
-        var tries: int = 20;
+        var tries: int = 100;
         while (len && tries-->0) {
             for (i = 0; i < len; i++) {
                 cell = toCheck[i];
@@ -103,7 +102,6 @@ public class Field extends EventDispatcher {
                         object.markSize(cell.x, cell.y);
                         if (object.sizeChecked) {
                             mark = mark.concat(getObjectCells(object));
-                            object.clearSize();
                         }
                     } else {
                         mark.push(cell);
@@ -138,11 +136,11 @@ public class Field extends EventDispatcher {
     private function checkUpperCells($cell: Cell):Boolean {
         var object: FieldObject = $cell.object;
         var cell: Cell = getCell($cell.x, $cell.y-1);
-        if (cell && !cell.depth && (!object || cell.object!=object)) {
+        if (cell && !cell.depth && (!cell.object || cell.object!=object)) {
             return false;
         }
         cell = getCell($cell.x-1, $cell.y);
-        if (cell && !cell.depth && (!object || cell.object!=object)) {
+        if (cell && !cell.depth && (!cell.object || cell.object!=object)) {
             return false;
         }
         return true;
