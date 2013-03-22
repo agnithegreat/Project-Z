@@ -8,7 +8,7 @@
 package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
-import com.projectz.utils.levelEditor.events.uiController.SelectUIControllerModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
 
 import starling.display.Button;
 import starling.display.Sprite;
@@ -30,7 +30,7 @@ public class ObjectEditorUI extends Sprite {
 
     public function ObjectEditorUI($assets:AssetManager, uiController:UIController) {
         this.uiController = uiController;
-        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         _filesPanel = new FilesPanel(uiController);
         _filesPanel.x = Constants.WIDTH + 200;
         addChild(_filesPanel);
@@ -59,7 +59,7 @@ public class ObjectEditorUI extends Sprite {
         }
     }
 
-    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
+    private function selectUIControllerModeListener(event:SelectModeEvent):void {
         _filesPanel.visible = (event.mode == UIControllerMode.EDIT_OBJECTS);
     }
 }

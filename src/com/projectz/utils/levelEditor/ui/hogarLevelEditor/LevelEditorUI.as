@@ -11,7 +11,9 @@ import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
-import com.projectz.utils.levelEditor.events.uiController.SelectUIControllerModeEvent;
+import com.projectz.utils.levelEditor.data.LevelStorage;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
+import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import flash.events.MouseEvent;
@@ -20,7 +22,9 @@ import flash.text.TextField;
 public class LevelEditorUI extends GraphicStorage {
 
     private var uiController:UIController;
+    private var model:Field;
     private var objectStorage:ObjectsStorage;
+    private var levelsStorage:LevelStorage;
 
     //панели:
     private var infoPanel:InfoPanel;
@@ -41,13 +45,15 @@ public class LevelEditorUI extends GraphicStorage {
     //информационные сообщения:
     private var tfInfo:TextField;
 
-    public function LevelEditorUI(uiController:UIController, objectStorage:ObjectsStorage) {
+    public function LevelEditorUI(uiController:UIController, model:Field, objectStorage:ObjectsStorage, levelsStorage:LevelStorage) {
         this.uiController = uiController;
+        this.model = model;
         this.objectStorage = objectStorage;
+        this.levelsStorage = levelsStorage;
 
         super(new mcLevelEditorPanel);
 
-        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
 
         outputInfo("Добро пожаловать в редактор уровней! Выберите одну из вкладок сверху, чтобы задать режим работы редактора.");
         showPanel(null);
@@ -65,7 +71,7 @@ public class LevelEditorUI extends GraphicStorage {
         //панели:
         infoPanel = new InfoPanel(mc["mcInfoPanel"], uiController);
         editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
-        editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"]);
+        editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
@@ -137,7 +143,7 @@ public class LevelEditorUI extends GraphicStorage {
 //LISTENERS:
 /////////////////////////////////////////////
 
-    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
+    private function selectUIControllerModeListener(event:SelectModeEvent):void {
         switch (event.mode) {
             case (UIControllerMode.EDIT_OBJECTS):
                 selectTab(btnTabEditObjects);

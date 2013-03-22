@@ -8,7 +8,7 @@
 package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 import com.hogargames.display.GraphicStorage;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.events.uiController.ShowCellInfoEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;
 import com.projectz.utils.levelEditor.model.Cell;
 
 import flash.display.MovieClip;

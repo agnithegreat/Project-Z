@@ -8,7 +8,7 @@
 package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 

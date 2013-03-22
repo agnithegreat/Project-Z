@@ -1,20 +1,20 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Hogar
- * Date: 21.03.13
- * Time: 12:03
+ * Date: 22.03.13
+ * Time: 13:59
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.events.uiController {
+package com.projectz.utils.levelEditor.controller.events.uiController.editPaths {
 import starling.events.Event;
 
-public class SelectUIControllerModeEvent extends Event {
+public class SelectEditPathModeEvent extends Event {
 
     private var _mode:String;
 
-    public static const SELECT_UI_CONTROLLER_MODE:String = "select mode";
+    public static const SELECT_EDIT_PATH_MODE:String = "select edit path mode";
 
-    public function SelectUIControllerModeEvent(mode:String, type:String = SELECT_UI_CONTROLLER_MODE, bubbles:Boolean = false) {
+    public function SelectEditPathModeEvent(mode:String, type:String = SELECT_EDIT_PATH_MODE, bubbles:Boolean = false) {
         this.mode = mode;
         super(type, bubbles, mode);
     }

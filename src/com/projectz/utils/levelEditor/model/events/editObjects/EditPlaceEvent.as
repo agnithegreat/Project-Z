@@ -5,7 +5,7 @@
  * Time: 22:28
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.events.levelEditorController {
+package com.projectz.utils.levelEditor.model.events.editObjects {
 import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;

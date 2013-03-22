@@ -5,7 +5,7 @@
  * Time: 10:13
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.events.uiController {
+package com.projectz.utils.levelEditor.controller.events.uiController.editObjects {
 import com.projectz.utils.objectEditor.data.ObjectData;
 
 

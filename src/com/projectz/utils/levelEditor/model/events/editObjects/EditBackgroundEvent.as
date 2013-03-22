@@ -1,24 +1,24 @@
 /**
  * Created with IntelliJ IDEA.
  * User: Hogar
- * Date: 20.03.13
- * Time: 10:28
+ * Date: 21.03.13
+ * Time: 19:10
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.events.uiController {
+package com.projectz.utils.levelEditor.model.events.editObjects {
 import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;
 
-public class SelectBackgroundEvent extends Event {
+public class EditBackgroundEvent extends Event{
 
     private var _objectData:ObjectData;
 
-    public static const SELECT_BACKGROUND:String = "select background";
+    public static const BACKGROUND_WAS_CHANGED:String = "background was changed";
 
-    public function SelectBackgroundEvent(objectData:ObjectData, type:String = SELECT_BACKGROUND, bubbles:Boolean = false) {
+    public function EditBackgroundEvent (objectData:ObjectData, type:String = BACKGROUND_WAS_CHANGED, bubbles:Boolean = false) {
         this.objectData = objectData;
-        super(type, bubbles, objectData);
+        super (type, bubbles, objectData);
     }
 
     public function get objectData():ObjectData {

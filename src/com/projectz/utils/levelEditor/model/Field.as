@@ -7,19 +7,19 @@
  */
 package com.projectz.utils.levelEditor.model {
 import com.projectz.game.event.GameEvent;
-import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.data.LevelData;
-import com.projectz.utils.levelEditor.events.levelEditorController.EditObjectEvent;
-import com.projectz.utils.levelEditor.events.levelEditorController.BackgroundWasChangedEvent;
-import com.projectz.utils.levelEditor.events.levelEditorController.EditPlaceEvent;
+import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
+import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
+import com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent;
+import com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.pathFinding.Grid;
-import com.projectz.utils.pathFinding.Path;
-import com.projectz.utils.pathFinding.PathFinder;
+
+import flash.geom.Point;
 
 import starling.events.Event;
 
@@ -68,8 +68,10 @@ public class Field extends EventDispatcher {
 
     public function set levelData(value:LevelData):void {
         _levelData = value;
-        createObjects(_levelData.objects);
-        changeBackground(_levelData.bg);
+        if (_levelData) {
+            createObjects(_levelData.objects);
+            changeBackground(_levelData.bg);
+        }
     }
 
     public function get levelData():LevelData {
@@ -84,6 +86,8 @@ public class Field extends EventDispatcher {
         return _field;
     }
 
+    /////////////////////////////////////////////
+    //OBJECTS:
     /////////////////////////////////////////////
 
     public function addObject($placeData: PlaceData):void {
@@ -121,21 +125,11 @@ public class Field extends EventDispatcher {
     public function changeBackground (backgroundId:String):void {
         if (_levelData) {
             _levelData.bg = backgroundId;
-            var objectData:ObjectData = _objectsStorage.getObjectData (backgroundId);
-            dispatchEvent(new BackgroundWasChangedEvent(objectData));
+            if (backgroundId) {
+                var objectData:ObjectData = _objectsStorage.getObjectData (backgroundId);
+                dispatchEvent(new EditBackgroundEvent(objectData));
+            }
         }
-    }
-
-    public function destroy():void {
-        while (_field.length>0) {
-            _field.pop().destroy();
-        }
-        _field = null;
-
-        for (var id: String in _fieldAsObj) {
-            delete _fieldAsObj[id];
-        }
-        _fieldAsObj = null;
     }
 
     public function removeAllObject():void {
@@ -149,6 +143,54 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /////////////////////////////////////////////
+    //PATH:
+    /////////////////////////////////////////////
+
+    public function addPointToPath (point:Point, pathData:PathData):void {
+        if (_levelData) {
+            var index:int = _levelData.paths.indexOf(pathData);
+            if (index != -1) {
+                var hasThisPoint:Boolean = false;
+                var numPoints:int = pathData.points.length;
+                for (var i:int = 0; i < numPoints; i++) {
+                    hasThisPoint = pathData.points [i].equals(point);
+                    if (hasThisPoint) {
+                        break;
+                    }
+                }
+                if (!hasThisPoint) {
+                    pathData.points.push(point);
+                    dispatchEvent(new EditPathEvent (pathData));
+                }
+            }
+        }
+    }
+
+    public function removePointFromPath (point:Point, pathData:PathData):void {
+        if (_levelData) {
+            var index:int = _levelData.paths.indexOf(pathData);
+            if (index != -1) {
+                var hasThisPoint:Boolean = true;
+                var numPoints:int = pathData.points.length;
+                for (var i:int = 0; i < numPoints; i++) {
+                    hasThisPoint = pathData.points [i].equals(point);
+                    if (hasThisPoint) {
+                        break;
+                    }
+                }
+                if (hasThisPoint) {
+                    pathData.points.splice(i, 1);
+                    dispatchEvent(new EditPathEvent (pathData));
+                }
+            }
+        }
+    }
+
+    /////////////////////////////////////////////
+    //OTHER:
+    /////////////////////////////////////////////
+
     public function save ():void {
         levelData.save(levelData.export());
     }
@@ -157,6 +199,17 @@ public class Field extends EventDispatcher {
         //
     }
 
+    public function destroy():void {
+        while (_field.length>0) {
+            _field.pop().destroy();
+        }
+        _field = null;
+
+        for (var id: String in _fieldAsObj) {
+            delete _fieldAsObj[id];
+        }
+        _fieldAsObj = null;
+    }
 
 /////////////////////////////////////////////
 //PRIVATE:

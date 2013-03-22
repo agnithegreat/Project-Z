@@ -5,7 +5,7 @@
  * Time: 14:45
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.events.uiController {
+package com.projectz.utils.levelEditor.controller.events.uiController {
 import com.projectz.utils.levelEditor.model.Cell;
 
 import starling.events.Event;

@@ -10,14 +10,18 @@ package com.projectz.utils.levelEditor.view {
 import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
+import com.projectz.utils.levelEditor.data.LevelData;
+import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.levelEditor.events.levelEditorController.EditObjectEvent;
-import com.projectz.utils.levelEditor.events.levelEditorController.BackgroundWasChangedEvent;
-import com.projectz.utils.levelEditor.events.levelEditorController.EditPlaceEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectUIControllerModeEvent;
+import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
+import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
+import com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.view.FieldObjectView;
@@ -65,15 +69,17 @@ public class FieldView extends Sprite {
 
         uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
-        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
 
         _field = $field;
-        _field.addEventListener(BackgroundWasChangedEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
+        _field.addEventListener(EditBackgroundEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(EditObjectEvent.OBJECT_ADDED, handleAddObject);
         _field.addEventListener(EditObjectEvent.SHADOW_ADDED, handleAddShadow);
         _field.addEventListener(EditObjectEvent.OBJECT_REMOVED, handleRemoveObject);
         _field.addEventListener(EditPlaceEvent.PLACE_ADDED, handleAddPlace);
+        _field.addEventListener(EditPathEvent.PATH_WAS_CHANGED, handleChangePath);
 
         _container = new Sprite();
         addChild(_container);
@@ -183,17 +189,6 @@ public class FieldView extends Sprite {
         _objectsContainer.sortChildren(sortByDepth);
     }
 
-    private function selectObject($objectData:ObjectData):void {
-        if ($objectData) {
-            if ($objectData.type != ObjectData.BACKGROUND) {
-                addObject($objectData);
-            }
-        }
-        else {
-            addObject(null);
-        }
-    }
-
     private function sortByDepth($child1:PositionView, $child2:PositionView):int {
         if ($child1.depth > $child2.depth) {
             return 1;
@@ -227,6 +222,10 @@ public class FieldView extends Sprite {
 
     private function handleAddPlace($event:EditPlaceEvent):void {
         addObject($event.objectData);
+    }
+
+    private function handleChangePath($event:EditPathEvent):void {
+        redrawPaths ($event.pathData);
     }
 
     private function handleAddObject($event:EditObjectEvent):void {
@@ -320,21 +319,26 @@ public class FieldView extends Sprite {
 
                     case TouchPhase.ENDED:                                      // click
                     {
-                        if (_currentObject) {
-                            var place:PlaceData = new PlaceData();
-                            place.place(_currentCell.positionX, _currentCell.positionY);
-                            place.object = _currentObject.object.name;
-                            place.realObject = _currentObject.object;
+                        if (uiController.mode == UIControllerMode.EDIT_OBJECTS) {
+                            if (_currentObject) {
+                                var place:PlaceData = new PlaceData();
+                                place.place(_currentCell.positionX, _currentCell.positionY);
+                                place.object = _currentObject.object.name;
+                                place.realObject = _currentObject.object;
 
-                            uiController.addObject(place);
+                                uiController.addObject(place);
 
-                            if (_shift) {
-                                addObject(_currentObject.object);
+                                if (_shift) {
+                                    addObject(_currentObject.object);
+                                } else {
+                                    addObject(null);
+                                }
                             } else {
-                                addObject(null);
+                                uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
                             }
-                        } else {
-                            uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
+                        }
+                        else if (uiController.mode == UIControllerMode.EDIT_PATHS) {
+                            uiController.editPointToCurrentPath (new Point (_currentCell.positionX, _currentCell.positionY));
                         }
 
                         _isPressed = false;
@@ -422,11 +426,20 @@ public class FieldView extends Sprite {
         obj.removeFromParent(true);
     }
 
+    /////////////////////////////////////////////
+    //OBJECTS:
+    /////////////////////////////////////////////
+
     private function selectObjectListener(event:SelectObjectEvent):void {
-        selectObject(event.objectData);
+        addObject(event.objectData);
     }
 
-    private function backgroundWasChangedListener(event:BackgroundWasChangedEvent):void {
+    private function selectObjectsTypeListener(event:SelectObjectsTypeEvent):void {
+        _objectsContainer.visible = _shadowsContainer.visible = event.objectsType != ObjectData.ENEMY;
+        addObject(null);
+    }
+
+    private function backgroundWasChangedListener(event:EditBackgroundEvent):void {
         var objectData:ObjectData = event.objectData;
         if (objectData.type == ObjectData.BACKGROUND) {
             if (_field.levelData) {
@@ -435,25 +448,73 @@ public class FieldView extends Sprite {
                     _bg.touchable = false;
                     addChildAt(_bg, 0);
                 }
-                _field.levelData.bg = objectData.name;
                 _bg.texture = _assets.getTexture(_field.levelData.bg);
             }
         }
     }
 
-    private function selectObjectsTypeListener(event:SelectObjectsTypeEvent):void {
-        _objectsContainer.visible = _shadowsContainer.visible = event.objectsType != ObjectData.ENEMY;
-        addObject(null);
+    /////////////////////////////////////////////
+    //PATHS:
+    /////////////////////////////////////////////
+
+    private function selectPathListener(event:SelectPathEvent):void {
+        redrawPaths(event.pathData);
     }
 
-    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
+    private function redrawPaths (pathData:PathData):void {
+        clearAllPaths ();
+        var levelData:LevelData = _field.levelData;
+        if (levelData) {
+            var numPaths:int = levelData.paths.length;
+            for (var i:int = 0; i < numPaths; i++) {
+                var curPathData:PathData = levelData.paths [i];
+                //pathData рисуем в последнюю очередь (последний слой)!
+                if (curPathData != pathData) {
+                    drawPath (curPathData);
+                }
+            }
+        }
+        //pathData рисуем в последнюю очередь (последний слой)!
+        drawPath (pathData);
+    }
+
+    private function drawPath (pathData:PathData):void {
+        if (pathData) {
+            var color:uint = pathData.color;
+            var numPoints:int = pathData.points.length;
+            for (var i:int = 0; i < numPoints; i++) {
+                var point:Point = pathData.points[i];
+                var cellView:CellView = getCellViewByPosition(point.x,  point.y);
+                if (cellView) {
+                    cellView.color = color;
+                }
+            }
+        }
+    }
+
+    private function clearAllPaths ():void {
+        var numCells:int = _cellsContainer.numChildren;
+        for (var i:int = 0; i < numCells; i++) {
+            var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
+            cellView.color = 0xffffff;
+        }
+    }
+
+    /////////////////////////////////////////////
+    //OTHER:
+    /////////////////////////////////////////////
+
+    private function selectUIControllerModeListener(event:SelectModeEvent):void {
         addObject(null);
+        clearAllPaths();
         switch (event.mode) {
             case UIControllerMode.EDIT_OBJECTS:
                 _objectsContainer.visible = true;
+                _shadowsContainer.visible = true;
                 break;
             case UIControllerMode.EDIT_PATHS:
                 _objectsContainer.visible = false;
+                _shadowsContainer.visible = false;
                 break;
         }
     }

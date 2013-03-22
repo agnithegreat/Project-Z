@@ -7,14 +7,19 @@
  */
 
 package com.projectz.utils.levelEditor.controller {
+import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.levelEditor.events.uiController.SelectBackgroundEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
-import com.projectz.utils.levelEditor.events.uiController.ShowCellInfoEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectUIControllerModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.ObjectData;
+
+import flash.geom.Point;
 
 import starling.events.EventDispatcher;
 
@@ -25,9 +30,11 @@ import starling.events.EventDispatcher;
  */
 public class UIController extends EventDispatcher {
 
-    private var levelEditorController:LevelEditorController
+    private var levelEditorController:LevelEditorController;
 
     private var _mode:String;//режим работы ui-контролера (редактор объектов, редактор путей и т.д.);
+    private var _editPathMode:String = EditPathMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
+    private var _currentEditingPath:PathData;
 
     public function UIController(levelEditorController:LevelEditorController) {
         this.levelEditorController = levelEditorController;
@@ -43,7 +50,7 @@ public class UIController extends EventDispatcher {
 
 
     /**
-     * Режим работы контролера редактора (редактор объектов, редактор путей и т.д.)
+     * Режим работы контролера (редактор объектов, редактор путей и т.д.)
      *
      * @see com.projectz.utils.levelEditor.controller.UIControllerMode
      */
@@ -53,7 +60,33 @@ public class UIController extends EventDispatcher {
 
     public function set mode(value:String):void {
         _mode = value;
-        dispatchEvent(new SelectUIControllerModeEvent(_mode));
+        dispatchEvent(new SelectModeEvent(_mode));
+    }
+
+    /**
+     * Режим работы контролера при редактировании пути (удаление точек или добавление);
+     *
+     * @see com.projectz.utils.levelEditor.controller.EditPathMode
+     */
+    public function get editPathMode():String {
+        return _editPathMode;
+    }
+
+    public function set editPathMode(value:String):void {
+        _editPathMode = value;
+        dispatchEvent(new SelectEditPathModeEvent(_editPathMode));
+    }
+
+    /**
+     * Текущий выбранный для редактирования путь;
+     */
+    public function get currentEditingPath():PathData {
+        return _currentEditingPath;
+    }
+
+    public function set currentEditingPath(value:PathData):void {
+        _currentEditingPath = value;
+        dispatchEvent(new SelectPathEvent(_currentEditingPath));
     }
 
     /////////////////////////////////////////////
@@ -79,6 +112,20 @@ public class UIController extends EventDispatcher {
         }
     }
 
+    public function editPointToCurrentPath (point:Point):void {
+        if (
+                (mode == UIControllerMode.EDIT_PATHS) &&
+                currentEditingPath
+        ) {
+            if (editPathMode == EditPathMode.ADD_POINTS) {
+                levelEditorController.addPointToPath (point, currentEditingPath);
+            }
+            else if (editPathMode == EditPathMode.REMOVE_POINTS) {
+                levelEditorController.removePointFromPath (point, currentEditingPath);
+            }
+        }
+    }
+
     /////////////////////////////////////////////
     //INFO:
     /////////////////////////////////////////////
@@ -93,15 +140,21 @@ public class UIController extends EventDispatcher {
     /////////////////////////////////////////////
 
     public function addObject (placeData:PlaceData):void {
-        levelEditorController.addObject(placeData);
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            levelEditorController.addObject(placeData);
+        }
     }
 
     public function selectObject ($x: int, $y: int):void {
-        levelEditorController.selectObject($x,  $y);
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            levelEditorController.selectObject($x,  $y);
+        }
     }
 
     public function clearAllObjects():void {
-        levelEditorController.clearAllObjects();
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            levelEditorController.clearAllObjects();
+        }
     }
 
     public function save ():void {

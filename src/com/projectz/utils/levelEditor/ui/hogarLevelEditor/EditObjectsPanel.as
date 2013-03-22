@@ -8,11 +8,10 @@
 package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
-import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.events.uiController.SelectBackgroundEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectEvent;
-import com.projectz.utils.levelEditor.events.uiController.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -86,7 +85,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         }
         cbxBackgrounds.dataProvider = dataProvider;
 
-        listObjects.addEventListener (Event.CHANGE, changeListener_cbxObjects);
+        listObjects.addEventListener (Event.CHANGE, changeListener_listObjects);
         cbxObjectsType.addEventListener (Event.CHANGE, changeListener_cbxObjectsType);
         cbxBackgrounds.addEventListener (Event.CHANGE, changeListener_cbxBackgrounds);
 
@@ -118,7 +117,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
     }
 
     private function selectObjectListener (event:SelectObjectEvent):void {
-        //устанавливаем позицию комбобокса для выбранноо объекта:
+        //устанавливаем позицию листа для выбранноо объекта:
         var dataProvider:DataProvider = listObjects.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);
@@ -176,9 +175,8 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         uiController.selectCurrentObjectType(String (cbxObjectsType.selectedItem.data));
     }
 
-    private function changeListener_cbxObjects (event:Event):void {
+    private function changeListener_listObjects (event:Event):void {
         uiController.selectCurrentObject(ObjectData (listObjects.selectedItem.data));
-
     }
 
     private function changeListener_cbxBackgrounds (event:Event):void {

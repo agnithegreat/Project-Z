@@ -63,7 +63,7 @@ public class App extends Sprite {
         _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
         _levelsStorage.parseDirectory(_path+"/levels");
 
-        Starling.juggler.delayCall(startGame, 0.15);
+        Starling.juggler.delayCall(startGame, 1.15);
     }
 
     private function startGame():void {
@@ -77,16 +77,19 @@ public class App extends Sprite {
 
         addChild(_view);
 
+
         //add ui:
-        _objectEditorUI = new ObjectEditorUI(_assets, _uiController);
-
-        addChild(_objectEditorUI);
-        _objectEditorUI.filesPanel.showFiles(_objectsStorage);
-
-        _levelEditorUI = new LevelEditorUI(_uiController, _objectsStorage);
+        _levelEditorUI = new LevelEditorUI(_uiController, _model, _objectsStorage, _levelsStorage);
 
         _levelEditorUI.x = Constants.WIDTH;
         Starling.current.nativeStage.addChild(_levelEditorUI);
+
+        //ui Кирилла+++
+        _objectEditorUI = new ObjectEditorUI(_assets, _uiController);
+        addChild(_objectEditorUI);
+        _objectEditorUI.filesPanel.showFiles(_objectsStorage);
+        //ui Кирилла---
+
 
         //init application:
         _model.levelData = _levelsStorage.getLevelData("level_01");

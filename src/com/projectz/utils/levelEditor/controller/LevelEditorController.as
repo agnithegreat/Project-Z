@@ -7,9 +7,12 @@
  */
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.objectEditor.data.ObjectData;
+
+import flash.geom.Point;
 
 import starling.events.EventDispatcher;
 
@@ -28,6 +31,10 @@ public class LevelEditorController extends EventDispatcher {
 //PUBLIC:
 /////////////////////////////////////////////
 
+    /////////////////////////////////////////////
+    //OBJECTS:
+    /////////////////////////////////////////////
+
     public function addObject (placeData:PlaceData):void {
         model.addObject(placeData);
     }
@@ -44,6 +51,22 @@ public class LevelEditorController extends EventDispatcher {
         model.removeAllObject();
     }
 
+    /////////////////////////////////////////////
+    //PATHS:
+    /////////////////////////////////////////////
+
+    public function addPointToPath (point:Point, pathData:PathData):void {
+        model.addPointToPath (point, pathData);
+    }
+
+    public function removePointFromPath (point:Point, pathData:PathData):void {
+        model.removePointFromPath (point, pathData);
+    }
+
+    /////////////////////////////////////////////
+    //OTHER:
+    /////////////////////////////////////////////
+
     public function save ():void {
         model.save();
     }
@@ -51,5 +74,6 @@ public class LevelEditorController extends EventDispatcher {
     public function export ():void {
         model.export();
     }
+
 }
 }
