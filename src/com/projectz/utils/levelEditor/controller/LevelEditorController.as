@@ -63,6 +63,14 @@ public class LevelEditorController extends EventDispatcher {
         model.removePointFromPath (point, pathData);
     }
 
+    public function selectPathTarget (point:Point, pathData:PathData):void {
+        model.selectPathTarget (point, pathData);
+    }
+
+    public function setPathColor (color:uint, pathData:PathData):void {
+        model.setPathColor (color, pathData);
+    }
+
     /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////

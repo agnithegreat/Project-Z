@@ -91,7 +91,12 @@ public class FieldView extends Sprite {
         var len:int = _field.field.length;
         var cell:CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], $assets.getTexture("ms-cell-levelEditor"), $assets.getTexture("ms-cell-levelEditor-lock"));
+            cell = new CellView(
+                    _field.field[i],
+                    $assets.getTexture("ms-cell-levelEditor"),
+                    $assets.getTexture("ms-cell-levelEditor-lock"),
+                    $assets.getTexture("ms-cell-levelEditor-flag")
+            );
             _cellsContainer.addChild(cell);
         }
 
@@ -487,6 +492,7 @@ public class FieldView extends Sprite {
                 var cellView:CellView = getCellViewByPosition(point.x,  point.y);
                 if (cellView) {
                     cellView.color = color;
+                    cellView.showFlag = (i == numPoints - 1);
                 }
             }
         }

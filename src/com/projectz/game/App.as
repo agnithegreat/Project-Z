@@ -54,7 +54,7 @@ public class App extends Sprite {
         _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
         _levelsStorage.parseDirectory(_path+"/levels");
 
-        Starling.juggler.delayCall(startGame, 0.15);
+        Starling.juggler.delayCall(startGame, 0.5);
     }
 
     private function startGame():void {

@@ -5,7 +5,7 @@
  * Time: 12:40
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.ui.hogarLevelEditor {
+package com.projectz.utils.levelEditor.ui.levelEditor {
 
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
@@ -159,7 +159,7 @@ public class LevelEditorUI extends GraphicStorage {
             case (UIControllerMode.EDIT_PATHS):
                 selectTab(btnTabEditPaths);
                 showPanel(editPathsPanel);
-                outputInfo("Редактирование путей времено не работает.");
+                outputInfo("Выберете путь из списка. Установите режим редактирования. Кликами по карте редактируйте выбранный путь.");
                 break;
             case (UIControllerMode.EDIT_ZONES):
                 selectTab(btnTabEditDefenderZones);

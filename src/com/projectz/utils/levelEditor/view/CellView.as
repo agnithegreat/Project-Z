@@ -35,16 +35,18 @@ public class CellView extends PositionView {
     }
 
     private var _showLock:Boolean = false;
+    private var _showFlag:Boolean = false;
 
     protected var _bg:Image;
-    protected var _lockBg:Image;
+    protected var _lockImage:Image;
+    protected var _flagImage:Image;
 
     private static const ROLL_OUT_ALPHA:Number = .3;
     private static const ROLL_OVER_ALPHA:Number = .5;
     private static const ROLL_MOUSE_DOWN:Number = .6;
     private static const ROLL_CLICK:Number = .7;
 
-    public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null) {
+    public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null, $flagView:Texture = null) {
         _cell = $cell;
 
         super();
@@ -54,6 +56,9 @@ public class CellView extends PositionView {
         }
         if ($lockTexture) {
             setLockView($lockTexture);
+        }
+        if ($flagView) {
+            setFlagView($flagView);
         }
 
 //        addEventListener(TouchEvent.TOUCH, handleTouch);
@@ -69,6 +74,9 @@ public class CellView extends PositionView {
 
     public function set color(value:uint):void {
         _bg.color = value;
+        if (_flagImage) {
+            _flagImage.color = value;
+        }
     }
 
     public function get showLock():Boolean {
@@ -77,8 +85,19 @@ public class CellView extends PositionView {
 
     public function set showLock(value:Boolean):void {
         _showLock = value;
-        if (_lockBg) {
-            _lockBg.visible = _showLock;
+        if (_lockImage) {
+            _lockImage.visible = _showLock;
+        }
+    }
+
+    public function get showFlag():Boolean {
+        return _showFlag;
+    }
+
+    public function set showFlag(value:Boolean):void {
+        _showFlag = value;
+        if (_flagImage) {
+            _flagImage.visible = _showFlag;
         }
     }
 
@@ -111,12 +130,21 @@ public class CellView extends PositionView {
     }
 
     protected function setLockView($lockTexture:Texture):void {
-        _lockBg = new Image($lockTexture);
-        _lockBg.pivotX = _bg.width / 2;
-        _lockBg.pivotY = _bg.height / 2;
-        _lockBg.alpha = .7;
-        _lockBg.visible = false;
-        addChild(_lockBg);
+        _lockImage = new Image($lockTexture);
+        _lockImage.pivotX = _bg.width / 2;
+        _lockImage.pivotY = _bg.height / 2;
+        _lockImage.alpha = .7;
+        _lockImage.visible = false;
+        addChild(_lockImage);
+    }
+
+    protected function setFlagView($lockTexture:Texture):void {
+        _flagImage = new Image($lockTexture);
+        _flagImage.pivotX = _bg.width / 2;
+        _flagImage.pivotY = _bg.height / 2;
+        _flagImage.alpha = .6;
+        _flagImage.visible = false;
+        addChild(_flagImage);
     }
 
     override public function destroy():void {
@@ -129,5 +157,6 @@ public class CellView extends PositionView {
         }
         _bg = null;
     }
+
 }
 }

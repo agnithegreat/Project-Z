@@ -12,7 +12,7 @@ import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.ObjectEditorUI;
-import com.projectz.utils.levelEditor.ui.hogarLevelEditor.LevelEditorUI;
+import com.projectz.utils.levelEditor.ui.levelEditor.LevelEditorUI;
 import com.projectz.utils.levelEditor.view.FieldView;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;

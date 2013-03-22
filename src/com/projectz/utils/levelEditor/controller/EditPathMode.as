@@ -10,5 +10,6 @@ public class EditPathMode {
 
     public static const ADD_POINTS:String = "add points";
     public static const REMOVE_POINTS:String = "remove points";
+    public static const SELECT_TARGET:String = "select target";
 }
 }
