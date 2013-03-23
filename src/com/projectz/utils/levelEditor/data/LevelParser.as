@@ -28,6 +28,7 @@ public class LevelParser {
 
         // Список объектов без расширений, объединенных по общему префиксу
         var objects: Dictionary = new Dictionary();
+        var fileObjects: Dictionary = new Dictionary();
 
         var len: int = $files.length;
         var file: File;
@@ -39,11 +40,11 @@ public class LevelParser {
             files[file.name] = file;
             name = getFileName(file.name);
             directories[name] = file.parent;
-            objects[name] = name;
+            fileObjects[name] = name;
         }
 
         var level: LevelData;
-        for (name in objects) {
+        for (name in fileObjects) {
             if (name != "levelsList") {
                 file = files[name+".json"];
                 objects[name] = new LevelData(file ? file : directories[name].resolvePath(name+".json"));

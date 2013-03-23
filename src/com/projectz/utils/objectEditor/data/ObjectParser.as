@@ -66,9 +66,9 @@ public class ObjectParser {
             len = parts[name].length;
             for (i = 0; i < len; i++) {
                 partName = parts[name][i];
-                animated = files[name+".xml"] && files[name+".png"];
+                animated = !partName && files[name+".xml"] && files[name+".png"];
                 if (animated) {
-                    part = objects[name].getPart();
+                    part = objects[name].getPart(partName);
                     for (var j:int = 1; j <= 5; j++) {
                         if (objects[name].type == ObjectData.ENEMY) {
                             part.addTextures(Enemy.WALK+"-0"+j, $assets.getTextures(name+"-"+Enemy.WALK+"-0"+j));

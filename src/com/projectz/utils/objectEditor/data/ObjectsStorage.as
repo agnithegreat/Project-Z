@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+import com.projectz.utils.json.JSONLoader;
+
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 
@@ -17,6 +19,10 @@ import starling.utils.AssetManager;
 public class ObjectsStorage {
 
     private var _objects: Dictionary; //хранит ссылки на все ассеты игры (в виде обектов ObjectData)
+    public function get objects():Dictionary {
+        return _objects;
+    }
+
     private var _types: Dictionary; //хранит группы ассетов по типам (so, ao, de и т.д.);
 
     private var _objectsList: Object = {files: []};

@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.data {
-import com.projectz.utils.JSONLoader;
+import com.projectz.utils.json.JSONLoader;
 
 import flash.filesystem.File;
 
@@ -42,10 +42,6 @@ public class LevelData extends JSONLoader {
 
         _objects = new <PlaceData>[];
         _paths = new <PathData>[];
-
-        if (_file && exists) {
-            load();
-        }
     }
 
 /////////////////////////////////////////////

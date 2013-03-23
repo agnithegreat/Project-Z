@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
-import com.projectz.utils.JSONLoader;
+import com.projectz.utils.json.JSONLoader;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
@@ -73,10 +73,6 @@ public class ObjectData extends JSONLoader {
         _name = $name;
         _type = _name.split("-")[0];
         _parts = new Dictionary();
-
-        if (_file && exists) {
-            load();
-        }
     }
 
     public function size($width: int, $height: int):void {

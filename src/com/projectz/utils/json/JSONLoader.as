@@ -5,7 +5,7 @@
  * Time: 11:18
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils {
+package com.projectz.utils.json {
 import starling.events.EventDispatcher;
 
 import flash.utils.ByteArray;
@@ -13,8 +13,6 @@ import flash.events.Event;
 import flash.filesystem.File;
 
 public class JSONLoader extends EventDispatcher {
-
-    public static const LOADED: String = "loaded_JSONLoader";
 
     protected var _file: File;
     public function get exists():Boolean {
@@ -47,7 +45,7 @@ public class JSONLoader extends EventDispatcher {
             _file.addEventListener(Event.COMPLETE, handleComplete);
             _file.load();
         } else {
-            dispatchEventWith(LOADED, false, data);
+            dispatchEventWith(Event.COMPLETE, false, data);
         }
     }
 
@@ -58,7 +56,7 @@ public class JSONLoader extends EventDispatcher {
         _data = JSON.parse(bytes.readUTFBytes(bytes.length));
         parse(_data);
 
-        dispatchEventWith(LOADED, false, data);
+        dispatchEventWith(Event.COMPLETE, false, data);
     }
 }
 }
