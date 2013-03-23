@@ -7,10 +7,12 @@
  */
 package com.projectz.game {
 import com.projectz.game.model.Game;
+import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.game.view.GameScreen;
 
+import starling.events.Event;
 import starling.core.Starling;
 import starling.display.Sprite;
 import starling.events.TouchEvent;
@@ -23,6 +25,8 @@ public class App extends Sprite {
     private var _assets: AssetManager;
     private var _objectsStorage: ObjectsStorage;
     private var _levelsStorage: LevelStorage;
+
+    private var _jsonManager: JSONManager;
 
     private var _game: Game;
     private var _view: GameScreen;
@@ -51,10 +55,28 @@ public class App extends Sprite {
     }
 
     private function initStart():void {
-        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
-        _levelsStorage.parseDirectory(_path+"/levels");
+        _jsonManager = new JSONManager();
+        _jsonManager.addEventListener(Event.CHANGE, handleLoadProgress);
+        _jsonManager.addEventListener(Event.COMPLETE, handleLoaded);
 
-        Starling.juggler.delayCall(startGame, 0.5);
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _jsonManager.addFiles(_objectsStorage.objects);
+
+        _levelsStorage.parseDirectory(_path+"/levels");
+        _jsonManager.addFiles(_levelsStorage.levels);
+
+        _jsonManager.load();
+    }
+
+    private function handleLoadProgress($event: Event):void {
+        trace("JSON loading progress:", $event.data);
+    }
+
+    private function handleLoaded($event: Event):void {
+        _jsonManager.removeEventListener(Event.CHANGE, handleLoadProgress);
+        _jsonManager.removeEventListener(Event.COMPLETE, handleLoaded);
+
+        startGame();
     }
 
     private function startGame():void {

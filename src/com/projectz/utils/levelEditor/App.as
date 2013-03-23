@@ -6,17 +6,18 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor {
+import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
-import com.projectz.utils.levelEditor.ui.ObjectEditorUI;
 import com.projectz.utils.levelEditor.ui.levelEditor.LevelEditorUI;
 import com.projectz.utils.levelEditor.view.FieldView;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
+import starling.events.Event;
 import starling.core.Starling;
 import starling.display.Sprite;
 import starling.utils.AssetManager;
@@ -28,13 +29,14 @@ public class App extends Sprite {
     private var _objectsStorage: ObjectsStorage;
     private var _levelsStorage: LevelStorage;
 
+    private var _jsonManager: JSONManager;
+
     private var _model: Field;
     private var _view: FieldView;
     private var _controller: LevelEditorController;
     private var _uiController: UIController;
 
     private var _levelEditorUI: LevelEditorUI;
-    private var _objectEditorUI: ObjectEditorUI;
 
     private var _path: String;
 
@@ -60,10 +62,28 @@ public class App extends Sprite {
 
     //Запускаем приложение после загрузки всех ассетов:
     private function startApp():void {
-        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
-        _levelsStorage.parseDirectory(_path+"/levels");
+        _jsonManager = new JSONManager();
+        _jsonManager.addEventListener(Event.CHANGE, handleLoadProgress);
+        _jsonManager.addEventListener(Event.COMPLETE, handleLoaded);
 
-        Starling.juggler.delayCall(startGame, 1.15);
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _jsonManager.addFiles(_objectsStorage.objects);
+
+        _levelsStorage.parseDirectory(_path+"/levels");
+        _jsonManager.addFiles(_levelsStorage.levels);
+
+        _jsonManager.load();
+    }
+
+    private function handleLoadProgress($event: Event):void {
+        trace("JSON loading progress:", $event.data);
+    }
+
+    private function handleLoaded($event: Event):void {
+        _jsonManager.removeEventListener(Event.CHANGE, handleLoadProgress);
+        _jsonManager.removeEventListener(Event.COMPLETE, handleLoaded);
+
+        startGame();
     }
 
     private function startGame():void {
@@ -83,13 +103,6 @@ public class App extends Sprite {
 
         _levelEditorUI.x = Constants.WIDTH;
         Starling.current.nativeStage.addChild(_levelEditorUI);
-
-        //ui Кирилла+++
-        _objectEditorUI = new ObjectEditorUI(_assets, _uiController);
-        addChild(_objectEditorUI);
-        _objectEditorUI.filesPanel.showFiles(_objectsStorage);
-        //ui Кирилла---
-
 
         //init application:
         _model.levelData = _levelsStorage.getLevelData("level_01");

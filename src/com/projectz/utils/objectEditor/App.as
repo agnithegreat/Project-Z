@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor {
+import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.objectEditor.ui.FileLine;
@@ -27,6 +28,8 @@ public class App extends Sprite {
     private var _assets: AssetManager;
     private var _objectsStorage: ObjectsStorage;
 
+    private var _jsonManager: JSONManager;
+
     private var _view: FieldView;
     private var _ui: UI;
 
@@ -45,10 +48,30 @@ public class App extends Sprite {
 
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
-            _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
-
-            Starling.juggler.delayCall(edit, 0.15);
+            Starling.juggler.delayCall(initStart, 0.15);
         }
+    }
+
+    private function initStart():void {
+        _jsonManager = new JSONManager();
+        _jsonManager.addEventListener(Event.CHANGE, handleLoadProgress);
+        _jsonManager.addEventListener(Event.COMPLETE, handleLoaded);
+
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _jsonManager.addFiles(_objectsStorage.objects);
+
+        _jsonManager.load();
+    }
+
+    private function handleLoadProgress($event: Event):void {
+        trace("JSON loading progress:", $event.data);
+    }
+
+    private function handleLoaded($event: Event):void {
+        _jsonManager.removeEventListener(Event.CHANGE, handleLoadProgress);
+        _jsonManager.removeEventListener(Event.COMPLETE, handleLoaded);
+
+        edit();
     }
 
     private function edit():void {
