@@ -6,7 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.data {
-
 import flash.geom.Point;
 
 public class PathData {
@@ -68,6 +67,10 @@ public class PathData {
 
     public function get points():Vector.<Point> {
         return _points;
+    }
+
+    public function get end():Point {
+        return _points[_points.length-1];
     }
 }
 }

@@ -39,6 +39,11 @@ public class Enemy extends Personage {
     protected var _strength: int;
     protected var _reward: int;
 
+    protected var _path: int;
+    public function get path():int {
+        return _path;
+    }
+
     public function Enemy($data: PartData) {
         super($data);
 

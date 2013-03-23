@@ -153,12 +153,9 @@ public class Field extends EventDispatcher {
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
             if (zombie.alive && !zombie.target) {
-                while (!cell || cell.locked) {
-                    // TODO: убрать!
-                    cell = getRandomCell();
-                }
-                zombie.walk(getWay(zombie.cell, cell));
-                cell = null;
+                var point: Point = _level.paths[0].end;
+                cell = getCell(point.x, point.y);
+                zombie.walk(getWay(zombie.cell, cell, 1));
             }
             zombie.step($delta);
         }
@@ -167,16 +164,11 @@ public class Field extends EventDispatcher {
         for (i = 0; i < len; i++) {
             var enemy: PlaceData = _generators[i].createEnemy();
             if (enemy) {
-                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object).parts[""]);
+                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object));
             }
         }
 
         dispatchEventWith(GameEvent.UPDATE);
-    }
-
-    private function getRandomCell():Cell {
-        var rand: int = _field.length*Math.random();
-        return _field[rand];
     }
 
     private function getWay($start: Cell, $end: Cell, $path: int = 0):Vector.<Cell> {
@@ -249,7 +241,7 @@ public class Field extends EventDispatcher {
 
     private function addGenerator($data: PlaceData):void {
         // TODO: Вынести параметры частоты и количества в редактор
-        _generators.push(new Generator($data.x, $data.y, $data.object, 60, 10));
+        _generators.push(new Generator($data.x, $data.y, $data.object, 60, 100));
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
@@ -285,6 +277,7 @@ public class Field extends EventDispatcher {
     }
 
     private function createShadow($x: int, $y: int, $data: PartData):void {
+        // TODO: тень != FieldObject, + тень должна обновлять свою позицию в зависимости от нахождения объекта, ее отбрасывающего
         var shadow: FieldObject = new FieldObject($data);
         var cell: Cell = getCell($x, $y);
         cell.shadow = shadow;
@@ -293,17 +286,24 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
     }
 
-    private function createPersonage($x: int, $y: int, $data: PartData):void {
-        var zombie: Enemy = new Enemy($data);
-        _objects.push(zombie);
+    private function createPersonage($x: int, $y: int, $data: ObjectData):void {
+        for each (var part: PartData in $data.parts) {
+            if (part.name!="shadow") {
+                var zombie: Enemy = new Enemy(part);
+                _objects.push(zombie);
 
-        var cell: Cell = getCell($x, $y);
-        cell.lock();
-        cell.addObject(zombie);
-        zombie.place(cell);
-        _enemies.push(zombie);
+                var cell: Cell = getCell($x, $y);
+                cell.lock();
+                cell.addObject(zombie);
+                zombie.place(cell);
+                _enemies.push(zombie);
 
-        dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
+                dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
+            } else {
+                createShadow($x, $y, part);
+            }
+        }
+
     }
 
     public function destroy():void {
