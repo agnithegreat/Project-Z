@@ -18,7 +18,7 @@ CONFIG::desktop {
 }
 
 import com.projectz.game.App;
-import com.projectz.utils.JSONLoader;
+import com.projectz.utils.json.JSONLoader;
 
 import flash.display.Bitmap;
 import flash.display.Sprite;
@@ -59,7 +59,7 @@ public class Main extends Sprite {
 
     public function Main() {
         _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
-        _config.addEventListener(JSONLoader.LOADED, handleLoaded);
+        _config.addEventListener(starling.events.Event.COMPLETE, handleLoaded);
         _config.load();
     }
 

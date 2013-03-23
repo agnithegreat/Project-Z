@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import com.projectz.utils.JSONLoader;
+import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.levelEditor.App;
 
 import flash.display.Sprite;
@@ -31,7 +31,7 @@ public class LevelEditor extends Sprite {
 
     public function LevelEditor() {
         _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
-        _config.addEventListener(JSONLoader.LOADED, handleLoaded);
+        _config.addEventListener(Event.COMPLETE, handleLoaded);
         _config.load();
     }
 

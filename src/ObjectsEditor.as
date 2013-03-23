@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
-import com.projectz.utils.JSONLoader;
+import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.objectEditor.App;
 
 import flash.display.Sprite;
@@ -30,7 +30,7 @@ public class ObjectsEditor extends Sprite {
 
     public function ObjectsEditor() {
         _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
-        _config.addEventListener(JSONLoader.LOADED, handleLoaded);
+        _config.addEventListener(Event.COMPLETE, handleLoaded);
         _config.load();
     }
 
