@@ -80,6 +80,7 @@ public class FieldView extends Sprite {
         _field.addEventListener(EditObjectEvent.OBJECT_REMOVED, handleRemoveObject);
         _field.addEventListener(EditPlaceEvent.PLACE_ADDED, handleAddPlace);
         _field.addEventListener(EditPathEvent.PATH_WAS_CHANGED, handleChangePath);
+        _field.addEventListener(EditPathEvent.COLOR_WAS_CHANGED, handleChangePath);
 
         _container = new Sprite();
         addChild(_container);
@@ -503,6 +504,7 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < numCells; i++) {
             var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
             cellView.color = 0xffffff;
+            cellView.showFlag = false;
         }
     }
 

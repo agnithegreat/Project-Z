@@ -138,6 +138,22 @@ public class UIController extends EventDispatcher {
         }
     }
 
+    public function addNewPath ():void {
+        if (mode == UIControllerMode.EDIT_PATHS) {
+            levelEditorController.addNewPath ();
+        }
+    }
+
+
+    public function deleteCurrentEditingPath ():void {
+        if (
+                (mode == UIControllerMode.EDIT_PATHS) &&
+                currentEditingPath
+        ) {
+            levelEditorController.deletePath (currentEditingPath);
+        }
+    }
+
     /////////////////////////////////////////////
     //INFO:
     /////////////////////////////////////////////

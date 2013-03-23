@@ -16,6 +16,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.S
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent;
 
 import fl.controls.ColorPicker;
 
@@ -42,14 +43,17 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
     private var btnDelete:ButtonWithText;
     private var btnNew:ButtonWithText;
 
-    public function EditPathsPanel(mc:MovieClip, model:Field,  uiController:UIController) {
+    public function EditPathsPanel(mc:MovieClip, model:Field, uiController:UIController) {
         this.model = model;
         this.uiController = uiController;
-        super (mc);
+        super(mc);
 
         uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
         uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
+        model.addEventListener(EditPathEvent.COLOR_WAS_CHANGED, colorWasChangedEvent);
+        model.addEventListener(EditPathEvent.PATH_WAS_ADDED, pathWasAddedListener);
+        model.addEventListener(EditPathEvent.PATH_WAS_REMOVED, pathWasRemovedListener);
     }
 
     public function show():void {
@@ -60,14 +64,14 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         visible = false;
     }
 
-    override protected function initGraphicElements ():void {
+    override protected function initGraphicElements():void {
         super.initGraphicElements();
 
-        listPaths = List (getElement("listPaths"));
-        clpPathColor = ColorPicker (getElement("clpPathColor"));
+        listPaths = List(getElement("listPaths"));
+        clpPathColor = ColorPicker(getElement("clpPathColor"));
 
-        listPaths.addEventListener (Event.CHANGE, changeListener_listPaths);
-        clpPathColor.addEventListener (Event.CHANGE, changeListener_clpPathColor);
+        listPaths.addEventListener(Event.CHANGE, changeListener_listPaths);
+        clpPathColor.addEventListener(Event.CHANGE, changeListener_clpPathColor);
 
         //создание кнопок:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
@@ -96,11 +100,27 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         btnNew.addEventListener(MouseEvent.CLICK, clickListener);
     }
 
-    private function initPathList (paths:Vector.<PathData>):void {
+    private function reInitPathList():void {
+        if (model.levelData) {
+            //формируем список всех путей текущего уровня:
+            initPathList(model.levelData.paths);
+
+            //устанавливаем текущий редактируемый путь:
+            var currentEditingPath:PathData;
+            if (model.levelData.paths.length > 0) {
+                currentEditingPath = model.levelData.paths [0];
+            }
+            uiController.currentEditingPath = currentEditingPath;
+
+        }
+    }
+
+
+    private function initPathList(paths:Vector.<PathData>):void {
         var dataProvider:DataProvider = new DataProvider();
         for (var i:int = 0; i < paths.length; i++) {
             var pathData:PathData = paths [i];
-            dataProvider.addItem({label:("path" + pathData.id),data:pathData});
+            dataProvider.addItem({label: ("path" + pathData.id), data: pathData});
         }
         listPaths.dataProvider = dataProvider;
     }
@@ -109,7 +129,7 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
 //LISTENERS:
 /////////////////////////////////////////////
 
-    private function clickListener (event:MouseEvent):void {
+    private function clickListener(event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnAddPathPoint):
                 uiController.editPathMode = EditPathMode.ADD_POINTS;
@@ -124,15 +144,15 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
                 uiController.save();
                 break;
             case (btnDelete):
-                //
+                uiController.deleteCurrentEditingPath();
                 break;
             case (btnNew):
-                //
+                uiController.addNewPath();
                 break;
         }
     }
 
-    private function selectPathListener (event:SelectPathEvent):void {
+    private function selectPathListener(event:SelectPathEvent):void {
         var pathData:PathData = event.pathData;
         //устанавливаем позицию листа для выбранноо пути:
         var dataProvider:DataProvider = listPaths.dataProvider;
@@ -152,18 +172,13 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
 
     }
 
-    private function selectUIControllerModeListener (event:SelectModeEvent):void {
+    private function selectUIControllerModeListener(event:SelectModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_PATHS) {
-            if (model.levelData) {
-                initPathList (model.levelData.paths);
-                if (model.levelData.paths.length > 0) {
-                    uiController.currentEditingPath = model.levelData.paths [0];
-                }
-            }
+            reInitPathList();
         }
     }
 
-    private function selectEditPathModeListener (event:SelectEditPathModeEvent):void {
+    private function selectEditPathModeListener(event:SelectEditPathModeEvent):void {
         if (event.mode == EditPathMode.ADD_POINTS) {
             btnAddPathPoint.selected = true;
             btnRemovePathPoint.selected = false;
@@ -181,12 +196,28 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         }
     }
 
-    private function changeListener_listPaths (event:Event):void {
-        uiController.currentEditingPath = PathData (listPaths.selectedItem.data);
+    private function changeListener_listPaths(event:Event):void {
+        uiController.currentEditingPath = PathData(listPaths.selectedItem.data);
     }
 
-    private function changeListener_clpPathColor (event:Event):void {
-        uiController.setPathColor (clpPathColor.selectedColor);
+    private function changeListener_clpPathColor(event:Event):void {
+        uiController.setPathColor(clpPathColor.selectedColor);
     }
+
+    private function colorWasChangedEvent(event:EditPathEvent):void {
+        if (event.pathData) {
+            clpPathColor.selectedColor = event.pathData.color;
+        }
+    }
+
+    private function pathWasAddedListener(event:EditPathEvent):void {
+        reInitPathList();
+        uiController.currentEditingPath = event.pathData;
+    }
+
+    private function pathWasRemovedListener(event:EditPathEvent):void {
+        reInitPathList();
+    }
+
 }
 }

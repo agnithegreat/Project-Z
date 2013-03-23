@@ -28,7 +28,7 @@ public class PathData {
     }
 
     public function set id(value:Number):void {
-        value = _id;
+        _id = value;
     }
 
     public function get color():uint {

@@ -214,8 +214,23 @@ public class Field extends EventDispatcher {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
                 pathData.color = color;
-                dispatchEvent(new EditPathEvent (pathData));
+                dispatchEvent(new EditPathEvent (pathData, EditPathEvent.COLOR_WAS_CHANGED));
             }
+        }
+    }
+
+    public function addNewPath ():void {
+        if (_levelData) {
+            var pathData:PathData = new PathData();
+            var maxId:int = 0;
+            var numPaths:int = _levelData.paths.length;
+            for (var i:int = 0; i < numPaths; i++) {
+                maxId = Math.max (maxId, _levelData.paths [i].id);
+                trace("maxId = " + maxId);
+            }
+            pathData.id = maxId + 1;
+            _levelData.paths.push (pathData);
+            dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_WAS_ADDED));
         }
     }
 
@@ -224,7 +239,7 @@ public class Field extends EventDispatcher {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
                 _levelData.paths.splice(index, 1);
-                dispatchEvent(new EditPathEvent (pathData));
+                dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_WAS_REMOVED));
             }
         }
     }

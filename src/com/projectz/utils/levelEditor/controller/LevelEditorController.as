@@ -71,6 +71,15 @@ public class LevelEditorController extends EventDispatcher {
         model.setPathColor (color, pathData);
     }
 
+    public function addNewPath ():void {
+        model.addNewPath ();
+    }
+
+
+    public function deletePath (pathData:PathData):void {
+        model.deletePath (pathData);
+    }
+
     /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////

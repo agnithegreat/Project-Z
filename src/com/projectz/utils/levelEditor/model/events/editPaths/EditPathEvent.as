@@ -15,6 +15,9 @@ public class EditPathEvent extends Event {
     private var _pathData:PathData;
 
     public static const PATH_WAS_CHANGED:String = "path was changed";
+    public static const COLOR_WAS_CHANGED:String = "color was changed";
+    public static const PATH_WAS_REMOVED:String = "path was removed";
+    public static const PATH_WAS_ADDED:String = "path was added";
 
     public function EditPathEvent(pathData:PathData, type:String = PATH_WAS_CHANGED, bubbles:Boolean = false) {
         this.pathData = pathData;
