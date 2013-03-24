@@ -15,8 +15,6 @@ import com.projectz.game.view.GameScreen;
 import starling.events.Event;
 import starling.core.Starling;
 import starling.display.Sprite;
-import starling.events.TouchEvent;
-import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 import starling.utils.formatString;
 
@@ -49,8 +47,6 @@ public class App extends Sprite {
     private function handleProgress(ratio: Number):void {
         if (ratio == 1) {
             Starling.juggler.delayCall(initStart, 0.15);
-
-            stage.addEventListener(TouchEvent.TOUCH, handleTouch);
         }
     }
 
@@ -95,15 +91,6 @@ public class App extends Sprite {
 
         _game.destroy();
         _game = null;
-    }
-
-    private function handleTouch($event: TouchEvent):void {
-        if ($event.getTouch(stage, TouchPhase.ENDED)) {
-//            if (_game) {
-//                endGame();
-//                startGame();
-//            }
-        }
     }
 }
 }

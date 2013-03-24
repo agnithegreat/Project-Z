@@ -63,7 +63,7 @@ public class ObjectsEditor extends Sprite {
         _assets.verbose = Capabilities.isDebugger;
         _assets.verbose = false;
         _assets.enqueue(
-                _directory.resolvePath(formatString("textures/{0}x", 1))
+            _directory.resolvePath(formatString("textures/{0}x", 1))
         );
 
         _starling = new Starling(App, stage, viewPort);
