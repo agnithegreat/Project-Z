@@ -90,15 +90,17 @@ public class Field extends EventDispatcher {
     //OBJECTS:
     /////////////////////////////////////////////
 
-    public function addObject($placeData: PlaceData):void {
-        // TODO: implement check addObjectTest
-
+    public function addObject($placeData: PlaceData):Boolean {
+        if (!checkObject($placeData.x, $placeData.y, $placeData.realObject)) {
+            return false;
+        }
         if (_levelData) {
             _levelData.addObject($placeData);
             createObject($placeData.x, $placeData.y, $placeData.realObject, $placeData);
             updateDepths();
             dispatchEventWith(GameEvent.UPDATE);
         }
+        return true;
     }
 
     public function selectObject($x: int,  $y: int):void {
@@ -420,6 +422,24 @@ public class Field extends EventDispatcher {
                 createShadow($x, $y, part, $placeData);
             }
         }
+    }
+
+    private function checkObject($x: int, $y: int, $data: ObjectData):Boolean {
+        for each (var part: PartData in $data.parts) {
+            if (part.name!="shadow") {
+                for (var i:int = 0; i < $data.mask.length; i++) {
+                    for (var j:int = 0; j < $data.mask[i].length; j++) {
+                        var cell: Cell = getCell($x+i, $y+j);
+                        if (cell) {
+                            if ($data.mask[i][j]==1 && cell.object) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private function createPart($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {

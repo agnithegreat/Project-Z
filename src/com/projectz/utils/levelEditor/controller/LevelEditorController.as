@@ -35,8 +35,8 @@ public class LevelEditorController extends EventDispatcher {
     //OBJECTS:
     /////////////////////////////////////////////
 
-    public function addObject (placeData:PlaceData):void {
-        model.addObject(placeData);
+    public function addObject (placeData:PlaceData):Boolean {
+        return model.addObject(placeData);
     }
 
     public function selectObject ($x: int, $y: int):void {

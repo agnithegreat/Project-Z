@@ -167,10 +167,11 @@ public class UIController extends EventDispatcher {
     //Методы классического mvc контроллера
     /////////////////////////////////////////////
 
-    public function addObject (placeData:PlaceData):void {
+    public function addObject (placeData:PlaceData):Boolean {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
-            levelEditorController.addObject(placeData);
+            return levelEditorController.addObject(placeData);
         }
+        return false;
     }
 
     public function selectObject ($x: int, $y: int):void {

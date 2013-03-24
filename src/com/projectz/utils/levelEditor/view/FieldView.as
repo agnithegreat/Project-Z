@@ -332,12 +332,12 @@ public class FieldView extends Sprite {
                                 place.object = _currentObject.object.name;
                                 place.realObject = _currentObject.object;
 
-                                uiController.addObject(place);
-
-                                if (_shift) {
-                                    addObject(_currentObject.object);
-                                } else {
-                                    addObject(null);
+                                if (uiController.addObject(place)) {
+                                    if (_shift) {
+                                        addObject(_currentObject.object);
+                                    } else {
+                                        addObject(null);
+                                    }
                                 }
                             } else {
                                 uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
