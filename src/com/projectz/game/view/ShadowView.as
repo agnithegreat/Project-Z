@@ -6,7 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
-import com.projectz.game.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.display.Image;
@@ -15,19 +14,13 @@ import starling.textures.Texture;
 
 public class ShadowView extends Sprite {
 
-    protected var _object: FieldObject;
+    protected var _object: PartData;
+    protected var _parent: PositionView
     private var _bg: Image;
 
-    public function get offsetX():int {
-        return (_object.data.top.y-_object.data.top.x)*PositionView.cellWidth*0.5;
-    }
-
-    public function get offsetY():int {
-        return (_object.data.top.y+_object.data.top.x)*PositionView.cellHeight*0.5;
-    }
-
-    public function ShadowView($object: FieldObject, $shadow: PartData) {
-        _object = $object;
+    public function ShadowView($shadow: PartData, $parent: PositionView) {
+        _object = $shadow;
+        _parent = $parent;
 
         pivotX = PositionView.cellWidth/2;
         pivotY = PositionView.cellHeight/2;
@@ -38,14 +31,14 @@ public class ShadowView extends Sprite {
     }
 
     public function updatePosition():void {
-        x = (_object.positionY-_object.positionX)*PositionView.cellWidth*0.5;
-        y = (_object.positionY+_object.positionX)*PositionView.cellHeight*0.5;
+        x = _parent.x;
+        y = _parent.y;
     }
 
     protected function setView($texture: Texture):void {
         _bg = new Image($texture);
-        _bg.pivotX = _object.data.pivotX+offsetX;
-        _bg.pivotY = _object.data.pivotY+offsetY;
+        _bg.pivotX = _bg.width/2+_object.pivotX;
+        _bg.pivotY = _bg.height/2+_object.pivotY;
         addChild(_bg);
     }
 
