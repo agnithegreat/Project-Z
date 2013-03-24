@@ -166,8 +166,9 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
 //        dataProvider.addItem({label:"Выберете объект...",data:null});
         for each (object in objects) {
             var objectData:ObjectData = ObjectData (object);
-            dataProvider.addItem({label:objectData.name,data:objectData});
+            dataProvider.addItem({label:objectData.name,data:objectData,name:objectData.name});
         }
+        dataProvider.sortOn("name");
         listObjects.dataProvider = dataProvider;
     }
 
