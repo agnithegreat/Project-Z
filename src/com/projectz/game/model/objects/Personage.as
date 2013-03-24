@@ -42,8 +42,8 @@ public class Personage extends FieldObject {
 
     protected var _state: String;
 
-    public function Personage($data: PartData) {
-        super($data);
+    public function Personage($data: PartData, $shadow: PartData) {
+        super($data, $shadow);
 
         _alive = true;
     }

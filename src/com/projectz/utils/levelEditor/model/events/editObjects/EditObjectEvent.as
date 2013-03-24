@@ -15,7 +15,6 @@ public class EditObjectEvent extends Event {
     private var _fieldObject:FieldObject;
 
     public static const OBJECT_ADDED: String = "object_added_EditObjectEvent";
-    public static const SHADOW_ADDED: String = "shadow_added_EditObjectEvent";
     public static const OBJECT_REMOVED: String = "object_removed_EditObjectEvent";
 
     public function EditObjectEvent (objectData:FieldObject, type:String, bubbles:Boolean = false):void {

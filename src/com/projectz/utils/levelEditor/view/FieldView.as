@@ -50,7 +50,6 @@ public class FieldView extends Sprite {
     private var _container:Sprite;
 
     private var _cellsContainer:Sprite;
-    private var _shadowsContainer:Sprite;
     private var _objectsContainer:Sprite;
 
     private var _currentObject:FieldObjectView;
@@ -76,7 +75,6 @@ public class FieldView extends Sprite {
         _field.addEventListener(EditBackgroundEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(EditObjectEvent.OBJECT_ADDED, handleAddObject);
-        _field.addEventListener(EditObjectEvent.SHADOW_ADDED, handleAddShadow);
         _field.addEventListener(EditObjectEvent.OBJECT_REMOVED, handleRemoveObject);
         _field.addEventListener(EditPlaceEvent.PLACE_ADDED, handleAddPlace);
         _field.addEventListener(EditPathEvent.PATH_WAS_CHANGED, handleChangePath);
@@ -104,13 +102,8 @@ public class FieldView extends Sprite {
         _container.x = (Constants.WIDTH + PositionView.cellWidth) * 0.5;
         _container.y = (Constants.HEIGHT + (1 - (_field.height + _field.height) * 0.5) * PositionView.cellHeight) * 0.5;
 
-        _shadowsContainer = new Sprite();
-        _shadowsContainer.alpha = 0.3;
-        _shadowsContainer.touchable = false;
-        _container.addChild(_shadowsContainer);
-
         _objectsContainer = new Sprite();
-        _objectsContainer.alpha = 0.3;
+        _objectsContainer.alpha = 0.5;
         _objectsContainer.touchable = false;
         _container.addChild(_objectsContainer);
 
@@ -156,16 +149,6 @@ public class FieldView extends Sprite {
         _objectsContainer.removeFromParent(true);
         _objectsContainer = null;
 
-        while (_shadowsContainer.numChildren > 0) {
-            object = _shadowsContainer.removeChildAt(0, true) as ObjectView;
-            if (object) {
-                object.destroy();
-            }
-        }
-        _shadowsContainer.removeFromParent(true);
-        _shadowsContainer = null;
-
-        _container.removeFromParent(true);
         _container = null;
     }
 
@@ -251,14 +234,6 @@ public class FieldView extends Sprite {
         }
     }
 
-    private function handleAddShadow($event:EditObjectEvent):void {
-        var fieldObject:FieldObject = $event.fieldObject;
-        if (fieldObject.cell.shadow) {
-            var object:ObjectView = new ObjectView(fieldObject.cell.shadow, "shadow");
-            _shadowsContainer.addChild(object);
-        }
-    }
-
     private function handleRemoveObject($event:EditObjectEvent):void {
         var object:FieldObject = $event.fieldObject;
 
@@ -277,17 +252,6 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < len; i++) {
             var obj:ObjectView = _objectsContainer.getChildAt(i) as ObjectView;
             if (obj.object == object) {
-                obj.destroy();
-                obj.removeFromParent(true);
-                i--;
-                len--;
-            }
-        }
-
-        len = _shadowsContainer.numChildren;
-        for (i = 0; i < len; i++) {
-            obj = _shadowsContainer.getChildAt(i) as ObjectView;
-            if (obj.object == object.cell.shadow) {
                 obj.destroy();
                 obj.removeFromParent(true);
                 i--;
@@ -441,7 +405,7 @@ public class FieldView extends Sprite {
     }
 
     private function selectObjectsTypeListener(event:SelectObjectsTypeEvent):void {
-        _objectsContainer.visible = _shadowsContainer.visible = event.objectsType != ObjectData.ENEMY;
+        _objectsContainer.visible = event.objectsType != ObjectData.ENEMY;
         addObject(null);
     }
 
@@ -518,11 +482,9 @@ public class FieldView extends Sprite {
         switch (event.mode) {
             case UIControllerMode.EDIT_OBJECTS:
                 _objectsContainer.visible = true;
-                _shadowsContainer.visible = true;
                 break;
             case UIControllerMode.EDIT_PATHS:
                 _objectsContainer.visible = false;
-                _shadowsContainer.visible = false;
                 break;
         }
     }

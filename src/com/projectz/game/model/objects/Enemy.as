@@ -44,8 +44,8 @@ public class Enemy extends Personage {
         return _path;
     }
 
-    public function Enemy($data: PartData) {
-        super($data);
+    public function Enemy($data: PartData, $shadow: PartData) {
+        super($data, $shadow);
 
         _hp = 100;
         _speed = 10;
@@ -90,14 +90,14 @@ public class Enemy extends Personage {
         }
 
         if (!_halfWay && _progress>=0.5) {
-            _cell.unlock();
             _cell.removeObject(this);
             _target.addObject(this);
-            _target.lock();
             _halfWay = true;
         }
 
         if (_progress>=1) {
+            _cell.unlock();
+            _target.lock();
             place(_target);
             _target = null;
 

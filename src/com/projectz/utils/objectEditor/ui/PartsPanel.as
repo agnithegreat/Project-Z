@@ -23,11 +23,14 @@ public class PartsPanel extends Sprite {
         addChild(_partsList);
     }
 
-    public function showParts($parts: Dictionary):void {
+    public function showParts($parts: Dictionary, $shadow: PartData):void {
         _parts = [];
         var part: PartData;
         for each (part in $parts) {
             _parts.push(new PartLine(part));
+        }
+        if ($shadow) {
+            _parts.push(new PartLine($shadow));
         }
         _parts.push(new PartLine(null));
         _parts.sortOn("name");

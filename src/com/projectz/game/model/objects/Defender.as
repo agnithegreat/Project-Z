@@ -16,8 +16,8 @@ public class Defender extends Personage {
     public static const RELOAD: String = "reload";
     public static const STATIC: String = "static";
 
-    public function Defender($data:PartData) {
-        super($data);
+    public function Defender($data:PartData, $shadow: PartData) {
+        super($data, $shadow);
     }
 
     public function fight():void {

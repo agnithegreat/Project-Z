@@ -26,14 +26,6 @@ public class Cell extends EventDispatcher {
         return x+y;
     }
 
-    private var _shadow: FieldObject;
-    public function get shadow():FieldObject {
-        return _shadow;
-    }
-    public function set shadow(value: FieldObject):void {
-        _shadow = value;
-    }
-
     private var _locked: Boolean;
     public function get locked():Boolean {
         return _locked;
@@ -93,7 +85,6 @@ public class Cell extends EventDispatcher {
 
     public function destroy():void {
         _objects = null;
-        _shadow = null;
     }
 }
 }

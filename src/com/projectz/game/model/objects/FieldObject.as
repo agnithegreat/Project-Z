@@ -38,8 +38,14 @@ public class FieldObject extends EventDispatcher {
         return _data;
     }
 
-    public function FieldObject($data:PartData) {
+    protected var _shadow: PartData;
+    public function get shadow():PartData {
+        return _shadow;
+    }
+
+    public function FieldObject($data:PartData, $shadow:PartData) {
         _data = $data;
+        _shadow = $shadow;
         createSize();
     }
 
@@ -87,6 +93,7 @@ public class FieldObject extends EventDispatcher {
         _size = null;
 
         _data = null;
+        _shadow = null;
     }
 }
 }

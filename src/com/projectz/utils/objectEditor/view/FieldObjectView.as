@@ -66,6 +66,9 @@ public class FieldObjectView extends Sprite {
         for each (part in _object.parts) {
             _objects.addChild(new ObjectView(part));
         }
+        if (_object.shadow) {
+            _objects.addChild(new ObjectView(_object.shadow));
+        }
 
         showField();
     }
@@ -101,7 +104,7 @@ public class FieldObjectView extends Sprite {
         var len: int = _cells.numChildren;
         for (var i:int = 0; i < len; i++) {
             cell = _cells.getChildAt(i) as CellView;
-            cell.alpha = _currentPart ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _object.mask[cell.position.x][cell.position.y];
+            cell.alpha = _currentPart && _currentPart.name ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _object.mask[cell.position.x][cell.position.y];
         }
     }
 

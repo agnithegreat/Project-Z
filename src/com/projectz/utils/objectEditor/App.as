@@ -104,7 +104,7 @@ public class App extends Sprite {
             case FileLine.SELECT_FILE:
                 var data: ObjectData = $event.data as ObjectData;
                 _view.addObject(data);
-                _ui.partsPanel.showParts(data.parts);
+                _ui.partsPanel.showParts(data.parts, data.shadow);
                 break;
             case PartLine.SELECT_PART:
                 var part: PartData = $event.data as PartData;

@@ -36,7 +36,6 @@ public class FieldView extends Sprite {
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
-        _field.addEventListener(GameEvent.SHADOW_ADDED, handleAddShadow);
 
         _bg = new Image($assets.getTexture(_field.level.bg));
         _bg.touchable = false;
@@ -87,19 +86,19 @@ public class FieldView extends Sprite {
             object = new ObjectView(fieldObject, fieldObject.data.name);
             _objects.addChild(object);
         }
-    }
-
-    private function handleAddShadow($event: Event):void {
-        var object: PositionView;
-        var fieldObject: FieldObject = $event.data as FieldObject;
-        if (fieldObject.cell.shadow) {
-            object = new ObjectView(fieldObject.cell.shadow, "shadow");
-            _shadows.addChild(object);
+        if (fieldObject.shadow) {
+            var shadow: ShadowView = new ShadowView(fieldObject.shadow, object);
+            _shadows.addChild(shadow);
         }
     }
 
     private function handleUpdate($event: Event):void {
         update();
+
+        var len: int = _shadows.numChildren;
+        for (var i:int = 0; i < len; i++) {
+            (_shadows.getChildAt(i) as ShadowView).updatePosition();
+        }
     }
 
     private function handleTouch($event: TouchEvent):void {

@@ -416,24 +416,18 @@ public class Field extends EventDispatcher {
 
     private function createObject($x: int, $y: int, $data: ObjectData, $placeData: PlaceData):void {
         for each (var part: PartData in $data.parts) {
-            if (part.name!="shadow") {
-                createPart($x, $y, part, $placeData);
-            } else {
-                createShadow($x, $y, part, $placeData);
-            }
+            createPart($x, $y, part, $placeData);
         }
     }
 
     private function checkObject($x: int, $y: int, $data: ObjectData):Boolean {
         for each (var part: PartData in $data.parts) {
-            if (part.name!="shadow") {
-                for (var i:int = 0; i < $data.mask.length; i++) {
-                    for (var j:int = 0; j < $data.mask[i].length; j++) {
-                        var cell: Cell = getCell($x+i, $y+j);
-                        if (cell) {
-                            if ($data.mask[i][j]==1 && cell.object) {
-                                return false;
-                            }
+            for (var i:int = 0; i < $data.mask.length; i++) {
+                for (var j:int = 0; j < $data.mask[i].length; j++) {
+                    var cell: Cell = getCell($x+i, $y+j);
+                    if (cell) {
+                        if ($data.mask[i][j]==1 && cell.object) {
+                            return false;
                         }
                     }
                 }
@@ -464,15 +458,5 @@ public class Field extends EventDispatcher {
             dispatchEvent(new EditObjectEvent (object, EditObjectEvent.OBJECT_ADDED));
         }
     }
-
-    private function createShadow($x: int, $y: int, $data: PartData, $placeData: PlaceData):void {
-        var shadow: FieldObject = new FieldObject($data, $placeData);
-        var cell: Cell = getCell($x, $y);
-        cell.shadow = shadow;
-        shadow.place(cell);
-
-        dispatchEvent(new EditObjectEvent(shadow, EditObjectEvent.SHADOW_ADDED));
-    }
-
 }
 }

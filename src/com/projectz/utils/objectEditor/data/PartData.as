@@ -14,6 +14,9 @@ import starling.utils.AssetManager;
 
 public class PartData {
 
+    public static const BACK: String = "back";
+    public static const SHADOW: String = "shadow";
+
     private var _name: String;
     public function get name():String {
         return _name;
@@ -75,7 +78,7 @@ public class PartData {
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];
             for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = _name=="shadow" ? 0 : 1;
+                _mask[i][j] = _name==SHADOW ? 0 : 1;
             }
         }
         _width = _mask.length;
@@ -95,7 +98,7 @@ public class PartData {
 
     private var _top: Point;
     public function get top():Point {
-        if (!_top && (width==height==1 || _name=="shadow")) {
+        if (!_top && (width==height==1 || _name==SHADOW)) {
             _top = new Point(0, 0);
         }
         if (!_top) {

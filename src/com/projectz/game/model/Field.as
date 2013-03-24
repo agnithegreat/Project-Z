@@ -246,16 +246,12 @@ public class Field extends EventDispatcher {
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
         for each (var part: PartData in $data.parts) {
-            if (part.name!="shadow") {
-                createPart($x, $y, part);
-            } else {
-                createShadow($x, $y, part);
-            }
+            createPart($x, $y, part, !part.top.x && !part.top.y ? $data.shadow : null);
         }
     }
 
-    private function createPart($x: int, $y: int, $data: PartData):void {
-        var object: FieldObject = new FieldObject($data);
+    private function createPart($x: int, $y: int, $data: PartData, $shadow: PartData):void {
+        var object: FieldObject = new FieldObject($data, $shadow);
 
         var cell: Cell;
         for (var i:int = 0; i < object.data.mask.length; i++) {
@@ -276,32 +272,18 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
     }
 
-    private function createShadow($x: int, $y: int, $data: PartData):void {
-        // TODO: тень != FieldObject, + тень должна обновлять свою позицию в зависимости от нахождения объекта, ее отбрасывающего
-        var shadow: FieldObject = new FieldObject($data);
-        var cell: Cell = getCell($x, $y);
-        cell.shadow = shadow;
-        shadow.place(cell);
-
-        dispatchEventWith(GameEvent.SHADOW_ADDED, false, shadow);
-    }
-
     private function createPersonage($x: int, $y: int, $data: ObjectData):void {
         for each (var part: PartData in $data.parts) {
-            if (part.name!="shadow") {
-                var zombie: Enemy = new Enemy(part);
-                _objects.push(zombie);
+            var zombie: Enemy = new Enemy(part, $data.shadow);
+            _objects.push(zombie);
 
-                var cell: Cell = getCell($x, $y);
-                cell.lock();
-                cell.addObject(zombie);
-                zombie.place(cell);
-                _enemies.push(zombie);
+            var cell: Cell = getCell($x, $y);
+            cell.lock();
+            cell.addObject(zombie);
+            zombie.place(cell);
+            _enemies.push(zombie);
 
-                dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
-            } else {
-                createShadow($x, $y, part);
-            }
+            dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
         }
 
     }

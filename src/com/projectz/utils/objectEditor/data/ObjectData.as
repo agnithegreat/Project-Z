@@ -61,10 +61,21 @@ public class ObjectData extends JSONLoader {
         return _parts;
     }
     public function getPart($name: String = ""):PartData {
+        if ($name == PartData.SHADOW) {
+            if (!_shadow) {
+                _shadow = new PartData(PartData.SHADOW);
+            }
+            return _shadow;
+        }
         if (!_parts[$name]) {
             _parts[$name] = new PartData($name);
         }
         return _parts[$name];
+    }
+
+    private var _shadow: PartData;
+    public function get shadow():PartData {
+        return _shadow;
     }
 
     public function ObjectData($name: String, $config: File = null) {
@@ -86,6 +97,9 @@ public class ObjectData extends JSONLoader {
         var index: String;
         for (index in _parts) {
            pts[index] = _parts[index].export();
+        }
+        if (_shadow) {
+            pts[PartData.SHADOW] = _shadow.export();
         }
         return pts;
     }
