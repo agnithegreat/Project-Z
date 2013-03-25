@@ -154,7 +154,9 @@ public class FieldObjectView extends Sprite {
                 var ty: Number = pos.y/PositionView.cellHeight;
                 var cx: int = Math.round(ty-tx);
                 var cy: int = Math.round(cx+tx*2);
-                _currentPart.partData.invertCellState(cx, cy);
+
+                // TODO: вынести в панель редактора
+                _currentPart.partData.setWalkable(cx, cy, 1);
                 updateField();
             }
         }

@@ -17,6 +17,9 @@ public class PartData {
     public static const BACK: String = "back";
     public static const SHADOW: String = "shadow";
 
+    public static const WALKABLE: int = 1;
+    public static const SHOTABLE: int = 2;
+
     private var _name: String;
     public function get name():String {
         return _name;
@@ -78,11 +81,25 @@ public class PartData {
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];
             for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = _name==SHADOW ? 0 : 1;
+                _mask[i][j] = 0;
             }
         }
         _width = _mask.length;
         _height = _mask[0].length;
+    }
+
+    public function getWalkable($x: int, $y: int):int {
+        return (WALKABLE & _mask[$x][$y]);
+    }
+    public function setWalkable($x: int, $y: int, $walkable: int):void {
+        _mask[$x][$y] = WALKABLE*$walkable + SHOTABLE*getShotable($x, $y);
+    }
+
+    public function getShotable($x: int, $y: int):int {
+        return (SHOTABLE & _mask[$x][$y]);
+    }
+    public function setShotable($x: int, $y: int, $shotable: int):void {
+        _mask[$x][$y] = WALKABLE*getWalkable($x, $y) + SHOTABLE*$shotable;
     }
 
     private function getTop():Point {
@@ -127,10 +144,6 @@ public class PartData {
             }
         }
         return _right;
-    }
-
-    public function invertCellState($x: int, $y: int):void {
-        _mask[$x][$y] = _mask[$x][$y] ? 0 : 1;
     }
 
     public function parse($data: Object):void {
