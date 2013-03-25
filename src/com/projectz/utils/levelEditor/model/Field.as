@@ -444,8 +444,8 @@ public class Field extends EventDispatcher {
             for (var j:int = 0; j < object.data.mask[i].length; j++) {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
-                    cell.lock();
-                    if (object.data.mask[i][j]==1) {
+                    if (!object.data.getWalkable(i, j)) {
+                        cell.lock();
                         cell.addObject(object);
                     }
                 }
