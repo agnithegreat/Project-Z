@@ -104,7 +104,7 @@ public class FieldObjectView extends Sprite {
         var len: int = _cells.numChildren;
         for (var i:int = 0; i < len; i++) {
             cell = _cells.getChildAt(i) as CellView;
-            cell.alpha = _currentPart && _currentPart.name ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _object.mask[cell.position.x][cell.position.y];
+            cell.alpha = _currentPart && _currentPart.partData.name!=PartData.SHADOW ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _object.mask[cell.position.x][cell.position.y];
         }
     }
 
