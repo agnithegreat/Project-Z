@@ -291,7 +291,7 @@ public class Field extends EventDispatcher {
         while (len && tries-->0) {
             for (i = 0; i < len; i++) {
                 cell = toCheck[i];
-                if (checkUpperCells(cell)) {
+                if (!cell.depth && checkUpperCells(cell)) {
                     object = cell.object;
                     if (object && object.data.width>1 && object.data.height>1) {
                         object.markSize(cell.x, cell.y);

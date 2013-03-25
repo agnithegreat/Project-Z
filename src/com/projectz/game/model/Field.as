@@ -100,7 +100,7 @@ public class Field extends EventDispatcher {
         while (len && tries-->0) {
             for (i = 0; i < len; i++) {
                 cell = toCheck[i];
-                if (checkUpperCells(cell)) {
+                if (!cell.depth && checkUpperCells(cell)) {
                     object = cell.object;
                     if (object && object.data.width>1 && object.data.height>1) {
                         object.markSize(cell.x, cell.y);
@@ -155,7 +155,7 @@ public class Field extends EventDispatcher {
             if (zombie.alive && !zombie.target) {
                 var point: Point = _level.paths[0].end;
                 cell = getCell(point.x, point.y);
-                zombie.walk(getWay(zombie.cell, cell, 1));
+                zombie.walk(getWay(zombie.cell, cell, int(Math.random()*2+1)));
             }
             zombie.step($delta);
         }
