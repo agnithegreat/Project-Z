@@ -258,7 +258,7 @@ public class Field extends EventDispatcher {
             for (var j:int = 0; j < object.data.mask[i].length; j++) {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
-                    if (!object.data.getWalkable(i, j)) {
+                    if (object.data.mask[i][j]==1) {
                         cell.lock();
                         _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject(object);

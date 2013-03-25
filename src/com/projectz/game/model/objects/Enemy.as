@@ -78,26 +78,31 @@ public class Enemy extends Personage {
     }
 
     public function die():void {
+        leave();
         _alive = false;
         _state = DIE;
         dispatchEventWith(_state);
     }
 
+    private function leave():void {
+        _cell.unlock();
+        _cell.removeObject(this);
+    }
+
     public function step($delta: Number):void {
-        if (_target) {
+        if (_target && (!_target.locked || _target.object==this)) {
             _progress += _speed/10 * $delta/distance;
             update();
         }
 
         if (!_halfWay && _progress>=0.5) {
-            _cell.removeObject(this);
+            leave();
+            _target.lock();
             _target.addObject(this);
             _halfWay = true;
         }
 
         if (_progress>=1) {
-            _cell.unlock();
-            _target.lock();
             place(_target);
             _target = null;
 
