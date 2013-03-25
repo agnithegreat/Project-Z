@@ -103,7 +103,6 @@ public class FieldView extends Sprite {
         _container.y = (Constants.HEIGHT + (1 - (_field.height + _field.height) * 0.5) * PositionView.cellHeight) * 0.5;
 
         _objectsContainer = new Sprite();
-        _objectsContainer.alpha = 0.5;
         _objectsContainer.touchable = false;
         _container.addChild(_objectsContainer);
 
@@ -172,6 +171,8 @@ public class FieldView extends Sprite {
                 _currentObject.y = _currentCell.y;
             }
         }
+
+        _objectsContainer.alpha = _currentObject ? 0.5 : 1;
     }
 
     private function update():void {
@@ -240,9 +241,9 @@ public class FieldView extends Sprite {
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
                 if (object.data.mask[i][j]) {
-                var cellView:CellView = getCellViewByPosition(object.cell.x - object.data.top.x + i, object.cell.y - object.data.top.y + j);
-                if (cellView) {
-                    cellView.showLock = false;
+                    var cellView:CellView = getCellViewByPosition(object.cell.x - object.data.top.x + i, object.cell.y - object.data.top.y + j);
+                    if (cellView) {
+                        cellView.showLock = false;
                     }
                 }
             }
