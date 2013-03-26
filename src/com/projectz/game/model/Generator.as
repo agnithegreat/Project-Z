@@ -16,14 +16,20 @@ public class Generator {
     private var _delay: int;
     private var _amount: int;
 
+    private var _path: int;
+    public function get path():int {
+        return _path;
+    }
+
     private var _time: int;
 
     private var _enabled: Boolean;
 
-    public function Generator($x: int, $y: int, $type: String, $delay: int, $amount: int) {
+    public function Generator($x: int, $y: int, $type: String, $path: int, $delay: int, $amount: int) {
         _x = $x;
         _y = $y;
         _type = $type;
+        _path = $path;
         _delay = $delay;
         _amount = $amount;
 

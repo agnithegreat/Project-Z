@@ -10,8 +10,11 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
+import com.projectz.game.model.objects.Personage;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.objectEditor.data.DefenderData;
+import com.projectz.utils.objectEditor.data.EnemyData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
@@ -244,13 +247,13 @@ public class Field extends EventDispatcher {
 
     public function blockCell($x: int, $y: int):void {
         if (!getCell($x, $y).object) {
-            createObject($x, $y, _objectsStorage.getObjectData("so-barrel-01"));
+            createPersonage($x, $y, _objectsStorage.getObjectData("de-boy"));
         }
     }
 
     private function addGenerator($data: PlaceData):void {
-        // TODO: Вынести параметры частоты и количества в редактор
-        _generators.push(new Generator($data.x, $data.y, $data.object, 60, 100));
+        // TODO: Вынести параметры пути, частоты и количества в редактор
+        _generators.push(new Generator($data.x, $data.y, $data.object, 0, 60, 100));
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
@@ -282,16 +285,20 @@ public class Field extends EventDispatcher {
     }
 
     private function createPersonage($x: int, $y: int, $data: ObjectData):void {
-        for each (var part: PartData in $data.parts) {
-            var zombie: Enemy = new Enemy(part, $data.shadow);
-            _objects.push(zombie);
-
-            var cell: Cell = getCell($x, $y);
-            zombie.place(cell);
-            _enemies.push(zombie);
-
-            dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
+        var personage: Personage
+        if ($data is EnemyData) {
+            personage = new Enemy($data as EnemyData);
+            _enemies.push(personage);
+        } else if ($data is DefenderData) {
+            personage = new Defender($data as DefenderData);
+            _defenders.push(personage);
         }
+        _objects.push(personage);
+
+        var cell: Cell = getCell($x, $y);
+        personage.place(cell);
+
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);
     }
 
     private function handleUpdateCell($e: Event):void {

@@ -59,10 +59,12 @@ public class ObjectParser {
 
         var animated: Boolean;
         var partName: String;
+        var ObjectClass: Class;
         var part: PartData;
         for (name in objects) {
             file = files[name+".json"];
-            objects[name] = new ObjectData(name, file ? file : directories[name].resolvePath(name+".json"));
+            ObjectClass = getClass(name.split("-")[0]);
+            objects[name] = new ObjectClass(name, file ? file : directories[name].resolvePath(name+".json"));
             len = parts[name].length;
             for (i = 0; i < len; i++) {
                 partName = parts[name][i];
@@ -88,6 +90,16 @@ public class ObjectParser {
             }
         }
         return objects;
+    }
+
+    private static function getClass($type: String):Class {
+        switch ($type) {
+            case ObjectData.DEFENDER:
+                return DefenderData;
+            case ObjectData.ENEMY:
+                return EnemyData;
+        }
+        return ObjectData;
     }
 
     private static function getFileName($name: String):String {

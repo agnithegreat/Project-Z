@@ -7,7 +7,7 @@
  */
 package com.projectz.game.model.objects {
 import com.projectz.game.model.Cell;
-import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.objectEditor.data.EnemyData;
 
 public class Enemy extends Personage {
 
@@ -39,24 +39,21 @@ public class Enemy extends Personage {
     }
 
     protected var _hp: int;
-    protected var _speed: int;
-    protected var _strength: int;
-    protected var _reward: int;
 
     protected var _path: int;
     public function get path():int {
         return _path;
     }
 
-    public function Enemy($data: PartData, $shadow: PartData) {
-        super($data, $shadow);
+    private var _enemyData: EnemyData;
 
+    public function Enemy($data: EnemyData) {
+        _enemyData = $data;
+        super(_enemyData.getPart(), _enemyData.shadow);
+
+        // TODO: сделать нормальный выбор пути
         _path = int(Math.random()*3);
-
-        _hp = 100;
-        _speed = 10;
-        _strength = 10;
-        _reward = 10;
+        _hp = _enemyData.hp;
     }
 
     override public function place($cell: Cell):void {
@@ -107,8 +104,9 @@ public class Enemy extends Personage {
             if (!_target.object) {
                 _target.addObject(this);
             }
+            // TODO: выбрать стиль передвижения персонажей
 //            if (_target.object==this) {
-                _progress += _speed/10 * $delta/distance;
+                _progress += _enemyData.speed * $delta/distance;
                 update();
 //            }
         }

@@ -29,25 +29,27 @@ public class ObjectData extends JSONLoader {
         return _type;
     }
 
+    protected var _mask: Array;
     public function get mask():Array {
-        var m: Array = [[1]];
-        for each (var part:PartData in _parts) {
-            for (var i:int = 0; i < part.width; i++) {
-                while (m.length<=i) {
-                    m.push([]);
-                }
-                for (var j:int = 0; j < part.height; j++) {
-                    while (m[i].length<=j) {
-                        m[i].push(0);
+        if (!_mask) {
+            _mask = [[1]];
+            for each (var part:PartData in _parts) {
+                for (var i:int = 0; i < part.width; i++) {
+                    while (_mask.length<=i) {
+                        _mask.push([]);
                     }
-                    if (part.mask[i][j]) {
-                        m[i][j] = part.mask[i][j];
+                    for (var j:int = 0; j < part.height; j++) {
+                        while (_mask[i].length<=j) {
+                            _mask[i].push(0);
+                        }
+                        if (part.mask[i][j]) {
+                            _mask[i][j] = part.mask[i][j];
+                        }
                     }
                 }
             }
         }
-
-        return m;
+        return _mask;
     }
     public function get width():int {
         return mask.length;

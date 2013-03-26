@@ -7,7 +7,7 @@
  */
 package com.projectz.game.model.objects {
 import com.projectz.game.model.Cell;
-import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.objectEditor.data.DefenderData;
 
 public class Defender extends Personage {
 
@@ -16,8 +16,15 @@ public class Defender extends Personage {
     public static const RELOAD: String = "reload";
     public static const STATIC: String = "static";
 
-    public function Defender($data:PartData, $shadow: PartData) {
-        super($data, $shadow);
+    private var _ammo: int;
+
+    private var _defenderData: DefenderData;
+
+    public function Defender($data:DefenderData) {
+        _defenderData = $data;
+        super(_defenderData.getPart(), _defenderData.shadow);
+
+        _ammo = _defenderData.ammo;
     }
 
     public function fight():void {
