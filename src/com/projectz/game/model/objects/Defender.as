@@ -42,7 +42,7 @@ public class Defender extends Personage {
         dispatchEventWith(_state);
     }
 
-    public function stay($cell: Cell):void {
+    public function stay():void {
         _state = STATIC;
         dispatchEventWith(_state);
     }

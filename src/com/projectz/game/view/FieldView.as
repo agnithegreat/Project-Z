@@ -8,6 +8,8 @@
 package com.projectz.game.view {
 import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Field;
+import com.projectz.game.model.objects.Defender;
+import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Personage;
 
@@ -79,13 +81,14 @@ public class FieldView extends Sprite {
     private function handleAddObject($event: Event):void {
         var object: PositionView;
         var fieldObject: FieldObject = $event.data as FieldObject;
-        if (fieldObject is Personage) {
+        if (fieldObject is Enemy) {
             object = new EnemyView(fieldObject as Personage);
-            _objects.addChild(object);
+        } else if (fieldObject is Defender) {
+            object = new DefenderView(fieldObject as Personage);
         } else {
             object = new ObjectView(fieldObject, fieldObject.data.name);
-            _objects.addChild(object);
         }
+        _objects.addChild(object);
         if (fieldObject.shadow) {
             var shadow: ShadowView = new ShadowView(fieldObject.shadow, object);
             _shadows.addChild(shadow);

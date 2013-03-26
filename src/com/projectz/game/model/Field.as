@@ -151,9 +151,9 @@ public class Field extends EventDispatcher {
 
     public function step($delta: Number):void {
         var len: int = _enemies.length;
-        var zombie:Enemy;
-
         var cell: Cell;
+
+        var zombie:Enemy;
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
             if (zombie.alive && !zombie.target) {
@@ -163,6 +163,13 @@ public class Field extends EventDispatcher {
                 zombie.go(getWay(zombie.cell, cell, zombie.path));
             }
             zombie.step($delta);
+        }
+
+        len = _defenders.length;
+        var defender: Defender;
+        for (i = 0; i < len; i++) {
+            defender = _defenders[i];
+            defender.stay();
         }
 
         len = _generators.length;
