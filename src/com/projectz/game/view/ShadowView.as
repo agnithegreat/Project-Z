@@ -7,12 +7,14 @@
  */
 package com.projectz.game.view {
 import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.game.event.GameEvent;
+
+import starling.core.Starling;
 
 import starling.display.Image;
-import starling.display.Sprite;
 import starling.textures.Texture;
 
-public class ShadowView extends Sprite {
+public class ShadowView extends PositionView {
 
     protected var _object: PartData;
     protected var _parent: PositionView
@@ -21,6 +23,7 @@ public class ShadowView extends Sprite {
     public function ShadowView($shadow: PartData, $parent: PositionView) {
         _object = $shadow;
         _parent = $parent;
+        _parent.addEventListener(GameEvent.DESTROY, handleDestroy);
 
         pivotX = PositionView.cellWidth/2;
         pivotY = PositionView.cellHeight/2;
@@ -42,8 +45,21 @@ public class ShadowView extends Sprite {
         addChild(_bg);
     }
 
-    public function destroy():void {
+    private function handleDestroy():void {
+        Starling.juggler.tween(this, 1, {
+            alpha: 0,
+            onComplete: dispatchDestroy
+        });
+    }
+
+    override public function destroy():void {
+        super.destroy();
+
         _object = null;
+
+        _parent.removeEventListeners();
+        _parent = null;
+
         if (_bg) {
             _bg.removeFromParent(true);
         }

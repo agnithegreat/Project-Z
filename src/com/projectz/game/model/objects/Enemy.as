@@ -16,6 +16,9 @@ public class Enemy extends Personage {
     public static const DIE: String = "die";
 
     private var _way: Vector.<Cell>;
+    public function hasCell($cell: Cell):Boolean {
+        return _way.indexOf($cell)>=0;
+    }
 
     override public function get cell():Cell {
         return _progress>0.5 && _target.depth>_cell.depth ? _target : _cell;
@@ -46,6 +49,8 @@ public class Enemy extends Personage {
 
     public function Enemy($data: PartData, $shadow: PartData) {
         super($data, $shadow);
+
+        _path = int(Math.random()*2+1);
 
         _hp = 100;
         _speed = 10;
@@ -85,19 +90,17 @@ public class Enemy extends Personage {
     }
 
     private function leave():void {
-        _cell.unlock();
         _cell.removeObject(this);
     }
 
     public function step($delta: Number):void {
-        if (_target && (!_target.locked || _target.object==this)) {
+        if (_target && (!_target.object || _target.object==this)) {
             _progress += _speed/10 * $delta/distance;
             update();
         }
 
         if (!_halfWay && _progress>=0.5) {
             leave();
-            _target.lock();
             _target.addObject(this);
             _halfWay = true;
         }

@@ -23,6 +23,7 @@ import com.projectz.utils.pathFinding.PathFinder;
 import flash.geom.Point;
 
 import starling.events.EventDispatcher;
+import starling.events.Event;
 
 public class Field extends EventDispatcher {
 
@@ -153,9 +154,9 @@ public class Field extends EventDispatcher {
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
             if (zombie.alive && !zombie.target) {
-                var point: Point = _level.paths[0].end;
+                var point: Point = _level.paths[zombie.path-1].end;
                 cell = getCell(point.x, point.y);
-                zombie.walk(getWay(zombie.cell, cell, int(Math.random()*2+1)));
+                zombie.walk(getWay(zombie.cell, cell, zombie.path));
             }
             zombie.step($delta);
         }
@@ -192,6 +193,7 @@ public class Field extends EventDispatcher {
             for (var i:int = 0; i < _width; i++) {
                 if (i+j>0.4*_width && i+j<1.6*_width && Math.abs(i-j)<0.4*_height) {
                     cell = new Cell(i, j);
+                    cell.addEventListener(GameEvent.UPDATE, handleUpdateCell);
                     _field.push(cell);
                     _fieldObj[i+"."+j] = cell;
                 }
@@ -259,7 +261,7 @@ public class Field extends EventDispatcher {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
                     if (object.data.mask[i][j]==1) {
-                        cell.lock();
+                        cell.walkable = false;
                         _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject(object);
                     }
@@ -278,14 +280,26 @@ public class Field extends EventDispatcher {
             _objects.push(zombie);
 
             var cell: Cell = getCell($x, $y);
-            cell.lock();
+            cell.walkable = false;
             cell.addObject(zombie);
             zombie.place(cell);
             _enemies.push(zombie);
 
             dispatchEventWith(GameEvent.OBJECT_ADDED, false, zombie);
         }
+    }
 
+    private function handleUpdateCell($e: Event):void {
+        var cell: Cell = $e.currentTarget as Cell;
+        var enemy: Enemy;
+        var len: int = _enemies.length;
+        for (var i:int = 0; i < len; i++) {
+            enemy = _enemies[i];
+            if (enemy.hasCell(cell)) {
+                var point: Point = _level.paths[enemy.path-1].end;
+                enemy.walk(getWay(enemy.cell, getCell(point.x, point.y), enemy.path));
+            }
+        }
     }
 
     public function destroy():void {

@@ -7,6 +7,7 @@
  */
 package com.projectz.game.model {
 import com.projectz.game.model.objects.FieldObject;
+import com.projectz.game.event.GameEvent;
 
 import starling.events.EventDispatcher;
 
@@ -26,9 +27,21 @@ public class Cell extends EventDispatcher {
         return x+y;
     }
 
-    private var _locked: Boolean;
-    public function get locked():Boolean {
-        return _locked;
+    private var _walkable: Boolean;
+    public function set walkable($value: Boolean):void {
+        _walkable = $value;
+        dispatchEventWith(GameEvent.UPDATE);
+    }
+    public function get walkable():Boolean {
+        return _walkable;
+    }
+
+    private var _shotable: Boolean;
+    public function set shotable($value: Boolean):void {
+        _shotable = $value;
+    }
+    public function get shotable():Boolean {
+        return _shotable;
     }
 
     private var _objects: Vector.<FieldObject>;
@@ -52,6 +65,7 @@ public class Cell extends EventDispatcher {
     public function Cell($x: int, $y: int) {
         _x = $x;
         _y = $y;
+        _walkable = true;
 
         _objects = new <FieldObject>[];
     }
@@ -69,14 +83,6 @@ public class Cell extends EventDispatcher {
             _objects.splice(index, 1);
             _object = null;
         }
-    }
-
-    public function lock():void {
-        _locked = true;
-    }
-
-    public function unlock():void {
-        _locked = false;
     }
 
     public function toString():String {
