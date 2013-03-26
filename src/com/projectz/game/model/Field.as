@@ -154,9 +154,10 @@ public class Field extends EventDispatcher {
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
             if (zombie.alive && !zombie.target) {
-                var point: Point = _level.paths[zombie.path-1].end;
+//                var point: Point = _level.paths[zombie.path-1].end;
+                var point: Point = _level.paths[0].end;
                 cell = getCell(point.x, point.y);
-                zombie.walk(getWay(zombie.cell, cell, zombie.path));
+                zombie.go(getWay(zombie.cell, cell, zombie.path));
             }
             zombie.step($delta);
         }
@@ -241,6 +242,12 @@ public class Field extends EventDispatcher {
         }
     }
 
+    public function blockCell($x: int, $y: int):void {
+        if (!getCell($x, $y).object) {
+            createObject($x, $y, _objectsStorage.getObjectData("so-barrel-01"));
+        }
+    }
+
     private function addGenerator($data: PlaceData):void {
         // TODO: Вынести параметры частоты и количества в редактор
         _generators.push(new Generator($data.x, $data.y, $data.object, 60, 100));
@@ -261,9 +268,9 @@ public class Field extends EventDispatcher {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
                     if (object.data.mask[i][j]==1) {
-                        cell.walkable = false;
                         _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject(object);
+                        cell.walkable = false;
                     }
                 }
             }
@@ -280,8 +287,6 @@ public class Field extends EventDispatcher {
             _objects.push(zombie);
 
             var cell: Cell = getCell($x, $y);
-            cell.walkable = false;
-            cell.addObject(zombie);
             zombie.place(cell);
             _enemies.push(zombie);
 
@@ -296,15 +301,17 @@ public class Field extends EventDispatcher {
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
             if (enemy.hasCell(cell)) {
-                var point: Point = _level.paths[enemy.path-1].end;
-                enemy.walk(getWay(enemy.cell, getCell(point.x, point.y), enemy.path));
+                var point: Point = _level.paths[0].end;
+//                var point: Point = _level.paths[enemy.path-1].end;
+                enemy.go(getWay(enemy.target, getCell(point.x, point.y), enemy.path));
             }
         }
     }
 
     public function destroy():void {
         while (_field.length>0) {
-            _field.pop().destroy();
+            _field[0].removeEventListeners();
+            _field.shift().destroy();
         }
         _field = null;
 

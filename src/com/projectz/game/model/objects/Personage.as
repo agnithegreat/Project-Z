@@ -48,6 +48,13 @@ public class Personage extends FieldObject {
         _alive = true;
     }
 
+    public function setState($state: String, $force: Boolean = false):void {
+        if (_state!=$state || $force) {
+            _state = $state;
+            dispatchEventWith(_state);
+        }
+    }
+
     override public function destroy():void {
         super.destroy();
 

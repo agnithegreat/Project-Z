@@ -45,7 +45,7 @@ public class FieldView extends Sprite {
         addChild(_container);
 
         _cells = new Sprite();
-        _cells.alpha = 0.1;
+        _cells.alpha = 0;
         _container.addChild(_cells);
 
         var len: int = _field.field.length;
@@ -111,7 +111,7 @@ public class FieldView extends Sprite {
             var cy: int = Math.round(cx+tx*2);
 
             // TODO: через контроллер
-//            _field.createZombie(cx, cy);
+            _field.blockCell(cx, cy);
         }
     }
 
@@ -129,6 +129,11 @@ public class FieldView extends Sprite {
         if ($child1.depth>$child2.depth) {
             return 1;
         } else if ($child1.depth<$child2.depth) {
+            return -1;
+        }
+        if ($child1.y>$child2.y) {
+            return 1;
+        } else if ($child1.y<$child2.y) {
             return -1;
         }
         return 0;

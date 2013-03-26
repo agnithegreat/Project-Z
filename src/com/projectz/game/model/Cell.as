@@ -44,11 +44,6 @@ public class Cell extends EventDispatcher {
         return _shotable;
     }
 
-    private var _objects: Vector.<FieldObject>;
-    public function get objects():Vector.<FieldObject> {
-        return _objects;
-    }
-
     private var _object: FieldObject;
     public function get object():FieldObject {
         return _object;
@@ -66,21 +61,14 @@ public class Cell extends EventDispatcher {
         _x = $x;
         _y = $y;
         _walkable = true;
-
-        _objects = new <FieldObject>[];
     }
 
     public function addObject($object: FieldObject):void {
-        if (_objects.indexOf($object)<0) {
-            _objects.push($object);
-            _object = $object;
-        }
+        _object = $object;
     }
 
     public function removeObject($object: FieldObject):void {
-        var index: int = _objects.indexOf($object);
-        if (index>=0) {
-            _objects.splice(index, 1);
+        if (_object==$object) {
             _object = null;
         }
     }
@@ -90,7 +78,7 @@ public class Cell extends EventDispatcher {
     }
 
     public function destroy():void {
-        _objects = null;
+        _object = null;
     }
 }
 }

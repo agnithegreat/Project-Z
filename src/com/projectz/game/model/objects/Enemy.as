@@ -14,10 +14,11 @@ public class Enemy extends Personage {
     public static const WALK: String = "walk";
     public static const ATTACK: String = "attack";
     public static const DIE: String = "die";
+    public static const STAY: String = "stay";
 
     private var _way: Vector.<Cell>;
     public function hasCell($cell: Cell):Boolean {
-        return _way.indexOf($cell)>=0;
+        return _way && _way.indexOf($cell)>=0;
     }
 
     override public function get cell():Cell {
@@ -50,7 +51,7 @@ public class Enemy extends Personage {
     public function Enemy($data: PartData, $shadow: PartData) {
         super($data, $shadow);
 
-        _path = int(Math.random()*2+1);
+        _path = int(Math.random()*3);
 
         _hp = 100;
         _speed = 10;
@@ -60,33 +61,41 @@ public class Enemy extends Personage {
 
     override public function place($cell: Cell):void {
         super.place($cell);
+        _cell.addObject(this);
         _progress = 0;
         _halfWay = false;
     }
 
-    public function walk($cells: Vector.<Cell>):void {
+    public function go($cells: Vector.<Cell>):void {
         _way = $cells;
-        if (_way.length>0) {
-            _target = _way.shift();
-            _state = WALK;
-            dispatchEventWith(_state);
-        } else {
-            // TODO: убрать эту заглушку
-            die();
+        if (!_target) {
+            if (_way.length>0) {
+                _target = _way.shift();
+                walk(true);
+            } else {
+                // TODO: убрать эту заглушку
+                die();
+            }
         }
+    }
+
+    public function walk($force: Boolean = false):void {
+        setState(WALK, $force);
+    }
+
+    public function stay():void {
+        setState(STAY);
     }
 
     public function attack($cell: Cell):void {
         _target = $cell;
-        _state = ATTACK;
-        dispatchEventWith(_state);
+        setState(ATTACK);
     }
 
     public function die():void {
         leave();
         _alive = false;
-        _state = DIE;
-        dispatchEventWith(_state);
+        setState(DIE);
     }
 
     private function leave():void {
@@ -94,14 +103,18 @@ public class Enemy extends Personage {
     }
 
     public function step($delta: Number):void {
-        if (_target && (!_target.object || _target.object==this)) {
-            _progress += _speed/10 * $delta/distance;
-            update();
+        if (_target) {
+            if (!_target.object) {
+                _target.addObject(this);
+            }
+//            if (_target.object==this) {
+                _progress += _speed/10 * $delta/distance;
+                update();
+//            }
         }
 
         if (!_halfWay && _progress>=0.5) {
             leave();
-            _target.addObject(this);
             _halfWay = true;
         }
 
@@ -109,7 +122,7 @@ public class Enemy extends Personage {
             place(_target);
             _target = null;
 
-            walk(_way);
+            go(_way);
         }
     }
 

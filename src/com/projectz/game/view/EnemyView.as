@@ -25,6 +25,7 @@ public class EnemyView extends PersonageView {
         _personage.addEventListener(Enemy.WALK, handleWalk);
         _personage.addEventListener(Enemy.ATTACK, handleAttack);
         _personage.addEventListener(Enemy.DIE, handleDie);
+        _personage.addEventListener(Enemy.STAY, handleStay);
 
         for (var i:int = 1; i <= 5; i++) {
             addState(WALK+i, _personage.data.states[WALK+i], 12);
@@ -35,6 +36,10 @@ public class EnemyView extends PersonageView {
 
     private function handleWalk($event: Event):void {
         walk(_personage.direction);
+    }
+
+    private function handleStay($event: Event):void {
+        _currentState.stop();
     }
 
     private function handleAttack($event: Event):void {
