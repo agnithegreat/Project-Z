@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
+import com.projectz.game.controller.UIController;
 import com.projectz.game.model.Game;
 
 import starling.display.Sprite;
@@ -19,12 +20,12 @@ public class GameScreen extends Sprite {
 
     private var _field: FieldView;
 
-    public function GameScreen($game: Game, $assets: AssetManager) {
+    public function GameScreen($game: Game, $assets: AssetManager, $uiController: UIController) {
         _assets = $assets;
 
         _game = $game;
 
-        _field = new FieldView(_game.field, _assets);
+        _field = new FieldView(_game.field, _assets, $uiController);
         addChild(_field);
     }
 

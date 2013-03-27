@@ -178,7 +178,7 @@ public class Field extends EventDispatcher {
         for (i = 0; i < len; i++) {
             var enemy: PlaceData = _generators[i].createEnemy();
             if (enemy) {
-                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object));
+                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object), _generators[i].path);
             }
         }
 
@@ -269,13 +269,13 @@ public class Field extends EventDispatcher {
 
     public function blockCell($x: int, $y: int):void {
         if (!getCell($x, $y).object) {
-            createPersonage($x, $y, _objectsStorage.getObjectData("de-boy"));
+            createPersonage($x, $y, _objectsStorage.getObjectData("de-sheriff"));
         }
     }
 
     private function addGenerator($data: PlaceData):void {
         // TODO: Вынести параметры пути, частоты и количества в редактор
-        _generators.push(new Generator($data.x, $data.y, $data.object, 0, 60, 100));
+        _generators.push(new Generator($data.x, $data.y, $data.object, 2, 60, 100));
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {
@@ -306,10 +306,10 @@ public class Field extends EventDispatcher {
         dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
     }
 
-    private function createPersonage($x: int, $y: int, $data: ObjectData):void {
+    private function createPersonage($x: int, $y: int, $data: ObjectData, $path: int = 0):void {
         var personage: Personage;
         if ($data is EnemyData) {
-            var enemy: Enemy = new Enemy($data as EnemyData);
+            var enemy: Enemy = new Enemy($data as EnemyData, $path);
             personage = enemy;
             _enemies.push(enemy);
         } else if ($data is DefenderData) {

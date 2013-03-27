@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
+import com.projectz.game.controller.UIController;
 import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Field;
 import com.projectz.game.model.objects.Defender;
@@ -25,6 +26,8 @@ import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
 
+    private var _uiController: UIController;
+
     private var _field: Field;
 
     private var _bg: Image;
@@ -34,7 +37,9 @@ public class FieldView extends Sprite {
     private var _shadows: Sprite;
     private var _objects: Sprite;
 
-    public function FieldView($field: Field, $assets: AssetManager) {
+    public function FieldView($field: Field, $assets: AssetManager, $uiController: UIController) {
+        _uiController = $uiController;
+
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
@@ -113,8 +118,7 @@ public class FieldView extends Sprite {
             var cx: int = Math.round(ty-tx);
             var cy: int = Math.round(cx+tx*2);
 
-            // TODO: через контроллер
-            _field.blockCell(cx, cy);
+            _uiController.addDefender(cx, cy);
         }
     }
 
@@ -143,6 +147,8 @@ public class FieldView extends Sprite {
     }
 
     public function destroy():void {
+        _uiController = null;
+
         removeEventListeners();
 
         _field.removeEventListeners();

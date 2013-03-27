@@ -59,8 +59,6 @@ public class DefenderData extends ObjectData {
         return _defence;
     }
 
-    // TODO: добавить зону эффектов для боссов
-
     public function DefenderData($name:String, $config:File = null) {
         super($name, $config);
     }

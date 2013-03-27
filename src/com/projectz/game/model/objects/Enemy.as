@@ -50,12 +50,11 @@ public class Enemy extends Personage {
 
     private var _enemyData: EnemyData;
 
-    public function Enemy($data: EnemyData) {
+    public function Enemy($data: EnemyData, $path: int) {
         _enemyData = $data;
         super(_enemyData.getPart(), _enemyData.shadow);
 
-        // TODO: сделать нормальный выбор пути
-        _path = 2;
+        _path = $path;
         _hp = _enemyData.hp;
     }
 
