@@ -7,10 +7,9 @@
  */
 package com.projectz.game.view {
 import com.projectz.utils.objectEditor.data.PartData;
-import com.projectz.game.event.GameEvent;
 
 import starling.core.Starling;
-
+import starling.events.Event;
 import starling.display.Image;
 import starling.textures.Texture;
 
@@ -23,7 +22,7 @@ public class ShadowView extends PositionView {
     public function ShadowView($shadow: PartData, $parent: PositionView) {
         _object = $shadow;
         _parent = $parent;
-        _parent.addEventListener(GameEvent.DESTROY, handleDestroy);
+        _parent.addEventListener(Event.COMPLETE, handleDestroy);
 
         pivotX = PositionView.cellWidth/2;
         pivotY = PositionView.cellHeight/2;

@@ -156,20 +156,22 @@ public class Field extends EventDispatcher {
         var zombie:Enemy;
         for (var i:int = 0; i < len; i++) {
             zombie = _enemies[i];
-            if (zombie.alive && !zombie.target) {
-//                var point: Point = _level.paths[zombie.path-1].end;
-                var point: Point = _level.paths[0].end;
-                cell = getCell(point.x, point.y);
-                zombie.go(getWay(zombie.cell, cell, zombie.path));
+            if (zombie.alive) {
+                if (!zombie.target) {
+    //                var point: Point = _level.paths[zombie.path-1].end;
+                    var point: Point = _level.paths[0].end;
+                    cell = getCell(point.x, point.y);
+                    zombie.go(getWay(zombie.cell, cell, zombie.path));
+                }
+                zombie.step($delta);
             }
-            zombie.step($delta);
         }
 
         len = _defenders.length;
         var defender: Defender;
         for (i = 0; i < len; i++) {
             defender = _defenders[i];
-            defender.stay();
+            defender.step();
         }
 
         len = _generators.length;
@@ -224,6 +226,19 @@ public class Field extends EventDispatcher {
 
     private function getCell(x: int, y: int):Cell {
         return _fieldObj[x+"."+y];
+    }
+
+    private function getArea($x: int, $y: int, $radius: int):Vector.<Cell> {
+        var area: Vector.<Cell> = new <Cell>[];
+        for (var i:int = -$radius; i <= $radius; i++) {
+            for (var j:int = -$radius; j <= $radius; j++) {
+                var cell: Cell = getCell($x+i, $y+j);
+                if (cell && cell.walkable && Math.sqrt(i*i+j*j)<=$radius) {
+                    area.push(cell);
+                }
+            }
+        }
+        return area;
     }
 
     private function createPaths($paths: Vector.<PathData>):void {
@@ -292,20 +307,24 @@ public class Field extends EventDispatcher {
     }
 
     private function createPersonage($x: int, $y: int, $data: ObjectData):void {
-        var personage: Personage
+        var personage: Personage;
         if ($data is EnemyData) {
-            personage = new Enemy($data as EnemyData);
-            _enemies.push(personage);
+            var enemy: Enemy = new Enemy($data as EnemyData);
+            personage = enemy;
+            _enemies.push(enemy);
         } else if ($data is DefenderData) {
-            personage = new Defender($data as DefenderData);
-            _defenders.push(personage);
+            var defender: Defender = new Defender($data as DefenderData);
+            defender.watch(getArea($x, $y, defender.radius));
+            _defenders.push(defender);
+            personage = defender;
         }
-        _objects.push(personage);
 
-        var cell: Cell = getCell($x, $y);
-        personage.place(cell);
+        if (personage) {
+            var cell: Cell = getCell($x, $y);
+            personage.place(cell);
 
-        dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);
+            dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);
+        }
     }
 
     private function handleUpdateCell($e: Event):void {

@@ -47,7 +47,7 @@ public class FieldView extends Sprite {
         addChild(_container);
 
         _cells = new Sprite();
-        _cells.alpha = 0;
+        _cells.alpha = 0.1;
         _container.addChild(_cells);
 
         var len: int = _field.field.length;

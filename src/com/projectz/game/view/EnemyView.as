@@ -6,8 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
-import com.projectz.game.model.objects.Personage;
 import com.projectz.game.model.objects.Enemy;
+import com.projectz.game.model.objects.Personage;
+import com.projectz.game.event.GameEvent;
 
 import starling.core.Starling;
 
@@ -22,32 +23,32 @@ public class EnemyView extends PersonageView {
     public function EnemyView($personage: Personage) {
         super($personage);
 
-        _personage.addEventListener(Enemy.WALK, handleWalk);
-        _personage.addEventListener(Enemy.ATTACK, handleAttack);
-        _personage.addEventListener(Enemy.DIE, handleDie);
-        _personage.addEventListener(Enemy.STAY, handleStay);
+        _personage.addEventListener(GameEvent.STATE, handleState);
 
         for (var i:int = 1; i <= 5; i++) {
             addState(WALK+i, _personage.data.states[WALK+i], 12);
             addState(ATTACK+i, _personage.data.states[ATTACK+i], 12);
             addState(DIE+i, _personage.data.states[DIE+i], 12, false);
         }
+
+        handleState(null);
     }
 
-    private function handleWalk($event: Event):void {
-        walk(_personage.direction);
-    }
-
-    private function handleStay($event: Event):void {
-        _currentState.stop();
-    }
-
-    private function handleAttack($event: Event):void {
-        attack(_personage.direction);
-    }
-
-    private function handleDie($event: Event):void {
-        die(1);
+    private function handleState($event: Event):void {
+        switch (_personage.state) {
+            case Enemy.WALK:
+                walk(_personage.direction);
+                break;
+            case Enemy.STAY:
+                _currentState.stop();
+                break;
+            case Enemy.ATTACK:
+                attack(_personage.direction);
+                break;
+            case Enemy.DIE:
+                die(1);
+                break;
+        }
     }
 
     public function walk(dir: int = 0):void {
@@ -69,6 +70,7 @@ public class EnemyView extends PersonageView {
 
     private function handleDied($event: Event):void {
         _currentState.removeEventListener(Event.COMPLETE, handleDied);
+        dispatchEventWith(Event.COMPLETE);
 
         Starling.juggler.tween(this, 1, {
             alpha: 0,

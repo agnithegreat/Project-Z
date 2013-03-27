@@ -7,8 +7,8 @@
  */
 package com.projectz.game.model.objects {
 import com.projectz.game.model.Cell;
-import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.game.event.GameEvent;
 
 import flash.geom.Point;
 
@@ -41,6 +41,9 @@ public class Personage extends FieldObject {
     }
 
     protected var _state: String;
+    public function get state():String {
+        return _state;
+    }
 
     public function Personage($data: PartData, $shadow: PartData) {
         super($data, $shadow);
@@ -51,7 +54,7 @@ public class Personage extends FieldObject {
     public function setState($state: String, $force: Boolean = false):void {
         if (_state!=$state || $force) {
             _state = $state;
-            dispatchEventWith(_state);
+            dispatchEventWith(GameEvent.STATE);
         }
     }
 

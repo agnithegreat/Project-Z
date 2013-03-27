@@ -52,7 +52,7 @@ public class Enemy extends Personage {
         super(_enemyData.getPart(), _enemyData.shadow);
 
         // TODO: сделать нормальный выбор пути
-        _path = int(Math.random()*3);
+        _path = 2;
         _hp = _enemyData.hp;
     }
 
@@ -69,10 +69,15 @@ public class Enemy extends Personage {
             if (_way.length>0) {
                 _target = _way.shift();
                 walk(true);
-            } else {
-                // TODO: убрать эту заглушку
-                die();
             }
+        }
+    }
+
+    public function damage($value: int):void {
+        _hp -= $value;
+        if (_hp<=0) {
+            _hp = 0;
+            die();
         }
     }
 
@@ -91,6 +96,9 @@ public class Enemy extends Personage {
 
     public function die():void {
         leave();
+        if (_target) {
+            _target.removeObject(this);
+        }
         _alive = false;
         setState(DIE);
     }
@@ -101,11 +109,11 @@ public class Enemy extends Personage {
 
     public function step($delta: Number):void {
         if (_target) {
-            if (!_target.object) {
-                _target.addObject(this);
-            }
+//            if (!_target.object) {
+//                _target.addObject(this);
+//            }
             // TODO: выбрать стиль передвижения персонажей
-//            if (_target.object==this) {
+//            if (!_target.object || _target.object==this) {
                 _progress += _enemyData.speed * $delta/distance;
                 update();
 //            }
@@ -129,6 +137,8 @@ public class Enemy extends Personage {
             _way.pop();
         }
         _way = null;
+
+        _enemyData = null;
     }
 }
 }
