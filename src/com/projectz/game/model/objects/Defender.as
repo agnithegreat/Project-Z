@@ -37,6 +37,11 @@ public class Defender extends Personage {
         _cooldown = 0;
     }
 
+    override public function place($cell: Cell):void {
+        super.place($cell);
+        _cell.addObject(this);
+    }
+
     public function watch($area: Vector.<Cell>):void {
         _area = $area;
         stay();
@@ -63,9 +68,6 @@ public class Defender extends Personage {
             var targets: Vector.<Enemy> = _defenderData.power ? _target.enemies : new <Enemy>[_aim];
             if (targets.length>0) {
                 damageTargets(targets);
-                attack(true);
-                _cooldown = _defenderData.cooldown;
-                _ammo--;
             }
         }
     }
@@ -86,6 +88,21 @@ public class Defender extends Personage {
         setState(STATIC);
     }
 
+    private function damageTargets($targets: Vector.<Enemy>):void {
+        var melee: Boolean = getDistance(_target)<1.5;
+        var len: int = $targets.length;
+        for (var i: int = 0; i < len; i++) {
+            Starling.juggler.delayCall($targets[i].damage, 0.25, melee ? _defenderData.defence : _defenderData.strength);
+        }
+        _cooldown = _defenderData.cooldown;
+        if (melee) {
+            fight(true);
+        } else {
+            attack(true);
+            _ammo--;
+        }
+    }
+
     private function get rangeEnemies():Vector.<Enemy> {
         var enemies: Vector.<Enemy> = new <Enemy>[];
         var len: int = _area.length;
@@ -104,13 +121,6 @@ public class Defender extends Personage {
             return -1;
         }
         return 0;
-    }
-
-    private function damageTargets($targets: Vector.<Enemy>):void {
-        var len: int = $targets.length;
-        for (var i: int = 0; i < len; i++) {
-            Starling.juggler.delayCall($targets[i].damage, 0.25, _defenderData.strength);
-        }
     }
 
     private function getDistance($cell: Cell):Number {

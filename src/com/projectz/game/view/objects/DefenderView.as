@@ -38,7 +38,7 @@ public class DefenderView extends PersonageView {
     private function handleState($event: Event):void {
         switch (_personage.state) {
             case Defender.FIGHT:
-                fight(_personage.direction);
+                fight(4);
                 break;
             case Defender.ATTACK:
                 attack(_personage.direction);

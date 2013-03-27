@@ -10,6 +10,8 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Cell;
 import com.projectz.utils.objectEditor.data.EnemyData;
 
+import starling.core.Starling;
+
 public class Enemy extends Personage {
 
     public static const WALK: String = "walk";
@@ -76,6 +78,35 @@ public class Enemy extends Personage {
         }
     }
 
+    public function step($delta: Number):void {
+        if (_target) {
+            var aim: Defender = _target.object as Defender;
+            if (aim) {
+//                Starling.juggler.delayCall(_target.object.damage, 0.25, _enemyData.strength);
+                attack();
+            } else {
+                // TODO: выбрать стиль передвижения персонажей
+    //            if (!_target.object || _target.object==this) {
+                    _progress += _enemyData.speed * $delta/distance;
+                    update();
+    //            }
+            }
+        }
+
+        if (!_halfWay && _progress>=0.5) {
+            leave();
+            _target.addObject(this);
+            _halfWay = true;
+        }
+
+        if (_progress>=1) {
+            place(_target);
+            _target = null;
+
+            go(_way);
+        }
+    }
+
     public function damage($value: int):void {
         _hp -= $value;
         dispatchEventWith(GameEvent.DAMAGE);
@@ -93,8 +124,7 @@ public class Enemy extends Personage {
         setState(STAY);
     }
 
-    public function attack($cell: Cell):void {
-        _target = $cell;
+    public function attack():void {
         setState(ATTACK);
     }
 
@@ -109,29 +139,6 @@ public class Enemy extends Personage {
 
     private function leave():void {
         _cell.removeObject(this);
-    }
-
-    public function step($delta: Number):void {
-        if (_target) {
-            // TODO: выбрать стиль передвижения персонажей
-//            if (!_target.object || _target.object==this) {
-                _progress += _enemyData.speed * $delta/distance;
-                update();
-//            }
-        }
-
-        if (!_halfWay && _progress>=0.5) {
-            leave();
-            _target.addObject(this);
-            _halfWay = true;
-        }
-
-        if (_progress>=1) {
-            place(_target);
-            _target = null;
-
-            go(_way);
-        }
     }
 
     override public function destroy():void {
