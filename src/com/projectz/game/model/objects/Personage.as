@@ -28,7 +28,7 @@ public class Personage extends FieldObject {
 
     public function get direction():int {
         var angle: Number = Math.atan2(dirY, dirX);
-        return _target ? Math.ceil(angle/(Math.PI/4)-1) : 0;
+        return _target ? angle/(Math.PI/4)-1 : 0;
     }
 
     public function get distance():Number {

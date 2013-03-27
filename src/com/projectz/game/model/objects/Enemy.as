@@ -80,16 +80,16 @@ public class Enemy extends Personage {
 
     public function step($delta: Number):void {
         if (_target) {
-            var aim: Defender = _target.object as Defender;
-            if (aim) {
+            var aim: FieldObject = _target.object;
+            if (aim && !(aim is Enemy)) {
 //                Starling.juggler.delayCall(_target.object.damage, 0.25, _enemyData.strength);
                 attack();
             } else {
                 // TODO: выбрать стиль передвижения персонажей
-    //            if (!_target.object || _target.object==this) {
+                if (!aim || aim==this) {
                     _progress += _enemyData.speed * $delta/distance;
                     update();
-    //            }
+                }
             }
         }
 
