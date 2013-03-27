@@ -5,7 +5,7 @@
  * Time: 13:10
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.model {
+package com.projectz.game.model.objects {
 import com.projectz.utils.levelEditor.data.PlaceData;
 
 public class Generator {

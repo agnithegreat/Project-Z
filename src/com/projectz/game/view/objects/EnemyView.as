@@ -5,7 +5,8 @@
  * Time: 11:31
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.view {
+package com.projectz.game.view.objects {
+import com.projectz.game.view.*;
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.Personage;
 import com.projectz.game.event.GameEvent;
@@ -24,6 +25,7 @@ public class EnemyView extends PersonageView {
         super($personage);
 
         _personage.addEventListener(GameEvent.STATE, handleState);
+        _personage.addEventListener(GameEvent.DAMAGE, handleDamage);
 
         for (var i:int = 1; i <= 5; i++) {
             addState(WALK+i, _personage.data.states[WALK+i], 12);
@@ -49,6 +51,10 @@ public class EnemyView extends PersonageView {
                 die(1);
                 break;
         }
+    }
+
+    private function handleDamage($event: Event):void {
+        dispatchEventWith(GameEvent.SHOW_EFFECT, true)
     }
 
     public function walk(dir: int = 0):void {

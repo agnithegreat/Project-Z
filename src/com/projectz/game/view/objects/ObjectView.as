@@ -5,7 +5,8 @@
  * Time: 23:23
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.view {
+package com.projectz.game.view.objects {
+import com.projectz.game.view.*;
 import com.projectz.game.model.objects.FieldObject;
 
 import starling.display.Image;

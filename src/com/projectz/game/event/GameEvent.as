@@ -11,7 +11,10 @@ public class GameEvent {
     public static const OBJECT_ADDED: String = "object_added_GameEvent";
 
     public static const UPDATE: String = "update_GameEvent";
+    public static const DAMAGE: String = "damage_GameEvent";
     public static const STATE: String = "state_GameEvent";
     public static const DESTROY: String = "destroy_GameEvent";
+
+    public static const SHOW_EFFECT: String = "show_effect_GameEvent";
 }
 }

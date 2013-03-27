@@ -83,9 +83,9 @@ public class App extends Sprite {
     private function startGame():void {
         _game = new Game(_objectsStorage, _levelsStorage.getLevelData("level_01"));
         _controller = new GameController(_game);
-        _uiController = new UIController(_controller);
+        _uiController = new UIController(_controller, _assets);
 
-        _view = new GameScreen(_game, _assets, _uiController);
+        _view = new GameScreen(_game, _uiController);
         addChild(_view);
 
         _game.init();

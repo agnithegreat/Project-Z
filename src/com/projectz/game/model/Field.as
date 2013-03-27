@@ -10,6 +10,7 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
+import com.projectz.game.model.objects.Generator;
 import com.projectz.game.model.objects.Personage;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;

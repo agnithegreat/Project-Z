@@ -13,6 +13,11 @@ import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Personage;
+import com.projectz.game.view.effects.Effect;
+import com.projectz.game.view.objects.DefenderView;
+import com.projectz.game.view.objects.EnemyView;
+import com.projectz.game.view.objects.ObjectView;
+import com.projectz.game.view.objects.ShadowView;
 
 import flash.geom.Point;
 
@@ -22,7 +27,6 @@ import starling.events.Event;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
-import starling.utils.AssetManager;
 
 public class FieldView extends Sprite {
 
@@ -35,16 +39,17 @@ public class FieldView extends Sprite {
 
     private var _cells: Sprite;
     private var _shadows: Sprite;
+    private var _effects: Sprite;
     private var _objects: Sprite;
 
-    public function FieldView($field: Field, $assets: AssetManager, $uiController: UIController) {
+    public function FieldView($field: Field, $uiController: UIController) {
         _uiController = $uiController;
 
         _field = $field;
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
 
-        _bg = new Image($assets.getTexture(_field.level.bg));
+        _bg = new Image(_uiController.assets.getTexture(_field.level.bg));
         _bg.touchable = false;
         addChild(_bg);
 
@@ -58,7 +63,7 @@ public class FieldView extends Sprite {
         var len: int = _field.field.length;
         var cell: CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], $assets.getTexture("ms-cell"));
+            cell = new CellView(_field.field[i], _uiController.assets.getTexture("ms-cell"));
             _cells.addChild(cell);
         }
         _cells.flatten();
@@ -70,10 +75,15 @@ public class FieldView extends Sprite {
         _shadows.touchable = false;
         _container.addChild(_shadows);
 
+        _effects = new Sprite();
+        _effects.touchable = false;
+        _container.addChild(_effects);
+
         _objects = new Sprite();
         _objects.touchable = false;
         _container.addChild(_objects);
 
+        addEventListener(GameEvent.SHOW_EFFECT, handleShowEffect);
         addEventListener(GameEvent.DESTROY, handleDestroy);
 
         addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
@@ -107,6 +117,14 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < len; i++) {
             (_shadows.getChildAt(i) as ShadowView).updatePosition();
         }
+    }
+
+    private function handleShowEffect($event: Event):void {
+        var target: PositionView = $event.target as PositionView;
+        var rand: int = Math.random()*2+1;
+        var effect: Effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTexture("blood_0"+rand));
+        _effects.addChild(effect);
+        effect.hide();
     }
 
     private function handleTouch($event: TouchEvent):void {

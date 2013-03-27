@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model.objects {
+import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Cell;
 import com.projectz.utils.objectEditor.data.EnemyData;
 
@@ -77,6 +78,7 @@ public class Enemy extends Personage {
 
     public function damage($value: int):void {
         _hp -= $value;
+        dispatchEventWith(GameEvent.DAMAGE);
         if (_hp<=0) {
             _hp = 0;
             die();
