@@ -55,29 +55,19 @@ public class Defender extends Personage {
         }
 
         if (!_aim || !_aim.alive || getDistance(_aim.cell)>radius) {
-            _aim = null;
-            var enemy: Enemy;
-            var len: int = _area.length;
-            for (var i:int = 0; i < len; i++) {
-                enemy = _area[i].object as Enemy;
-                if (enemy) {
-                    _aim = enemy;
-                }
-            }
+            var enemies: Vector.<Enemy> = rangeEnemies;
+            _aim = enemies.length ? enemies[0] : null;
         }
         if (_aim) {
             _target = _aim.cell;
-            Starling.juggler.delayCall(_aim.damage, 0.25, _defenderData.strength);
-            attack(true);
-            _cooldown = _defenderData.cooldown;
-            _ammo--;
+            var targets: Vector.<Enemy> = _defenderData.power ? _target.enemies : new <Enemy>[_aim];
+            if (targets.length>0) {
+                damageTargets(targets);
+                attack(true);
+                _cooldown = _defenderData.cooldown;
+                _ammo--;
+            }
         }
-    }
-
-    private function getDistance($cell: Cell):Number {
-        var dx: int = $cell.x-cell.x;
-        var dy: int = $cell.y-cell.y;
-        return Math.sqrt(dx*dx+dy*dy);
     }
 
     public function fight($force: Boolean = false):void {
@@ -94,6 +84,39 @@ public class Defender extends Personage {
 
     public function stay():void {
         setState(STATIC);
+    }
+
+    private function get rangeEnemies():Vector.<Enemy> {
+        var enemies: Vector.<Enemy> = new <Enemy>[];
+        var len: int = _area.length;
+        for (var i:int = 0; i < len; i++) {
+            enemies = enemies.concat(_area[i].enemies);
+        }
+        // TODO: сортировка по количеству зомби в клетке, сортировка по здоровью, etc
+        enemies.sort(sortEnemies);
+        return enemies;
+    }
+
+    private function sortEnemies($enemy1: Enemy, $enemy2: Enemy):int {
+        if ($enemy1.stepsLeft>$enemy2.stepsLeft) {
+            return 1;
+        } else if ($enemy1.stepsLeft<$enemy2.stepsLeft) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private function damageTargets($targets: Vector.<Enemy>):void {
+        var len: int = $targets.length;
+        for (var i: int = 0; i < len; i++) {
+            Starling.juggler.delayCall($targets[i].damage, 0.25, _defenderData.strength);
+        }
+    }
+
+    private function getDistance($cell: Cell):Number {
+        var dx: int = $cell.x-cell.x;
+        var dy: int = $cell.y-cell.y;
+        return Math.sqrt(dx*dx+dy*dy);
     }
 }
 }

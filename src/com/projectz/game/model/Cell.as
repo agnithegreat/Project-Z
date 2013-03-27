@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model {
+import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.event.GameEvent;
 
@@ -44,9 +45,12 @@ public class Cell extends EventDispatcher {
         return _shotable;
     }
 
-    private var _object: FieldObject;
+    private var _objects: Vector.<FieldObject>;
+    public function get objects():Vector.<FieldObject> {
+        return _objects;
+    }
     public function get object():FieldObject {
-        return _object;
+        return _objects.length>0 ? _objects[0] : null;
     }
 
     private var _depth: int;
@@ -61,16 +65,33 @@ public class Cell extends EventDispatcher {
         _x = $x;
         _y = $y;
         _walkable = true;
+
+        _objects = new <FieldObject>[];
     }
 
     public function addObject($object: FieldObject):void {
-        _object = $object;
+        if (_objects.indexOf($object)<0) {
+            _objects.push($object);
+        }
     }
 
     public function removeObject($object: FieldObject):void {
-        if (_object==$object) {
-            _object = null;
+        var index: int = _objects.indexOf($object);
+        if (index>=0) {
+            _objects.splice(index, 1);
         }
+    }
+
+    public function get enemies():Vector.<Enemy> {
+        var targets: Vector.<Enemy> = new <Enemy>[];
+        var len: int = _objects.length;
+        for (var i: int = 0; i < len; i++) {
+            var enemy: Enemy = _objects[i] as Enemy;
+            if (enemy) {
+                targets.push(enemy);
+            }
+        }
+        return targets;
     }
 
     public function toString():String {
@@ -78,7 +99,7 @@ public class Cell extends EventDispatcher {
     }
 
     public function destroy():void {
-        _object = null;
+        _objects = null;
     }
 }
 }

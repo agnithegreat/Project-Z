@@ -20,6 +20,9 @@ public class Enemy extends Personage {
     public function hasCell($cell: Cell):Boolean {
         return _way && _way.indexOf($cell)>=0;
     }
+    public function get stepsLeft():int {
+        return _way.length;
+    }
 
     override public function get cell():Cell {
         return _progress>0.5 && _target.depth>_cell.depth ? _target : _cell;
@@ -109,9 +112,6 @@ public class Enemy extends Personage {
 
     public function step($delta: Number):void {
         if (_target) {
-//            if (!_target.object) {
-//                _target.addObject(this);
-//            }
             // TODO: выбрать стиль передвижения персонажей
 //            if (!_target.object || _target.object==this) {
                 _progress += _enemyData.speed * $delta/distance;
@@ -121,6 +121,7 @@ public class Enemy extends Personage {
 
         if (!_halfWay && _progress>=0.5) {
             leave();
+            _target.addObject(this);
             _halfWay = true;
         }
 
