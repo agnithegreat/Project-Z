@@ -16,6 +16,9 @@ public class LevelData extends JSONLoader {
     public function get id():int {
         return _id;
     }
+    public function set id($value: int):void {
+        _id = $value;
+    }
 
     private var _bg: String;
     public function get bg():String {
@@ -35,13 +38,17 @@ public class LevelData extends JSONLoader {
         return _paths;
     }
 
-    //TODO:добавить генераторы, которые генерируют волны, привязывают к путям, задают задержки по времни и т.д.
+    private var _generators: Vector.<GeneratorData>;
+    public function get generators():Vector.<GeneratorData> {
+        return _generators;
+    }
 
     public function LevelData($config: File = null) {
         super($config);
 
         _objects = new <PlaceData>[];
         _paths = new <PathData>[];
+        _generators = new <GeneratorData>[];
     }
 
 /////////////////////////////////////////////
@@ -95,10 +102,17 @@ public class LevelData extends JSONLoader {
             pathData.parse($data.paths[i]);
             _paths.push(pathData);
         }
+
+        len = $data.generators.length;
+        for (i = 0; i < len; i++) {
+            var generator: GeneratorData = new GeneratorData();
+            generator.parse($data.generators[i]);
+            _generators.push(generator);
+        }
     }
 
     public function export():Object {
-        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths()};
+        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators()};
     }
 
 /////////////////////////////////////////////
@@ -121,6 +135,15 @@ public class LevelData extends JSONLoader {
             paths[i] = _paths[i].export();
         }
         return paths;
+    }
+
+    private function getGenerators():Array {
+        var gs: Array = [];
+        var len: int = _generators.length;
+        for (var i:int = 0; i < len; i++) {
+            gs[i] = _generators[i].export();
+        }
+        return gs;
     }
 }
 }

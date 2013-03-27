@@ -86,7 +86,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
         listObjects.addEventListener (Event.CHANGE, changeListener_listObjects);
         cbxObjectsType.addEventListener (Event.CHANGE, changeListener_cbxObjectsType);
-        cbxBackgrounds.addEventListener (Event.CHANGE, changeListener_cbxBackgrounds);
+        cbxBackgrounds.addEventListener (Event.CLOSE, changeListener_cbxBackgrounds);
 
         //создание кнопок:
         btnSave = new ButtonWithText (mc["btnSave"]);

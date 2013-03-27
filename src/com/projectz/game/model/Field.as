@@ -12,6 +12,7 @@ import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.Generator;
 import com.projectz.game.model.objects.Personage;
+import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.objectEditor.data.DefenderData;
@@ -84,6 +85,7 @@ public class Field extends EventDispatcher {
 
     public function init():void {
         createPaths(_level.paths);
+        createGenerators(_level.generators);
         createObjects(_level.objects);
         updateDepths();
     }
@@ -253,18 +255,20 @@ public class Field extends EventDispatcher {
         }
     }
 
+    private function createGenerators($generators: Vector.<GeneratorData>):void {
+        var len: int = $generators.length;
+        for (var i: int = 0; i < len; i++) {
+            _generators.push(new Generator($generators[i]));
+        }
+    }
+
     private function createObjects($objects: Vector.<PlaceData>):void {
         _objects = new <FieldObject>[];
 
         var len: int = $objects.length;
         for (var i: int = 0; i < len; i++) {
             var obj: PlaceData = $objects[i];
-            var objData: ObjectData = _objectsStorage.getObjectData(obj.object);
-            if (objData.type == ObjectData.ENEMY) {
-                addGenerator(obj);
-            } else {
-                createObject(obj.x, obj.y, objData);
-            }
+            createObject(obj.x, obj.y, _objectsStorage.getObjectData(obj.object));
         }
     }
 
@@ -272,11 +276,6 @@ public class Field extends EventDispatcher {
         if (!getCell($x, $y).object) {
             createPersonage($x, $y, _objectsStorage.getObjectData("de-sheriff"));
         }
-    }
-
-    private function addGenerator($data: PlaceData):void {
-        // TODO: Вынести параметры пути, частоты и количества в редактор
-        _generators.push(new Generator($data.x, $data.y, $data.object, 2, 60, 100));
     }
 
     private function createObject($x: int, $y: int, $data: ObjectData):void {

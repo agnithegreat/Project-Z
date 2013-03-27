@@ -105,7 +105,7 @@ public class App extends Sprite {
         Starling.current.nativeStage.addChild(_levelEditorUI);
 
         //init application:
-        _model.levelData = _levelsStorage.getLevelData("level_01");
+        _model.levelData = _levelsStorage.getLevelData(1);
         _uiController.mode = UIControllerMode.EDIT_OBJECTS;
         _uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
         _uiController.selectCurrentObject(null);
