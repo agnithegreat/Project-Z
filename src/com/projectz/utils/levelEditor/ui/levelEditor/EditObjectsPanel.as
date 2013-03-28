@@ -71,8 +71,9 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         cbxBackgrounds.focusEnabled = false;
 
         var dataProvider:DataProvider = new DataProvider();
-        dataProvider.addItem({label:"animated object (" + ObjectData.ANIMATED_OBJECT + ")",data:ObjectData.ANIMATED_OBJECT});
         dataProvider.addItem({label:"static object (" + ObjectData.STATIC_OBJECT + ")",data:ObjectData.STATIC_OBJECT});
+        dataProvider.addItem({label:"target object (" + ObjectData.TARGET_OBJECT + ")",data:ObjectData.TARGET_OBJECT});
+        dataProvider.addItem({label:"animated object (" + ObjectData.ANIMATED_OBJECT + ")",data:ObjectData.ANIMATED_OBJECT});
         cbxObjectsType.dataProvider = dataProvider;
         dataProvider = new DataProvider ();
 

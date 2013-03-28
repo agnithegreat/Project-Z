@@ -23,8 +23,10 @@ public class Enemy extends Personage {
     public function hasCell($cell: Cell):Boolean {
         return _way && _way.indexOf($cell)>=0;
     }
-    public function get stepsLeft():int {
-        return _way.length;
+
+    private var _lastCell: Cell;
+    public function get lastCell():Cell {
+        return _lastCell;
     }
 
     override public function get cell():Cell {
@@ -46,6 +48,8 @@ public class Enemy extends Personage {
 
     protected var _hp: int;
 
+    private var _cooldown: int;
+
     protected var _path: int;
     public function get path():int {
         return _path;
@@ -59,6 +63,7 @@ public class Enemy extends Personage {
 
         _path = $path;
         _hp = _enemyData.hp;
+        _cooldown = 0;
     }
 
     override public function place($cell: Cell):void {
@@ -70,9 +75,17 @@ public class Enemy extends Personage {
 
     public function go($cells: Vector.<Cell>):void {
         _way = $cells;
+        _lastCell = _way[_way.length-1];
+        next();
+    }
+
+    private function next():void {
         if (!_target) {
             if (_way.length>0) {
                 _target = _way.shift();
+                if (_target.attackObject) {
+                    _target.walkable = false;
+                }
                 walk(true);
             }
         }
@@ -81,9 +94,9 @@ public class Enemy extends Personage {
     public function step($delta: Number):void {
         if (_target) {
             var aim: FieldObject = _target.object;
-            if (aim && !(aim is Enemy)) {
-//                Starling.juggler.delayCall(_target.object.damage, 0.25, _enemyData.strength);
-                attack();
+            // TODO: заменить Building на ITarget
+            if (aim is Building) {
+                damageTarget(aim as Building);
             } else {
                 // TODO: выбрать стиль передвижения персонажей
                 if (!aim || aim==this) {
@@ -102,9 +115,18 @@ public class Enemy extends Personage {
         if (_progress>=1) {
             place(_target);
             _target = null;
-
-            go(_way);
+            next();
         }
+    }
+
+    private function damageTarget($target: Building):void {
+        if (_cooldown>0) {
+            _cooldown--;
+            return;
+        }
+        Starling.juggler.delayCall($target.damage, 0.25, _enemyData.strength);
+        attack();
+        _cooldown = _enemyData.cooldown;
     }
 
     public function damage($value: int):void {
@@ -129,6 +151,7 @@ public class Enemy extends Personage {
     }
 
     public function die():void {
+        _cell.walkable = true;
         leave();
         if (_target) {
             _target.removeObject(this);
@@ -142,9 +165,8 @@ public class Enemy extends Personage {
     }
 
     override public function destroy():void {
-        while (_way.length>0) {
-            _way.pop();
-        }
+        super.destroy();
+
         _way = null;
 
         _enemyData = null;

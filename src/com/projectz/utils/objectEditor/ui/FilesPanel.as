@@ -28,6 +28,7 @@ public class FilesPanel extends Sprite {
     private var _filesList: Sprite;
 
     private var _staticTab: Button;
+    private var _targetTab: Button;
     private var _animatedTab: Button;
     private var _defendersTab: Button;
     private var _enemiesTab: Button;
@@ -44,19 +45,24 @@ public class FilesPanel extends Sprite {
         _staticTab.addEventListener(Event.TRIGGERED, handleClick);
         addChild(_staticTab);
 
+        _targetTab = new Button(texture, "to");
+        _targetTab.addEventListener(Event.TRIGGERED, handleClick);
+        _targetTab.x = 40;
+        addChild(_targetTab);
+
         _animatedTab = new Button(texture, "ao");
         _animatedTab.addEventListener(Event.TRIGGERED, handleClick);
-        _animatedTab.x = 50;
+        _animatedTab.x = 80;
         addChild(_animatedTab);
 
         _defendersTab = new Button(texture, "de");
         _defendersTab.addEventListener(Event.TRIGGERED, handleClick);
-        _defendersTab.x = 100;
+        _defendersTab.x = 120;
         addChild(_defendersTab);
 
         _enemiesTab = new Button(texture, "en");
         _enemiesTab.addEventListener(Event.TRIGGERED, handleClick);
-        _enemiesTab.x = 150;
+        _enemiesTab.x = 160;
         addChild(_enemiesTab);
 
         _filesList = new Sprite();
@@ -99,6 +105,9 @@ public class FilesPanel extends Sprite {
         switch ($event.currentTarget) {
             case _staticTab:
                 showTab(ObjectData.STATIC_OBJECT);
+                break;
+            case _targetTab:
+                showTab(ObjectData.TARGET_OBJECT);
                 break;
             case _animatedTab:
                 showTab(ObjectData.ANIMATED_OBJECT);

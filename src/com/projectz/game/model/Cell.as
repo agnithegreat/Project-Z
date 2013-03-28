@@ -15,6 +15,13 @@ import starling.events.EventDispatcher;
 
 public class Cell extends EventDispatcher {
 
+    public static function getDistance($cell1: Cell, $cell2: Cell):Number {
+        var dx: int = $cell1.x-$cell2.x;
+        var dy: int = $cell1.y-$cell2.y;
+        return Math.sqrt(dx*dx+dy*dy);
+    }
+
+
     private var _x: int;
     public function get x():int {
         return _x;
@@ -71,7 +78,6 @@ public class Cell extends EventDispatcher {
         dispatchEventWith(GameEvent.CELL_POS);
     }
 
-    // TODO: сделать тревожную зону
     private var _attackObject: FieldObject;
     public function get attackObject():FieldObject {
         return _attackObject;

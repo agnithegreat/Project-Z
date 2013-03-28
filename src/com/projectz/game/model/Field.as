@@ -7,6 +7,7 @@
  */
 package com.projectz.game.model {
 import com.projectz.game.event.GameEvent;
+import com.projectz.game.model.objects.Building;
 import com.projectz.game.model.objects.Defender;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
@@ -22,6 +23,7 @@ import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.levelEditor.data.PlaceData;
+import com.projectz.utils.objectEditor.data.TargetData;
 import com.projectz.utils.pathFinding.Grid;
 import com.projectz.utils.pathFinding.Path;
 import com.projectz.utils.pathFinding.PathFinder;
@@ -63,6 +65,9 @@ public class Field extends EventDispatcher {
         return _objects;
     }
 
+    private var _targets: Vector.<Building>;
+    private var _targetCells: Vector.<Cell>;
+
     private var _generators: Vector.<Generator>;
 
     private var _enemies: Vector.<Enemy>;
@@ -76,6 +81,8 @@ public class Field extends EventDispatcher {
 
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
+        _targets = new <Building>[];
+        _targetCells = new <Cell>[];
         _generators = new <Generator>[];
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
@@ -163,9 +170,7 @@ public class Field extends EventDispatcher {
             zombie = _enemies[i];
             if (zombie.alive) {
                 if (!zombie.target) {
-    //                var point: Point = _level.paths[zombie.path-1].end;
-                    var point: Point = _level.paths[0].end;
-                    cell = getCell(point.x, point.y);
+                    cell = getTargetCell(zombie.cell);
                     zombie.go(getWay(zombie.cell, cell, zombie.path));
                 }
                 zombie.step($delta);
@@ -233,12 +238,50 @@ public class Field extends EventDispatcher {
         return _fieldObj[x+"."+y];
     }
 
+    private var _tempCell: Cell;
+    private function getTargetCell($cell: Cell):Cell {
+        _tempCell = $cell;
+        _targetCells.sort(sortTargets);
+        return _targetCells[0];
+    }
+
+    private function sortTargets($cell1: Cell, $cell2: Cell):int {
+        if (!checkCellAvailable($cell1)) {
+            return 1;
+        }
+        if (!checkCellAvailable($cell2)) {
+            return -1;
+        }
+        var d1: int = Cell.getDistance(_tempCell, $cell1);
+        var d2: int = Cell.getDistance(_tempCell, $cell2);
+        if (d1 > d2) {
+            return 1;
+        } else if (d1 < d2) {
+            return -1;
+        }
+        return 0;
+    }
+
+    private function checkCellAvailable($cell:Cell):Boolean {
+        for (var i:int = -1; i <= 1; i++) {
+            for (var j:int = -1; j <= 1; j++) {
+                if (i || j) {
+                    var cell: Cell = getCell($cell.x+i, $cell.y+j);
+                    if (cell && cell.walkable) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private function getArea($x: int, $y: int, $radius: int):Vector.<Cell> {
         var area: Vector.<Cell> = new <Cell>[];
         for (var i:int = -$radius; i <= $radius; i++) {
             for (var j:int = -$radius; j <= $radius; j++) {
                 var cell: Cell = getCell($x+i, $y+j);
-                if (cell && cell.walkable && Math.sqrt(i*i+j*j)<=$radius) {
+                if (cell && i*i+j*j <= $radius*$radius) {
                     area.push(cell);
                 }
             }
@@ -279,7 +322,12 @@ public class Field extends EventDispatcher {
         var len: int = $objects.length;
         for (var i: int = 0; i < len; i++) {
             var obj: PlaceData = $objects[i];
-            createObject(obj.x, obj.y, _objectsStorage.getObjectData(obj.object));
+            var object: ObjectData = _objectsStorage.getObjectData(obj.object);
+            if (object is TargetData) {
+                createTarget(obj.x, obj.y, object as TargetData);
+            } else {
+                createObject(obj.x, obj.y, object);
+            }
         }
     }
 
@@ -290,32 +338,58 @@ public class Field extends EventDispatcher {
         }
     }
 
-    private function createObject($x: int, $y: int, $data: ObjectData):void {
-        for each (var part: PartData in $data.parts) {
-            createPart($x, $y, part, !part.top.x && !part.top.y ? $data.shadow : null);
+    private function createTarget($x: int, $y: int, $data: TargetData):void {
+        var target: Building = new Building($data.getPart(), $data.shadow, $data);
+        createPart($x, $y, target);
+        _targets.push(target);
+
+        createAttackArea(target);
+    }
+
+    private function createAttackArea($object: FieldObject):void {
+        var x: int = $object.positionX-1;
+        var y: int = $object.positionY-1;
+        var width: int = $object.data.width+2;
+        var height: int = $object.data.height+2;
+        for (var i:int = x; i < x+width; i++) {
+            for (var j:int = y; j < y+height; j++) {
+                var cell: Cell = getCell(i, j);
+                if (cell) {
+                    if ($object.checkCell(i, j)) {
+                        _targetCells.push(cell);
+                    } else {
+                        cell.attackObject = $object;
+                    }
+                }
+            }
         }
     }
 
-    private function createPart($x: int, $y: int, $data: PartData, $shadow: PartData):void {
-        var object: FieldObject = new FieldObject($data, $shadow);
+    private function createObject($x: int, $y: int, $data: ObjectData):void {
+        for each (var part: PartData in $data.parts) {
+            var object: FieldObject = new FieldObject(part, !part.top.x && !part.top.y ? $data.shadow : null);
+            createPart($x, $y, object);
+        }
+    }
 
+    private function createPart($x: int, $y: int, $object: FieldObject):void {
         var cell: Cell;
-        for (var i:int = 0; i < object.data.mask.length; i++) {
-            for (var j:int = 0; j < object.data.mask[i].length; j++) {
+        for (var i:int = 0; i < $object.data.mask.length; i++) {
+            for (var j:int = 0; j < $object.data.mask[i].length; j++) {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
-                    if (object.data.mask[i][j]==1) {
+                    if ($object.data.mask[i][j]==1) {
                         _grid.setWalkable(cell.x, cell.y, false);
-                        cell.addObject(object);
+                        cell.addObject($object);
                         cell.walkable = false;
                     }
                 }
             }
         }
-        object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
-        _objects.push(object);
+        $object.place(getCell($x+$object.data.top.x, $y+$object.data.top.y));
+        _objects.push($object);
 
-        dispatchEventWith(GameEvent.OBJECT_ADDED, false, object);
+        dispatchEventWith(GameEvent.OBJECT_ADDED, false, $object);
     }
 
     private function createPersonage($x: int, $y: int, $data: ObjectData, $path: int = 0):void {
@@ -341,14 +415,15 @@ public class Field extends EventDispatcher {
 
     private function handleUpdateCell($e: Event):void {
         var cell: Cell = $e.currentTarget as Cell;
+        _grid.setWalkable(cell.x, cell.y, cell.walkable);
+
         var enemy: Enemy;
         var len: int = _enemies.length;
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
-            if (enemy.hasCell(cell)) {
-                var point: Point = _level.paths[0].end;
-//                var point: Point = _level.paths[enemy.path-1].end;
-                enemy.go(getWay(enemy.target, getCell(point.x, point.y), enemy.path));
+            if (cell.object!=enemy && enemy.hasCell(cell)) {
+                var target: Cell = getTargetCell(enemy.target);
+                enemy.go(getWay(enemy.target, getCell(target.x, target.y), enemy.path));
             }
         }
     }
