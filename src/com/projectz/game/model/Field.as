@@ -409,6 +409,10 @@ public class Field extends EventDispatcher {
             var cell: Cell = getCell($x, $y);
             personage.place(cell);
 
+            if (personage is Defender) {
+                createAttackArea(personage);
+            }
+
             dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);
         }
     }

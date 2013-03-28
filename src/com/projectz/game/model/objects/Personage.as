@@ -12,7 +12,7 @@ import com.projectz.game.event.GameEvent;
 
 import flash.geom.Point;
 
-public class Personage extends FieldObject {
+public class Personage extends FieldObject implements ITarget {
 
     protected var _target: Cell;
     public function get target():Cell {
@@ -49,6 +49,10 @@ public class Personage extends FieldObject {
         super($data, $shadow);
 
         _alive = true;
+    }
+
+    public function damage($value: int):void {
+
     }
 
     public function setState($state: String, $force: Boolean = false):void {

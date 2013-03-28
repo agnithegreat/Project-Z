@@ -74,6 +74,8 @@ public class Defender extends Personage {
             if (targets.length>0) {
                 damageTargets(targets);
             }
+        } else {
+            stay();
         }
     }
 

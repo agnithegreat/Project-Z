@@ -10,7 +10,7 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.objectEditor.data.TargetData;
 
-public class Building extends FieldObject {
+public class Building extends FieldObject implements ITarget {
 
     private var _targetData: TargetData;
 

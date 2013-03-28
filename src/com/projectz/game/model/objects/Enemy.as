@@ -75,7 +75,7 @@ public class Enemy extends Personage {
 
     public function go($cells: Vector.<Cell>):void {
         _way = $cells;
-        _lastCell = _way[_way.length-1];
+        _lastCell = _way.length>0 ? _way[_way.length-1] : null;
         next();
     }
 
@@ -94,9 +94,8 @@ public class Enemy extends Personage {
     public function step($delta: Number):void {
         if (_target) {
             var aim: FieldObject = _target.object;
-            // TODO: заменить Building на ITarget
-            if (aim is Building) {
-                damageTarget(aim as Building);
+            if (aim is ITarget && !(aim is Enemy)) {
+                damageTarget(aim as ITarget);
             } else {
                 // TODO: выбрать стиль передвижения персонажей
                 if (!aim || aim==this) {
@@ -119,7 +118,7 @@ public class Enemy extends Personage {
         }
     }
 
-    private function damageTarget($target: Building):void {
+    private function damageTarget($target: ITarget):void {
         if (_cooldown>0) {
             _cooldown--;
             return;
@@ -129,7 +128,7 @@ public class Enemy extends Personage {
         _cooldown = _enemyData.cooldown;
     }
 
-    public function damage($value: int):void {
+    override public function damage($value: int):void {
         _hp -= $value;
         dispatchEventWith(GameEvent.DAMAGE);
         if (_hp<=0) {

@@ -97,7 +97,7 @@ package com.projectz.utils.pathFinding {
 			_path = new Path();
 			var node : Node = _endNode;
 			_path.path.push(node);
-			while (node != _startNode) {
+			while (node && node != _startNode) {
 				node = node.parent;
 				_path.path.unshift(node);
 			}
