@@ -15,6 +15,7 @@ import com.projectz.game.model.objects.Personage;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.data.PositionData;
 import com.projectz.utils.objectEditor.data.DefenderData;
 import com.projectz.utils.objectEditor.data.EnemyData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
@@ -86,6 +87,7 @@ public class Field extends EventDispatcher {
     public function init():void {
         createPaths(_level.paths);
         createGenerators(_level.generators);
+        createPositions(_level.positions);
         createObjects(_level.objects);
         updateDepths();
     }
@@ -262,6 +264,15 @@ public class Field extends EventDispatcher {
         }
     }
 
+    private function createPositions($positions: Vector.<PositionData>):void {
+        var len: int = $positions.length;
+        for (var i:int = 0; i < len; i++) {
+            var pos: PositionData = $positions[i];
+            var cell: Cell = getCell(pos.x, pos.y);
+            cell.positionData = pos;
+        }
+    }
+
     private function createObjects($objects: Vector.<PlaceData>):void {
         _objects = new <FieldObject>[];
 
@@ -273,7 +284,8 @@ public class Field extends EventDispatcher {
     }
 
     public function blockCell($x: int, $y: int):void {
-        if (!getCell($x, $y).object) {
+        var cell: Cell = getCell($x, $y);
+        if (cell.positionData && !cell.object) {
             createPersonage($x, $y, _objectsStorage.getObjectData("de-sheriff"));
         }
     }

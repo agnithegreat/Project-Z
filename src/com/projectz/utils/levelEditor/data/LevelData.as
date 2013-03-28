@@ -43,12 +43,18 @@ public class LevelData extends JSONLoader {
         return _generators;
     }
 
+    private var _positions: Vector.<PositionData>;
+    public function get positions():Vector.<PositionData> {
+        return _positions;
+    }
+
     public function LevelData($config: File = null) {
         super($config);
 
         _objects = new <PlaceData>[];
         _paths = new <PathData>[];
         _generators = new <GeneratorData>[];
+        _positions = new <PositionData>[];
     }
 
 /////////////////////////////////////////////
@@ -60,7 +66,6 @@ public class LevelData extends JSONLoader {
             _objects.push($object);
         }
     }
-
     public function removeObject($object: PlaceData):void {
         var index: int = _objects.indexOf($object);
         if (index >= 0) {
@@ -74,7 +79,6 @@ public class LevelData extends JSONLoader {
         paths.push (pathData);
         return pathData;
     }
-
     public function removePath (pathData:PathData):Boolean {
         var index:int = _paths.indexOf(pathData);
         if (index != -1) {
@@ -84,11 +88,33 @@ public class LevelData extends JSONLoader {
         return false;
     }
 
+    public function addGenerator ($gen: GeneratorData):void {
+        _generators.push ($gen);
+    }
+    public function removeGenerator ($gen:GeneratorData):void {
+        var index:int = _generators.indexOf($gen);
+        if (index != -1) {
+            _generators.splice(index, 1);
+        }
+    }
+
+    public function addPosition($pos: PositionData):void {
+        if (_positions.indexOf($pos)<0) {
+            _positions.push($pos);
+        }
+    }
+    public function removePosition($pos: PositionData):void {
+        var index: int = _positions.indexOf($pos);
+        if (index >= 0) {
+            _positions.splice(index, 1);
+        }
+    }
+
     override public function parse($data: Object):void {
         _id = $data.id;
         _bg = $data.bg;
 
-        var len: int = $data.objects.length;
+        var len: int = $data.objects ? $data.objects.length : 0;
         var i:int;
         for (i = 0; i < len; i++) {
             var object: PlaceData = new PlaceData();
@@ -96,23 +122,30 @@ public class LevelData extends JSONLoader {
             _objects.push(object);
         }
 
-        len = $data.paths.length;
+        len = $data.paths ? $data.paths.length : 0;
         for (i = 0; i < len; i++) {
             var pathData: PathData = new PathData();
             pathData.parse($data.paths[i]);
             _paths.push(pathData);
         }
 
-        len = $data.generators.length;
+        len = $data.generators ? $data.generators.length : 0;
         for (i = 0; i < len; i++) {
             var generator: GeneratorData = new GeneratorData();
             generator.parse($data.generators[i]);
             _generators.push(generator);
         }
+
+        len = $data.positions ? $data.positions.length : 0;
+        for (i = 0; i < len; i++) {
+            var pos: PositionData = new PositionData();
+            pos.parse($data.positions[i]);
+            _positions.push(pos);
+        }
     }
 
     public function export():Object {
-        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators()};
+        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions()};
     }
 
 /////////////////////////////////////////////
@@ -144,6 +177,15 @@ public class LevelData extends JSONLoader {
             gs[i] = _generators[i].export();
         }
         return gs;
+    }
+
+    private function getPositions():Array {
+        var ps: Array = [];
+        var len: int = _positions.length;
+        for (var i:int = 0; i < len; i++) {
+            ps[i] = _positions[i].export();
+        }
+        return ps;
     }
 }
 }

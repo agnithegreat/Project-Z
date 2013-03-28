@@ -9,6 +9,7 @@ package com.projectz.game.model {
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.data.PositionData;
 
 import starling.events.EventDispatcher;
 
@@ -59,6 +60,14 @@ public class Cell extends EventDispatcher {
     }
     public function set depth(value:int):void {
         _depth = value;
+    }
+
+    private var _positionData: PositionData;
+    public function get positionData():PositionData {
+        return _positionData;
+    }
+    public function set positionData(value:PositionData):void {
+        _positionData = value;
     }
 
     public function Cell($x: int, $y: int) {
