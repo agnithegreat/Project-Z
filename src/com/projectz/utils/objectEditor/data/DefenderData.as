@@ -67,7 +67,7 @@ public class DefenderData extends ObjectData {
         super.parse($data);
 
         _cost = $data.cost ? $data.cost : 10;
-        _radius = $data.radius ? $data.radius : 3;
+        _radius = $data.radius ? $data.radius : 4;
         _strength = $data.strength ? $data.strength : 25;
         _power = $data.power ? $data.power : 1;
         _cooldown = $data.cooldown ? $data.cooldown : 25;
