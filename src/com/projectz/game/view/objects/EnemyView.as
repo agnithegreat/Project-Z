@@ -10,6 +10,7 @@ import com.projectz.game.view.*;
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.Personage;
 import com.projectz.game.event.GameEvent;
+import com.projectz.game.view.effects.Effect;
 
 import starling.core.Starling;
 
@@ -54,7 +55,7 @@ public class EnemyView extends PersonageView {
     }
 
     private function handleDamage($event: Event):void {
-        dispatchEventWith(GameEvent.SHOW_EFFECT, true)
+        dispatchEventWith(GameEvent.SHOW_EFFECT, true, Effect.BLOOD);
     }
 
     public function walk(dir: int = 0):void {
@@ -68,6 +69,8 @@ public class EnemyView extends PersonageView {
     }
 
     public function die(dir: int = 0):void {
+        dispatchEventWith(GameEvent.SHOW_EFFECT, true, Effect.DIE);
+
         setState(DIE+(Math.abs(dir)+1));
         _currentState.currentFrame = 0;
         _currentState.scaleX = 1;

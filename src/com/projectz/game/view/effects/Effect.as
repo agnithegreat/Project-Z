@@ -14,6 +14,9 @@ import starling.textures.Texture;
 
 public class Effect extends PositionView {
 
+    public static const BLOOD: String = "die";
+    public static const DIE: String = "blood";
+
     private var _image: Image;
 
     private var _x: Number;
@@ -37,8 +40,12 @@ public class Effect extends PositionView {
         addChild(_image);
     }
 
-    public function hide():void {
-        Starling.juggler.tween(this, 1, {
+    public function hide($delay: Number, $time: Number):void {
+        Starling.juggler.delayCall(tween, $delay, $time);
+    }
+
+    private function tween($time: Number):void {
+        Starling.juggler.tween(this, $time, {
             alpha: 0,
             onComplete: dispatchDestroy
         });

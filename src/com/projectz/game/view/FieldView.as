@@ -39,8 +39,9 @@ public class FieldView extends Sprite {
 
     private var _cells: Sprite;
     private var _shadows: Sprite;
-    private var _effects: Sprite;
+    private var _floorEffects: Sprite;
     private var _objects: Sprite;
+    private var _overallEffects: Sprite;
 
     public function FieldView($field: Field, $uiController: UIController) {
         _uiController = $uiController;
@@ -75,13 +76,17 @@ public class FieldView extends Sprite {
         _shadows.touchable = false;
         _container.addChild(_shadows);
 
-        _effects = new Sprite();
-        _effects.touchable = false;
-        _container.addChild(_effects);
+        _floorEffects = new Sprite();
+        _floorEffects.touchable = false;
+        _container.addChild(_floorEffects);
 
         _objects = new Sprite();
         _objects.touchable = false;
         _container.addChild(_objects);
+
+        _overallEffects = new Sprite();
+        _overallEffects.touchable = false;
+        _container.addChild(_overallEffects);
 
         addEventListener(GameEvent.SHOW_EFFECT, handleShowEffect);
         addEventListener(GameEvent.DESTROY, handleDestroy);
@@ -121,10 +126,18 @@ public class FieldView extends Sprite {
 
     private function handleShowEffect($event: Event):void {
         var target: PositionView = $event.target as PositionView;
-        var rand: int = Math.random()*2+1;
-        var effect: Effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTexture("blood_0"+rand));
-        _effects.addChild(effect);
-        effect.hide();
+        var effect: Effect;
+        if ($event.data == Effect.BLOOD) {
+            rand = Math.random()*2+1;
+            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTexture("blood_0"+rand));
+            _overallEffects.addChild(effect);
+            effect.hide(0, 1);
+        } else if ($event.data == Effect.DIE) {
+            var rand: int = Math.random()*2+1;
+            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTexture("blood_0"+rand));
+            _floorEffects.addChild(effect);
+            effect.hide(3, 1);
+        }
     }
 
     private function handleTouch($event: TouchEvent):void {
