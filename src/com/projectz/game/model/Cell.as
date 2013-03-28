@@ -71,6 +71,26 @@ public class Cell extends EventDispatcher {
         dispatchEventWith(GameEvent.CELL_POS);
     }
 
+    // TODO: сделать тревожную зону
+    private var _attackObject: FieldObject;
+    public function get attackObject():FieldObject {
+        return _attackObject;
+    }
+    public function set attackObject(value:FieldObject):void {
+        _attackObject = value;
+        dispatchEventWith(GameEvent.CELL_ATTACK);
+    }
+
+    // TODO: сделать зону видимости
+    private var _sightObject: FieldObject;
+    public function get sightObject():FieldObject {
+        return _sightObject;
+    }
+    public function set sightObject(value:FieldObject):void {
+        _sightObject = value;
+        dispatchEventWith(GameEvent.CELL_SIGHT);
+    }
+
     public function Cell($x: int, $y: int) {
         _x = $x;
         _y = $y;
@@ -110,6 +130,9 @@ public class Cell extends EventDispatcher {
 
     public function destroy():void {
         _objects = null;
+        _positionData = null;
+        _attackObject = null;
+        _sightObject = null;
     }
 }
 }

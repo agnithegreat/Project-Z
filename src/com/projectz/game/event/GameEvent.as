@@ -12,6 +12,8 @@ public class GameEvent {
 
     public static const CELL_WALK: String = "cell_walk_GameEvent";
     public static const CELL_POS: String = "cell_pos_GameEvent";
+    public static const CELL_ATTACK: String = "cell_attack_GameEvent";
+    public static const CELL_SIGHT: String = "cell_sight_GameEvent";
 
     public static const UPDATE: String = "update_GameEvent";
     public static const DAMAGE: String = "damage_GameEvent";
