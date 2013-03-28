@@ -59,9 +59,14 @@ public class Defender extends Personage {
             return;
         }
 
-        if (!_aim || !_aim.alive || getDistance(_aim.cell)>radius) {
+        if (!_aim || !_aim.alive || Cell.getDistance(_cell, _aim.cell)>radius) {
+            _aim = null;
             var enemies: Vector.<Enemy> = rangeEnemies;
-            _aim = enemies.length ? enemies[0] : null;
+            if (enemies.length) {
+                // TODO: сортировка по количеству зомби в клетке, сортировка по здоровью, etc
+                enemies.sort(sortEnemies);
+                _aim = enemies[0];
+            }
         }
         if (_aim) {
             _target = _aim.cell;
@@ -89,7 +94,7 @@ public class Defender extends Personage {
     }
 
     private function damageTargets($targets: Vector.<Enemy>):void {
-        var melee: Boolean = getDistance(_target)<1.5;
+        var melee: Boolean = Cell.getDistance(_cell, _target) <= Math.SQRT2;
         var len: int = $targets.length;
         for (var i: int = 0; i < len; i++) {
             Starling.juggler.delayCall($targets[i].damage, 0.25, melee ? _defenderData.defence : _defenderData.strength);
@@ -109,24 +114,18 @@ public class Defender extends Personage {
         for (var i:int = 0; i < len; i++) {
             enemies = enemies.concat(_area[i].enemies);
         }
-        // TODO: сортировка по количеству зомби в клетке, сортировка по здоровью, etc
-        enemies.sort(sortEnemies);
         return enemies;
     }
 
     private function sortEnemies($enemy1: Enemy, $enemy2: Enemy):int {
-        if ($enemy1.stepsLeft>$enemy2.stepsLeft) {
+        var d1: int = Cell.getDistance($enemy1.lastCell, $enemy1.cell);
+        var d2: int = Cell.getDistance($enemy2.lastCell, $enemy2.cell);
+        if (d1 > d2) {
             return 1;
-        } else if ($enemy1.stepsLeft<$enemy2.stepsLeft) {
+        } else if (d1 < d2) {
             return -1;
         }
         return 0;
-    }
-
-    private function getDistance($cell: Cell):Number {
-        var dx: int = $cell.x-cell.x;
-        var dy: int = $cell.y-cell.y;
-        return Math.sqrt(dx*dx+dy*dy);
     }
 }
 }

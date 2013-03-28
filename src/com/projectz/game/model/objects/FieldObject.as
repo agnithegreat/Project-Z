@@ -73,6 +73,15 @@ public class FieldObject extends EventDispatcher {
         }
     }
 
+    public function checkCell($x: int, $y: int):Boolean {
+        var tx: int = $x-_cell.x+_data.top.x;
+        var ty: int = $y-_cell.y+_data.top.y;
+        if (tx>=0 && ty>=0 && tx<_data.width && ty<data.height) {
+            return true;
+        }
+        return false;
+    }
+
     public function place($cell: Cell):void {
         _cell = $cell;
     }

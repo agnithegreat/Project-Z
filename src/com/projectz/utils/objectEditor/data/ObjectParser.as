@@ -98,6 +98,8 @@ public class ObjectParser {
                 return DefenderData;
             case ObjectData.ENEMY:
                 return EnemyData;
+            case ObjectData.TARGET_OBJECT:
+                return TargetData;
         }
         return ObjectData;
     }

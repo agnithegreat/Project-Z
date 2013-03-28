@@ -35,6 +35,12 @@ public class EnemyData extends ObjectData {
         return _strength;
     }
 
+    // Время между ударами.
+    private var _cooldown: int;
+    public function get cooldown():int {
+        return _cooldown;
+    }
+
     // Выпадающие припасы. Список припасов, которые могут выпасть при уничтожении данного типа противника. Что конкретно выпадет выбирается случайным образом из списка.
     private var _reward: int;
     public function get reward():int {
@@ -54,6 +60,7 @@ public class EnemyData extends ObjectData {
         _hp = $data.hp ? $data.hp : 100;
         _speed = $data.speed ? $data.speed : 1;
         _strength = $data.strength ? $data.strength : 1;
+        _cooldown = $data.cooldown ? $data.cooldown : 25;
         _reward = $data.reward ? $data.reward : 100;
     }
 
@@ -62,6 +69,7 @@ public class EnemyData extends ObjectData {
         obj.hp = _hp;
         obj.speed = _speed;
         obj.strength = _strength;
+        obj.cooldown = _cooldown;
         obj.reward = _reward;
         return obj;
     }
