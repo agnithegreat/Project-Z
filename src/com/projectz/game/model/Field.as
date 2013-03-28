@@ -211,7 +211,7 @@ public class Field extends EventDispatcher {
             for (var i:int = 0; i < _width; i++) {
                 if (i+j>0.4*_width && i+j<1.6*_width && Math.abs(i-j)<0.4*_height) {
                     cell = new Cell(i, j);
-                    cell.addEventListener(GameEvent.UPDATE, handleUpdateCell);
+                    cell.addEventListener(GameEvent.CELL_WALK, handleUpdateCell);
                     _field.push(cell);
                     _fieldObj[i+"."+j] = cell;
                 }

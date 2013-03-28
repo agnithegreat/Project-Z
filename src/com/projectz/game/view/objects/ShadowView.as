@@ -18,15 +18,20 @@ public class ShadowView extends PositionView {
 
     protected var _object: PartData;
     protected var _parent: PositionView
-    private var _bg: Image;
+
+    override public function get positionX():Number {
+        return _parent.x;
+    }
+    override public function get positionY():Number {
+        return _parent.y;
+    }
 
     public function ShadowView($shadow: PartData, $parent: PositionView) {
         _object = $shadow;
         _parent = $parent;
         _parent.addEventListener(Event.COMPLETE, handleDestroy);
 
-        pivotX = PositionView.cellWidth/2;
-        pivotY = PositionView.cellHeight/2;
+        super();
 
         if ($shadow.states[PartData.SHADOW]) {
             setView($shadow.states[PartData.SHADOW]);
@@ -34,8 +39,8 @@ public class ShadowView extends PositionView {
     }
 
     public function updatePosition():void {
-        x = _parent.x;
-        y = _parent.y;
+        x = positionX;
+        y = positionY;
     }
 
     protected function setView($texture: Texture):void {

@@ -12,7 +12,7 @@ import com.projectz.game.model.objects.FieldObject;
 import starling.display.Image;
 import starling.textures.Texture;
 
-public class ObjectView extends CellView {
+public class ObjectView extends PositionView {
 
     protected var _object: FieldObject;
     private var _part: String;
@@ -33,10 +33,14 @@ public class ObjectView extends CellView {
         _object = $object;
         _part = $part;
 
-        super(_object.cell, _object.data.states[_part]);
+        _cell = _object.cell;
+
+        super();
+
+        setView(_object.data.states[_part]);
     }
 
-    override protected function setView($texture: Texture):void {
+    protected function setView($texture: Texture):void {
         _bg = new Image($texture);
         _bg.pivotX = _bg.width/2+_object.data.pivotX+offsetX;
         _bg.pivotY = _bg.height/2+_object.data.pivotY+offsetY;

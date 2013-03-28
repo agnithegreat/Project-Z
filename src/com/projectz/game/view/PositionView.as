@@ -7,6 +7,9 @@
  */
 package com.projectz.game.view {
 import com.projectz.game.event.GameEvent;
+import com.projectz.game.model.Cell;
+
+import starling.display.Image;
 
 import starling.display.Sprite;
 
@@ -15,15 +18,18 @@ public class PositionView extends Sprite {
     public static var cellWidth: int = 72;
     public static var cellHeight: int = 36;
 
+    protected var _cell: Cell;
     public function get positionX():Number {
-        return 0;
+        return _cell.x;
     }
     public function get positionY():Number {
-        return 0;
+        return _cell.y;
     }
 
+    protected var _bg: Image;
+
     public function get depth():Number {
-        return 0;
+        return _cell.depth;
     }
 
     public function PositionView() {

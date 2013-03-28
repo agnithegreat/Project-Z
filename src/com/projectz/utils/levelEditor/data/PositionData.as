@@ -28,7 +28,7 @@ public class PositionData {
     }
 
     // TODO: добавить эффекты
-    private var _effects: Vector;
+//    private var _effects: Vector;
 
     public function PositionData() {
     }

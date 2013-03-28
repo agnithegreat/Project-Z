@@ -7,27 +7,18 @@
  */
 package com.projectz.game.view {
 import com.projectz.game.model.Cell;
+import com.projectz.game.event.GameEvent;
 
-import starling.display.DisplayObject;
+import starling.events.Event;
 import starling.display.Image;
-import starling.events.Touch;
-import starling.events.TouchEvent;
-import starling.events.TouchPhase;
 import starling.textures.Texture;
 
 public class CellView extends PositionView {
 
-    protected var _cell: Cell;
-    override public function get positionX():Number {
-        return _cell.x;
-    }
-    override public function get positionY():Number {
-        return _cell.y;
-    }
-
-    protected var _bg: Image;
-
     public function CellView($cell: Cell, $texture: Texture) {
+        _cell = $cell;
+        _cell.addEventListener(GameEvent.CELL_POS, handleUpdate);
+
         _cell = $cell;
 
         super();
@@ -36,7 +27,11 @@ public class CellView extends PositionView {
             setView($texture);
         }
 
-//        addEventListener(TouchEvent.TOUCH, handleTouch);
+        handleUpdate(null);
+    }
+
+    private function handleUpdate($event: Event):void {
+        visible = Boolean(_cell.positionData);
     }
 
     protected function setView($texture: Texture):void {
@@ -44,11 +39,6 @@ public class CellView extends PositionView {
         _bg.pivotX = _bg.width/2;
         _bg.pivotY = _bg.height/2;
         addChild(_bg);
-    }
-
-    private function handleTouch(event:TouchEvent):void {
-        var touch: Touch = event.getTouch(event.target as DisplayObject, TouchPhase.MOVED);
-        _bg.color = touch ? 0x00FF00 : 0x000000;
     }
 
     override public function destroy():void {

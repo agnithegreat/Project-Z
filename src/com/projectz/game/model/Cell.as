@@ -32,7 +32,7 @@ public class Cell extends EventDispatcher {
     private var _walkable: Boolean;
     public function set walkable($value: Boolean):void {
         _walkable = $value;
-        dispatchEventWith(GameEvent.UPDATE);
+        dispatchEventWith(GameEvent.CELL_WALK);
     }
     public function get walkable():Boolean {
         return _walkable;
@@ -68,6 +68,7 @@ public class Cell extends EventDispatcher {
     }
     public function set positionData(value:PositionData):void {
         _positionData = value;
+        dispatchEventWith(GameEvent.CELL_POS);
     }
 
     public function Cell($x: int, $y: int) {
