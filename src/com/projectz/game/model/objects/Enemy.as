@@ -157,6 +157,8 @@ public class Enemy extends Personage {
         }
         _alive = false;
         setState(DIE);
+
+        dispatchEventWith(GameEvent.ENEMY_DIE);
     }
 
     private function leave():void {

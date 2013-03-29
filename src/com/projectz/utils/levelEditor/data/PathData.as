@@ -68,9 +68,5 @@ public class PathData {
     public function get points():Vector.<Point> {
         return _points;
     }
-
-    public function get end():Point {
-        return _points[_points.length-1];
-    }
 }
 }

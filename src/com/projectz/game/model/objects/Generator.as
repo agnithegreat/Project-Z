@@ -24,11 +24,12 @@ public class Generator {
     }
 
     private var _enabled: Boolean;
+    public function get enabled():Boolean {
+        return _enabled;
+    }
 
     public function Generator($data: GeneratorData) {
         _data = $data;
-
-        initWave(1);
     }
 
     public function initWave($wave: int):void {
