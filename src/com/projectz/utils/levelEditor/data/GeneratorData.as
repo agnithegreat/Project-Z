@@ -9,10 +9,6 @@ package com.projectz.utils.levelEditor.data {
 
 public class GeneratorData {
 
-    // TODO: обдумать, стоит ли использовать один и тот же генератор на разных волнах, или просто расписать свои параметры для каждой волны.
-    // возможно, лучше задавать генератор не типом монстров, а их последовательностью
-    // TODO: waves
-
     private var _x: int;
     public function get x():int {
         return _x;
@@ -23,30 +19,6 @@ public class GeneratorData {
         return _y;
     }
 
-    private var _type: String;
-    public function get type():String {
-        return _type;
-    }
-    public function set type($value: String):void {
-        _type = $value;
-    }
-
-    private var _amount: int;
-    public function get amount():int {
-        return _amount;
-    }
-    public function set amount($value: int):void {
-        _amount = $value;
-    }
-
-    private var _delay: int;
-    public function get delay():int {
-        return _delay;
-    }
-    public function set delay($value: int):void {
-        _delay = $value;
-    }
-
     private var _path: int;
     public function get path():int {
         return _path;
@@ -55,7 +27,13 @@ public class GeneratorData {
         _path = $value;
     }
 
+    private var _waves: Vector.<GeneratorWaveData>;
+    public function get waves():Vector.<GeneratorWaveData> {
+        return _waves;
+    }
+
     public function GeneratorData() {
+        _waves = new <GeneratorWaveData>[];
     }
 
     public function place($x: int, $y: int):void {
@@ -66,14 +44,26 @@ public class GeneratorData {
     public function parse($data: Object):void {
         _x = $data.x;
         _y = $data.y;
-        _type = $data.type;
-        _amount = $data.amount ? $data.amount : 10;
-        _delay = $data.delay ? $data.delay : 60;
         _path = $data.path ? $data.path : 2;
+
+        var len: int = $data.waves.length;
+        for (var i:int = 0; i < len; i++) {
+            _waves[i] = new GeneratorWaveData();
+            _waves[i].parse($data.waves[i]);
+        }
     }
 
     public function export():Object {
-        return {"x": _x, "y": _y, "type": _type, "amount": _amount, "delay": _delay, "path": _path};
+        return {"x": _x, "y": _y, "path": _path, "waves": getWaves()};
+    }
+
+    private function getWaves():Array {
+        var waves: Array = [];
+        var len: int = _waves.length;
+        for (var i:int = 0; i < len; i++) {
+            waves[i] = _waves[i].export();
+        }
+        return waves;
     }
 }
 }
