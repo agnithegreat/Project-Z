@@ -10,6 +10,8 @@ public class GameEvent {
 
     public static const OBJECT_ADDED: String = "object_added_GameEvent";
 
+    public static const ENEMY_DIE: String = "enemy_die_GameEvent";
+
     public static const CELL_WALK: String = "cell_walk_GameEvent";
     public static const CELL_POS: String = "cell_pos_GameEvent";
     public static const CELL_ATTACK: String = "cell_attack_GameEvent";

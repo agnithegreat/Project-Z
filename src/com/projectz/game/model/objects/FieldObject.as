@@ -91,6 +91,8 @@ public class FieldObject extends EventDispatcher {
     }
 
     public function destroy():void {
+        removeEventListeners();
+
         _cell = null;
 
         for (var i:int = 0; i < _size.length; i++) {

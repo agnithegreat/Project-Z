@@ -48,6 +48,11 @@ public class LevelData extends JSONLoader {
         return _positions;
     }
 
+    private var _waves: Vector.<WaveData>;
+    public function get waves():Vector.<WaveData> {
+        return _waves;
+    }
+
     public function LevelData($config: File = null) {
         super($config);
 
@@ -55,6 +60,7 @@ public class LevelData extends JSONLoader {
         _paths = new <PathData>[];
         _generators = new <GeneratorData>[];
         _positions = new <PositionData>[];
+        _waves = new <WaveData>[];
     }
 
 /////////////////////////////////////////////
@@ -110,6 +116,18 @@ public class LevelData extends JSONLoader {
         }
     }
 
+    public function addWave($wave: WaveData):void {
+        if (_waves.indexOf($wave)<0) {
+            _waves.push($wave);
+        }
+    }
+    public function removeWave($wave: WaveData):void {
+        var index: int = _waves.indexOf($wave);
+        if (index >= 0) {
+            _waves.splice(index, 1);
+        }
+    }
+
     override public function parse($data: Object):void {
         _id = $data.id;
         _bg = $data.bg;
@@ -142,10 +160,17 @@ public class LevelData extends JSONLoader {
             pos.parse($data.positions[i]);
             _positions.push(pos);
         }
+
+        len = $data.waves ? $data.waves.length : 0;
+        for (i = 0; i < len; i++) {
+            var wave: WaveData = new WaveData();
+            wave.parse($data.waves[i]);
+            _waves.push(wave);
+        }
     }
 
     public function export():Object {
-        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions()};
+        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions(), "waves": getWaves()};
     }
 
 /////////////////////////////////////////////
@@ -186,6 +211,15 @@ public class LevelData extends JSONLoader {
             ps[i] = _positions[i].export();
         }
         return ps;
+    }
+
+    private function getWaves():Array {
+        var ws: Array = [];
+        var len: int = _waves.length;
+        for (var i:int = 0; i < len; i++) {
+            ws[i] = _waves[i].export();
+        }
+        return ws;
     }
 }
 }

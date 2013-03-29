@@ -17,6 +17,7 @@ import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PositionData;
+import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.objectEditor.data.DefenderData;
 import com.projectz.utils.objectEditor.data.EnemyData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
@@ -73,6 +74,9 @@ public class Field extends EventDispatcher {
     private var _enemies: Vector.<Enemy>;
     private var _defenders: Vector.<Defender>;
 
+    private var _waveTime: Number;
+    private var _wave: int;
+
     public function Field($width: int, $height: int, $objectsStorage: ObjectsStorage, $level: LevelData) {
         _width = $width;
         _height = $height;
@@ -97,6 +101,38 @@ public class Field extends EventDispatcher {
         createPositions(_level.positions);
         createObjects(_level.objects);
         updateDepths();
+
+        _wave = 0;
+        _waveTime = 0;
+        nextWave();
+    }
+
+    public function nextWave():void {
+        _wave++;
+
+        if (_level.waves.length>=_wave) {
+            _waveTime = _level.waves[_wave-1].time;
+
+            var len: int = _generators.length;
+            for (var i:int = 0; i < len; i++) {
+                _generators[i].initWave(_wave);
+            }
+        } else {
+            // TODO: endGame
+        }
+    }
+
+    private function checkWaveEnded():Boolean {
+        if (_waveTime<=0) {
+            return true;
+        }
+        var len: int = _generators.length;
+        for (var i:int = 0; i < len; i++) {
+            if (_generators[i].enabled) {
+                return false;
+            }
+        }
+        return !_enemies.length;
     }
 
     private function updateDepths():void {
@@ -162,6 +198,8 @@ public class Field extends EventDispatcher {
     }
 
     public function step($delta: Number):void {
+        _waveTime -= $delta;
+
         var len: int = _enemies.length;
         var cell: Cell;
 
@@ -190,6 +228,10 @@ public class Field extends EventDispatcher {
             if (enemy) {
                 createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object), _generators[i].path);
             }
+        }
+
+        if (checkWaveEnded()) {
+            nextWave();
         }
 
         dispatchEventWith(GameEvent.UPDATE);
@@ -396,6 +438,7 @@ public class Field extends EventDispatcher {
         var personage: Personage;
         if ($data is EnemyData) {
             var enemy: Enemy = new Enemy($data as EnemyData, $path);
+            enemy.addEventListener(GameEvent.ENEMY_DIE, handleEnemyDie);
             personage = enemy;
             _enemies.push(enemy);
         } else if ($data is DefenderData) {
@@ -414,6 +457,14 @@ public class Field extends EventDispatcher {
             }
 
             dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);
+        }
+    }
+
+    private function handleEnemyDie($event: Event):void {
+        var enemy: Enemy = $event.currentTarget as Enemy;
+        var index: int = _enemies.indexOf(enemy);
+        if (index>=0) {
+            _enemies.splice(index, 1);
         }
     }
 
