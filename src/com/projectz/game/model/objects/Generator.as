@@ -7,13 +7,16 @@
  */
 package com.projectz.game.model.objects {
 import com.projectz.utils.levelEditor.data.GeneratorData;
+import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 
 public class Generator {
 
     private var _data: GeneratorData;
 
-    private var _amount: int;
+    private var _wave: GeneratorWaveData;
+
+    private var _generated: int;
     private var _time: int;
 
     public function get path():int {
@@ -25,21 +28,28 @@ public class Generator {
     public function Generator($data: GeneratorData) {
         _data = $data;
 
-        _amount = _data.amount;
+        initWave(1);
+    }
+
+    public function initWave($wave: int):void {
+        _wave = _data.waves[$wave-1];
+
+        _generated = 0;
         _time = 0;
-        _enabled = true;
+        _enabled = _wave.amount>0;
     }
 
     public function createEnemy():PlaceData {
-        if (!_enabled || ++_time < _data.delay) {
+        if (!_enabled || ++_time < _wave.delay) {
             return null;
         }
         _time = 0;
-        _enabled = --_amount > 0;
 
         var place: PlaceData = new PlaceData();
         place.place(_data.x, _data.y);
-        place.object = _data.type;
+        place.object = _wave.sequence[_generated];
+
+        _enabled = ++_generated < _wave.amount;
         return place;
     }
 }
