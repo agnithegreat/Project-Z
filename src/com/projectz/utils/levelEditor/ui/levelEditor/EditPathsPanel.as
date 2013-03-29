@@ -26,7 +26,6 @@ import fl.data.DataProvider;
 import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.MouseEvent;
-import flash.text.TextField;
 
 public class EditPathsPanel extends GraphicStorage implements IPanel {
 
