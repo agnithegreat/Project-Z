@@ -14,6 +14,8 @@ import flash.utils.Dictionary;
  */
 public class LevelStorage {
 
+    private var _folder: File;
+
     private var _levels: Dictionary; //хранит ссылки на все уровни игры (в виде обектов LevelData)
     public function get levels():Dictionary {
         return _levels;
@@ -33,8 +35,8 @@ public class LevelStorage {
      * @param $path Путь к директории
      */
     public function parseDirectory ($path:String):void {
-        var folder: File = new File($path);
-        _levels = LevelParser.parseDirectory(folder, _levelsList);
+        _folder = new File($path);
+        _levels = LevelParser.parseDirectory(_folder, _levelsList);
     }
 
     /**
@@ -42,15 +44,13 @@ public class LevelStorage {
      *
      * @param $id id'шник уровня
      */
-    public function getLevelData ($id:String):LevelData {
-        var levelData:LevelData;
-        levelData = _levels [$id];
-        if (levelData) {
-            return levelData;
+    public function getLevelData ($id: int):LevelData {
+        var id: String = "level_"+$id;
+        if (!_levels[id]) {
+            _levels[id] = new LevelData(_folder.resolvePath(id+".json"));
+            _levels[id].id = $id;
         }
-        else {
-            throw new Error ('Level "' + $id + '" not parsed.');
-        }
+        return _levels[id];
     }
 }
 }

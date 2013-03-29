@@ -6,12 +6,21 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model {
+import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.data.PositionData;
 
 import starling.events.EventDispatcher;
 
 public class Cell extends EventDispatcher {
+
+    public static function getDistance($cell1: Cell, $cell2: Cell):Number {
+        var dx: int = $cell1.x-$cell2.x;
+        var dy: int = $cell1.y-$cell2.y;
+        return Math.sqrt(dx*dx+dy*dy);
+    }
+
 
     private var _x: int;
     public function get x():int {
@@ -30,7 +39,7 @@ public class Cell extends EventDispatcher {
     private var _walkable: Boolean;
     public function set walkable($value: Boolean):void {
         _walkable = $value;
-        dispatchEventWith(GameEvent.UPDATE);
+        dispatchEventWith(GameEvent.CELL_WALK);
     }
     public function get walkable():Boolean {
         return _walkable;
@@ -44,9 +53,12 @@ public class Cell extends EventDispatcher {
         return _shotable;
     }
 
-    private var _object: FieldObject;
+    private var _objects: Vector.<FieldObject>;
+    public function get objects():Vector.<FieldObject> {
+        return _objects;
+    }
     public function get object():FieldObject {
-        return _object;
+        return _objects.length>0 ? _objects[0] : null;
     }
 
     private var _depth: int;
@@ -57,20 +69,65 @@ public class Cell extends EventDispatcher {
         _depth = value;
     }
 
+    private var _positionData: PositionData;
+    public function get positionData():PositionData {
+        return _positionData;
+    }
+    public function set positionData(value:PositionData):void {
+        _positionData = value;
+        dispatchEventWith(GameEvent.CELL_POS);
+    }
+
+    private var _attackObject: FieldObject;
+    public function get attackObject():FieldObject {
+        return _attackObject;
+    }
+    public function set attackObject(value:FieldObject):void {
+        _attackObject = value;
+        dispatchEventWith(GameEvent.CELL_ATTACK);
+    }
+
+    // TODO: сделать зону видимости
+    private var _sightObject: FieldObject;
+    public function get sightObject():FieldObject {
+        return _sightObject;
+    }
+    public function set sightObject(value:FieldObject):void {
+        _sightObject = value;
+        dispatchEventWith(GameEvent.CELL_SIGHT);
+    }
+
     public function Cell($x: int, $y: int) {
         _x = $x;
         _y = $y;
         _walkable = true;
+
+        _objects = new <FieldObject>[];
     }
 
     public function addObject($object: FieldObject):void {
-        _object = $object;
+        if (_objects.indexOf($object)<0) {
+            _objects.push($object);
+        }
     }
 
     public function removeObject($object: FieldObject):void {
-        if (_object==$object) {
-            _object = null;
+        var index: int = _objects.indexOf($object);
+        if (index>=0) {
+            _objects.splice(index, 1);
         }
+    }
+
+    public function get enemies():Vector.<Enemy> {
+        var targets: Vector.<Enemy> = new <Enemy>[];
+        var len: int = _objects.length;
+        for (var i: int = 0; i < len; i++) {
+            var enemy: Enemy = _objects[i] as Enemy;
+            if (enemy) {
+                targets.push(enemy);
+            }
+        }
+        return targets;
     }
 
     public function toString():String {
@@ -78,7 +135,10 @@ public class Cell extends EventDispatcher {
     }
 
     public function destroy():void {
-        _object = null;
+        _objects = null;
+        _positionData = null;
+        _attackObject = null;
+        _sightObject = null;
     }
 }
 }

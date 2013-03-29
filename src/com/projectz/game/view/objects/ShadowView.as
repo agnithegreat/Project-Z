@@ -5,12 +5,12 @@
  * Time: 12:39
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.view {
+package com.projectz.game.view.objects {
+import com.projectz.game.view.*;
 import com.projectz.utils.objectEditor.data.PartData;
-import com.projectz.game.event.GameEvent;
 
 import starling.core.Starling;
-
+import starling.events.Event;
 import starling.display.Image;
 import starling.textures.Texture;
 
@@ -18,15 +18,20 @@ public class ShadowView extends PositionView {
 
     protected var _object: PartData;
     protected var _parent: PositionView
-    private var _bg: Image;
+
+    override public function get positionX():Number {
+        return _parent.x;
+    }
+    override public function get positionY():Number {
+        return _parent.y;
+    }
 
     public function ShadowView($shadow: PartData, $parent: PositionView) {
         _object = $shadow;
         _parent = $parent;
-        _parent.addEventListener(GameEvent.DESTROY, handleDestroy);
+        _parent.addEventListener(Event.COMPLETE, handleDestroy);
 
-        pivotX = PositionView.cellWidth/2;
-        pivotY = PositionView.cellHeight/2;
+        super();
 
         if ($shadow.states[PartData.SHADOW]) {
             setView($shadow.states[PartData.SHADOW]);
@@ -34,8 +39,8 @@ public class ShadowView extends PositionView {
     }
 
     public function updatePosition():void {
-        x = _parent.x;
-        y = _parent.y;
+        x = positionX;
+        y = positionY;
     }
 
     protected function setView($texture: Texture):void {

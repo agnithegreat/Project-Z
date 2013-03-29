@@ -6,8 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.model.objects {
+import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Cell;
 import com.projectz.utils.objectEditor.data.EnemyData;
+
+import starling.core.Starling;
 
 public class Enemy extends Personage {
 
@@ -19,6 +22,11 @@ public class Enemy extends Personage {
     private var _way: Vector.<Cell>;
     public function hasCell($cell: Cell):Boolean {
         return _way && _way.indexOf($cell)>=0;
+    }
+
+    private var _lastCell: Cell;
+    public function get lastCell():Cell {
+        return _lastCell;
     }
 
     override public function get cell():Cell {
@@ -40,6 +48,8 @@ public class Enemy extends Personage {
 
     protected var _hp: int;
 
+    private var _cooldown: int;
+
     protected var _path: int;
     public function get path():int {
         return _path;
@@ -47,13 +57,13 @@ public class Enemy extends Personage {
 
     private var _enemyData: EnemyData;
 
-    public function Enemy($data: EnemyData) {
+    public function Enemy($data: EnemyData, $path: int) {
         _enemyData = $data;
         super(_enemyData.getPart(), _enemyData.shadow);
 
-        // TODO: сделать нормальный выбор пути
-        _path = int(Math.random()*3);
+        _path = $path;
         _hp = _enemyData.hp;
+        _cooldown = 0;
     }
 
     override public function place($cell: Cell):void {
@@ -65,14 +75,65 @@ public class Enemy extends Personage {
 
     public function go($cells: Vector.<Cell>):void {
         _way = $cells;
+        _lastCell = _way.length>0 ? _way[_way.length-1] : null;
+        next();
+    }
+
+    private function next():void {
         if (!_target) {
             if (_way.length>0) {
                 _target = _way.shift();
+                if (_target.attackObject) {
+                    _target.walkable = false;
+                }
                 walk(true);
-            } else {
-                // TODO: убрать эту заглушку
-                die();
             }
+        }
+    }
+
+    public function step($delta: Number):void {
+        if (_target) {
+            var aim: FieldObject = _target.object;
+            if (aim is ITarget && !(aim is Enemy)) {
+                damageTarget(aim as ITarget);
+            } else {
+                // TODO: выбрать стиль передвижения персонажей
+                if (!aim || aim==this) {
+                    _progress += _enemyData.speed * $delta/distance;
+                    update();
+                }
+            }
+        }
+
+        if (!_halfWay && _progress>=0.5) {
+            leave();
+            _target.addObject(this);
+            _halfWay = true;
+        }
+
+        if (_progress>=1) {
+            place(_target);
+            _target = null;
+            next();
+        }
+    }
+
+    private function damageTarget($target: ITarget):void {
+        if (_cooldown>0) {
+            _cooldown--;
+            return;
+        }
+        Starling.juggler.delayCall($target.damage, 0.25, _enemyData.strength);
+        attack();
+        _cooldown = _enemyData.cooldown;
+    }
+
+    override public function damage($value: int):void {
+        _hp -= $value;
+        dispatchEventWith(GameEvent.DAMAGE);
+        if (_hp<=0) {
+            _hp = 0;
+            die();
         }
     }
 
@@ -84,13 +145,16 @@ public class Enemy extends Personage {
         setState(STAY);
     }
 
-    public function attack($cell: Cell):void {
-        _target = $cell;
+    public function attack():void {
         setState(ATTACK);
     }
 
     public function die():void {
+        _cell.walkable = true;
         leave();
+        if (_target) {
+            _target.removeObject(this);
+        }
         _alive = false;
         setState(DIE);
     }
@@ -99,36 +163,12 @@ public class Enemy extends Personage {
         _cell.removeObject(this);
     }
 
-    public function step($delta: Number):void {
-        if (_target) {
-            if (!_target.object) {
-                _target.addObject(this);
-            }
-            // TODO: выбрать стиль передвижения персонажей
-//            if (_target.object==this) {
-                _progress += _enemyData.speed * $delta/distance;
-                update();
-//            }
-        }
-
-        if (!_halfWay && _progress>=0.5) {
-            leave();
-            _halfWay = true;
-        }
-
-        if (_progress>=1) {
-            place(_target);
-            _target = null;
-
-            go(_way);
-        }
-    }
-
     override public function destroy():void {
-        while (_way.length>0) {
-            _way.pop();
-        }
+        super.destroy();
+
         _way = null;
+
+        _enemyData = null;
     }
 }
 }

@@ -5,48 +5,41 @@
  * Time: 13:10
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.model {
+package com.projectz.game.model.objects {
+import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 
 public class Generator {
 
-    private var _x: int;
-    private var _y: int;
-    private var _type: String;
-    private var _delay: int;
+    private var _data: GeneratorData;
+
     private var _amount: int;
-
-    private var _path: int;
-    public function get path():int {
-        return _path;
-    }
-
     private var _time: int;
+
+    public function get path():int {
+        return _data.path;
+    }
 
     private var _enabled: Boolean;
 
-    public function Generator($x: int, $y: int, $type: String, $path: int, $delay: int, $amount: int) {
-        _x = $x;
-        _y = $y;
-        _type = $type;
-        _path = $path;
-        _delay = $delay;
-        _amount = $amount;
+    public function Generator($data: GeneratorData) {
+        _data = $data;
 
+        _amount = _data.amount;
         _time = 0;
         _enabled = true;
     }
 
     public function createEnemy():PlaceData {
-        if (!_enabled || ++_time < _delay) {
+        if (!_enabled || ++_time < _data.delay) {
             return null;
         }
         _time = 0;
         _enabled = --_amount > 0;
 
         var place: PlaceData = new PlaceData();
-        place.place(_x, _y);
-        place.object = _type;
+        place.place(_data.x, _data.y);
+        place.object = _data.type;
         return place;
     }
 }

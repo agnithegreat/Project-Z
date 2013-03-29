@@ -59,8 +59,6 @@ public class DefenderData extends ObjectData {
         return _defence;
     }
 
-    // TODO: добавить зону эффектов для боссов
-
     public function DefenderData($name:String, $config:File = null) {
         super($name, $config);
     }
@@ -68,13 +66,13 @@ public class DefenderData extends ObjectData {
     override public function parse($data: Object):void {
         super.parse($data);
 
-        _cost = $data.cost;
-        _radius = $data.radius;
-        _strength = $data.strength;
-        _power = $data.power;
-        _cooldown = $data.cooldown;
-        _ammo = $data.ammo;
-        _defence = $data.defence;
+        _cost = $data.cost ? $data.cost : 10;
+        _radius = $data.radius ? $data.radius : 4;
+        _strength = $data.strength ? $data.strength : 25;
+        _power = $data.power ? $data.power : 1;
+        _cooldown = $data.cooldown ? $data.cooldown : 25;
+        _ammo = $data.ammo ? $data.ammo : 5;
+        _defence = $data.defence ? $data.defence : 10;
     }
 
     override public function export():Object {

@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game {
+import com.projectz.game.controller.GameController;
+import com.projectz.game.controller.UIController;
 import com.projectz.game.model.Game;
 import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.levelEditor.data.LevelStorage;
@@ -25,6 +27,9 @@ public class App extends Sprite {
     private var _levelsStorage: LevelStorage;
 
     private var _jsonManager: JSONManager;
+
+    private var _controller: GameController;
+    private var _uiController: UIController;
 
     private var _game: Game;
     private var _view: GameScreen;
@@ -76,9 +81,11 @@ public class App extends Sprite {
     }
 
     private function startGame():void {
-        _game = new Game(_objectsStorage, _levelsStorage.getLevelData("level_01"));
+        _game = new Game(_objectsStorage, _levelsStorage.getLevelData(1));
+        _controller = new GameController(_game);
+        _uiController = new UIController(_controller, _assets);
 
-        _view = new GameScreen(_game, _assets);
+        _view = new GameScreen(_game, _uiController);
         addChild(_view);
 
         _game.init();

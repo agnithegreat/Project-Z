@@ -6,25 +6,21 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
+import com.projectz.game.controller.UIController;
 import com.projectz.game.model.Game;
 
 import starling.display.Sprite;
-import starling.utils.AssetManager;
 
 public class GameScreen extends Sprite {
-
-    private var _assets: AssetManager;
 
     private var _game: Game;
 
     private var _field: FieldView;
 
-    public function GameScreen($game: Game, $assets: AssetManager) {
-        _assets = $assets;
-
+    public function GameScreen($game: Game, $uiController: UIController) {
         _game = $game;
 
-        _field = new FieldView(_game.field, _assets);
+        _field = new FieldView(_game.field, $uiController);
         addChild(_field);
     }
 

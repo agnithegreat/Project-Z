@@ -18,8 +18,8 @@ package com.projectz.utils.pathFinding {
 		
 		private static var _path : Path;
 		
-		// private var _heuristic:Function = manhattan;
-		// private var _heuristic:Function = euclidian;
+		// private static var _heuristic:Function = manhattan;
+		// private static var _heuristic:Function = euclidian;
 		private static var _heuristic : Function = diagonal;
 		
 		private static var _straightCost : Number = 1.0;
@@ -38,6 +38,7 @@ package com.projectz.utils.pathFinding {
 			_startNode.f = _startNode.g + _startNode.h;
 
             search(path);
+            buildPath();
 
 			return _path;
 		}
@@ -45,7 +46,6 @@ package com.projectz.utils.pathFinding {
 		private static function search(path: int = 0) : Boolean {
 			var node : Node = _startNode;
 			while (node != _endNode) {
-//			while (node) {
 				var startX : int = Math.max(0, node.x - 1);
 				var endX : int = Math.min(_grid.numCols - 1, node.x + 1);
 				var startY : int = Math.max(0, node.y - 1);
@@ -54,9 +54,11 @@ package com.projectz.utils.pathFinding {
 				for (var i : int = startX; i <= endX; i++) {
 					for (var j : int = startY; j <= endY; j++) {
 						var test : Node = _grid.getNode(i, j);
-						if (test == node || !test.getWalkable(path) || !_grid.getNode(node.x, test.y).walkable || !_grid.getNode(test.x, node.y).walkable) {
-							continue;
-						}
+                        if (test != _endNode) {
+						    if (test == node || !test.getWalkable(path) || !_grid.getNode(node.x, test.y).walkable || !_grid.getNode(test.x, node.y).walkable) {
+    							continue;
+    						}
+                        }
 
 						var cost : Number = _straightCost;
 						if (!((node.x == test.x) || (node.y == test.y))) {
@@ -86,10 +88,8 @@ package com.projectz.utils.pathFinding {
 					return false;
 				}
 				_open.sortOn("f", Array.NUMERIC);
-//				node = (_open.length>0) ? (_open.shift() as Node) : null;
 				node = _open.shift() as Node;
 			}
-			buildPath();
 			return true;
 		}
 
@@ -97,7 +97,7 @@ package com.projectz.utils.pathFinding {
 			_path = new Path();
 			var node : Node = _endNode;
 			_path.path.push(node);
-			while (node != _startNode) {
+			while (node && node != _startNode) {
 				node = node.parent;
 				_path.path.unshift(node);
 			}
