@@ -123,9 +123,6 @@ public class UIController extends EventDispatcher {
             else if (editPathMode == EditPathMode.REMOVE_POINTS) {
                 levelEditorController.removePointFromPath (point, currentEditingPath);
             }
-            else if (editPathMode == EditPathMode.SELECT_TARGET) {
-                levelEditorController.selectPathTarget (point, currentEditingPath);
-            }
         }
     }
 

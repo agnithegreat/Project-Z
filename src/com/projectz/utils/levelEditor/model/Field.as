@@ -189,28 +189,6 @@ public class Field extends EventDispatcher {
         }
     }
 
-    public function selectPathTarget (point:Point, pathData:PathData):void {
-        if (_levelData) {
-            var index:int = _levelData.paths.indexOf(pathData);
-            if (index != -1) {
-                var hasThisPoint:Boolean = false;
-                var numPoints:int = pathData.points.length;
-                for (var i:int = 0; i < numPoints; i++) {
-                    hasThisPoint = pathData.points [i].equals(point);
-                    if (hasThisPoint) {
-                        break;
-                    }
-                }
-                if (hasThisPoint) {
-                    var _targetPoint:Point = pathData.points [i];
-                    pathData.points.splice(i, 1);
-                    pathData.points.push(_targetPoint);
-                    dispatchEvent(new EditPathEvent (pathData));
-                }
-            }
-        }
-    }
-
     public function setPathColor (color:uint, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);

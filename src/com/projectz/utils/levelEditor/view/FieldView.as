@@ -458,7 +458,6 @@ public class FieldView extends Sprite {
                 var cellView:CellView = getCellViewByPosition(point.x,  point.y);
                 if (cellView) {
                     cellView.color = color;
-                    cellView.showFlag = (i == numPoints - 1);
                 }
             }
         }
@@ -469,7 +468,6 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < numCells; i++) {
             var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
             cellView.color = 0xffffff;
-            cellView.showFlag = false;
         }
     }
 

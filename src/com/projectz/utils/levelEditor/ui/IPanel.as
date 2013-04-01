@@ -5,7 +5,7 @@
  * Time: 16:42
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.ui.levelEditor {
+package com.projectz.utils.levelEditor.ui {
 public interface IPanel {
 
     function show ():void;

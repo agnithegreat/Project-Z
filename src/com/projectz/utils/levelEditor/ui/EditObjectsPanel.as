@@ -5,7 +5,8 @@
  * Time: 16:38
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.ui.levelEditor {
+package com.projectz.utils.levelEditor.ui {
+
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
@@ -122,7 +123,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);
             if (dataProviderItem.data == event.objectData) {
-                listObjects.selectedItem = dataProviderItem;
+//                listObjects.selectedItem = dataProviderItem;
                 if (event.objectData) {
                     trace ("select object = " + event.objectData.name);
                 }
@@ -178,6 +179,7 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
 
     private function changeListener_listObjects (event:Event):void {
         uiController.selectCurrentObject(ObjectData (listObjects.selectedItem.data));
+        listObjects.selectedItem = null;
     }
 
     private function changeListener_cbxBackgrounds (event:Event):void {

@@ -51,7 +51,7 @@
     <!-- Whether the user can resize the window. Optional. Default true. -->
     <resizable>false</resizable>
     <!-- The window's initial width in pixels. Optional. -->
-    <width>1230</width>
+    <width>1430</width>
     <!-- The window's initial height in pixels. Optional. -->
     <height>768</height>
     <!-- The window's initial x position. Optional. -->

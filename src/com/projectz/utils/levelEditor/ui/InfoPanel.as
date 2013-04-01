@@ -5,7 +5,7 @@
  * Time: 16:40
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.ui.levelEditor {
+package com.projectz.utils.levelEditor.ui {
 import com.hogargames.display.GraphicStorage;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;

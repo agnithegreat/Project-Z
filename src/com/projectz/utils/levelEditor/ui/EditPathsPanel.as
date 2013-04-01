@@ -5,7 +5,8 @@
  * Time: 19:16
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.ui.levelEditor {
+package com.projectz.utils.levelEditor.ui {
+
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
@@ -37,7 +38,6 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
 
     private var btnAddPathPoint:ButtonWithText;
     private var btnRemovePathPoint:ButtonWithText;
-    private var btnSelectPathTarget:ButtonWithText;
     private var btnSave:ButtonWithText;
     private var btnDelete:ButtonWithText;
     private var btnNew:ButtonWithText;
@@ -75,25 +75,21 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         //создание кнопок:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
         btnRemovePathPoint = new ButtonWithText(mc["btnRemovePathPoint"]);
-        btnSelectPathTarget = new ButtonWithText(mc["btnSelectPathTarget"]);
         btnSave = new ButtonWithText(mc["btnSave"]);
         btnDelete = new ButtonWithText(mc["btnDelete"]);
         btnNew = new ButtonWithText(mc["btnNew"]);
 
         btnAddPathPoint.selected = (uiController.editPathMode == EditPathMode.ADD_POINTS);
         btnRemovePathPoint.selected = (uiController.editPathMode == EditPathMode.REMOVE_POINTS);
-        btnSelectPathTarget.selected = (uiController.editPathMode == EditPathMode.SELECT_TARGET);
 
         btnAddPathPoint.text = "Добавление";
         btnRemovePathPoint.text = "Удаление";
-        btnSelectPathTarget.text = "Выбор цели";
         btnSave.text = "Сохранить";
         btnDelete.text = "<FONT size = '13'>Удалить путь<FONT>";
         btnNew.text = "<FONT size = '13'>Создать путь<FONT>";
 
         btnAddPathPoint.addEventListener(MouseEvent.CLICK, clickListener);
         btnRemovePathPoint.addEventListener(MouseEvent.CLICK, clickListener);
-        btnSelectPathTarget.addEventListener(MouseEvent.CLICK, clickListener);
         btnSave.addEventListener(MouseEvent.CLICK, clickListener);
         btnDelete.addEventListener(MouseEvent.CLICK, clickListener);
         btnNew.addEventListener(MouseEvent.CLICK, clickListener);
@@ -135,9 +131,6 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
                 break;
             case (btnRemovePathPoint):
                 uiController.editPathMode = EditPathMode.REMOVE_POINTS;
-                break;
-            case (btnSelectPathTarget):
-                uiController.editPathMode = EditPathMode.SELECT_TARGET;
                 break;
             case (btnSave):
                 uiController.save();
@@ -181,17 +174,10 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         if (event.mode == EditPathMode.ADD_POINTS) {
             btnAddPathPoint.selected = true;
             btnRemovePathPoint.selected = false;
-            btnSelectPathTarget.selected = false;
         }
         else if (event.mode == EditPathMode.REMOVE_POINTS) {
             btnAddPathPoint.selected = false;
             btnRemovePathPoint.selected = true;
-            btnSelectPathTarget.selected = false;
-        }
-        else if (event.mode == EditPathMode.SELECT_TARGET) {
-            btnAddPathPoint.selected = false;
-            btnRemovePathPoint.selected = false;
-            btnSelectPathTarget.selected = true;
         }
     }
 

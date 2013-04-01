@@ -5,7 +5,7 @@
  * Time: 12:40
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.utils.levelEditor.ui.levelEditor {
+package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
@@ -36,6 +36,7 @@ public class LevelEditorUI extends GraphicStorage {
     //табы:
     private var btnTabEditObjects:ButtonWithText;
     private var btnTabEditPaths:ButtonWithText;
+    private var btnTabEditGenerators:ButtonWithText;
     private var btnTabEditDefenderZones:ButtonWithText;
     private var btnTabEditLevels:ButtonWithText;
     private var btnTabEditSettings:ButtonWithText;
@@ -79,13 +80,23 @@ public class LevelEditorUI extends GraphicStorage {
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);
         btnTabEditPaths = new ButtonWithText(mc["mcBtnTab2"]);
-        btnTabEditDefenderZones = new ButtonWithText(mc["mcBtnTab3"]);
-        btnTabEditLevels = new ButtonWithText(mc["mcBtnTab4"]);
-        btnTabEditSettings = new ButtonWithText(mc["mcBtnTab5"]);
+        btnTabEditGenerators = new ButtonWithText(mc["mcBtnTab3"]);
+        btnTabEditDefenderZones = new ButtonWithText(mc["mcBtnTab4"]);
+        btnTabEditLevels = new ButtonWithText(mc["mcBtnTab5"]);
+        btnTabEditSettings = new ButtonWithText(mc["mcBtnTab6"]);
+        var btn7:ButtonWithText = new ButtonWithText(mc["mcBtnTab7"]);
+        var btn8:ButtonWithText = new ButtonWithText(mc["mcBtnTab8"]);
+
+        btn7.enable = false;
+        btn8.enable = false;
+
+        btn7.text = "---";
+        btn8.text = "---";
 //        mc["mcBtnTab5"].visible = false;//убираем видимость неиспользованных (запасных) табов:
 
         tabs.push(btnTabEditObjects);
         tabs.push(btnTabEditPaths);
+        tabs.push(btnTabEditGenerators);
         tabs.push(btnTabEditDefenderZones);
         tabs.push(btnTabEditLevels);
         tabs.push(btnTabEditSettings);
@@ -97,6 +108,7 @@ public class LevelEditorUI extends GraphicStorage {
 
         btnTabEditObjects.text = "редактор объектов";
         btnTabEditPaths.text = "редактор путей";
+        btnTabEditGenerators.text = "редактор генераторов";
         btnTabEditDefenderZones.text = "редактор зон защитников";
         btnTabEditLevels.text = "редактор уровней";
         btnTabEditSettings.text = "настройки";
@@ -104,6 +116,7 @@ public class LevelEditorUI extends GraphicStorage {
         //добавляем слушатели:
         btnTabEditObjects.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditPaths.addEventListener(MouseEvent.CLICK, clickListener);
+        btnTabEditGenerators.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditDefenderZones.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditLevels.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditSettings.addEventListener(MouseEvent.CLICK, clickListener);
@@ -161,6 +174,11 @@ public class LevelEditorUI extends GraphicStorage {
                 showPanel(editPathsPanel);
                 outputInfo("Выберете путь из списка. Установите режим редактирования. Кликами по карте редактируйте выбранный путь.");
                 break;
+            case (UIControllerMode.EDIT_GENERATORS):
+                selectTab(btnTabEditGenerators);
+                showPanel(null);
+                outputInfo("Редактирование генараторов времено не работает.");
+                break;
             case (UIControllerMode.EDIT_ZONES):
                 selectTab(btnTabEditDefenderZones);
                 showPanel(null);
@@ -186,6 +204,9 @@ public class LevelEditorUI extends GraphicStorage {
                 break;
             case (btnTabEditPaths):
                 uiController.mode = UIControllerMode.EDIT_PATHS;
+                break;
+            case (btnTabEditGenerators):
+                uiController.mode = UIControllerMode.EDIT_GENERATORS;
                 break;
             case (btnTabEditDefenderZones):
                 uiController.mode = UIControllerMode.EDIT_ZONES;
