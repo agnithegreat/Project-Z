@@ -35,7 +35,7 @@ public class MovieClipToPNG {
                 state = $mc.currentFrameLabel;
                 count = 0;
             }
-            var bd: BitmapData = new BitmapData(rect.width, rect.height);
+            var bd: BitmapData = new BitmapData(rect.width, rect.height, true, 0x00000000);
             bd.draw($mc, new Matrix(1, 0, 0, 1, -rect.x, -rect.y));
 
             var png: PNG = new PNG();

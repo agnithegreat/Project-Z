@@ -11,6 +11,8 @@ import flash.display.MovieClip;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.filesystem.File;
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
 import flash.net.getClassByAlias;
 import flash.system.ApplicationDomain;
 import flash.system.LoaderContext;
@@ -32,6 +34,7 @@ public class MovieClipExporter extends Sprite {
     }
 
     private function handleSelect($event: Event):void {
+        _file.removeEventListener(Event.SELECT, handleSelect);
         _file.load();
     }
 
@@ -49,15 +52,26 @@ public class MovieClipExporter extends Sprite {
         var name: String = _file.name.split(".")[0];
         var type: String = name.split("-")[1];
         var Cl: Class = getDefinitionByName(type) as Class;
-        _sequence = MovieClipToPNG.exportPNGSequence(name, new Cl());
-        saveNext(null);
+        var pers: MovieClip = new Cl();
+        addChild(pers);
+        _sequence = MovieClipToPNG.exportPNGSequence(name, pers);
+        pers.gotoAndPlay(1);
+
+        _file.addEventListener(Event.SELECT, handleSave);
+        _file.browseForDirectory("");
     }
 
-    private function saveNext($event: Event):void {
-        var png: PNG = _sequence.shift();
-        var file: File = new File();
-        file.addEventListener(Event.COMPLETE, saveNext);
-        file.save(png.data, png.name+".png");
+    private function handleSave(event:Event):void {
+        var fs : FileStream = new FileStream();
+
+        for (var i:int = 0; i < _sequence.length; i++) {
+            var png: PNG = _sequence[i];
+            var targetFile : File = _file.resolvePath(png.name+".png");
+            fs.open(targetFile, FileMode.WRITE);
+            fs.writeBytes(png.data);
+        }
+
+        fs.close();
     }
 }
 }
