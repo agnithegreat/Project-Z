@@ -39,7 +39,7 @@ public class MovieClipToPNG {
             bd.draw($mc, new Matrix(1, 0, 0, 1, -rect.x, -rect.y));
 
             var png: PNG = new PNG();
-            png.name = $name + "-" + state + "_" + (++count);
+            png.name = $name + "-" + state + "_" + (100 + (++count));
             png.data = PNGEncoder.encode(bd);
             pngs.push(png);
 
