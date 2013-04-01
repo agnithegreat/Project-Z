@@ -48,8 +48,8 @@ public class PersonageView extends PositionView {
         if ($textures && $textures.length>0) {
             var state: MovieClip = new MovieClip($textures, $fps);
             state.loop = $loop;
-            state.pivotX = state.width/2;
-            state.pivotY = state.height-PositionView.cellHeight*0.2;
+            state.pivotX = _personage.data.pivotX;
+            state.pivotY = _personage.data.pivotY;
             _states[$id] = state;
         }
     }

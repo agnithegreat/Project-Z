@@ -43,8 +43,13 @@ public class ObjectView extends PositionView {
     }
 
     public function update():void {
-        _bg.pivotX = _bg.width/2+_partData.pivotX;
-        _bg.pivotY = _bg.height/2+_partData.pivotY;
+        if (_bg is MovieClip) {
+            _bg.pivotX = _partData.pivotX;
+            _bg.pivotY = _partData.pivotY;
+        } else {
+            _bg.pivotX = _bg.width/2+_partData.pivotX;
+            _bg.pivotY = _bg.height/2+_partData.pivotY;
+        }
     }
 
     override public function destroy():void {
