@@ -24,6 +24,11 @@ public class Enemy extends Personage {
         return _way && _way.indexOf($cell)>=0;
     }
 
+    private var _sightTarget: Cell;
+    public function get sightTarget():Cell {
+        return _sightTarget;
+    }
+
     private var _lastCell: Cell;
     public function get lastCell():Cell {
         return _lastCell;
@@ -71,6 +76,8 @@ public class Enemy extends Personage {
         _cell.addObject(this);
         _progress = 0;
         _halfWay = false;
+
+        _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
     }
 
     public function go($cells: Vector.<Cell>):void {
@@ -80,14 +87,12 @@ public class Enemy extends Personage {
     }
 
     private function next():void {
-        if (!_target) {
-            if (_way.length>0) {
-                _target = _way.shift();
-                if (_target.attackObject) {
-                    _target.walkable = false;
-                }
-                walk(true);
+        if (!_target && _way.length>0) {
+            _target = _way.shift();
+            if (_target.attackObject) {
+                _target.walkable = false;
             }
+            walk(true);
         }
     }
 
