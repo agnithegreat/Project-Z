@@ -28,7 +28,7 @@ import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
-public class EditPathsPanel extends GraphicStorage implements IPanel {
+public class EditPathsPanel extends BasicPanel {
 
     private var model:Field;
     private var uiController:UIController;
@@ -55,13 +55,9 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         model.addEventListener(EditPathEvent.PATH_WAS_REMOVED, pathWasRemovedListener);
     }
 
-    public function show():void {
-        visible = true;
-    }
-
-    public function hide():void {
-        visible = false;
-    }
+/////////////////////////////////////////////
+//PROTECTED:
+/////////////////////////////////////////////
 
     override protected function initGraphicElements():void {
         super.initGraphicElements();
@@ -94,6 +90,10 @@ public class EditPathsPanel extends GraphicStorage implements IPanel {
         btnDelete.addEventListener(MouseEvent.CLICK, clickListener);
         btnNew.addEventListener(MouseEvent.CLICK, clickListener);
     }
+
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
 
     private function reInitPathList():void {
         if (model.levelData) {
