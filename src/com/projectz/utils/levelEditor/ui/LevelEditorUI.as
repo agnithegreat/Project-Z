@@ -30,6 +30,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var infoPanel:InfoPanel;
     private var editObjectsPanel:EditObjectsPanel;
     private var editPathsPanel:EditPathsPanel;
+    private var editGeneratorsPanel:EditGeneratorsPanel;
 
     private var panels:Vector.<IPanel> = new <IPanel>[];
 
@@ -67,15 +68,17 @@ public class LevelEditorUI extends GraphicStorage {
     override protected function initGraphicElements():void {
         super.initGraphicElements();
 
-        //инициализируем графические элементы (парсим графику):
+        //инициализируем графические элементы:
 
         //панели:
         infoPanel = new InfoPanel(mc["mcInfoPanel"], uiController);
         editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
+        editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
+        panels.push(editGeneratorsPanel);
 
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);
@@ -176,7 +179,7 @@ public class LevelEditorUI extends GraphicStorage {
                 break;
             case (UIControllerMode.EDIT_GENERATORS):
                 selectTab(btnTabEditGenerators);
-                showPanel(null);
+                showPanel(editGeneratorsPanel);
                 outputInfo("Редактирование генараторов времено не работает.");
                 break;
             case (UIControllerMode.EDIT_ZONES):

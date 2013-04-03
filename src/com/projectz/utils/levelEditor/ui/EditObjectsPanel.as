@@ -13,6 +13,7 @@ import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
+import com.projectz.utils.levelEditor.ui.controls.ProjectZCellRender;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -25,7 +26,7 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.utils.Dictionary;
 
-public class EditObjectsPanel extends GraphicStorage implements IPanel{
+public class EditObjectsPanel extends BasicPanel {
 
     private var cbxObjectsType:ComboBox;
     private var listObjects:List;
@@ -46,14 +47,6 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
 
         super (mc);
-    }
-
-    public function show():void {
-        visible = true;
-    }
-
-    public function hide():void {
-        visible = false;
     }
 
 /////////////////////////////////////////////
@@ -178,7 +171,9 @@ public class EditObjectsPanel extends GraphicStorage implements IPanel{
     }
 
     private function changeListener_listObjects (event:Event):void {
-        uiController.selectCurrentObject(ObjectData (listObjects.selectedItem.data));
+        if (listObjects.selectedItem) {
+            uiController.selectCurrentObject(ObjectData (listObjects.selectedItem.data));
+        }
         listObjects.selectedItem = null;
     }
 
