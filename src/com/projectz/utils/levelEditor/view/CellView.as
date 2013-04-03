@@ -36,17 +36,19 @@ public class CellView extends PositionView {
 
     private var _showLock:Boolean = false;
     private var _showFlag:Boolean = false;
+    private var _showHatching:Boolean = false;
 
     protected var _bg:Image;
     protected var _lockImage:Image;
     protected var _flagImage:Image;
+    protected var _hatchingImage:Image;
 
     private static const ROLL_OUT_ALPHA:Number = .3;
     private static const ROLL_OVER_ALPHA:Number = .5;
     private static const ROLL_MOUSE_DOWN:Number = .6;
     private static const ROLL_CLICK:Number = .7;
 
-    public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null, $flagView:Texture = null) {
+    public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null, $flagView:Texture = null, $hatchingView:Texture = null) {
         _cell = $cell;
 
         super();
@@ -59,6 +61,9 @@ public class CellView extends PositionView {
         }
         if ($flagView) {
             setFlagView($flagView);
+        }
+        if ($flagView) {
+            setHatchingView($hatchingView);
         }
 
 //        addEventListener(TouchEvent.TOUCH, handleTouch);
@@ -98,6 +103,17 @@ public class CellView extends PositionView {
         _showFlag = value;
         if (_flagImage) {
             _flagImage.visible = _showFlag;
+        }
+    }
+
+    public function get showHatching():Boolean {
+        return _showHatching;
+    }
+
+    public function set showHatching(value:Boolean):void {
+        _showHatching = value;
+        if (_hatchingImage) {
+            _hatchingImage.visible = _showHatching;
         }
     }
 
@@ -145,6 +161,15 @@ public class CellView extends PositionView {
         _flagImage.alpha = .6;
         _flagImage.visible = false;
         addChild(_flagImage);
+    }
+
+    protected function setHatchingView($hatchingView:Texture):void {
+        _hatchingImage = new Image($hatchingView);
+        _hatchingImage.pivotX = _bg.width / 2;
+        _hatchingImage.pivotY = _bg.height / 2;
+        _hatchingImage.alpha = .3;
+        _hatchingImage.visible = false;
+        addChild(_hatchingImage);
     }
 
     override public function destroy():void {

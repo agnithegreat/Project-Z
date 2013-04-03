@@ -7,8 +7,11 @@
  */
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.data.GeneratorData;
+import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
+import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
@@ -74,6 +77,58 @@ public class LevelEditorController extends EventDispatcher {
 
     public function deletePath (pathData:PathData):void {
         model.deletePath (pathData);
+    }
+
+    /////////////////////////////////////////////
+    //GENERATORS:
+    /////////////////////////////////////////////
+
+    public function addNewGenerator ():void {
+        model.addNewGenerator();
+    }
+
+    public function removeGenerator (generatorData:GeneratorData):void {
+        model.removeGenerator(generatorData);
+    }
+
+    public function setGeneratorPath (pathId:int, generatorData:GeneratorData):void {
+        model.setGeneratorPath(pathId, generatorData);
+    }
+
+    public function setGeneratorPosition (point:Point, generatorData:GeneratorData):void {
+        model.setGeneratorPosition(point, generatorData);
+    }
+
+    /////////////////////////////////////////////
+    //WAVES:
+    /////////////////////////////////////////////
+
+    public function addNewWave():void {
+        model.addNewWave();
+    }
+
+    public function removeWave(waveData:WaveData):void {
+        model.removeWave(waveData);
+    }
+
+    //устанавливаем время для волны:
+    public function setWaveTime (time:int, waveData:WaveData):void {
+        model.setWaveTime(time, waveData);
+    }
+
+    //устанавливаем задержку для волны генератора:
+    public function setDelayOfGeneratorWave (delay:int, generatorWaveData:GeneratorWaveData):void {
+        model.setDelayOfGeneratorWave(delay, generatorWaveData);
+    }
+
+    //добавляем тип врага для волны генератора:
+    public function addEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+        model.addEnemyToGeneratorWave(enemy, generatorWaveData);
+    }
+
+    //убираем тип врага для волны генератора:
+    public function removeEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+        model.removeEnemyToGeneratorWave(enemy, generatorWaveData);
     }
 
     /////////////////////////////////////////////

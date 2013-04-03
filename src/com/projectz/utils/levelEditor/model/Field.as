@@ -7,8 +7,16 @@
  */
 package com.projectz.utils.levelEditor.model {
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.data.GeneratorData;
+import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.data.WaveData;
+import com.projectz.utils.levelEditor.data.WaveData;
+import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
+import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
+import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent;
@@ -146,7 +154,7 @@ public class Field extends EventDispatcher {
     }
 
     /////////////////////////////////////////////
-    //PATH:
+    //PATHS:
     /////////////////////////////////////////////
 
     public function addPointToPath (point:Point, pathData:PathData):void {
@@ -201,25 +209,164 @@ public class Field extends EventDispatcher {
 
     public function addNewPath ():void {
         if (_levelData) {
-            var pathData:PathData = new PathData();
-            var maxId:int = 0;
-            var numPaths:int = _levelData.paths.length;
-            for (var i:int = 0; i < numPaths; i++) {
-                maxId = Math.max (maxId, _levelData.paths [i].id);
-                trace("maxId = " + maxId);
-            }
-            pathData.id = maxId + 1;
-            _levelData.paths.push (pathData);
+            var pathData:PathData = _levelData.addNewPath ();
             dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_WAS_ADDED));
         }
     }
 
     public function deletePath (pathData:PathData):void {
         if (_levelData) {
-            var index:int = _levelData.paths.indexOf(pathData);
-            if (index != -1) {
-                _levelData.paths.splice(index, 1);
+            if (_levelData.deletePath (pathData)) {
                 dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_WAS_REMOVED));
+            }
+        }
+    }
+
+    /////////////////////////////////////////////
+    //GENERATORS & WAVES:
+    /////////////////////////////////////////////
+
+    public function addNewGenerator ():void {
+        if (_levelData) {
+            var generatorData:GeneratorData = _levelData.addNewGenerator ();
+            dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_ADDED));
+        }
+    }
+
+    public function removeGenerator (generatorData:GeneratorData):void {
+        if (_levelData) {
+            if (_levelData.removeGenerator(generatorData)) {
+                dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_REMOVED));
+            }
+        }
+    }
+
+    public function setGeneratorPath (pathId:int, generatorData:GeneratorData):void {
+        if (_levelData) {
+            var index:int = _levelData.generators.indexOf (generatorData);
+            if (index != -1) {
+                //проверяем, существует ли путь с таким id:
+                var numPaths:int = _levelData.paths.length;
+                for (var i:int = 0; i < numPaths; i++) {
+                    var pathData:PathData = _levelData.paths [i];
+                    if (pathData.id == pathId) {
+                        generatorData.path = pathId;
+                        if (pathData.length > 0) {
+                            var point:Point = pathData [0];
+                            generatorData.place (point.x, point.y);
+                        }
+                        dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public function setGeneratorPosition (point:Point, generatorData:GeneratorData):void {
+        if (_levelData) {
+            var index:int = _levelData.generators.indexOf (generatorData);
+            if (index != -1) {
+                //находим текущий путь по id:
+                var numPaths:int = _levelData.paths.length;
+                for (var i:int = 0; i < numPaths; i++) {
+                    var pathData:PathData = _levelData.paths [i];
+                    if (pathData.id == generatorData.path) {
+                        //проверяем, существует ли в текущем пути указаная точка:
+                        var numPoints:int = pathData.points.length;
+                        for (var j:int = 0; j < numPoints; j++) {
+                            var pathPoint:Point = pathData.points [j];
+                            if (pathPoint.equals (point)) {
+                                generatorData.place(point.x, point.y);
+                                dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public function addNewWave():void {
+        if (_levelData) {
+            var waveData:WaveData = _levelData.addNewWave ();
+            dispatchEvent(new EditWavesEvent (waveData, EditWavesEvent.WAVE_WAS_ADDED));
+        }
+    }
+
+    public function removeWave(waveData:WaveData):void {
+        if (_levelData && waveData) {
+            _levelData.removeWave (waveData.id);
+            dispatchEvent(new EditWavesEvent (waveData, EditWavesEvent.WAVE_WAS_ADDED));
+        }
+    }
+
+    //устанавливаем время для волны:
+    public function setWaveTime (time:int, waveData:WaveData):void {
+        if (_levelData) {
+            var index:int = _levelData.waves.indexOf (waveData);
+            if (index != -1) {
+                waveData.time = time;
+                dispatchEvent(new EditWavesEvent (waveData, EditWavesEvent.WAVE_WAS_CHANGED));
+            }
+        }
+    }
+
+    //устанавливаем задержку для волны генератора:
+    public function setDelayOfGeneratorWave (delay:int, generatorWaveData:GeneratorWaveData):void {
+        if (_levelData) {
+            var numGenerators:int = _levelData.generators.length;
+            for (var i:int = 0; i < numGenerators; i++) {
+                var generatorData:GeneratorData = _levelData.generators [i];
+                var index:int = generatorData.waves.indexOf (generatorWaveData);
+                if (index != -1) {
+                    generatorWaveData.delay = delay;
+                    dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
+                    dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
+                    break;
+                }
+            }
+        }
+    }
+
+    //добавляем тип врага для волны генератора:
+    public function addEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+        if (_levelData) {
+            var numGenerators:int = _levelData.generators.length;
+            for (var i:int = 0; i < numGenerators; i++) {
+                var generatorData:GeneratorData = _levelData.generators [i];
+                var index:int = generatorData.waves.indexOf (generatorWaveData);
+                if (index != -1) {
+                    var enemyIndex:int = generatorWaveData.sequence.indexOf (enemy);
+                    if (enemyIndex == -1) {
+                        generatorWaveData.sequence.push(enemy);
+                        dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
+                        dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    //убираем тип врага для волны генератора:
+    public function removeEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+        if (_levelData) {
+            var numGenerators:int = _levelData.generators.length;
+            for (var i:int = 0; i < numGenerators; i++) {
+                var generatorData:GeneratorData = _levelData.generators [i];
+                var index:int = generatorData.waves.indexOf (generatorWaveData);
+                if (index != -1) {
+                    var enemyIndex:int = generatorWaveData.sequence.indexOf (enemy);
+                    if (enemyIndex != -1) {
+                        generatorWaveData.sequence.splice(enemyIndex, 1);
+                        dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
+                        dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
+                    }
+                    break;
+                }
             }
         }
     }

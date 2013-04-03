@@ -94,7 +94,8 @@ public class FieldView extends Sprite {
                     _field.field[i],
                     $assets.getTexture("ms-cell-levelEditor"),
                     $assets.getTexture("ms-cell-levelEditor-lock"),
-                    $assets.getTexture("ms-cell-levelEditor-flag")
+                    $assets.getTexture("ms-cell-levelEditor-flag"),
+                    $assets.getTexture("ms-cell-levelEditor-hatching")
             );
             _cellsContainer.addChild(cell);
         }
@@ -311,6 +312,9 @@ public class FieldView extends Sprite {
                         else if (uiController.mode == UIControllerMode.EDIT_PATHS) {
                             uiController.editPointToCurrentPath (new Point (_currentCell.positionX, _currentCell.positionY));
                         }
+                        else if (uiController.mode == UIControllerMode.EDIT_GENERATORS) {
+                            uiController.editPointToCurrentPath (new Point (_currentCell.positionX, _currentCell.positionY));
+                        }
 
                         _isPressed = false;
                         onCellClick(_currentCell);
@@ -441,15 +445,15 @@ public class FieldView extends Sprite {
                 var curPathData:PathData = levelData.paths [i];
                 //pathData рисуем в последнюю очередь (последний слой)!
                 if (curPathData != pathData) {
-                    drawPath (curPathData);
+                    drawPath (curPathData, false);
                 }
             }
         }
         //pathData рисуем в последнюю очередь (последний слой)!
-        drawPath (pathData);
+        drawPath (pathData, true);
     }
 
-    private function drawPath (pathData:PathData):void {
+    private function drawPath (pathData:PathData, showHatching:Boolean = false):void {
         if (pathData) {
             var color:uint = pathData.color;
             var numPoints:int = pathData.points.length;
@@ -458,6 +462,7 @@ public class FieldView extends Sprite {
                 var cellView:CellView = getCellViewByPosition(point.x,  point.y);
                 if (cellView) {
                     cellView.color = color;
+                    cellView.showHatching = showHatching;
                 }
             }
         }
@@ -468,6 +473,7 @@ public class FieldView extends Sprite {
         for (var i:int = 0; i < numCells; i++) {
             var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
             cellView.color = 0xffffff;
+            cellView.showHatching = false;
         }
     }
 

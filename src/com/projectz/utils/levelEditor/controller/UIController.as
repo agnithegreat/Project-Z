@@ -7,6 +7,9 @@
  */
 
 package com.projectz.utils.levelEditor.controller {
+
+import com.projectz.utils.levelEditor.data.GeneratorData;
+import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
@@ -16,6 +19,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editObjects
 import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
+import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
@@ -105,12 +109,52 @@ public class UIController extends EventDispatcher {
         }
     }
 
+    /////////////////////////////////////////////
+    //INFO:
+    /////////////////////////////////////////////
+
+    public function showCellInfo($cell:Cell):void {
+        dispatchEvent(new ShowCellInfoEvent($cell));
+    }
+
+/////////////////////////////////////////////
+//LEVEL EDITOR CONTROLLER:
+//Методы классического mvc контроллера
+/////////////////////////////////////////////
+
+    /////////////////////////////////////////////
+    //OBJECTS:
+    /////////////////////////////////////////////
+
     public function selectLevelBackground(objectData:ObjectData):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
             dispatchEvent(new SelectBackgroundEvent(objectData));
             levelEditorController.changeBackground(objectData);
         }
     }
+
+    public function addObject (placeData:PlaceData):Boolean {
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            return levelEditorController.addObject(placeData);
+        }
+        return false;
+    }
+
+    public function selectObject ($x: int, $y: int):void {
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            levelEditorController.selectObject($x,  $y);
+        }
+    }
+
+    public function clearAllObjects():void {
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            levelEditorController.clearAllObjects();
+        }
+    }
+
+    /////////////////////////////////////////////
+    //PATHS:
+    /////////////////////////////////////////////
 
     public function editPointToCurrentPath (point:Point):void {
         if (
@@ -152,36 +196,80 @@ public class UIController extends EventDispatcher {
     }
 
     /////////////////////////////////////////////
-    //INFO:
+    //GENERATORS:
     /////////////////////////////////////////////
 
-    public function showCellInfo($cell:Cell):void {
-        dispatchEvent(new ShowCellInfoEvent($cell));
-    }
-
-    /////////////////////////////////////////////
-    //LEVEL EDITOR CONTROLLER:
-    //Методы классического mvc контроллера
-    /////////////////////////////////////////////
-
-    public function addObject (placeData:PlaceData):Boolean {
-        if (mode == UIControllerMode.EDIT_OBJECTS) {
-            return levelEditorController.addObject(placeData);
-        }
-        return false;
-    }
-
-    public function selectObject ($x: int, $y: int):void {
-        if (mode == UIControllerMode.EDIT_OBJECTS) {
-            levelEditorController.selectObject($x,  $y);
+    public function addNewGenerator ():void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.addNewGenerator();
         }
     }
 
-    public function clearAllObjects():void {
-        if (mode == UIControllerMode.EDIT_OBJECTS) {
-            levelEditorController.clearAllObjects();
+    public function removeGenerator (generatorData:GeneratorData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.removeGenerator(generatorData);
         }
     }
+
+    public function setGeneratorPath (pathId:int, generatorData:GeneratorData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.setGeneratorPath(pathId, generatorData);
+        }
+    }
+
+    public function setGeneratorPosition (point:Point, generatorData:GeneratorData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.setGeneratorPosition(point, generatorData);
+        }
+    }
+
+    /////////////////////////////////////////////
+    //WAVES:
+    /////////////////////////////////////////////
+
+    public function addNewWave():void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.addNewWave();
+        }
+    }
+
+    public function removeWave(waveData:WaveData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.removeWave(waveData);
+        }
+    }
+
+    //устанавливаем время для волны:
+    public function setWaveTime (time:int, waveData:WaveData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.setWaveTime(time, waveData);
+        }
+    }
+
+    //устанавливаем задержку для волны генератора:
+    public function setDelayOfGeneratorWave (delay:int, generatorWaveData:GeneratorWaveData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.setDelayOfGeneratorWave(delay, generatorWaveData);
+        }
+    }
+
+    //добавляем тип врага для волны генератора:
+    public function addEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.addEnemyToGeneratorWave(enemy, generatorWaveData);
+        }
+    }
+
+    //убираем тип врага для волны генератора:
+    public function removeEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS) {
+            levelEditorController.removeEnemyToGeneratorWave(enemy, generatorWaveData);
+        }
+    }
+
+    /////////////////////////////////////////////
+    //OTHER:
+    /////////////////////////////////////////////
 
     public function save ():void {
         levelEditorController.save();

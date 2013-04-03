@@ -53,6 +53,23 @@ public class GeneratorData {
         }
     }
 
+    public function addNewWaveData (id:int):void {
+        var generatorWaveData:GeneratorWaveData = new GeneratorWaveData();
+        generatorWaveData.id = id;
+        _waves.push (generatorWaveData);
+    }
+
+    public function removeWaveData (id:int):void {
+        var numWaves:int = _waves.length;
+        for (var i:int = 0; i < numWaves; i++) {
+            var generatorWaveData:GeneratorWaveData = _waves [i];
+            if (generatorWaveData.id == id) {
+                _waves.splice (i, 1);
+                break;
+            }
+        }
+    }
+
     public function export():Object {
         return {"x": _x, "y": _y, "path": _path, "waves": getWaves()};
     }

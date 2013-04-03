@@ -15,6 +15,7 @@ import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import fl.controls.ComboBox;
 
 import fl.controls.List;
+import fl.controls.NumericStepper;
 
 import flash.display.MovieClip;
 import flash.display.Sprite;
@@ -41,6 +42,8 @@ public class EditGeneratorsPanel extends BasicPanel {
     private var btnRemoveWave:ButtonWithText;
     private var btnAddEnemy:ButtonWithText;
     private var btnRemoveEnemy:ButtonWithText;
+    private var nstTime:NumericStepper;
+    private var nstDelay:NumericStepper;
 
     public function EditGeneratorsPanel(mc:MovieClip, model:Field, uiController:UIController, objectStorage:ObjectsStorage) {
         this.model = model;
@@ -70,6 +73,8 @@ public class EditGeneratorsPanel extends BasicPanel {
         btnRemoveWave = new ButtonWithText (mc ["btnRemoveWave"]);
         btnAddEnemy = new ButtonWithText (mc ["btnAddEnemy"]);
         btnRemoveEnemy = new ButtonWithText (mc ["btnRemoveEnemy"]);
+        nstTime = NumericStepper (getElement ("nstTime"));
+        nstDelay = NumericStepper (getElement ("nstDelay"));
 
         btnAddGenerator.text = "Добавить";
         btnRemoveGenerator.text = "Удалить";

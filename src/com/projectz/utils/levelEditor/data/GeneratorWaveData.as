@@ -9,7 +9,15 @@ package com.projectz.utils.levelEditor.data {
 
 public class GeneratorWaveData {
 
-    private var _sequence: Array; // of String: ["en-normal", "en-cock", "en-cock", ..]
+    private var _id: int;
+    public function get id():int {
+        return _id;
+    }
+    public function set id($value:int):void {
+        _id = $value;
+    }
+
+    private var _sequence: Array = new Array(); // of String: ["en-normal", "en-cock", "en-cock", ..]
     public function get sequence():Array {
         return _sequence;
     }
@@ -37,7 +45,7 @@ public class GeneratorWaveData {
     }
 
     public function export():Object {
-        return {"sequence": _sequence.join(","), "delay": _delay};
+        return {"id": _id,"sequence": _sequence.join(","), "delay": _delay};
     }
 }
 }

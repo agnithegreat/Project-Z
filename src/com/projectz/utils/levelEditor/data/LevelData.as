@@ -9,6 +9,7 @@ package com.projectz.utils.levelEditor.data {
 import com.projectz.utils.json.JSONLoader;
 
 import flash.filesystem.File;
+import flash.geom.Point;
 
 public class LevelData extends JSONLoader {
 
@@ -79,13 +80,21 @@ public class LevelData extends JSONLoader {
         }
     }
 
-    public function addPath (id:int):PathData {
+    public function addNewPath ():PathData {
+        //расчитываем максимальный id среди всех путей:
+        var maxId:int = 0;
+        var numPaths:int = paths.length;
+        for (var i:int = 0; i < numPaths; i++) {
+            maxId = Math.max (maxId, paths [i].id);
+        }
+        //добавляем новый путь:
         var pathData:PathData = new PathData ();
-        pathData.id = id;
+        pathData.id = maxId + 1;
         paths.push (pathData);
         return pathData;
     }
-    public function removePath (pathData:PathData):Boolean {
+
+    public function deletePath (pathData:PathData):Boolean {
         var index:int = _paths.indexOf(pathData);
         if (index != -1) {
             _paths.splice(index, 1);
@@ -94,14 +103,27 @@ public class LevelData extends JSONLoader {
         return false;
     }
 
-    public function addGenerator ($gen: GeneratorData):void {
-        _generators.push ($gen);
+    public function addNewGenerator ():GeneratorData {
+        var generatorData: GeneratorData = new GeneratorData();
+        if (paths.length > 0) {
+            var pathData:PathData = paths [0];
+            generatorData.path = pathData.id;
+            if (pathData.points.length > 0) {
+                var point:Point = pathData.points [0];
+                generatorData.place (point.x,  point.y);
+            }
+        }
+        _generators.push (generatorData);
+        return generatorData;
     }
-    public function removeGenerator ($gen:GeneratorData):void {
+
+    public function removeGenerator ($gen:GeneratorData):Boolean {
         var index:int = _generators.indexOf($gen);
         if (index != -1) {
             _generators.splice(index, 1);
+            return true;
         }
+        return false;
     }
 
     public function addPosition($pos: PositionData):void {
@@ -116,15 +138,43 @@ public class LevelData extends JSONLoader {
         }
     }
 
-    public function addWave($wave: WaveData):void {
-        if (_waves.indexOf($wave)<0) {
-            _waves.push($wave);
+    public function addNewWave():WaveData {
+        //расчитываем максимальный id среди всех волн:
+        var maxId:int = 0;
+        var numWaves:int = paths.length;
+        var i:int;
+        for (i = 0; i < numWaves; i++) {
+            maxId = Math.max (maxId, paths [i].id);
         }
+        //добавляем новую волну:
+        var waveData:WaveData = new WaveData ();
+        waveData.id = maxId + 1;
+        _waves.push(waveData);
+        //добавляем новую волну в каждый генератор:
+        var numGenerators:int = generators.length;
+        for (i = 0; i < numGenerators; i++) {
+            var generatorData:GeneratorData = generators [i];
+            generatorData.addNewWaveData(maxId + 1);
+        }
+
+        return waveData;
     }
-    public function removeWave($wave: WaveData):void {
-        var index: int = _waves.indexOf($wave);
-        if (index >= 0) {
-            _waves.splice(index, 1);
+
+    public function removeWave(id:int):void {
+        var numWaves:int = paths.length;
+        for (var i:int = 0; i < numWaves; i++) {
+            var waveData:WaveData = _waves [i];
+            if (waveData.id == id) {
+                //удаляем волну:
+                _waves.splice(i, 1);
+                //удаляем волну из каждого генератора:
+                var numGenerators:int = generators.length;
+                for (var j:int = 0; j < numGenerators; j++) {
+                    var generatorData:GeneratorData = generators [j];
+                    generatorData.removeWaveData(id);
+                }
+                break;
+            }
         }
     }
 
