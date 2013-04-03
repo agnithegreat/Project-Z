@@ -89,6 +89,7 @@ public class EditPathsPanel extends BasicPanel {
         btnSave.addEventListener(MouseEvent.CLICK, clickListener);
         btnDelete.addEventListener(MouseEvent.CLICK, clickListener);
         btnNew.addEventListener(MouseEvent.CLICK, clickListener);
+
     }
 
 /////////////////////////////////////////////
@@ -115,7 +116,7 @@ public class EditPathsPanel extends BasicPanel {
         var dataProvider:DataProvider = new DataProvider();
         for (var i:int = 0; i < paths.length; i++) {
             var pathData:PathData = paths [i];
-            dataProvider.addItem({label: ("path" + pathData.id), data: pathData});
+            dataProvider.addItem({label: ("path " + pathData.id), data: pathData});
         }
         listPaths.dataProvider = dataProvider;
     }

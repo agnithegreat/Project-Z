@@ -229,6 +229,13 @@ public class Field extends EventDispatcher {
     public function addNewGenerator ():void {
         if (_levelData) {
             var generatorData:GeneratorData = _levelData.addNewGenerator ();
+            var numWaves:int = _levelData.waves.length;
+            for (var i:int = 0; i < numWaves; i++) {
+                var generatorWaveData:GeneratorWaveData = new GeneratorWaveData();
+                var waveData:WaveData = _levelData.waves [i];
+                generatorWaveData.id = waveData.id;
+                generatorData.waves.push (generatorWaveData);
+            }
             dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_ADDED));
         }
     }
@@ -251,8 +258,8 @@ public class Field extends EventDispatcher {
                     var pathData:PathData = _levelData.paths [i];
                     if (pathData.id == pathId) {
                         generatorData.path = pathId;
-                        if (pathData.length > 0) {
-                            var point:Point = pathData [0];
+                        if (pathData.points.length > 0) {
+                            var point:Point = pathData.points [0];
                             generatorData.place (point.x, point.y);
                         }
                         dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));

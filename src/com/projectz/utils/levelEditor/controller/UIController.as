@@ -261,7 +261,7 @@ public class UIController extends EventDispatcher {
     }
 
     //убираем тип врага для волны генератора:
-    public function removeEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+    public function removeEnemyFromGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
             levelEditorController.removeEnemyToGeneratorWave(enemy, generatorWaveData);
         }

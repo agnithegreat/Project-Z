@@ -34,6 +34,7 @@ public class GeneratorData {
 
     public function GeneratorData() {
         _waves = new <GeneratorWaveData>[];
+
     }
 
     public function place($x: int, $y: int):void {
