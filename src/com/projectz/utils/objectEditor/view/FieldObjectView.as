@@ -156,7 +156,7 @@ public class FieldObjectView extends Sprite {
                 var cy: int = Math.round(cx+tx*2);
 
                 // TODO: вынести в панель редактора
-                _currentPart.partData.setWalkable(cx, cy, 1);
+                _currentPart.partData.setWalkable(cx, cy, 1-_currentPart.partData.getWalkable(cx, cy));
                 updateField();
             }
         }

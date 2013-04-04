@@ -13,8 +13,8 @@ import starling.display.Sprite;
 
 public class PositionView extends Sprite {
 
-    public static var cellWidth: int = 72;
-    public static var cellHeight: int = 36;
+    public static var cellWidth: int = 36;
+    public static var cellHeight: int = 18;
 
     protected var _position: Point;
     public function get position():Point {
