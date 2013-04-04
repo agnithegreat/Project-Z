@@ -88,7 +88,7 @@ public class App extends Sprite {
 
     private function startGame():void {
         //init mvc model:
-        _model = new Field(36, 36, _objectsStorage);
+        _model = new Field(72, 72, _objectsStorage);
 
         _controller = new LevelEditorController(_model);
         _uiController = new UIController(_controller);
@@ -105,7 +105,7 @@ public class App extends Sprite {
         Starling.current.nativeStage.addChild(_levelEditorUI);
 
         //init application:
-        _model.levelData = _levelsStorage.getLevelData(1);
+        _model.levelData = _levelsStorage.getLevelData(2);
         _uiController.mode = UIControllerMode.EDIT_OBJECTS;
         _uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
         _uiController.selectCurrentObject(null);

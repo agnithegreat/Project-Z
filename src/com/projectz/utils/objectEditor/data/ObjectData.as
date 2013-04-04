@@ -32,20 +32,18 @@ public class ObjectData extends JSONLoader {
 
     protected var _mask: Array;
     public function get mask():Array {
-        if (!_mask) {
-            _mask = [[1]];
-            for each (var part:PartData in _parts) {
-                for (var i:int = 0; i < part.width; i++) {
-                    while (_mask.length<=i) {
-                        _mask.push([]);
+        _mask = [[1]];
+        for each (var part:PartData in _parts) {
+            for (var i:int = 0; i < part.width; i++) {
+                while (_mask.length<=i) {
+                    _mask.push([]);
+                }
+                for (var j:int = 0; j < part.height; j++) {
+                    while (_mask[i].length<=j) {
+                        _mask[i].push(0);
                     }
-                    for (var j:int = 0; j < part.height; j++) {
-                        while (_mask[i].length<=j) {
-                            _mask[i].push(0);
-                        }
-                        if (part.mask[i][j]) {
-                            _mask[i][j] = part.mask[i][j];
-                        }
+                    if (part.mask[i][j]) {
+                        _mask[i][j] = part.mask[i][j];
                     }
                 }
             }

@@ -81,7 +81,7 @@ public class PartData {
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];
             for (var j:int = 0; j < $height; j++) {
-                _mask[i][j] = 0;
+                _mask[i][j] = 1;
             }
         }
         _width = _mask.length;
@@ -89,10 +89,12 @@ public class PartData {
     }
 
     public function getWalkable($x: int, $y: int):int {
-        return (WALKABLE & _mask[$x][$y]);
+//        return (WALKABLE & _mask[$x][$y]);
+        return _mask[$x][$y];
     }
     public function setWalkable($x: int, $y: int, $walkable: int):void {
-        _mask[$x][$y] = WALKABLE*$walkable + SHOTABLE*getShotable($x, $y);
+        _mask[$x][$y] = $walkable;
+//        _mask[$x][$y] = WALKABLE*$walkable + SHOTABLE*getShotable($x, $y);
     }
 
     public function getShotable($x: int, $y: int):int {
