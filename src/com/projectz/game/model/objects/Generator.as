@@ -20,7 +20,7 @@ public class Generator {
     private var _time: int;
 
     public function get path():int {
-        return _data.path;
+        return _data.pathId;
     }
 
     private var _enabled: Boolean;

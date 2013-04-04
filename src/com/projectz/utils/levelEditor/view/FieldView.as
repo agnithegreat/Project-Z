@@ -10,6 +10,8 @@ package com.projectz.utils.levelEditor.view {
 import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
+import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
+import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
@@ -70,6 +72,7 @@ public class FieldView extends Sprite {
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
+        uiController.addEventListener(SelectGeneratorEvent.SELECT_GENERATOR, selectGeneratorListener);
 
         _field = $field;
         _field.addEventListener(EditBackgroundEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
@@ -201,6 +204,57 @@ public class FieldView extends Sprite {
         return cellView;
     }
 
+    private function redrawPaths (pathData:PathData):void {
+        clearAllCells(true, true, true);
+        var levelData:LevelData = _field.levelData;
+        if (levelData) {
+            var numPaths:int = levelData.paths.length;
+            for (var i:int = 0; i < numPaths; i++) {
+                var curPathData:PathData = levelData.paths [i];
+                //pathData рисуем в последнюю очередь (последний слой)!
+                if (curPathData != pathData) {
+                    drawPath (curPathData, false);
+                }
+            }
+        }
+        //pathData рисуем в последнюю очередь (последний слой)!
+        drawPath (pathData, true);
+    }
+
+    private function drawPath (pathData:PathData, showHatching:Boolean = false):void {
+        if (pathData) {
+            var color:uint = pathData.color;
+            var numPoints:int = pathData.points.length;
+            for (var i:int = 0; i < numPoints; i++) {
+                var point:Point = pathData.points[i];
+                var cellView:CellView = getCellViewByPosition(point.x,  point.y);
+                if (cellView) {
+                    cellView.color = color;
+                    cellView.showHatching = showHatching;
+                }
+            }
+        }
+    }
+
+    private function clearAllCells (clearColor:Boolean = true, clearFlag:Boolean = true, clearHatching:Boolean = true, clearLock:Boolean = false):void {
+        var numCells:int = _cellsContainer.numChildren;
+        for (var i:int = 0; i < numCells; i++) {
+            var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
+            if (clearColor) {
+                cellView.color = 0xffffff;
+            }
+            if (clearFlag) {
+                cellView.showFlag = false;
+            }
+            if (clearHatching) {
+                cellView.showHatching = false;
+            }
+            if (clearLock) {
+                cellView.showLock = false;
+            }
+        }
+    }
+
 /////////////////////////////////////////////
 //LISTENERS:
 /////////////////////////////////////////////
@@ -313,7 +367,7 @@ public class FieldView extends Sprite {
                             uiController.editPointToCurrentPath (new Point (_currentCell.positionX, _currentCell.positionY));
                         }
                         else if (uiController.mode == UIControllerMode.EDIT_GENERATORS) {
-                            uiController.editPointToCurrentPath (new Point (_currentCell.positionX, _currentCell.positionY));
+                            uiController.setGeneratorPosition (new Point (_currentCell.positionX, _currentCell.positionY));
                         }
 
                         _isPressed = false;
@@ -436,44 +490,35 @@ public class FieldView extends Sprite {
         redrawPaths(event.pathData);
     }
 
-    private function redrawPaths (pathData:PathData):void {
-        clearAllPaths ();
+    /////////////////////////////////////////////
+    //GENERATORS:
+    /////////////////////////////////////////////
+
+    private function selectGeneratorListener(event:SelectGeneratorEvent):void {
+        //очищаем все клетки:
+        clearAllCells (true, true, true);
+        var generatorData:GeneratorData = event.generatorData;
         var levelData:LevelData = _field.levelData;
-        if (levelData) {
-            var numPaths:int = levelData.paths.length;
-            for (var i:int = 0; i < numPaths; i++) {
-                var curPathData:PathData = levelData.paths [i];
-                //pathData рисуем в последнюю очередь (последний слой)!
-                if (curPathData != pathData) {
-                    drawPath (curPathData, false);
+        if (generatorData && levelData) {
+            var pathData:PathData = levelData.getPathDataById(generatorData.pathId);
+            if (pathData) {
+                //рисуем путь для текущего выбраного генератора:
+                drawPath(pathData);
+                //показываем подсветку (штриховку) для всех генераторов:
+                var numGenerators:int = levelData.generators.length;
+                for (var i:int = 0; i < numGenerators; i++) {
+                    var generatorDataForHatching:GeneratorData = levelData.generators [i];
+                    var cellViewForHatching:CellView = getCellViewByPosition (generatorDataForHatching.x, generatorDataForHatching.y);
+                    if (cellViewForHatching) {
+                        cellViewForHatching.showHatching = true;
+                    }
                 }
-            }
-        }
-        //pathData рисуем в последнюю очередь (последний слой)!
-        drawPath (pathData, true);
-    }
-
-    private function drawPath (pathData:PathData, showHatching:Boolean = false):void {
-        if (pathData) {
-            var color:uint = pathData.color;
-            var numPoints:int = pathData.points.length;
-            for (var i:int = 0; i < numPoints; i++) {
-                var point:Point = pathData.points[i];
-                var cellView:CellView = getCellViewByPosition(point.x,  point.y);
+                //рисуем флаг в позиции текущего выбраного генератора:
+                var cellView:CellView = getCellViewByPosition (generatorData.x, generatorData.y);
                 if (cellView) {
-                    cellView.color = color;
-                    cellView.showHatching = showHatching;
+                    cellView.showFlag = true;
                 }
             }
-        }
-    }
-
-    private function clearAllPaths ():void {
-        var numCells:int = _cellsContainer.numChildren;
-        for (var i:int = 0; i < numCells; i++) {
-            var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
-            cellView.color = 0xffffff;
-            cellView.showHatching = false;
         }
     }
 
@@ -483,13 +528,17 @@ public class FieldView extends Sprite {
 
     private function selectUIControllerModeListener(event:SelectModeEvent):void {
         addObject(null);
-        clearAllPaths();
+        clearAllCells(true, true, true);
+        _objectsContainer.visible = false;
         switch (event.mode) {
             case UIControllerMode.EDIT_OBJECTS:
                 _objectsContainer.visible = true;
                 break;
             case UIControllerMode.EDIT_PATHS:
-                _objectsContainer.visible = false;
+                //
+                break;
+            case UIControllerMode.EDIT_GENERATORS:
+                //
                 break;
         }
     }

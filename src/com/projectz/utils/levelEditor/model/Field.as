@@ -257,7 +257,7 @@ public class Field extends EventDispatcher {
                 for (var i:int = 0; i < numPaths; i++) {
                     var pathData:PathData = _levelData.paths [i];
                     if (pathData.id == pathId) {
-                        generatorData.path = pathId;
+                        generatorData.pathId = pathId;
                         if (pathData.points.length > 0) {
                             var point:Point = pathData.points [0];
                             generatorData.place (point.x, point.y);
@@ -278,7 +278,7 @@ public class Field extends EventDispatcher {
                 var numPaths:int = _levelData.paths.length;
                 for (var i:int = 0; i < numPaths; i++) {
                     var pathData:PathData = _levelData.paths [i];
-                    if (pathData.id == generatorData.path) {
+                    if (pathData.id == generatorData.pathId) {
                         //проверяем, существует ли в текущем пути указаная точка:
                         var numPoints:int = pathData.points.length;
                         for (var j:int = 0; j < numPoints; j++) {
@@ -303,10 +303,16 @@ public class Field extends EventDispatcher {
         }
     }
 
-    public function removeWave(waveData:WaveData):void {
-        if (_levelData && waveData) {
-            _levelData.removeWave (waveData.id);
-            dispatchEvent(new EditWavesEvent (waveData, EditWavesEvent.WAVE_WAS_ADDED));
+    public function removeWave(waveId:int):void {
+        if (_levelData) {
+            var waveData:WaveData = _levelData.getWaveDataById(waveId);
+            if (_levelData.removeWave (waveId)) {
+                dispatchEvent(new EditWavesEvent (waveData, EditWavesEvent.WAVE_WAS_REMOVED));
+                trace ("удаляем волну " + waveId);
+            }
+            else {
+                trace ("не можем удалить волну " + waveId);
+            }
         }
     }
 
@@ -338,42 +344,22 @@ public class Field extends EventDispatcher {
         }
     }
 
-    //добавляем тип врага для волны генератора:
-    public function addEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
-        if (_levelData) {
-            var numGenerators:int = _levelData.generators.length;
-            for (var i:int = 0; i < numGenerators; i++) {
-                var generatorData:GeneratorData = _levelData.generators [i];
-                var index:int = generatorData.waves.indexOf (generatorWaveData);
-                if (index != -1) {
-                    var enemyIndex:int = generatorWaveData.sequence.indexOf (enemy);
-                    if (enemyIndex == -1) {
-                        generatorWaveData.sequence.push(enemy);
-                        dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
-                        dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
-                    }
-                    break;
-                }
+    //добавляем врага в стек волны генератора:
+    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, generatorWaveData:GeneratorWaveData):void {
+        if (_levelData && hasGeneratorWaveData (generatorWaveData)) {
+            if (generatorWaveData.sequence.length >= positionId) {
+                generatorWaveData.sequence.splice(positionId, 0, enemyId);
+                dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
             }
         }
     }
 
-    //убираем тип врага для волны генератора:
-    public function removeEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
-        if (_levelData) {
-            var numGenerators:int = _levelData.generators.length;
-            for (var i:int = 0; i < numGenerators; i++) {
-                var generatorData:GeneratorData = _levelData.generators [i];
-                var index:int = generatorData.waves.indexOf (generatorWaveData);
-                if (index != -1) {
-                    var enemyIndex:int = generatorWaveData.sequence.indexOf (enemy);
-                    if (enemyIndex != -1) {
-                        generatorWaveData.sequence.splice(enemyIndex, 1);
-                        dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
-                        dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
-                    }
-                    break;
-                }
+    //убираем врага из стека волны генератора:
+    public function removeEnemyToGeneratorWave (positionId:int, generatorWaveData:GeneratorWaveData):void {
+        if (_levelData && hasGeneratorWaveData (generatorWaveData)) {
+            if (generatorWaveData.sequence.length > positionId) {
+                generatorWaveData.sequence.splice(positionId, 1);
+                dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED))
             }
         }
     }
@@ -589,6 +575,20 @@ public class Field extends EventDispatcher {
 
             dispatchEvent(new EditObjectEvent (object, EditObjectEvent.OBJECT_ADDED));
         }
+    }
+
+    private function hasGeneratorWaveData (generatorWaveData:GeneratorWaveData):Boolean {
+        if (_levelData) {
+            var numGenerators:int = _levelData.generators.length;
+            for (var i:int = 0; i < numGenerators; i++) {
+                var generatorData:GeneratorData = _levelData.generators [i];
+                var index:int = generatorData.waves.indexOf (generatorWaveData);
+                if (index != -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 }

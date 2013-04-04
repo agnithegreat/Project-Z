@@ -38,7 +38,6 @@ public class EditPathsPanel extends BasicPanel {
 
     private var btnAddPathPoint:ButtonWithText;
     private var btnRemovePathPoint:ButtonWithText;
-    private var btnSave:ButtonWithText;
     private var btnDelete:ButtonWithText;
     private var btnNew:ButtonWithText;
 
@@ -71,7 +70,6 @@ public class EditPathsPanel extends BasicPanel {
         //создание кнопок:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
         btnRemovePathPoint = new ButtonWithText(mc["btnRemovePathPoint"]);
-        btnSave = new ButtonWithText(mc["btnSave"]);
         btnDelete = new ButtonWithText(mc["btnDelete"]);
         btnNew = new ButtonWithText(mc["btnNew"]);
 
@@ -80,13 +78,11 @@ public class EditPathsPanel extends BasicPanel {
 
         btnAddPathPoint.text = "Добавление";
         btnRemovePathPoint.text = "Удаление";
-        btnSave.text = "Сохранить";
         btnDelete.text = "<FONT size = '13'>Удалить путь<FONT>";
         btnNew.text = "<FONT size = '13'>Создать путь<FONT>";
 
         btnAddPathPoint.addEventListener(MouseEvent.CLICK, clickListener);
         btnRemovePathPoint.addEventListener(MouseEvent.CLICK, clickListener);
-        btnSave.addEventListener(MouseEvent.CLICK, clickListener);
         btnDelete.addEventListener(MouseEvent.CLICK, clickListener);
         btnNew.addEventListener(MouseEvent.CLICK, clickListener);
 
@@ -132,9 +128,6 @@ public class EditPathsPanel extends BasicPanel {
                 break;
             case (btnRemovePathPoint):
                 uiController.editPathMode = EditPathMode.REMOVE_POINTS;
-                break;
-            case (btnSave):
-                uiController.save();
                 break;
             case (btnDelete):
                 uiController.deleteCurrentEditingPath();

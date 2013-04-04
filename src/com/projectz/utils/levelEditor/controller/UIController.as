@@ -8,6 +8,7 @@
 
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PathData;
@@ -37,8 +38,11 @@ public class UIController extends EventDispatcher {
     private var levelEditorController:LevelEditorController;
 
     private var _mode:String;//режим работы ui-контролера (редактор объектов, редактор путей и т.д.);
+
     private var _editPathMode:String = EditPathMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
-    private var _currentEditingPath:PathData;
+    private var _currentEditingPath:PathData;//текущий редактируемый путь
+
+    private var _currentEditingGenerator:GeneratorData;//текущий редактируемый генератор
 
     public function UIController(levelEditorController:LevelEditorController) {
         this.levelEditorController = levelEditorController;
@@ -66,6 +70,10 @@ public class UIController extends EventDispatcher {
         _mode = value;
         dispatchEvent(new SelectModeEvent(_mode));
     }
+
+    /////////////////////////////////////////////
+    //PATHS:
+    /////////////////////////////////////////////
 
     /**
      * Режим работы контролера при редактировании пути (удаление точек или добавление);
@@ -107,6 +115,19 @@ public class UIController extends EventDispatcher {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
             dispatchEvent(new SelectObjectsTypeEvent(objectsType));
         }
+    }
+
+    /////////////////////////////////////////////
+    //GENERATORS:
+    /////////////////////////////////////////////
+
+    public function get currentEditingGenerator():GeneratorData {
+        return _currentEditingGenerator;
+    }
+
+    public function set currentEditingGenerator(value:GeneratorData):void {
+        _currentEditingGenerator = value;
+        dispatchEvent(new SelectGeneratorEvent(_currentEditingGenerator));
     }
 
     /////////////////////////////////////////////
@@ -211,15 +232,17 @@ public class UIController extends EventDispatcher {
         }
     }
 
-    public function setGeneratorPath (pathId:int, generatorData:GeneratorData):void {
+    public function setGeneratorPath (pathId:int):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
-            levelEditorController.setGeneratorPath(pathId, generatorData);
+            if (_currentEditingGenerator) {
+                levelEditorController.setGeneratorPath(pathId, _currentEditingGenerator);
+            }
         }
     }
 
-    public function setGeneratorPosition (point:Point, generatorData:GeneratorData):void {
-        if (mode == UIControllerMode.EDIT_GENERATORS) {
-            levelEditorController.setGeneratorPosition(point, generatorData);
+    public function setGeneratorPosition (point:Point):void {
+        if (mode == UIControllerMode.EDIT_GENERATORS && _currentEditingGenerator) {
+            levelEditorController.setGeneratorPosition(point, _currentEditingGenerator);
         }
     }
 
@@ -233,9 +256,9 @@ public class UIController extends EventDispatcher {
         }
     }
 
-    public function removeWave(waveData:WaveData):void {
+    public function removeWave(waveId:int):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
-            levelEditorController.removeWave(waveData);
+            levelEditorController.removeWave(waveId);
         }
     }
 
@@ -254,16 +277,16 @@ public class UIController extends EventDispatcher {
     }
 
     //добавляем тип врага для волны генератора:
-    public function addEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
-            levelEditorController.addEnemyToGeneratorWave(enemy, generatorWaveData);
+            levelEditorController.addEnemyToGeneratorWave(enemyId, positionId, generatorWaveData);
         }
     }
 
     //убираем тип врага для волны генератора:
-    public function removeEnemyFromGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
+    public function removeEnemyFromGeneratorWave (positionId:int, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
-            levelEditorController.removeEnemyToGeneratorWave(enemy, generatorWaveData);
+            levelEditorController.removeEnemyToGeneratorWave(positionId, generatorWaveData);
         }
     }
 

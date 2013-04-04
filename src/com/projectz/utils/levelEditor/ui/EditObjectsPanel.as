@@ -7,13 +7,11 @@
  */
 package com.projectz.utils.levelEditor.ui {
 
-import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
-import com.projectz.utils.levelEditor.ui.controls.ProjectZCellRender;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -35,7 +33,6 @@ public class EditObjectsPanel extends BasicPanel {
     private var uiController:UIController;
     private var objectStorage:ObjectsStorage;
 
-    private var btnSave:ButtonWithText;
     private var btnClearAll:ButtonWithText;
 
     public function EditObjectsPanel(mc:MovieClip, uiController:UIController, objectStorage:ObjectsStorage) {
@@ -84,13 +81,10 @@ public class EditObjectsPanel extends BasicPanel {
         cbxBackgrounds.addEventListener (Event.CLOSE, changeListener_cbxBackgrounds);
 
         //создание кнопок:
-        btnSave = new ButtonWithText (mc["btnSave"]);
         btnClearAll = new ButtonWithText (mc["btnClearAll"]);
 
-        btnSave.text = "сохранить";
         btnClearAll.text = "очистить всё";
 
-        btnSave.addEventListener(MouseEvent.CLICK, clickListener);
         btnClearAll.addEventListener(MouseEvent.CLICK, clickListener);
 
     }
@@ -101,9 +95,6 @@ public class EditObjectsPanel extends BasicPanel {
 
     private function clickListener (event:MouseEvent):void {
         switch (event.currentTarget) {
-            case (btnSave):
-                uiController.save();
-                break;
             case (btnClearAll):
                 uiController.clearAllObjects();
                 break;

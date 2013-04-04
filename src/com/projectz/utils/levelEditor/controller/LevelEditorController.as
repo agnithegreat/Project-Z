@@ -107,8 +107,8 @@ public class LevelEditorController extends EventDispatcher {
         model.addNewWave();
     }
 
-    public function removeWave(waveData:WaveData):void {
-        model.removeWave(waveData);
+    public function removeWave(waveId:int):void {
+        model.removeWave(waveId);
     }
 
     //устанавливаем время для волны:
@@ -122,13 +122,13 @@ public class LevelEditorController extends EventDispatcher {
     }
 
     //добавляем тип врага для волны генератора:
-    public function addEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
-        model.addEnemyToGeneratorWave(enemy, generatorWaveData);
+    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, generatorWaveData:GeneratorWaveData):void {
+        model.addEnemyToGeneratorWave(enemyId, positionId, generatorWaveData);
     }
 
     //убираем тип врага для волны генератора:
-    public function removeEnemyToGeneratorWave (enemy:String, generatorWaveData:GeneratorWaveData):void {
-        model.removeEnemyToGeneratorWave(enemy, generatorWaveData);
+    public function removeEnemyToGeneratorWave (positionId:int, generatorWaveData:GeneratorWaveData):void {
+        model.removeEnemyToGeneratorWave(positionId, generatorWaveData);
     }
 
     /////////////////////////////////////////////

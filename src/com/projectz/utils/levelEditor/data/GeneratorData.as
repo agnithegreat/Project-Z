@@ -19,12 +19,12 @@ public class GeneratorData {
         return _y;
     }
 
-    private var _path: int;
-    public function get path():int {
-        return _path;
+    private var _pathId: int;
+    public function get pathId():int {
+        return _pathId;
     }
-    public function set path($value: int):void {
-        _path = $value;
+    public function set pathId($value: int):void {
+        _pathId = $value;
     }
 
     private var _waves: Vector.<GeneratorWaveData>;
@@ -45,7 +45,7 @@ public class GeneratorData {
     public function parse($data: Object):void {
         _x = $data.x;
         _y = $data.y;
-        _path = $data.path ? $data.path : 2;
+        _pathId = $data.path ? $data.path : 2;
 
         var len: int = $data.waves.length;
         for (var i:int = 0; i < len; i++) {
@@ -72,7 +72,7 @@ public class GeneratorData {
     }
 
     public function export():Object {
-        return {"x": _x, "y": _y, "path": _path, "waves": getWaves()};
+        return {"x": _x, "y": _y, "path": _pathId, "waves": getWaves()};
     }
 
     private function getWaves():Array {

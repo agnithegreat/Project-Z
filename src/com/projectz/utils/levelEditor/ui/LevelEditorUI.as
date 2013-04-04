@@ -41,6 +41,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var btnTabEditDefenderZones:ButtonWithText;
     private var btnTabEditLevels:ButtonWithText;
     private var btnTabEditSettings:ButtonWithText;
+    private var btnSave:ButtonWithText;
 
     private var tabs:Vector.<ButtonWithText> = new <ButtonWithText>[];
 
@@ -89,6 +90,7 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditSettings = new ButtonWithText(mc["mcBtnTab6"]);
         var btn7:ButtonWithText = new ButtonWithText(mc["mcBtnTab7"]);
         var btn8:ButtonWithText = new ButtonWithText(mc["mcBtnTab8"]);
+        btnSave = new ButtonWithText(mc["btnSave"]);
 
         btn7.enable = false;
         btn8.enable = false;
@@ -115,6 +117,7 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditDefenderZones.text = "редактор зон защитников";
         btnTabEditLevels.text = "редактор уровней";
         btnTabEditSettings.text = "настройки";
+        btnSave.text = "сохранить";
 
         //добавляем слушатели:
         btnTabEditObjects.addEventListener(MouseEvent.CLICK, clickListener);
@@ -123,6 +126,7 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditDefenderZones.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditLevels.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditSettings.addEventListener(MouseEvent.CLICK, clickListener);
+        btnSave.addEventListener(MouseEvent.CLICK, clickListener);
     }
 
 /////////////////////////////////////////////
@@ -180,7 +184,8 @@ public class LevelEditorUI extends GraphicStorage {
             case (UIControllerMode.EDIT_GENERATORS):
                 selectTab(btnTabEditGenerators);
                 showPanel(editGeneratorsPanel);
-                outputInfo("Редактирование генараторов времено не работает.");
+                outputInfo("Редактирование генараторов. Редактирование генераторов, волн и стека каждой волны. " +
+                        "Для указания позиции генератора выберите путь и кликните по карте в пределах этого пути.");
                 break;
             case (UIControllerMode.EDIT_ZONES):
                 selectTab(btnTabEditDefenderZones);
@@ -219,6 +224,9 @@ public class LevelEditorUI extends GraphicStorage {
                 break;
             case (btnTabEditSettings):
                 uiController.mode = UIControllerMode.EDIT_SETTINGS;
+                break;
+            case (btnSave):
+                uiController.save();
                 break;
         }
     }

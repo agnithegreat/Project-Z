@@ -107,7 +107,7 @@ public class LevelData extends JSONLoader {
         var generatorData: GeneratorData = new GeneratorData();
         if (paths.length > 0) {
             var pathData:PathData = paths [0];
-            generatorData.path = pathData.id;
+            generatorData.pathId = pathData.id;
             if (pathData.points.length > 0) {
                 var point:Point = pathData.points [0];
                 generatorData.place (point.x,  point.y);
@@ -141,10 +141,10 @@ public class LevelData extends JSONLoader {
     public function addNewWave():WaveData {
         //расчитываем максимальный id среди всех волн:
         var maxId:int = 0;
-        var numWaves:int = paths.length;
+        var numWaves:int = waves.length;
         var i:int;
         for (i = 0; i < numWaves; i++) {
-            maxId = Math.max (maxId, paths [i].id);
+            maxId = Math.max (maxId, waves [i].id);
         }
         //добавляем новую волну:
         var waveData:WaveData = new WaveData ();
@@ -154,14 +154,14 @@ public class LevelData extends JSONLoader {
         var numGenerators:int = generators.length;
         for (i = 0; i < numGenerators; i++) {
             var generatorData:GeneratorData = generators [i];
-            generatorData.addNewWaveData(maxId + 1);
+            generatorData.addNewWaveData(waveData.id);
         }
 
         return waveData;
     }
 
-    public function removeWave(id:int):void {
-        var numWaves:int = paths.length;
+    public function removeWave(id:int):Boolean {
+        var numWaves:int = waves.length;
         for (var i:int = 0; i < numWaves; i++) {
             var waveData:WaveData = _waves [i];
             if (waveData.id == id) {
@@ -173,9 +173,10 @@ public class LevelData extends JSONLoader {
                     var generatorData:GeneratorData = generators [j];
                     generatorData.removeWaveData(id);
                 }
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     override public function parse($data: Object):void {
@@ -221,6 +222,28 @@ public class LevelData extends JSONLoader {
 
     public function export():Object {
         return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions(), "waves": getWaves()};
+    }
+
+    public function getPathDataById (id:int):PathData {
+        var numPath:int = _paths.length;
+        for (var i:int = 0; i < numPath; i++) {
+            var pathData:PathData = _paths [i];
+            if (pathData.id == id) {
+                return pathData;
+            }
+        }
+        return pathData;
+    }
+
+    public function getWaveDataById (id:int):WaveData {
+        var numWaves:int = _waves.length;
+        for (var i:int = 0; i < numWaves; i++) {
+            var waveData:WaveData = _waves [i];
+            if (waveData.id == id) {
+                return waveData;
+            }
+        }
+        return waveData;
     }
 
 /////////////////////////////////////////////
