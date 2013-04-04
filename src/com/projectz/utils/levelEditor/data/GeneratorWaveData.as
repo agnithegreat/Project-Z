@@ -43,7 +43,6 @@ public class GeneratorWaveData {
         _sequence = $data.sequence ? $data.sequence.split(",") : [];
         _delay = $data.delay ? $data.delay : 60;
         _id = $data.id ? $data.id : 0;
-        trace ("--- id = " + $data.id);
     }
 
     public function export():Object {

@@ -13,7 +13,6 @@ import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeE
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
-import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.Field;
