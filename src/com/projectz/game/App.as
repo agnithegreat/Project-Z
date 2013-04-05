@@ -13,6 +13,7 @@ import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.game.view.GameScreen;
+import com.projectz.game.ui.UI;
 
 import starling.events.Event;
 import starling.core.Starling;
@@ -33,7 +34,7 @@ public class App extends Sprite {
 
     private var _game: Game;
     private var _view: GameScreen;
-//    private var _ui: UI;
+    private var _ui: UI;
 
     private var _path: String;
 
@@ -87,6 +88,9 @@ public class App extends Sprite {
 
         _view = new GameScreen(_game, _uiController);
         addChild(_view);
+
+        _ui = new UI(_assets);
+        addChild(_ui);
 
         _game.init();
     }
