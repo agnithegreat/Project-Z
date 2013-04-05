@@ -37,12 +37,14 @@ public class JSONLoader extends EventDispatcher {
 
     public function save($data: Object):void {
         var text: String = JSON.stringify($data);
+        _file.addEventListener(Event.COMPLETE, handleComplete_save);
         _file.save(text, _file.name);
     }
 
     public function load():void {
         if (_file.exists) {
             _file.addEventListener(Event.COMPLETE, handleComplete);
+            _file.addEventListener(Event.CANCEL, handleCancel);
             _file.load();
         } else {
             dispatchEventWith(Event.COMPLETE, false, data);
@@ -57,6 +59,16 @@ public class JSONLoader extends EventDispatcher {
         parse(_data);
 
         dispatchEventWith(Event.COMPLETE, false, data);
+    }
+
+    protected function handleComplete_save(event:Event):void {
+        _file.removeEventListener(Event.COMPLETE, handleComplete_save);
+
+        dispatchEventWith(Event.COMPLETE, false, data);
+    }
+
+    protected function handleCancel(event:Event):void {
+        dispatchEventWith(Event.CANCEL, false, data);
     }
 }
 }

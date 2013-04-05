@@ -184,7 +184,7 @@ public class LevelEditorUI extends GraphicStorage {
             case (UIControllerMode.EDIT_GENERATORS):
                 selectTab(btnTabEditGenerators);
                 showPanel(editGeneratorsPanel);
-                outputInfo("Редактирование генараторов. Редактирование генераторов, волн и стека каждой волны. " +
+                outputInfo("Редактирование генараторов, волн и стека каждой волны. " +
                         "Для указания позиции генератора выберите путь и кликните по карте в пределах этого пути.");
                 break;
             case (UIControllerMode.EDIT_ZONES):
