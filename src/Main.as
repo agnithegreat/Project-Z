@@ -84,7 +84,7 @@ public class Main extends Sprite {
 //        _scaleFactor = viewPort.width < 1152 ? 1 : 2;
         _scaleFactor = 1;
         _assets = new AssetManager(_scaleFactor);
-        basicAssetsPath = formatString("textures/{0}x", _scaleFactor);
+        basicAssetsPath = formatString("textures/{0}x/final", _scaleFactor);
 
         _assets.verbose = Capabilities.isDebugger;
 

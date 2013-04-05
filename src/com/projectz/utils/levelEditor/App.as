@@ -66,7 +66,7 @@ public class App extends Sprite {
         _jsonManager.addEventListener(Event.CHANGE, handleLoadProgress);
         _jsonManager.addEventListener(Event.COMPLETE, handleLoaded);
 
-        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/level_elements", _assets.scaleFactor), _assets);
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/final/level_elements", _assets.scaleFactor), _assets);
         _jsonManager.addFiles(_objectsStorage.objects);
 
         _levelsStorage.parseDirectory(_path+"/levels");
