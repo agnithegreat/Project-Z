@@ -62,13 +62,13 @@ public class ObjectView extends PositionView {
 
     private function deformation():void {
         _animated = true;
-        Starling.juggler.tween(this, 0.2, {
+        Starling.juggler.tween(this, 0.1, {
             skewY: -0.02,
             onComplete: formation
         });
     }
     private function formation():void {
-        Starling.juggler.tween(this, 0.2, {
+        Starling.juggler.tween(this, 0.1, {
             skewY: 0,
             onComplete: endFormation
         });
