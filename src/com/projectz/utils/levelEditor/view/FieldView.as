@@ -52,6 +52,7 @@ public class FieldView extends Sprite {
     private var _container:Sprite;
 
     private var _cellsContainer:Sprite;
+    private var _cellsViewAsObject:Object = new Object();
     private var _objectsContainer:Sprite;
 
     private var _currentObject:FieldObjectView;
@@ -91,17 +92,20 @@ public class FieldView extends Sprite {
         _container.addChild(_cellsContainer);
 
         var len:int = _field.field.length;
-        var cell:CellView;
+        var cellView:CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(
+            cellView = new CellView(
                     _field.field[i],
                     $assets.getTexture("ms-cell-levelEditor"),
                     $assets.getTexture("ms-cell-levelEditor-lock"),
                     $assets.getTexture("ms-cell-levelEditor-flag"),
                     $assets.getTexture("ms-cell-levelEditor-hatching")
             );
-            _cellsContainer.addChild(cell);
+            _cellsContainer.addChild(cellView);
+            _cellsViewAsObject[cellView.positionX + "_" + cellView.positionY] = cellView;
         }
+
+        _cellsContainer.flatten();
 
         _container.x = (Constants.WIDTH + PositionView.cellWidth) * 0.5;
         _container.y = (Constants.HEIGHT + (1 - (_field.height + _field.height) * 0.5) * PositionView.cellHeight) * 0.5;
@@ -141,6 +145,7 @@ public class FieldView extends Sprite {
         }
         _cellsContainer.removeFromParent(true);
         _cellsContainer = null;
+        _cellsViewAsObject = null;
 
         var object:ObjectView;
         while (_objectsContainer.numChildren > 0) {
@@ -193,18 +198,22 @@ public class FieldView extends Sprite {
     }
 
     private function getCellViewByPosition($x:int, $y:int):CellView {
-        var cellView:CellView;
-        for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
-            var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
-            if ((_cellView.positionX == $x) && (_cellView.positionY == $y)) {
-                cellView = _cellView;
-                break;
-            }
+        var cellView:CellView = _cellsViewAsObject[$x + "_" + $y];
+        if (!cellView) {
+//            trace("ищем перебором");
+//            for (var i:int = 0; i < _cellsContainer.numChildren; i++) {
+//                var _cellView:CellView = CellView(_cellsContainer.getChildAt(i));
+//                if ((_cellView.positionX == $x) && (_cellView.positionY == $y)) {
+//                    cellView = _cellView;
+//                    break;
+//                }
+//            }
         }
         return cellView;
     }
 
     private function redrawPaths (pathData:PathData):void {
+        _cellsContainer.unflatten();
         clearAllCells(true, true, true);
         var levelData:LevelData = _field.levelData;
         if (levelData) {
@@ -219,6 +228,7 @@ public class FieldView extends Sprite {
         }
         //pathData рисуем в последнюю очередь (последний слой)!
         drawPath (pathData, true);
+        _cellsContainer.flatten();
     }
 
     private function drawPath (pathData:PathData, showHatching:Boolean = false):void {
@@ -237,6 +247,7 @@ public class FieldView extends Sprite {
     }
 
     private function clearAllCells (clearColor:Boolean = true, clearFlag:Boolean = true, clearHatching:Boolean = true, clearLock:Boolean = false):void {
+        _cellsContainer.unflatten();
         var numCells:int = _cellsContainer.numChildren;
         for (var i:int = 0; i < numCells; i++) {
             var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
@@ -253,6 +264,7 @@ public class FieldView extends Sprite {
                 cellView.showLock = false;
             }
         }
+        _cellsContainer.flatten();
     }
 
 /////////////////////////////////////////////
@@ -278,6 +290,7 @@ public class FieldView extends Sprite {
         var object:ObjectView = new ObjectView(fieldObject, fieldObject.data.name);
         _objectsContainer.addChild(object);
 
+        _cellsContainer.unflatten();
         for (var i:int = 0; i < fieldObject.data.width; i++) {
             for (var j:int = 0; j < fieldObject.data.height; j++) {
                 if (fieldObject.data.mask[i][j]) {
@@ -288,11 +301,12 @@ public class FieldView extends Sprite {
                 }
             }
         }
+        _cellsContainer.flatten();
     }
 
     private function handleRemoveObject($event:EditObjectEvent):void {
         var object:FieldObject = $event.fieldObject;
-
+        _cellsContainer.unflatten();
         for (i = 0; i < object.data.width; i++) {
             for (var j:int = 0; j < object.data.height; j++) {
                 if (object.data.mask[i][j]) {
@@ -314,6 +328,7 @@ public class FieldView extends Sprite {
                 len--;
             }
         }
+        _cellsContainer.flatten();
     }
 
     private function handleUpdate($event:Event):void {
@@ -393,26 +408,26 @@ public class FieldView extends Sprite {
 
     private function onCellRollOver(cellView:CellView):void {
         if (cellView) {
-            cellView.onRollOver();
+//            cellView.onRollOver();
             uiController.showCellInfo(cellView.cell);
         }
     }
 
     private function onCellRollOut(cellView:CellView):void {
         if (cellView) {
-            cellView.onRollOut();
+//            cellView.onRollOut();
         }
     }
 
     private function onCellMouseDown(cellView:CellView):void {
         if (cellView) {
-            cellView.onMouseDown();
+//            cellView.onMouseDown();
         }
     }
 
     private function onCellClick(cellView:CellView):void {
         if (cellView) {
-            cellView.onClick();
+//            cellView.onClick();
         }
     }
 
@@ -502,6 +517,7 @@ public class FieldView extends Sprite {
         if (generatorData && levelData) {
             var pathData:PathData = levelData.getPathDataById(generatorData.pathId);
             if (pathData) {
+                _cellsContainer.unflatten();
                 //рисуем путь для текущего выбраного генератора:
                 drawPath(pathData);
                 //показываем подсветку (штриховку) для всех генераторов:
@@ -518,6 +534,7 @@ public class FieldView extends Sprite {
                 if (cellView) {
                     cellView.showFlag = true;
                 }
+                _cellsContainer.flatten();
             }
         }
     }

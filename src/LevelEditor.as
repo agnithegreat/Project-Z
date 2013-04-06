@@ -11,7 +11,6 @@ import com.projectz.utils.levelEditor.App;
 import com.projectz.utils.levelEditor.ui.SelectConfigPanel;
 
 import flash.display.Sprite;
-import flash.events.MouseEvent;
 
 import flash.filesystem.File;
 import flash.geom.Rectangle;
@@ -33,68 +32,28 @@ public class LevelEditor extends Sprite {
     private var selectConfigPanel: SelectConfigPanel;
 
     public function LevelEditor() {
-        addEventListener(Event.ADDED_TO_STAGE, addedToStageListener);
-    }
-
-    private function addedToStageListener (event:flash.events.Event):void {
         _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
         _config.addEventListener(Event.COMPLETE, completeListener_loadConfigFile);
         _config.load();
     }
 
     private function completeListener_loadConfigFile(event:Event):void {
-        trace("completeListener_loadConfigFile");
         _config.removeEventListener(Event.COMPLETE, completeListener_loadConfigFile);
         if (_config.data.path) {
             _directory = new File(_config.data.path);
             init();
         } else {
-            trace("нет пути");
             _directory = new File();
-            _directory.addEventListener(Event.SELECT, handleSelect);
-            _directory.addEventListener(Event.CANCEL, handleCancel);
 
-            selectConfigPanel = new SelectConfigPanel();
-            selectConfigPanel.btnSelectPath.addEventListener(MouseEvent.CLICK, clickListener_selectPath);
-            selectConfigPanel.btnSaveConfig.addEventListener(MouseEvent.CLICK, clickListener_btnSaveConfig);
-            selectConfigPanel.btnStart.addEventListener(MouseEvent.CLICK, clickListener_btnStart);
+            selectConfigPanel = new SelectConfigPanel(_config, _directory);
             addChild (selectConfigPanel);
-            selectConfigPanel.selectPathStep();
+            selectConfigPanel.addEventListener(Event.COMPLETE, completeListener_start);
         }
     }
 
-    private function completeListener_saveConfigFile(event:Event):void {
-        trace("completeListener_saveConfigFile");
-        selectConfigPanel.finalStep();
-    }
-
-
-    private function clickListener_selectPath (event:MouseEvent):void {
-        trace("clickListener_selectPath");
-        _directory.browseForDirectory("Final");
-    }
-
-    private function clickListener_btnSaveConfig (event:MouseEvent):void {
-        trace("clickListener_btnSaveConfig");
-        _config.addEventListener(Event.COMPLETE, completeListener_saveConfigFile);
-        _config.save(_config.data);
-    }
-
-    private function clickListener_btnStart (event:MouseEvent):void {
-        trace("clickListener_btnStart");
-        removeChild(selectConfigPanel);
+    private function completeListener_start(event:*):void {
+        removeChild (selectConfigPanel);
         init();
-    }
-
-    private function handleSelect(event:Object):void {
-        trace("handleSelect");
-        _config.data.path = _directory.nativePath;
-        selectConfigPanel.showPath(_config.data.path);
-        selectConfigPanel.saveConfigStep();
-    }
-
-    private function handleCancel(event:Object):void {
-        trace("handleCancel");
     }
 
     private function init():void {
@@ -115,6 +74,7 @@ public class LevelEditor extends Sprite {
         _starling = new Starling(App, stage, viewPort);
         _starling.stage.stageWidth  = Constants.WIDTH+200;
         _starling.stage.stageHeight = Constants.HEIGHT;
+        _starling.showStats = true;
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
         _starling.addEventListener(Event.ROOT_CREATED, handleRootCreated);

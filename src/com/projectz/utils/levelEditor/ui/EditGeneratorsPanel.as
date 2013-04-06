@@ -112,6 +112,14 @@ public class EditGeneratorsPanel extends BasicPanel {
         nstDelay.minimum = 0;
         nstDelay.maximum = 1000;
 
+        listAddEnemy.focusEnabled = false;
+        listGenerators.focusEnabled = false;
+        listWaves.focusEnabled = false;
+        listEnemies.focusEnabled = false;
+        cbxPaths.focusEnabled = false;
+        nstTime.focusEnabled = false;
+        nstDelay.focusEnabled = false;
+
         btnAddGenerator.text = "Добавить";
         btnRemoveGenerator.text = "Удалить";
         btnAddWave.text = "Добавить";

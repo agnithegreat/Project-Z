@@ -67,6 +67,11 @@ public class EditPathsPanel extends BasicPanel {
         listPaths.addEventListener(Event.CHANGE, changeListener_listPaths);
         clpPathColor.addEventListener(Event.CHANGE, changeListener_clpPathColor);
 
+        listPaths.focusEnabled = false;
+        clpPathColor.focusEnabled = false;
+        listPaths.focusEnabled = false;
+        clpPathColor.focusEnabled = false;
+
         //создание кнопок:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
         btnRemovePathPoint = new ButtonWithText(mc["btnRemovePathPoint"]);
