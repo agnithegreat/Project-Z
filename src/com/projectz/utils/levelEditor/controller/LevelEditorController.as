@@ -58,12 +58,12 @@ public class LevelEditorController extends EventDispatcher {
     //PATHS:
     /////////////////////////////////////////////
 
-    public function addPointToPath (point:Point, pathData:PathData):void {
-        model.addPointToPath (point, pathData);
+    public function addPointToPath (points:Vector.<Point>, pathData:PathData):void {
+        model.addPointsToPath (points, pathData);
     }
 
-    public function removePointFromPath (point:Point, pathData:PathData):void {
-        model.removePointFromPath (point, pathData);
+    public function removePointFromPath (points:Vector.<Point>, pathData:PathData):void {
+        model.removePointFromPath (points, pathData);
     }
 
     public function setPathColor (color:uint, pathData:PathData):void {

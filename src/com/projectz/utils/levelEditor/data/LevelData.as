@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor.data {
 import com.projectz.utils.json.JSONLoader;
+import com.projectz.utils.levelEditor.data.PathData;
 
 import flash.filesystem.File;
 import flash.geom.Point;
@@ -109,7 +110,7 @@ public class LevelData extends JSONLoader {
             var pathData:PathData = paths [0];
             generatorData.pathId = pathData.id;
             if (pathData.points.length > 0) {
-                var point:Point = pathData.points [0];
+                var point:Point = PathData.stringDataToPoint(pathData.points [0]);
                 generatorData.place (point.x,  point.y);
             }
         }

@@ -11,8 +11,10 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
+import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
@@ -65,6 +67,10 @@ public class FieldView extends Sprite {
     protected var _lastCellX:int;
     protected var _lastCellY:int;
 
+    private var firstSelectedPointForEditingPath:Point;
+    //используется при редактировании пути методом редактирования областей по двум точкам.
+    //Хранит информацию о первой выбраной точке.
+
     public function FieldView($field:Field, $assets:AssetManager, uiController:UIController) {
         _assets = $assets;
         this.uiController = uiController;
@@ -72,6 +78,7 @@ public class FieldView extends Sprite {
         uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
         uiController.addEventListener(SelectGeneratorEvent.SELECT_GENERATOR, selectGeneratorListener);
 
@@ -236,7 +243,7 @@ public class FieldView extends Sprite {
             var color:uint = pathData.color;
             var numPoints:int = pathData.points.length;
             for (var i:int = 0; i < numPoints; i++) {
-                var point:Point = pathData.points[i];
+                var point:Point = PathData.stringDataToPoint(pathData.points[i]);
                 var cellView:CellView = getCellViewByPosition(point.x,  point.y);
                 if (cellView) {
                     cellView.color = color;
@@ -379,7 +386,29 @@ public class FieldView extends Sprite {
                             }
                         }
                         else if (uiController.mode == UIControllerMode.EDIT_PATHS) {
-                            uiController.editPointToCurrentPath (new Point (_currentCell.positionX, _currentCell.positionY));
+                            var points:Vector.<Point> = new Vector.<Point>();
+                            points.push(new Point (_currentCell.positionX, _currentCell.positionY));
+                            if (uiController.editPathAreaMode) {
+                                if (firstSelectedPointForEditingPath) {
+                                    //добавляем все точки, в области, лежащей между двумя выделеными точками:
+                                    var startPositionX:int = Math.min(_currentCell.positionX, firstSelectedPointForEditingPath.x);
+                                    var startPositionY:int = Math.min(_currentCell.positionY, firstSelectedPointForEditingPath.y);
+                                    var endPositionX:int = Math.max(_currentCell.positionX, firstSelectedPointForEditingPath.x);
+                                    var endPositionY:int = Math.max(_currentCell.positionY, firstSelectedPointForEditingPath.y);
+                                    for (var i:int = startPositionX; i <= endPositionX; i++) {
+                                        for (var j:int = startPositionY; j <= endPositionY; j++) {
+                                            points.push(new Point (i, j));
+                                        }
+                                    }
+                                    //очищаем данные о первой выделеной точке:
+                                    firstSelectedPointForEditingPath = null;
+                                }
+                                else {
+                                    //добавляем данные о первой выделеной точке:
+                                    firstSelectedPointForEditingPath = new Point (_currentCell.positionX, _currentCell.positionY);
+                                }
+                            }
+                            uiController.editPointToCurrentPath (points);
                         }
                         else if (uiController.mode == UIControllerMode.EDIT_GENERATORS) {
                             uiController.setGeneratorPosition (new Point (_currentCell.positionX, _currentCell.positionY));
@@ -558,6 +587,10 @@ public class FieldView extends Sprite {
                 //
                 break;
         }
+    }
+
+    private function selectEditPathModeListener(event:SelectEditPathModeEvent):void {
+        firstSelectedPointForEditingPath = null;
     }
 }
 }

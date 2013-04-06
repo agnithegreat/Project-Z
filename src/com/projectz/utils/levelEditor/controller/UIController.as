@@ -41,6 +41,7 @@ public class UIController extends EventDispatcher {
 
     private var _editPathMode:String = EditPathMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
     private var _currentEditingPath:PathData;//текущий редактируемый путь
+    private var _editPathAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет.
 
     private var _currentEditingGenerator:GeneratorData;//текущий редактируемый генератор
 
@@ -58,7 +59,7 @@ public class UIController extends EventDispatcher {
 
 
     /**
-     * Режим работы контролера (редактор объектов, редактор путей и т.д.)
+     * Режим работы контролера (редактор объектов, редактор путей и т.д.).
      *
      * @see com.projectz.utils.levelEditor.controller.UIControllerMode
      */
@@ -76,7 +77,7 @@ public class UIController extends EventDispatcher {
     /////////////////////////////////////////////
 
     /**
-     * Режим работы контролера при редактировании пути (удаление точек или добавление);
+     * Режим работы контролера при редактировании пути (удаление точек или добавление).
      *
      * @see com.projectz.utils.levelEditor.controller.EditPathMode
      */
@@ -90,7 +91,7 @@ public class UIController extends EventDispatcher {
     }
 
     /**
-     * Текущий выбранный для редактирования путь;
+     * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет.
      */
     public function get currentEditingPath():PathData {
         return _currentEditingPath;
@@ -99,6 +100,17 @@ public class UIController extends EventDispatcher {
     public function set currentEditingPath(value:PathData):void {
         _currentEditingPath = value;
         dispatchEvent(new SelectPathEvent(_currentEditingPath));
+    }
+
+    /**
+     * Текущий выбранный для редактирования путь;
+     */
+    public function get editPathAreaMode():Boolean {
+        return _editPathAreaMode;
+    }
+
+    public function set editPathAreaMode(value:Boolean):void {
+        _editPathAreaMode = value;
     }
 
     /////////////////////////////////////////////
@@ -177,16 +189,16 @@ public class UIController extends EventDispatcher {
     //PATHS:
     /////////////////////////////////////////////
 
-    public function editPointToCurrentPath (point:Point):void {
+    public function editPointToCurrentPath (points:Vector.<Point>):void {
         if (
                 (mode == UIControllerMode.EDIT_PATHS) &&
                 currentEditingPath
         ) {
             if (editPathMode == EditPathMode.ADD_POINTS) {
-                levelEditorController.addPointToPath (point, currentEditingPath);
+                levelEditorController.addPointToPath (points, currentEditingPath);
             }
             else if (editPathMode == EditPathMode.REMOVE_POINTS) {
-                levelEditorController.removePointFromPath (point, currentEditingPath);
+                levelEditorController.removePointFromPath (points, currentEditingPath);
             }
         }
     }

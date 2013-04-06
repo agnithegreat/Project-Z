@@ -12,10 +12,26 @@ public class PathData {
 
     private var _id: Number;
     private var _color: uint = 0x00ff00;//цвет нужен только для редактора путей в LevelEditor'е.
-    private var _points:Vector.<Point>;//массив точек, образующих путь, по которому перемещаются враги.
+    private var _points:Vector.<String>;//массив точек, образующих путь, по которому перемещаются враги.
 
     public function PathData() {
-        _points = new Vector.<Point>();
+        _points = new Vector.<String>();
+    }
+
+    public static function stringDataToPoint (string:String):Point {
+        var point:Point = new Point();
+        var pointAsArray:Array = string.split("_");
+        if (pointAsArray.length > 0) {
+            point.x = pointAsArray[0];
+        }
+        if (pointAsArray.length > 1) {
+            point.y = pointAsArray[1];
+        }
+        return point;
+    }
+
+    public static function pointToStringData (point:Point):String {
+        return (point.x + "_"  + point.y);
     }
 
 /////////////////////////////////////////////
@@ -39,18 +55,18 @@ public class PathData {
     }
 
     public function clearAllPoints ():void {
-        _points = new Vector.<Point>();
+        _points = new Vector.<String>();
     }
 
     public function parse($data: Object):void {
         _id = $data.id;
         _color = uint ($data.color);
-        _points = new Vector.<Point>();
+        _points = new Vector.<String>();
         var len:int = $data.points.length;
         for (var i:int = 0; i < len; i++) {
             var pointData:Object = $data.points[i];
-            var point: Point = new Point(pointData.x, pointData.y);
-            _points.push(point);
+            var pointAsString: String = String(pointData.x + "_"  + pointData.y);
+            _points.push(pointAsString);
         }
     }
 
@@ -59,13 +75,13 @@ public class PathData {
         var arrPointsAsObjects:Array/*of Objects {"x":x,"y":y}*/ = new Array()/*of Objects {"x":x,"y":y}*/;
         var len: int = _points.length;
         for (var i:int = 0; i < len; i++) {
-            var point:Point = _points [i];
+            var point:Point = stringDataToPoint(_points [i]);
             arrPointsAsObjects[i] = {"x":point.x, "y":point.y};
         }
         return {"id": _id, "color": _color, "points": arrPointsAsObjects};
     }
 
-    public function get points():Vector.<Point> {
+    public function get points():Vector.<String> {
         return _points;
     }
 }

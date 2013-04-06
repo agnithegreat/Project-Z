@@ -12,6 +12,8 @@ import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
@@ -157,42 +159,35 @@ public class Field extends EventDispatcher {
     //PATHS:
     /////////////////////////////////////////////
 
-    public function addPointToPath (point:Point, pathData:PathData):void {
+    public function addPointsToPath (points:Vector.<Point>, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
-                var hasThisPoint:Boolean = false;
-                var numPoints:int = pathData.points.length;
-                for (var i:int = 0; i < numPoints; i++) {
-                    hasThisPoint = pathData.points [i].equals(point);
-                    if (hasThisPoint) {
-                        break;
+                for (var i:int = 0; i < points.length; i++) {
+                    var point:Point = points [i];
+                    var pointAsString:String = PathData.pointToStringData(point);
+                    if (pathData.points.indexOf(pointAsString) == -1) {
+                        pathData.points.push(pointAsString);
                     }
                 }
-                if (!hasThisPoint) {
-                    pathData.points.push(point);
-                    dispatchEvent(new EditPathEvent (pathData));
-                }
+                dispatchEvent(new EditPathEvent (pathData));
             }
         }
     }
 
-    public function removePointFromPath (point:Point, pathData:PathData):void {
+    public function removePointFromPath (points:Vector.<Point>, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
-                var hasThisPoint:Boolean = true;
-                var numPoints:int = pathData.points.length;
-                for (var i:int = 0; i < numPoints; i++) {
-                    hasThisPoint = pathData.points [i].equals(point);
-                    if (hasThisPoint) {
-                        break;
+                for (var i:int = 0; i < points.length; i++) {
+                    var point:Point = points [i];
+                    var pointAsString:String = PathData.pointToStringData(point);
+                    var pointIndex:int =pathData.points.indexOf(pointAsString);
+                    if (pointIndex != -1) {
+                        pathData.points.splice(pointIndex, 1);
                     }
                 }
-                if (hasThisPoint) {
-                    pathData.points.splice(i, 1);
-                    dispatchEvent(new EditPathEvent (pathData));
-                }
+                dispatchEvent(new EditPathEvent (pathData));
             }
         }
     }
@@ -259,7 +254,7 @@ public class Field extends EventDispatcher {
                     if (pathData.id == pathId) {
                         generatorData.pathId = pathId;
                         if (pathData.points.length > 0) {
-                            var point:Point = pathData.points [0];
+                            var point:Point = PathData.stringDataToPoint(pathData.points [0]);
                             generatorData.place (point.x, point.y);
                         }
                         dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
@@ -282,7 +277,7 @@ public class Field extends EventDispatcher {
                         //проверяем, существует ли в текущем пути указаная точка:
                         var numPoints:int = pathData.points.length;
                         for (var j:int = 0; j < numPoints; j++) {
-                            var pathPoint:Point = pathData.points [j];
+                            var pathPoint:Point = PathData.stringDataToPoint(pathData.points [j]);
                             if (pathPoint.equals (point)) {
                                 generatorData.place(point.x, point.y);
                                 dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));

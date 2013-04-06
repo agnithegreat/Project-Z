@@ -19,6 +19,8 @@ import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeE
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent;
 
+import fl.controls.CheckBox;
+
 import fl.controls.ColorPicker;
 
 import fl.controls.List;
@@ -35,6 +37,7 @@ public class EditPathsPanel extends BasicPanel {
 
     private var listPaths:List;
     private var clpPathColor:ColorPicker;
+    private var chxAreaMode:CheckBox;
 
     private var btnAddPathPoint:ButtonWithText;
     private var btnRemovePathPoint:ButtonWithText;
@@ -63,14 +66,17 @@ public class EditPathsPanel extends BasicPanel {
 
         listPaths = List(getElement("listPaths"));
         clpPathColor = ColorPicker(getElement("clpPathColor"));
+        chxAreaMode = CheckBox(getElement("chxAreaMode"));
 
         listPaths.addEventListener(Event.CHANGE, changeListener_listPaths);
         clpPathColor.addEventListener(Event.CHANGE, changeListener_clpPathColor);
+        chxAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
 
         listPaths.focusEnabled = false;
         clpPathColor.focusEnabled = false;
         listPaths.focusEnabled = false;
         clpPathColor.focusEnabled = false;
+        chxAreaMode.focusEnabled = false;
 
         //создание кнопок:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
@@ -186,6 +192,10 @@ public class EditPathsPanel extends BasicPanel {
 
     private function changeListener_clpPathColor(event:Event):void {
         uiController.setPathColor(clpPathColor.selectedColor);
+    }
+
+    private function changeListener_chxAreaMode(event:Event):void {
+        uiController.editPathAreaMode = chxAreaMode.selected;
     }
 
     private function colorWasChangedEvent(event:EditPathEvent):void {
