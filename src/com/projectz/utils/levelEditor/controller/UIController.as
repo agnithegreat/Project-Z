@@ -8,6 +8,7 @@
 
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderZonesModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
@@ -18,7 +19,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.S
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.Cell;
@@ -39,11 +40,14 @@ public class UIController extends EventDispatcher {
 
     private var _mode:String;//режим работы ui-контролера (редактор объектов, редактор путей и т.д.);
 
-    private var _editPathMode:String = EditPathMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
+    private var _editPathMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
     private var _currentEditingPath:PathData;//текущий редактируемый путь
-    private var _editPathAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет.
+    private var _editPathAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании путей.
 
     private var _currentEditingGenerator:GeneratorData;//текущий редактируемый генератор
+
+    private var _editDefenderZonesMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании зон защитников (удаление точек или добавление);
+    private var _editDefenderZonesAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании зон защитников.
 
     public function UIController(levelEditorController:LevelEditorController) {
         this.levelEditorController = levelEditorController;
@@ -69,26 +73,12 @@ public class UIController extends EventDispatcher {
 
     public function set mode(value:String):void {
         _mode = value;
-        dispatchEvent(new SelectModeEvent(_mode));
+        dispatchEvent(new SelectUIControllerModeEvent(_mode));
     }
 
     /////////////////////////////////////////////
     //PATHS:
     /////////////////////////////////////////////
-
-    /**
-     * Режим работы контролера при редактировании пути (удаление точек или добавление).
-     *
-     * @see com.projectz.utils.levelEditor.controller.EditPathMode
-     */
-    public function get editPathMode():String {
-        return _editPathMode;
-    }
-
-    public function set editPathMode(value:String):void {
-        _editPathMode = value;
-        dispatchEvent(new SelectEditPathModeEvent(_editPathMode));
-    }
 
     /**
      * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет.
@@ -103,7 +93,21 @@ public class UIController extends EventDispatcher {
     }
 
     /**
-     * Текущий выбранный для редактирования путь;
+     * Режим работы контролера при редактировании пути (удаление точек или добавление).
+     *
+     * @see com.projectz.utils.levelEditor.controller.EditMode
+     */
+    public function get editPathMode():String {
+        return _editPathMode;
+    }
+
+    public function set editPathMode(value:String):void {
+        _editPathMode = value;
+        dispatchEvent(new SelectEditPathModeEvent(_editPathMode));
+    }
+
+    /**
+     * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании путей.
      */
     public function get editPathAreaMode():Boolean {
         return _editPathAreaMode;
@@ -140,6 +144,35 @@ public class UIController extends EventDispatcher {
     public function set currentEditingGenerator(value:GeneratorData):void {
         _currentEditingGenerator = value;
         dispatchEvent(new SelectGeneratorEvent(_currentEditingGenerator));
+    }
+
+    /////////////////////////////////////////////
+    //DEFENDER ZONES:
+    /////////////////////////////////////////////
+
+    /**
+     * Режим работы контролера при редактировании зон защитников (удаление точек или добавление).
+     *
+     * @see com.projectz.utils.levelEditor.controller.EditMode
+     */
+    public function get editDefenderZonesMode():String {
+        return _editDefenderZonesMode;
+    }
+
+    public function set editDefenderZonesMode(value:String):void {
+        _editDefenderZonesMode = value;
+        dispatchEvent(new SelectEditDefenderZonesModeEvent(_editDefenderZonesMode));
+    }
+
+    /**
+     * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при зон защитнико.
+     */
+    public function get editDefenderZonesAreaMode():Boolean {
+        return _editDefenderZonesAreaMode;
+    }
+
+    public function set editDefenderZonesAreaMode(value:Boolean):void {
+        _editDefenderZonesAreaMode = value;
     }
 
     /////////////////////////////////////////////
@@ -194,10 +227,10 @@ public class UIController extends EventDispatcher {
                 (mode == UIControllerMode.EDIT_PATHS) &&
                 currentEditingPath
         ) {
-            if (editPathMode == EditPathMode.ADD_POINTS) {
+            if (editPathMode == EditMode.ADD_POINTS) {
                 levelEditorController.addPointToPath (points, currentEditingPath);
             }
-            else if (editPathMode == EditPathMode.REMOVE_POINTS) {
+            else if (editPathMode == EditMode.REMOVE_POINTS) {
                 levelEditorController.removePointFromPath (points, currentEditingPath);
             }
         }
@@ -300,6 +333,27 @@ public class UIController extends EventDispatcher {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
             levelEditorController.removeEnemyToGeneratorWave(positionId, generatorWaveData);
         }
+    }
+
+    /////////////////////////////////////////////
+    //DEFENDER ZONES:
+    /////////////////////////////////////////////
+
+    public function editPointToDefenderZones (points:Vector.<Point>):void {
+        if (
+                (mode == UIControllerMode.EDIT_DEFENDER_ZONES)
+        ) {
+            if (editDefenderZonesMode == EditMode.ADD_POINTS) {
+                levelEditorController.addPointsToDefenderZones (points);
+            }
+            else if (editDefenderZonesMode == EditMode.REMOVE_POINTS) {
+                levelEditorController.removePointsToDefenderZone (points);
+            }
+        }
+    }
+
+    public function clearAllDefenderZonesPoint ():void {
+        levelEditorController.clearAllDefenderZonesPoint();
     }
 
     /////////////////////////////////////////////

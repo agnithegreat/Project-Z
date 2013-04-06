@@ -12,7 +12,7 @@ import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.LevelStorage;
-import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
@@ -31,6 +31,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var editObjectsPanel:EditObjectsPanel;
     private var editPathsPanel:EditPathsPanel;
     private var editGeneratorsPanel:EditGeneratorsPanel;
+    private var editDefenderZonesPanel:EditDefenderZonesPanel;
 
     private var panels:Vector.<IPanel> = new <IPanel>[];
 
@@ -56,7 +57,7 @@ public class LevelEditorUI extends GraphicStorage {
 
         super(new mcLevelEditorPanel);
 
-        uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
 
         outputInfo("Добро пожаловать в редактор уровней! Выберите одну из вкладок сверху, чтобы задать режим работы редактора.");
         showPanel(null);
@@ -76,10 +77,12 @@ public class LevelEditorUI extends GraphicStorage {
         editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
         editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage);
+        editDefenderZonesPanel = new EditDefenderZonesPanel(mc["mcEditDefenderZonesPanel"], uiController);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
         panels.push(editGeneratorsPanel);
+        panels.push(editDefenderZonesPanel);
 
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);
@@ -163,7 +166,7 @@ public class LevelEditorUI extends GraphicStorage {
 //LISTENERS:
 /////////////////////////////////////////////
 
-    private function selectUIControllerModeListener(event:SelectModeEvent):void {
+    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         switch (event.mode) {
             case (UIControllerMode.EDIT_OBJECTS):
                 selectTab(btnTabEditObjects);
@@ -191,10 +194,15 @@ public class LevelEditorUI extends GraphicStorage {
                 outputInfo("Редактирование генараторов, волн и стека каждой волны. " +
                         "Для указания позиции генератора выберите путь и кликните по карте в пределах этого пути.");
                 break;
-            case (UIControllerMode.EDIT_ZONES):
+            case (UIControllerMode.EDIT_DEFENDER_ZONES):
                 selectTab(btnTabEditDefenderZones);
-                showPanel(null);
-                outputInfo("Редактирование зон защитников времено не работает.");
+                showPanel(editDefenderZonesPanel);
+                outputInfo(
+
+                        "Установите режим редактирования (добавление или удаление). Кликами по карте редактируйте зоны защитников." +
+                        "\n" +
+                        "Если включена опция 'редактирование областей', то редактируются прямоугольные участки между двумя указанными точками."
+                );
                 break;
             case (UIControllerMode.EDIT_LEVELS):
                 selectTab(btnTabEditLevels);
@@ -221,7 +229,7 @@ public class LevelEditorUI extends GraphicStorage {
                 uiController.mode = UIControllerMode.EDIT_GENERATORS;
                 break;
             case (btnTabEditDefenderZones):
-                uiController.mode = UIControllerMode.EDIT_ZONES;
+                uiController.mode = UIControllerMode.EDIT_DEFENDER_ZONES;
                 break;
             case (btnTabEditLevels):
                 uiController.mode = UIControllerMode.EDIT_LEVELS;

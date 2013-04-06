@@ -9,7 +9,7 @@ package com.projectz.utils.levelEditor.ui {
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
-import com.projectz.utils.levelEditor.controller.events.uiController.SelectModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
@@ -64,7 +64,7 @@ public class EditGeneratorsPanel extends BasicPanel {
         this.objectStorage = objectStorage;
         super(mc);
 
-        uiController.addEventListener(SelectModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectGeneratorEvent.SELECT_GENERATOR, selectGeneratorListener);
         model.addEventListener(EditGeneratorEvent.GENERATOR_WAS_ADDED, generatorWasAddedListener);
         model.addEventListener(EditGeneratorEvent.GENERATOR_WAS_REMOVED, generatorWasRemovedListener);
@@ -331,7 +331,7 @@ public class EditGeneratorsPanel extends BasicPanel {
         }
     }
 
-    private function selectUIControllerModeListener(event:SelectModeEvent):void {
+    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_GENERATORS) {
             resetGeneratorsList();
         }

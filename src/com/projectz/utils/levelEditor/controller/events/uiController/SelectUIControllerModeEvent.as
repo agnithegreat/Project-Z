@@ -8,13 +8,13 @@
 package com.projectz.utils.levelEditor.controller.events.uiController {
 import starling.events.Event;
 
-public class SelectModeEvent extends Event {
+public class SelectUIControllerModeEvent extends Event {
 
     private var _mode:String;
 
     public static const SELECT_UI_CONTROLLER_MODE:String = "select mode";
 
-    public function SelectModeEvent(mode:String, type:String = SELECT_UI_CONTROLLER_MODE, bubbles:Boolean = false) {
+    public function SelectUIControllerModeEvent(mode:String, type:String = SELECT_UI_CONTROLLER_MODE, bubbles:Boolean = false) {
         this.mode = mode;
         super(type, bubbles, mode);
     }

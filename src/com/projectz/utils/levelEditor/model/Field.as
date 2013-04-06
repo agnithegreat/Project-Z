@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor.model {
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.data.DataUtils;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.LevelData;
@@ -16,6 +17,7 @@ import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.data.WaveData;
+import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderZonesEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
@@ -165,7 +167,7 @@ public class Field extends EventDispatcher {
             if (index != -1) {
                 for (var i:int = 0; i < points.length; i++) {
                     var point:Point = points [i];
-                    var pointAsString:String = PathData.pointToStringData(point);
+                    var pointAsString:String = DataUtils.pointToStringData(point);
                     if (pathData.points.indexOf(pointAsString) == -1) {
                         pathData.points.push(pointAsString);
                     }
@@ -181,8 +183,8 @@ public class Field extends EventDispatcher {
             if (index != -1) {
                 for (var i:int = 0; i < points.length; i++) {
                     var point:Point = points [i];
-                    var pointAsString:String = PathData.pointToStringData(point);
-                    var pointIndex:int =pathData.points.indexOf(pointAsString);
+                    var pointAsString:String = DataUtils.pointToStringData(point);
+                    var pointIndex:int = pathData.points.indexOf(pointAsString);
                     if (pointIndex != -1) {
                         pathData.points.splice(pointIndex, 1);
                     }
@@ -254,7 +256,7 @@ public class Field extends EventDispatcher {
                     if (pathData.id == pathId) {
                         generatorData.pathId = pathId;
                         if (pathData.points.length > 0) {
-                            var point:Point = PathData.stringDataToPoint(pathData.points [0]);
+                            var point:Point = DataUtils.stringDataToPoint(pathData.points [0]);
                             generatorData.place (point.x, point.y);
                         }
                         dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
@@ -277,7 +279,7 @@ public class Field extends EventDispatcher {
                         //проверяем, существует ли в текущем пути указаная точка:
                         var numPoints:int = pathData.points.length;
                         for (var j:int = 0; j < numPoints; j++) {
-                            var pathPoint:Point = PathData.stringDataToPoint(pathData.points [j]);
+                            var pathPoint:Point = DataUtils.stringDataToPoint(pathData.points [j]);
                             if (pathPoint.equals (point)) {
                                 generatorData.place(point.x, point.y);
                                 dispatchEvent(new EditGeneratorEvent (generatorData, EditGeneratorEvent.GENERATOR_WAS_CHANGED));
@@ -356,6 +358,44 @@ public class Field extends EventDispatcher {
                 generatorWaveData.sequence.splice(positionId, 1);
                 dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED))
             }
+        }
+    }
+
+    /////////////////////////////////////////////
+    //DEFENDER ZONES:
+    /////////////////////////////////////////////
+
+    public function addPointsToDefenderZones (points:Vector.<Point>):void {
+        if (_levelData) {
+            for (var i:int = 0; i < points.length; i++) {
+                var point:Point = points [i];
+                var pointAsString:String = DataUtils.pointToStringData(point);
+                if (_levelData.defenderZonesPoints.indexOf(pointAsString) == -1) {
+                    _levelData.defenderZonesPoints.push(pointAsString);
+                }
+            }
+            dispatchEvent(new EditDefenderZonesEvent ());
+        }
+    }
+
+    public function removePointsToDefenderZone (points:Vector.<Point>):void {
+        if (_levelData) {
+            for (var i:int = 0; i < points.length; i++) {
+                var point:Point = points [i];
+                var pointAsString:String = DataUtils.pointToStringData(point);
+                var pointIndex:int = _levelData.defenderZonesPoints.indexOf(pointAsString);
+                if (pointIndex != -1) {
+                    _levelData.defenderZonesPoints.splice(pointIndex, 1);
+                }
+            }
+            dispatchEvent(new EditDefenderZonesEvent ());
+        }
+    }
+
+    public function clearAllDefenderZonesPoint ():void {
+        if (_levelData) {
+            _levelData.clearAllDefenderZonesPoint();
+            dispatchEvent(new EditDefenderZonesEvent ());
         }
     }
 

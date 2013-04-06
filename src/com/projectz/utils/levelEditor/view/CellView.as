@@ -167,7 +167,7 @@ public class CellView extends PositionView {
         _hatchingImage = new Image($hatchingView);
         _hatchingImage.pivotX = _bg.width / 2;
         _hatchingImage.pivotY = _bg.height / 2;
-        _hatchingImage.alpha = .3;
+        _hatchingImage.alpha = .5;
         _hatchingImage.visible = false;
         addChild(_hatchingImage);
     }

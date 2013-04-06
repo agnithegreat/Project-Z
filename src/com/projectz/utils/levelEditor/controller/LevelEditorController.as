@@ -132,6 +132,22 @@ public class LevelEditorController extends EventDispatcher {
     }
 
     /////////////////////////////////////////////
+    //DEFENDER ZONES:
+    /////////////////////////////////////////////
+
+    public function addPointsToDefenderZones (points:Vector.<Point>):void {
+        model.addPointsToDefenderZones(points);
+    }
+
+    public function removePointsToDefenderZone (points:Vector.<Point>):void {
+        model.removePointsToDefenderZone(points);
+    }
+
+    public function clearAllDefenderZonesPoint ():void {
+        model.clearAllDefenderZonesPoint();
+    }
+
+    /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////
 

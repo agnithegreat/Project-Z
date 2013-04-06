@@ -55,6 +55,11 @@ public class LevelData extends JSONLoader {
         return _waves;
     }
 
+    private var _defenderZonesPoints:Vector.<String>;//массив точек (строк формата "x_y"), образующих путь, по которому перемещаются враги.
+    public function get defenderZonesPoints():Vector.<String> {
+        return _defenderZonesPoints;
+    }
+
     public function LevelData($config: File = null) {
         super($config);
 
@@ -63,6 +68,7 @@ public class LevelData extends JSONLoader {
         _generators = new <GeneratorData>[];
         _positions = new <PositionData>[];
         _waves = new <WaveData>[];
+        _defenderZonesPoints = new <String>[];
     }
 
 /////////////////////////////////////////////
@@ -110,7 +116,7 @@ public class LevelData extends JSONLoader {
             var pathData:PathData = paths [0];
             generatorData.pathId = pathData.id;
             if (pathData.points.length > 0) {
-                var point:Point = PathData.stringDataToPoint(pathData.points [0]);
+                var point:Point = DataUtils.stringDataToPoint(pathData.points [0]);
                 generatorData.place (point.x,  point.y);
             }
         }
@@ -180,6 +186,10 @@ public class LevelData extends JSONLoader {
         return false;
     }
 
+    public function clearAllDefenderZonesPoint ():void {
+        _defenderZonesPoints = new Vector.<String>();
+    }
+
     override public function parse($data: Object):void {
         _id = $data.id;
         _bg = $data.bg;
@@ -219,10 +229,17 @@ public class LevelData extends JSONLoader {
             wave.parse($data.waves[i]);
             _waves.push(wave);
         }
+
+        len = $data.defenderZonesPoints ? $data.defenderZonesPoints.length : 0;
+        for (i = 0; i < len; i++) {
+            var pointData:Object = $data.defenderZonesPoints[i];
+            var pointAsString:String = String(pointData.x + "_"  + pointData.y);
+            _defenderZonesPoints.push(pointAsString);
+        }
     }
 
     public function export():Object {
-        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions(), "waves": getWaves()};
+        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions(), "waves": getWaves(), "defenderZonesPoints" : getDefenderZonesPoints()};
     }
 
     public function getPathDataById (id:int):PathData {
@@ -294,6 +311,17 @@ public class LevelData extends JSONLoader {
             ws[i] = _waves[i].export();
         }
         return ws;
+    }
+
+    private function getDefenderZonesPoints():Array {
+        //Преобразовываем Vector из строкового представления {x_y} в строковое представление {"x":x,"y":y}:
+        var arrPointsAsObjects:Array/*of Objects {"x":x,"y":y}*/ = new Array()/*of Objects {"x":x,"y":y}*/;
+        var len: int = _defenderZonesPoints.length;
+        for (var i:int = 0; i < len; i++) {
+            var point:Point = DataUtils.stringDataToPoint(_defenderZonesPoints [i]);
+            arrPointsAsObjects[i] = {"x":point.x, "y":point.y};
+        }
+        return arrPointsAsObjects;
     }
 }
 }

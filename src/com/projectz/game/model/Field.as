@@ -13,6 +13,7 @@ import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.Generator;
 import com.projectz.game.model.objects.Personage;
+import com.projectz.utils.levelEditor.data.DataUtils;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
@@ -337,7 +338,7 @@ public class Field extends EventDispatcher {
         for (var i: int = 0; i < len; i++) {
             var path: PathData = $paths[i];
             for (var j:int = 0; j < path.points.length; j++) {
-                var point: Point = PathData.stringDataToPoint(path.points[j]);
+                var point: Point = DataUtils.stringDataToPoint(path.points[j]);
                 _grid.setPath(point.x, point.y, path.id);
             }
         }
