@@ -10,5 +10,6 @@ public class EditMode {
 
     public static const ADD_POINTS:String = "add points";
     public static const REMOVE_POINTS:String = "remove points";
+    public static const SET_POINT:String = "set points";
 }
 }

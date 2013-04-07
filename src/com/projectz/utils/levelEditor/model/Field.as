@@ -15,9 +15,10 @@ import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
+import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.data.WaveData;
-import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderZonesEvent;
+import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
@@ -365,37 +366,77 @@ public class Field extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
-    public function addPointsToDefenderZones (points:Vector.<Point>):void {
+    public function addNewDefenderPosition ():void {
         if (_levelData) {
-            for (var i:int = 0; i < points.length; i++) {
-                var point:Point = points [i];
-                var pointAsString:String = DataUtils.pointToStringData(point);
-                if (_levelData.defenderZonesPoints.indexOf(pointAsString) == -1) {
-                    _levelData.defenderZonesPoints.push(pointAsString);
-                }
-            }
-            dispatchEvent(new EditDefenderZonesEvent ());
+            var newDefenderPositionData:DefenderPositionData = new DefenderPositionData();
+            var middleCell:Cell = _field[Math.round(_field.length / 2)];
+            newDefenderPositionData.place(middleCell.x, middleCell.y);
+            _levelData.defenderPositions.push(newDefenderPositionData);
+            dispatchEvent(new EditDefenderPositionEvent (newDefenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_ADDED));
         }
     }
 
-    public function removePointsToDefenderZone (points:Vector.<Point>):void {
+    public function removeDefenderPosition (defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
-            for (var i:int = 0; i < points.length; i++) {
-                var point:Point = points [i];
-                var pointAsString:String = DataUtils.pointToStringData(point);
-                var pointIndex:int = _levelData.defenderZonesPoints.indexOf(pointAsString);
-                if (pointIndex != -1) {
-                    _levelData.defenderZonesPoints.splice(pointIndex, 1);
-                }
+            var positionIndex:int = _levelData.defenderPositions.indexOf(defenderPositionData);
+            if (positionIndex != -1) {
+                _levelData.defenderPositions.splice(positionIndex, 1);
+                dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED));
             }
-            dispatchEvent(new EditDefenderZonesEvent ());
         }
     }
 
-    public function clearAllDefenderZonesPoint ():void {
+    public function addPointsToDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
-            _levelData.clearAllDefenderZonesPoint();
-            dispatchEvent(new EditDefenderZonesEvent ());
+            if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
+                var numPoints:int = points.length;
+                for (var i:int = 0; i < numPoints; i++) {
+                    var point:Point = points [i];
+                    var pointAsString:String = DataUtils.pointToStringData(point);
+                    if (defenderPositionData.availablePoints.indexOf(pointAsString) == -1) {
+                        defenderPositionData.availablePoints.push(pointAsString);
+                        trace("add point " + point);
+                    }
+                }
+                dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED));
+            }
+        }
+    }
+
+    public function removePointsFromDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
+        if (_levelData) {
+            if (_levelData) {
+                if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
+                    var numPoints:int = points.length;
+                    for (var i:int = 0; i < numPoints; i++) {
+                        var point:Point = points [i];
+                        var pointAsString:String = DataUtils.pointToStringData(point);
+                        var pointIndex:int = defenderPositionData.availablePoints.indexOf(pointAsString);
+                        if (pointIndex != -1) {
+                            defenderPositionData.availablePoints.splice(pointIndex, 1);
+                        }
+                    }
+                    dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED));
+                }
+            }
+        }
+    }
+
+    public function clearAllPointsFromDefenderZone (defenderPositionData:DefenderPositionData):void {
+        if (_levelData) {
+            defenderPositionData.clearAllDefenderZonesPoint();
+            dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED));
+        }
+    }
+
+    public function setCurrentDefenderZonePosition (point:Point, defenderPositionData:DefenderPositionData):void {
+        if (_levelData) {
+            if (_levelData) {
+                if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
+                    defenderPositionData.place(point.x,  point.y);
+                    dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED));
+                }
+            }
         }
     }
 

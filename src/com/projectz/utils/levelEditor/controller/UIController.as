@@ -8,8 +8,10 @@
 
 package com.projectz.utils.levelEditor.controller {
 
-import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderZonesModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
+import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PathData;
@@ -40,12 +42,13 @@ public class UIController extends EventDispatcher {
 
     private var _mode:String;//режим работы ui-контролера (редактор объектов, редактор путей и т.д.);
 
-    private var _editPathMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
     private var _currentEditingPath:PathData;//текущий редактируемый путь
+    private var _editPathMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
     private var _editPathAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании путей.
 
     private var _currentEditingGenerator:GeneratorData;//текущий редактируемый генератор
 
+    private var _currentEditingDefenderPosition:DefenderPositionData;//текущая редактируемая позиция защитника
     private var _editDefenderZonesMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании зон защитников (удаление точек или добавление);
     private var _editDefenderZonesAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании зон защитников.
 
@@ -81,7 +84,7 @@ public class UIController extends EventDispatcher {
     /////////////////////////////////////////////
 
     /**
-     * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет.
+     * Текущий редактируемый путь
      */
     public function get currentEditingPath():PathData {
         return _currentEditingPath;
@@ -151,6 +154,18 @@ public class UIController extends EventDispatcher {
     /////////////////////////////////////////////
 
     /**
+     * Текущая редактируемая позиция защитника
+     */
+    public function get currentEditingDefenderPosition():DefenderPositionData {
+        return _currentEditingDefenderPosition;
+    }
+
+    public function set currentEditingDefenderPosition(value:DefenderPositionData):void {
+        _currentEditingDefenderPosition = value;
+        dispatchEvent(new SelectDefenderPositionEvent(_currentEditingDefenderPosition));
+    }
+
+    /**
      * Режим работы контролера при редактировании зон защитников (удаление точек или добавление).
      *
      * @see com.projectz.utils.levelEditor.controller.EditMode
@@ -161,7 +176,7 @@ public class UIController extends EventDispatcher {
 
     public function set editDefenderZonesMode(value:String):void {
         _editDefenderZonesMode = value;
-        dispatchEvent(new SelectEditDefenderZonesModeEvent(_editDefenderZonesMode));
+        dispatchEvent(new SelectEditDefenderPositionModeEvent(_editDefenderZonesMode));
     }
 
     /**
@@ -339,21 +354,51 @@ public class UIController extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
-    public function editPointToDefenderZones (points:Vector.<Point>):void {
+    public function editPointsToCurrentDefenderZone (points:Vector.<Point>):void {
         if (
-                (mode == UIControllerMode.EDIT_DEFENDER_ZONES)
+                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
+                currentEditingDefenderPosition
         ) {
             if (editDefenderZonesMode == EditMode.ADD_POINTS) {
-                levelEditorController.addPointsToDefenderZones (points);
+                levelEditorController.addPointsToDefenderPosition (points, currentEditingDefenderPosition);
             }
             else if (editDefenderZonesMode == EditMode.REMOVE_POINTS) {
-                levelEditorController.removePointsToDefenderZone (points);
+                levelEditorController.removePointsFromDefenderPosition (points, currentEditingDefenderPosition);
             }
         }
     }
 
+    public function setCurrentDefenderZonePosition (point:Point):void {
+        if (
+                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
+                (editDefenderZonesMode == EditMode.SET_POINT) &&
+                currentEditingDefenderPosition
+        ) {
+            levelEditorController.setCurrentDefenderZonePosition (point, currentEditingDefenderPosition);
+        }
+    }
+
+    public function addNewDefenderPosition ():void {
+        if (
+                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS)
+        ) {
+            levelEditorController.addNewDefenderPosition();
+        }
+    }
+
+    public function removeCurrentDefenderPosition ():void {
+        if (
+                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
+                currentEditingDefenderPosition
+        ) {
+            levelEditorController.removeDefenderPosition(currentEditingDefenderPosition);
+        }
+    }
+
     public function clearAllDefenderZonesPoint ():void {
-        levelEditorController.clearAllDefenderZonesPoint();
+        if (currentEditingDefenderPosition) {
+            levelEditorController.clearAllDefenderZonesPoint(currentEditingDefenderPosition);
+        }
     }
 
     /////////////////////////////////////////////
@@ -367,6 +412,7 @@ public class UIController extends EventDispatcher {
     public function export ():void {
         levelEditorController.export();
     }
+
 
 }
 }

@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.PathData;
@@ -135,16 +136,28 @@ public class LevelEditorController extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
-    public function addPointsToDefenderZones (points:Vector.<Point>):void {
-        model.addPointsToDefenderZones(points);
+    public function addNewDefenderPosition ():void {
+        model.addNewDefenderPosition();
     }
 
-    public function removePointsToDefenderZone (points:Vector.<Point>):void {
-        model.removePointsToDefenderZone(points);
+    public function removeDefenderPosition (defenderPositionData:DefenderPositionData):void {
+        model.removeDefenderPosition(defenderPositionData);
     }
 
-    public function clearAllDefenderZonesPoint ():void {
-        model.clearAllDefenderZonesPoint();
+    public function addPointsToDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
+        model.addPointsToDefenderPosition(points, defenderPositionData);
+    }
+
+    public function removePointsFromDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
+        model.removePointsFromDefenderPosition(points, defenderPositionData);
+    }
+
+    public function clearAllDefenderZonesPoint (defenderPositionData:DefenderPositionData):void {
+        model.clearAllPointsFromDefenderZone(defenderPositionData);
+    }
+
+    public function setCurrentDefenderZonePosition (point:Point, defenderPositionData:DefenderPositionData):void {
+        model.setCurrentDefenderZonePosition (point, defenderPositionData);
     }
 
     /////////////////////////////////////////////

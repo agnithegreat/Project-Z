@@ -9,7 +9,7 @@ package com.projectz.game.model {
 import com.projectz.game.model.objects.Enemy;
 import com.projectz.game.model.objects.FieldObject;
 import com.projectz.game.event.GameEvent;
-import com.projectz.utils.levelEditor.data.PositionData;
+import com.projectz.utils.levelEditor.data.DefenderPositionData;
 
 import starling.events.EventDispatcher;
 
@@ -69,11 +69,11 @@ public class Cell extends EventDispatcher {
         _depth = value;
     }
 
-    private var _positionData: PositionData;
-    public function get positionData():PositionData {
+    private var _positionData: DefenderPositionData;
+    public function get positionData():DefenderPositionData {
         return _positionData;
     }
-    public function set positionData(value:PositionData):void {
+    public function set positionData(value:DefenderPositionData):void {
         _positionData = value;
         dispatchEventWith(GameEvent.CELL_POS);
     }

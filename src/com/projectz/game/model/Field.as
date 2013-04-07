@@ -18,7 +18,7 @@ import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PathData;
-import com.projectz.utils.levelEditor.data.PositionData;
+import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.objectEditor.data.DefenderData;
 import com.projectz.utils.objectEditor.data.EnemyData;
@@ -100,7 +100,7 @@ public class Field extends EventDispatcher {
     public function init():void {
         createPaths(_level.paths);
         createGenerators(_level.generators);
-        createPositions(_level.positions);
+        createPositions(_level.defenderPositions);
         createObjects(_level.objects);
         updateDepths();
 
@@ -351,10 +351,10 @@ public class Field extends EventDispatcher {
         }
     }
 
-    private function createPositions($positions: Vector.<PositionData>):void {
+    private function createPositions($positions: Vector.<DefenderPositionData>):void {
         var len: int = $positions.length;
         for (var i:int = 0; i < len; i++) {
-            var pos: PositionData = $positions[i];
+            var pos: DefenderPositionData = $positions[i];
             var cell: Cell = getCell(pos.x, pos.y);
             cell.positionData = pos;
         }

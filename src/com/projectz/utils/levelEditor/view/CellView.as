@@ -47,6 +47,8 @@ public class CellView extends PositionView {
     private static const ROLL_OVER_ALPHA:Number = .5;
     private static const ROLL_MOUSE_DOWN:Number = .6;
     private static const ROLL_CLICK:Number = .7;
+    private static const HATCHING_ALPHA:Number = .3;
+    private static const EXTRA_HATCHING_ALPHA:Number = .75;
 
     public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null, $flagView:Texture = null, $hatchingView:Texture = null) {
         _cell = $cell;
@@ -114,6 +116,14 @@ public class CellView extends PositionView {
         _showHatching = value;
         if (_hatchingImage) {
             _hatchingImage.visible = _showHatching;
+            _hatchingImage.alpha = HATCHING_ALPHA;
+        }
+    }
+
+    public function showExtraHatching ():void {
+        showHatching = true;
+        if (_hatchingImage) {
+            _hatchingImage.alpha = EXTRA_HATCHING_ALPHA;
         }
     }
 
@@ -167,7 +177,7 @@ public class CellView extends PositionView {
         _hatchingImage = new Image($hatchingView);
         _hatchingImage.pivotX = _bg.width / 2;
         _hatchingImage.pivotY = _bg.height / 2;
-        _hatchingImage.alpha = .5;
+        _hatchingImage.alpha = HATCHING_ALPHA;
         _hatchingImage.visible = false;
         addChild(_hatchingImage);
     }

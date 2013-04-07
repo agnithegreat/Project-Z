@@ -31,7 +31,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var editObjectsPanel:EditObjectsPanel;
     private var editPathsPanel:EditPathsPanel;
     private var editGeneratorsPanel:EditGeneratorsPanel;
-    private var editDefenderZonesPanel:EditDefenderZonesPanel;
+    private var editDefenderPositionsPanel:EditDefenderPositionsPanel;
 
     private var panels:Vector.<IPanel> = new <IPanel>[];
 
@@ -77,12 +77,12 @@ public class LevelEditorUI extends GraphicStorage {
         editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
         editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage);
-        editDefenderZonesPanel = new EditDefenderZonesPanel(mc["mcEditDefenderZonesPanel"], uiController);
+        editDefenderPositionsPanel = new EditDefenderPositionsPanel(mc["mcEditDefenderPositionsPanel"], model, uiController);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
         panels.push(editGeneratorsPanel);
-        panels.push(editDefenderZonesPanel);
+        panels.push(editDefenderPositionsPanel);
 
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);
@@ -194,12 +194,12 @@ public class LevelEditorUI extends GraphicStorage {
                 outputInfo("Редактирование генараторов, волн и стека каждой волны. " +
                         "Для указания позиции генератора выберите путь и кликните по карте в пределах этого пути.");
                 break;
-            case (UIControllerMode.EDIT_DEFENDER_ZONES):
+            case (UIControllerMode.EDIT_DEFENDER_POSITIONS):
                 selectTab(btnTabEditDefenderZones);
-                showPanel(editDefenderZonesPanel);
+                showPanel(editDefenderPositionsPanel);
                 outputInfo(
 
-                        "Установите режим редактирования (добавление или удаление). Кликами по карте редактируйте зоны защитников." +
+                        "Выберете позицию защитника из списка. Установите режим редактирования (добавление, удаление, указание позиции). Кликами по карте редактируйте зону позиции защитника." +
                         "\n" +
                         "Если включена опция 'редактирование областей', то редактируются прямоугольные участки между двумя указанными точками."
                 );
@@ -229,7 +229,7 @@ public class LevelEditorUI extends GraphicStorage {
                 uiController.mode = UIControllerMode.EDIT_GENERATORS;
                 break;
             case (btnTabEditDefenderZones):
-                uiController.mode = UIControllerMode.EDIT_DEFENDER_ZONES;
+                uiController.mode = UIControllerMode.EDIT_DEFENDER_POSITIONS;
                 break;
             case (btnTabEditLevels):
                 uiController.mode = UIControllerMode.EDIT_LEVELS;

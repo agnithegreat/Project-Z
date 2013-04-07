@@ -8,17 +8,20 @@
 package com.projectz.utils.levelEditor.view {
 
 import com.projectz.game.event.GameEvent;
+import com.projectz.utils.levelEditor.controller.EditMode;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
-import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderZonesModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
 import com.projectz.utils.levelEditor.data.DataUtils;
+import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderZonesEvent;
+import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent;
@@ -85,9 +88,10 @@ public class FieldView extends Sprite {
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
-        uiController.addEventListener(SelectEditDefenderZonesModeEvent.SELECT_EDIT_DEFENDERS_ZONES_MODE, selectEditDefenderZonesModeListener);
+        uiController.addEventListener(SelectEditDefenderPositionModeEvent.SELECT_EDIT_DEFENDER_POSITION_MODE, selectEditDefenderPositionModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
         uiController.addEventListener(SelectGeneratorEvent.SELECT_GENERATOR, selectGeneratorListener);
+        uiController.addEventListener(SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION, selectDefenderPositionListener);
 
         _field = $field;
         _field.addEventListener(EditBackgroundEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
@@ -97,7 +101,7 @@ public class FieldView extends Sprite {
         _field.addEventListener(EditPlaceEvent.PLACE_ADDED, handleAddPlace);
         _field.addEventListener(EditPathEvent.PATH_WAS_CHANGED, handleChangePath);
         _field.addEventListener(EditPathEvent.COLOR_WAS_CHANGED, handleChangePath);
-        _field.addEventListener(EditDefenderZonesEvent.DEFENDER_ZONES_WAS_CHANGED, handleEditDefenderZones);
+        _field.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED, handleEditDefenderZones);
 
         _container = new Sprite();
         addChild(_container);
@@ -246,20 +250,6 @@ public class FieldView extends Sprite {
         _cellsContainer.flatten();
     }
 
-    private function redrawDefenderZones ():void {
-        _cellsContainer.unflatten();
-        var levelData:LevelData = _field.levelData;
-        if (levelData) {
-            var numDefenderZonesPoints:int = levelData.defenderZonesPoints.length;
-            for (var i:int = 0; i < numDefenderZonesPoints; i++) {
-                var point:Point = DataUtils.stringDataToPoint(levelData.defenderZonesPoints [i]);
-                var cellView:CellView = getCellViewByPosition(point.x, point.y);
-                cellView.showHatching = true;
-            }
-        }
-        _cellsContainer.flatten();
-    }
-
     private function drawPath (pathData:PathData, showHatching:Boolean = false):void {
         if (pathData) {
             var color:uint = pathData.color;
@@ -272,6 +262,50 @@ public class FieldView extends Sprite {
                     cellView.showHatching = showHatching;
                 }
             }
+        }
+    }
+
+    private function redrawDefenderPositions (currentDefenderPositionData:DefenderPositionData):void {
+        clearAllCells(false, true, true);
+        var levelData:LevelData = _field.levelData;
+        if (levelData) {
+            _cellsContainer.unflatten();
+            var numDefenderPositions:int = levelData.defenderPositions.length;
+            for (var i:int = 0; i < numDefenderPositions; i++) {
+                var defenderPosition:DefenderPositionData = levelData.defenderPositions [i];
+                if (defenderPosition != currentDefenderPositionData) {
+                    drawDefenderPosition (defenderPosition);
+                }
+            }
+            if (currentDefenderPositionData) {
+                var cellView:CellView;
+                cellView = getCellViewByPosition(currentDefenderPositionData.x, currentDefenderPositionData.y);
+                cellView.showFlag = true;
+                cellView.showHatching = true;
+                drawDefenderPosition (currentDefenderPositionData, true);
+            }
+            _cellsContainer.flatten();
+        }
+    }
+
+    private function drawDefenderPosition (defenderPositionData:DefenderPositionData, showExtraHatching:Boolean = false):void {
+        if (defenderPositionData) {
+            _cellsContainer.unflatten();
+            var availablePoints:Vector.<String> = defenderPositionData.availablePoints;
+            var numAvailablePoints:int = availablePoints.length;
+            for (var i:int = 0; i < numAvailablePoints; i++) {
+                var point:Point = DataUtils.stringDataToPoint(availablePoints[i]);
+                var cellView:CellView = getCellViewByPosition(point.x, point.y);
+                if (showExtraHatching) {
+                    cellView.showExtraHatching();
+                }
+                else {
+                    cellView.showHatching = true;
+                }
+            }
+            cellView = getCellViewByPosition(defenderPositionData.x, defenderPositionData.y);
+            cellView.showFlag = true;
+            _cellsContainer.flatten();
         }
     }
 
@@ -314,9 +348,8 @@ public class FieldView extends Sprite {
         redrawPaths ($event.pathData);
     }
 
-    private function handleEditDefenderZones($event:EditDefenderZonesEvent):void {
-        redrawPaths(null);
-        redrawDefenderZones();
+    private function handleEditDefenderZones($event:EditDefenderPositionEvent):void {
+        redrawDefenderPositions($event.defenderPositionData);
     }
 
     private function handleAddObject($event:EditObjectEvent):void {
@@ -423,7 +456,7 @@ public class FieldView extends Sprite {
                             points = new Vector.<Point>();
                             points.push(new Point (_currentCell.positionX, _currentCell.positionY));
                             if (uiController.editPathAreaMode) {
-                                if (firstSelectedPointForEditingDefenderZones) {
+                                if (firstSelectedPointForEditingPath) {
                                     //добавляем все точки, в области, лежащей между двумя выделеными точками:
                                     startPositionX = Math.min(_currentCell.positionX, firstSelectedPointForEditingPath.x);
                                     startPositionY = Math.min(_currentCell.positionY, firstSelectedPointForEditingPath.y);
@@ -444,30 +477,35 @@ public class FieldView extends Sprite {
                             }
                             uiController.editPointToCurrentPath (points);
                         }
-                        else if (uiController.mode == UIControllerMode.EDIT_DEFENDER_ZONES) {
-                            points = new Vector.<Point>();
-                            points.push(new Point (_currentCell.positionX, _currentCell.positionY));
-                            if (uiController.editDefenderZonesAreaMode) {
-                                if (firstSelectedPointForEditingDefenderZones) {
-                                    //добавляем все точки, в области, лежащей между двумя выделеными точками:
-                                    startPositionX = Math.min(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
-                                    startPositionY = Math.min(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
-                                    endPositionX = Math.max(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
-                                    endPositionY = Math.max(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
-                                    for (i = startPositionX; i <= endPositionX; i++) {
-                                        for (j = startPositionY; j <= endPositionY; j++) {
-                                            points.push(new Point (i, j));
-                                        }
-                                    }
-                                    //очищаем данные о первой выделеной точке:
-                                    firstSelectedPointForEditingDefenderZones = null;
-                                }
-                                else {
-                                    //добавляем данные о первой выделеной точке:
-                                    firstSelectedPointForEditingDefenderZones = new Point (_currentCell.positionX, _currentCell.positionY);
-                                }
+                        else if (uiController.mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) {
+                            if (uiController.editDefenderZonesMode == EditMode.SET_POINT) {
+                                uiController.setCurrentDefenderZonePosition(new Point(_currentCell.positionX, _currentCell.positionY));
                             }
-                            uiController.editPointToDefenderZones (points);
+                            else {
+                                points = new Vector.<Point>();
+                                points.push(new Point (_currentCell.positionX, _currentCell.positionY));
+                                if (uiController.editDefenderZonesAreaMode) {
+                                    if (firstSelectedPointForEditingDefenderZones) {
+                                        //добавляем все точки, в области, лежащей между двумя выделеными точками:
+                                        startPositionX = Math.min(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
+                                        startPositionY = Math.min(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
+                                        endPositionX = Math.max(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
+                                        endPositionY = Math.max(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
+                                        for (i = startPositionX; i <= endPositionX; i++) {
+                                            for (j = startPositionY; j <= endPositionY; j++) {
+                                                points.push(new Point (i, j));
+                                            }
+                                        }
+                                        //очищаем данные о первой выделеной точке:
+                                        firstSelectedPointForEditingDefenderZones = null;
+                                    }
+                                    else {
+                                        //добавляем данные о первой выделеной точке:
+                                        firstSelectedPointForEditingDefenderZones = new Point (_currentCell.positionX, _currentCell.positionY);
+                                    }
+                                }
+                                uiController.editPointsToCurrentDefenderZone (points);
+                            }
                         }
                         else if (uiController.mode == UIControllerMode.EDIT_GENERATORS) {
                             uiController.setGeneratorPosition (new Point (_currentCell.positionX, _currentCell.positionY));
@@ -627,6 +665,10 @@ public class FieldView extends Sprite {
         }
     }
 
+    private function selectDefenderPositionListener(event:SelectDefenderPositionEvent):void {
+        redrawDefenderPositions(event.defenderPositionData);
+    }
+
     /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////
@@ -645,9 +687,9 @@ public class FieldView extends Sprite {
             case UIControllerMode.EDIT_GENERATORS:
                 //
                 break;
-            case UIControllerMode.EDIT_DEFENDER_ZONES:
+            case UIControllerMode.EDIT_DEFENDER_POSITIONS:
                 redrawPaths(null);
-                redrawDefenderZones();
+                redrawDefenderPositions(null);
                 break;
         }
     }
@@ -656,7 +698,7 @@ public class FieldView extends Sprite {
         firstSelectedPointForEditingPath = null;
     }
 
-    private function selectEditDefenderZonesModeListener(event:SelectEditDefenderZonesModeEvent):void {
+    private function selectEditDefenderPositionModeListener(event:SelectEditDefenderPositionModeEvent):void {
         firstSelectedPointForEditingDefenderZones = null;
     }
 }

@@ -8,13 +8,13 @@
 package com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones {
 import starling.events.Event;
 
-public class SelectEditDefenderZonesModeEvent extends Event {
+public class SelectEditDefenderPositionModeEvent extends Event {
 
     private var _mode:String;
 
-    public static const SELECT_EDIT_DEFENDERS_ZONES_MODE:String = "select edit defender zones mode";
+    public static const SELECT_EDIT_DEFENDER_POSITION_MODE:String = "select edit defender position mode";
 
-    public function SelectEditDefenderZonesModeEvent(mode:String, type:String = SELECT_EDIT_DEFENDERS_ZONES_MODE, bubbles:Boolean = false) {
+    public function SelectEditDefenderPositionModeEvent(mode:String, type:String = SELECT_EDIT_DEFENDER_POSITION_MODE, bubbles:Boolean = false) {
         this.mode = mode;
         super(type, bubbles, mode);
     }

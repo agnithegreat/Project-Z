@@ -45,9 +45,9 @@ public class LevelData extends JSONLoader {
         return _generators;
     }
 
-    private var _positions: Vector.<PositionData>;
-    public function get positions():Vector.<PositionData> {
-        return _positions;
+    private var _defenderPositions: Vector.<DefenderPositionData>;
+    public function get defenderPositions():Vector.<DefenderPositionData> {
+        return _defenderPositions;
     }
 
     private var _waves: Vector.<WaveData>;
@@ -55,10 +55,7 @@ public class LevelData extends JSONLoader {
         return _waves;
     }
 
-    private var _defenderZonesPoints:Vector.<String>;//массив точек (строк формата "x_y"), образующих путь, по которому перемещаются враги.
-    public function get defenderZonesPoints():Vector.<String> {
-        return _defenderZonesPoints;
-    }
+
 
     public function LevelData($config: File = null) {
         super($config);
@@ -66,9 +63,8 @@ public class LevelData extends JSONLoader {
         _objects = new <PlaceData>[];
         _paths = new <PathData>[];
         _generators = new <GeneratorData>[];
-        _positions = new <PositionData>[];
+        _defenderPositions = new <DefenderPositionData>[];
         _waves = new <WaveData>[];
-        _defenderZonesPoints = new <String>[];
     }
 
 /////////////////////////////////////////////
@@ -133,15 +129,15 @@ public class LevelData extends JSONLoader {
         return false;
     }
 
-    public function addPosition($pos: PositionData):void {
-        if (_positions.indexOf($pos)<0) {
-            _positions.push($pos);
+    public function addPosition($pos: DefenderPositionData):void {
+        if (_defenderPositions.indexOf($pos)<0) {
+            _defenderPositions.push($pos);
         }
     }
-    public function removePosition($pos: PositionData):void {
-        var index: int = _positions.indexOf($pos);
+    public function removePosition($pos: DefenderPositionData):void {
+        var index: int = _defenderPositions.indexOf($pos);
         if (index >= 0) {
-            _positions.splice(index, 1);
+            _defenderPositions.splice(index, 1);
         }
     }
 
@@ -186,10 +182,6 @@ public class LevelData extends JSONLoader {
         return false;
     }
 
-    public function clearAllDefenderZonesPoint ():void {
-        _defenderZonesPoints = new Vector.<String>();
-    }
-
     override public function parse($data: Object):void {
         _id = $data.id;
         _bg = $data.bg;
@@ -218,9 +210,9 @@ public class LevelData extends JSONLoader {
 
         len = $data.positions ? $data.positions.length : 0;
         for (i = 0; i < len; i++) {
-            var pos: PositionData = new PositionData();
+            var pos: DefenderPositionData = new DefenderPositionData();
             pos.parse($data.positions[i]);
-            _positions.push(pos);
+            _defenderPositions.push(pos);
         }
 
         len = $data.waves ? $data.waves.length : 0;
@@ -230,16 +222,11 @@ public class LevelData extends JSONLoader {
             _waves.push(wave);
         }
 
-        len = $data.defenderZonesPoints ? $data.defenderZonesPoints.length : 0;
-        for (i = 0; i < len; i++) {
-            var pointData:Object = $data.defenderZonesPoints[i];
-            var pointAsString:String = String(pointData.x + "_"  + pointData.y);
-            _defenderZonesPoints.push(pointAsString);
-        }
+
     }
 
     public function export():Object {
-        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions(), "waves": getWaves(), "defenderZonesPoints" : getDefenderZonesPoints()};
+        return {'id': _id, 'bg': _bg, 'objects': getObjects(), 'paths':getPaths(), 'generators': getGenerators(), 'positions': getPositions(), "waves": getWaves()};
     }
 
     public function getPathDataById (id:int):PathData {
@@ -297,9 +284,9 @@ public class LevelData extends JSONLoader {
 
     private function getPositions():Array {
         var ps: Array = [];
-        var len: int = _positions.length;
+        var len: int = _defenderPositions.length;
         for (var i:int = 0; i < len; i++) {
-            ps[i] = _positions[i].export();
+            ps[i] = _defenderPositions[i].export();
         }
         return ps;
     }
@@ -313,15 +300,5 @@ public class LevelData extends JSONLoader {
         return ws;
     }
 
-    private function getDefenderZonesPoints():Array {
-        //Преобразовываем Vector из строкового представления {x_y} в строковое представление {"x":x,"y":y}:
-        var arrPointsAsObjects:Array/*of Objects {"x":x,"y":y}*/ = new Array()/*of Objects {"x":x,"y":y}*/;
-        var len: int = _defenderZonesPoints.length;
-        for (var i:int = 0; i < len; i++) {
-            var point:Point = DataUtils.stringDataToPoint(_defenderZonesPoints [i]);
-            arrPointsAsObjects[i] = {"x":point.x, "y":point.y};
-        }
-        return arrPointsAsObjects;
-    }
 }
 }

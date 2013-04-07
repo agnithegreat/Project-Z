@@ -102,10 +102,10 @@ public class EditPathsPanel extends BasicPanel {
 //PRIVATE:
 /////////////////////////////////////////////
 
-    private function reInitPathList():void {
+    private function reInitPathsList():void {
         if (model.levelData) {
             //формируем список всех путей текущего уровня:
-            initPathList(model.levelData.paths);
+            initPathsList(model.levelData.paths);
 
             //устанавливаем текущий редактируемый путь:
             var currentEditingPath:PathData;
@@ -118,7 +118,7 @@ public class EditPathsPanel extends BasicPanel {
     }
 
 
-    private function initPathList(paths:Vector.<PathData>):void {
+    private function initPathsList(paths:Vector.<PathData>):void {
         var dataProvider:DataProvider = new DataProvider();
         for (var i:int = 0; i < paths.length; i++) {
             var pathData:PathData = paths [i];
@@ -170,7 +170,7 @@ public class EditPathsPanel extends BasicPanel {
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_PATHS) {
-            reInitPathList();
+            reInitPathsList();
         }
     }
 
@@ -204,12 +204,12 @@ public class EditPathsPanel extends BasicPanel {
     }
 
     private function pathWasAddedListener(event:EditPathEvent):void {
-        reInitPathList();
+        reInitPathsList();
         uiController.currentEditingPath = event.pathData;
     }
 
     private function pathWasRemovedListener(event:EditPathEvent):void {
-        reInitPathList();
+        reInitPathsList();
     }
 
 }
