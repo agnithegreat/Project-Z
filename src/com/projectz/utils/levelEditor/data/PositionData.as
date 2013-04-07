@@ -19,14 +19,6 @@ public class PositionData {
         return _y;
     }
 
-    private var _radius: int;
-    public function get radius():int {
-        return _radius;
-    }
-    public function set radius($value: int):void {
-        _radius = $value;
-    }
-
     // TODO: добавить эффекты
 //    private var _effects: Vector;
 
@@ -41,11 +33,10 @@ public class PositionData {
     public function parse($data: Object):void {
         _x = $data.x;
         _y = $data.y;
-        _radius = $data.radius;
     }
 
     public function export():Object {
-        return {"x": _x, "y": _y, "radius": _radius};
+        return {"x": _x, "y": _y};
     }
 }
 }
