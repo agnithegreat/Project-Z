@@ -343,10 +343,12 @@ public class Field extends EventDispatcher {
     }
 
     //добавляем врага в стек волны генератора:
-    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, generatorWaveData:GeneratorWaveData):void {
+    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, count:int, generatorWaveData:GeneratorWaveData):void {
         if (_levelData && hasGeneratorWaveData (generatorWaveData)) {
             if (generatorWaveData.sequence.length >= positionId) {
-                generatorWaveData.sequence.splice(positionId, 0, enemyId);
+                for (var i:int = 0; i < count; i++) {
+                    generatorWaveData.sequence.splice(positionId, 0, enemyId);
+                }
                 dispatchEvent(new EditGeneratorWaveEvent (generatorWaveData, EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED));
             }
         }

@@ -43,6 +43,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 
     private var mcAddEnemyPanel:Sprite;
     private var listAddEnemy:List;
+    private var nstNumEnemies:NumericStepper;
     private var listGenerators:List;
     private var listWaves:List;
     private var listEnemies:List;
@@ -93,6 +94,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 
         mcAddEnemyPanel = Sprite(getElement("mcAddEnemyPanel"));
         listAddEnemy = List(getElement("listAddEnemy", mcAddEnemyPanel));
+        nstNumEnemies = NumericStepper(getElement("nstNumEnemies", mcAddEnemyPanel));
         listGenerators = List(getElement("listGenerators"));
         listWaves = List(getElement("listWaves"));
         listEnemies = List(getElement("listEnemies"));
@@ -113,6 +115,7 @@ public class EditGeneratorsPanel extends BasicPanel {
         nstDelay.maximum = 1000;
 
         listAddEnemy.focusEnabled = false;
+        nstNumEnemies.focusEnabled = false;
         listGenerators.focusEnabled = false;
         listWaves.focusEnabled = false;
         listEnemies.focusEnabled = false;
@@ -243,7 +246,8 @@ public class EditGeneratorsPanel extends BasicPanel {
         }
         listEnemies.dataProvider = dataProvider;
         if (dataProvider.length > 0) {
-            listEnemies.selectedIndex = 0;
+            listEnemies.selectedIndex = dataProvider.length - 1;
+            listEnemies.scrollToIndex(dataProvider.length - 1);
         }
     }
 
@@ -345,7 +349,8 @@ public class EditGeneratorsPanel extends BasicPanel {
                 if (listEnemies.selectedItem) {
                     positionId = listEnemies.selectedIndex + 1;
                 }
-                uiController.addEnemyToGeneratorWave(listAddEnemy.selectedItem.data, positionId, currentGeneratorWaveData);
+                var count:int = nstNumEnemies.value;
+                uiController.addEnemyToGeneratorWave(listAddEnemy.selectedItem.data, positionId, count, currentGeneratorWaveData);
             }
         }
         listAddEnemy.selectedItem = null;

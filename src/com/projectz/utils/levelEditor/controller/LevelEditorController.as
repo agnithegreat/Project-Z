@@ -123,8 +123,8 @@ public class LevelEditorController extends EventDispatcher {
     }
 
     //добавляем тип врага для волны генератора:
-    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, generatorWaveData:GeneratorWaveData):void {
-        model.addEnemyToGeneratorWave(enemyId, positionId, generatorWaveData);
+    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, count:int, generatorWaveData:GeneratorWaveData):void {
+        model.addEnemyToGeneratorWave(enemyId, positionId, count, generatorWaveData);
     }
 
     //убираем тип врага для волны генератора:

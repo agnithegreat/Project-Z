@@ -679,6 +679,7 @@ public class FieldView extends Sprite {
         _objectsContainer.visible = false;
         switch (event.mode) {
             case UIControllerMode.EDIT_OBJECTS:
+                redrawPaths(null);
                 _objectsContainer.visible = true;
                 break;
             case UIControllerMode.EDIT_PATHS:

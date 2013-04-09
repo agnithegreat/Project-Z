@@ -337,9 +337,9 @@ public class UIController extends EventDispatcher {
     }
 
     //добавляем тип врага для волны генератора:
-    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, generatorWaveData:GeneratorWaveData):void {
+    public function addEnemyToGeneratorWave (enemyId:String, positionId:int, count:int, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
-            levelEditorController.addEnemyToGeneratorWave(enemyId, positionId, generatorWaveData);
+            levelEditorController.addEnemyToGeneratorWave(enemyId, positionId, count, generatorWaveData);
         }
     }
 
