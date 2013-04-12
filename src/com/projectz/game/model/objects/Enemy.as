@@ -19,6 +19,11 @@ public class Enemy extends Personage {
     public static const DIE: String = "die";
     public static const STAY: String = "stay";
 
+    private var _lastTarget: Cell;
+    public function get lastTarget():Cell {
+        return _lastTarget;
+    }
+
     private var _sightTarget: Cell;
     public function get sightTarget():Cell {
         return _sightTarget;
@@ -70,8 +75,9 @@ public class Enemy extends Personage {
         _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
     }
 
-    public function go($cell: Cell):void {
-        _target = $cell;
+    public function go($cells: Vector.<Cell>):void {
+        _target = $cells[0];
+        _lastTarget = $cells[$cells.length-1];
         if (_target.attackObject) {
             _target.walkable = false;
         }

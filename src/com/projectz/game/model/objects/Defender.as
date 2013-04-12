@@ -120,13 +120,13 @@ public class Defender extends Personage {
     }
 
     private function sortEnemies($enemy1: Enemy, $enemy2: Enemy):int {
-//        var d1: int = Cell.getDistance($enemy1.lastCell, $enemy1.cell);
-//        var d2: int = Cell.getDistance($enemy2.lastCell, $enemy2.cell);
-//        if (d1 > d2) {
-//            return 1;
-//        } else if (d1 < d2) {
-//            return -1;
-//        }
+        var d1: int = Cell.getDistance($enemy1.lastTarget, $enemy1.cell);
+        var d2: int = Cell.getDistance($enemy2.lastTarget, $enemy2.cell);
+        if (d1 > d2) {
+            return 1;
+        } else if (d1 < d2) {
+            return -1;
+        }
         return 0;
     }
 }
