@@ -211,7 +211,7 @@ public class Field extends EventDispatcher {
             if (zombie.alive) {
                 if (!zombie.target) {
                     cell = getTargetCell(zombie.cell);
-                    zombie.go(getWay(zombie.cell, cell, zombie.path));
+                    zombie.go(getWay(zombie.cell, cell, zombie.path)[0]);
                 }
                 zombie.step($delta);
             }
@@ -475,18 +475,6 @@ public class Field extends EventDispatcher {
     }
 
     private function handleUpdateCell($e: Event):void {
-        var cell: Cell = $e.currentTarget as Cell;
-        _grid.setWalkable(cell.x, cell.y, cell.walkable);
-
-        var enemy: Enemy;
-        var len: int = _enemies.length;
-        for (var i:int = 0; i < len; i++) {
-            enemy = _enemies[i];
-            if (cell.object!=enemy && enemy.hasCell(cell)) {
-                var target: Cell = getTargetCell(enemy.target);
-                enemy.go(getWay(enemy.target, getCell(target.x, target.y), enemy.path));
-            }
-        }
     }
 
     public function destroy():void {

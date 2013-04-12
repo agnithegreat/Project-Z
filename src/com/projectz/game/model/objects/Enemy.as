@@ -19,19 +19,9 @@ public class Enemy extends Personage {
     public static const DIE: String = "die";
     public static const STAY: String = "stay";
 
-    private var _way: Vector.<Cell>;
-    public function hasCell($cell: Cell):Boolean {
-        return _way && _way.indexOf($cell)>=0;
-    }
-
     private var _sightTarget: Cell;
     public function get sightTarget():Cell {
         return _sightTarget;
-    }
-
-    private var _lastCell: Cell;
-    public function get lastCell():Cell {
-        return _lastCell;
     }
 
     override public function get cell():Cell {
@@ -80,20 +70,12 @@ public class Enemy extends Personage {
         _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
     }
 
-    public function go($cells: Vector.<Cell>):void {
-        _way = $cells;
-        _lastCell = _way.length>0 ? _way[_way.length-1] : null;
-        next();
-    }
-
-    private function next():void {
-        if (!_target && _way.length>0) {
-            _target = _way.shift();
-            if (_target.attackObject) {
-                _target.walkable = false;
-            }
-            walk(true);
+    public function go($cell: Cell):void {
+        _target = $cell;
+        if (_target.attackObject) {
+            _target.walkable = false;
         }
+        walk(true);
     }
 
     public function step($delta: Number):void {
@@ -119,7 +101,6 @@ public class Enemy extends Personage {
         if (_progress>=1) {
             place(_target);
             _target = null;
-            next();
         }
     }
 
@@ -172,8 +153,6 @@ public class Enemy extends Personage {
 
     override public function destroy():void {
         super.destroy();
-
-        _way = null;
 
         _enemyData = null;
     }
