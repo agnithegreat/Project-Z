@@ -67,7 +67,7 @@ public class FieldView extends Sprite {
 
     private var _shift:Boolean;
 
-    protected var _isPressed:Boolean;
+    protected var _selectMode: Boolean;
     protected var _isRolledOver:Boolean;
     protected var _lastCellX:int;
     protected var _lastCellY:int;
@@ -404,13 +404,6 @@ public class FieldView extends Sprite {
 
     protected function onTouchHandler(event:TouchEvent):void {
         var touch:Touch = event.getTouch(stage);
-        var points:Vector.<Point>;
-        var startPositionX:int;
-        var startPositionY:int;
-        var endPositionX:int;
-        var endPositionY:int;
-        var i:int;
-        var j:int;
         if (touch) {
             var pos:Point = getPositionByTouchEvent(touch);
             _currentCell = getCellViewByPosition(pos.x, pos.y);
@@ -423,112 +416,118 @@ public class FieldView extends Sprite {
                 _lastCellY = _currentCell.positionY;
                 switch (touch.phase) {
                     case TouchPhase.BEGAN:                                      // press
-                    {
-                        if (_isPressed) {
+                        if (_selectMode) {
                             return;
                         }
-                        _isPressed = true;
+                        _selectMode = true;
                         onCellMouseDown(_currentCell);
                         break;
-                    }
-
                     case TouchPhase.ENDED:                                      // click
-                    {
-                        if (uiController.mode == UIControllerMode.EDIT_OBJECTS) {
-                            if (_currentObject) {
-                                var place:PlaceData = new PlaceData();
-                                place.place(_currentCell.positionX, _currentCell.positionY);
-                                place.object = _currentObject.object.name;
-                                place.realObject = _currentObject.object;
-
-                                if (uiController.addObject(place)) {
-                                    if (_shift) {
-                                        addObject(_currentObject.object);
-                                    } else {
-                                        addObject(null);
-                                    }
-                                }
-                            } else {
-                                uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
-                            }
-                        }
-                        else if (uiController.mode == UIControllerMode.EDIT_PATHS) {
-                            points = new Vector.<Point>();
-                            points.push(new Point (_currentCell.positionX, _currentCell.positionY));
-                            if (uiController.editPathAreaMode) {
-                                if (firstSelectedPointForEditingPath) {
-                                    //добавляем все точки, в области, лежащей между двумя выделеными точками:
-                                    startPositionX = Math.min(_currentCell.positionX, firstSelectedPointForEditingPath.x);
-                                    startPositionY = Math.min(_currentCell.positionY, firstSelectedPointForEditingPath.y);
-                                    endPositionX = Math.max(_currentCell.positionX, firstSelectedPointForEditingPath.x);
-                                    endPositionY = Math.max(_currentCell.positionY, firstSelectedPointForEditingPath.y);
-                                    for (i = startPositionX; i <= endPositionX; i++) {
-                                        for (j = startPositionY; j <= endPositionY; j++) {
-                                            points.push(new Point (i, j));
-                                        }
-                                    }
-                                    //очищаем данные о первой выделеной точке:
-                                    firstSelectedPointForEditingPath = null;
-                                }
-                                else {
-                                    //добавляем данные о первой выделеной точке:
-                                    firstSelectedPointForEditingPath = new Point (_currentCell.positionX, _currentCell.positionY);
-                                }
-                            }
-                            uiController.editPointToCurrentPath (points);
-                        }
-                        else if (uiController.mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) {
-                            if (uiController.editDefenderZonesMode == EditMode.SET_POINT) {
-                                uiController.setCurrentDefenderZonePosition(new Point(_currentCell.positionX, _currentCell.positionY));
-                            }
-                            else {
-                                points = new Vector.<Point>();
-                                points.push(new Point (_currentCell.positionX, _currentCell.positionY));
-                                if (uiController.editDefenderZonesAreaMode) {
-                                    if (firstSelectedPointForEditingDefenderZones) {
-                                        //добавляем все точки, в области, лежащей между двумя выделеными точками:
-                                        startPositionX = Math.min(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
-                                        startPositionY = Math.min(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
-                                        endPositionX = Math.max(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
-                                        endPositionY = Math.max(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
-                                        for (i = startPositionX; i <= endPositionX; i++) {
-                                            for (j = startPositionY; j <= endPositionY; j++) {
-                                                points.push(new Point (i, j));
-                                            }
-                                        }
-                                        //очищаем данные о первой выделеной точке:
-                                        firstSelectedPointForEditingDefenderZones = null;
-                                    }
-                                    else {
-                                        //добавляем данные о первой выделеной точке:
-                                        firstSelectedPointForEditingDefenderZones = new Point (_currentCell.positionX, _currentCell.positionY);
-                                    }
-                                }
-                                uiController.editPointsToCurrentDefenderZone (points);
-                            }
-                        }
-                        else if (uiController.mode == UIControllerMode.EDIT_GENERATORS) {
-                            uiController.setGeneratorPosition (new Point (_currentCell.positionX, _currentCell.positionY));
-                        }
-
-                        _isPressed = false;
-                        onCellClick(_currentCell);
+                        _selectMode = false;
                         break;
-                    }
-
                     default :
-                    {
                         if (_currentObject) {
                             _currentObject.x = _currentCell.x;
                             _currentObject.y = _currentCell.y;
                         }
+                }
+
+                if (_selectMode) {
+                    if (uiController.mode == UIControllerMode.EDIT_OBJECTS) {
+                        editObjects();
                     }
+                    else if (uiController.mode == UIControllerMode.EDIT_PATHS) {
+                        editPaths();
+                    }
+                    else if (uiController.mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) {
+                        editDefenderPositions();
+                    }
+                    else if (uiController.mode == UIControllerMode.EDIT_GENERATORS) {
+                        uiController.setGeneratorPosition (new Point (_currentCell.positionX, _currentCell.positionY));
+                    }
+                    onCellClick(_currentCell);
                 }
             }
         } else {
             _isRolledOver = false;
 
             onCellRollOut(getCellViewByPosition(_lastCellX, _lastCellY));
+        }
+    }
+
+    private function editObjects():void {
+        if (_currentObject) {
+            var place:PlaceData = new PlaceData();
+            place.place(_currentCell.positionX, _currentCell.positionY);
+            place.object = _currentObject.object.name;
+            place.realObject = _currentObject.object;
+
+            if (uiController.addObject(place)) {
+                if (_shift) {
+                    addObject(_currentObject.object);
+                } else {
+                    addObject(null);
+                }
+            }
+        } else {
+            uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
+        }
+    }
+
+    private function editPaths():void {
+        var points: Vector.<Point> = new <Point>[];
+        points.push(new Point (_currentCell.positionX, _currentCell.positionY));
+        if (uiController.editPathAreaMode) {
+            if (firstSelectedPointForEditingPath) {
+                //добавляем все точки, в области, лежащей между двумя выделеными точками:
+                var startPositionX: int = Math.min(_currentCell.positionX, firstSelectedPointForEditingPath.x);
+                var startPositionY: int = Math.min(_currentCell.positionY, firstSelectedPointForEditingPath.y);
+                var endPositionX: int = Math.max(_currentCell.positionX, firstSelectedPointForEditingPath.x);
+                var endPositionY: int = Math.max(_currentCell.positionY, firstSelectedPointForEditingPath.y);
+                for (var i: int = startPositionX; i <= endPositionX; i++) {
+                    for (var j: int = startPositionY; j <= endPositionY; j++) {
+                        points.push(new Point (i, j));
+                    }
+                }
+                //очищаем данные о первой выделеной точке:
+                firstSelectedPointForEditingPath = null;
+            }
+            else {
+                //добавляем данные о первой выделеной точке:
+                firstSelectedPointForEditingPath = new Point (_currentCell.positionX, _currentCell.positionY);
+            }
+        }
+        uiController.editPointToCurrentPath (points);
+    }
+
+    private function editDefenderPositions():void {
+        if (uiController.editDefenderZonesMode == EditMode.SET_POINT) {
+            uiController.setCurrentDefenderZonePosition(new Point(_currentCell.positionX, _currentCell.positionY));
+        }
+        else {
+            var points: Vector.<Point> = new <Point>[];
+            points.push(new Point (_currentCell.positionX, _currentCell.positionY));
+            if (uiController.editDefenderZonesAreaMode) {
+                if (firstSelectedPointForEditingDefenderZones) {
+                    //добавляем все точки, в области, лежащей между двумя выделеными точками:
+                    var startPositionX: int = Math.min(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
+                    var startPositionY: int = Math.min(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
+                    var endPositionX: int = Math.max(_currentCell.positionX, firstSelectedPointForEditingDefenderZones.x);
+                    var endPositionY: int = Math.max(_currentCell.positionY, firstSelectedPointForEditingDefenderZones.y);
+                    for (var i: int = startPositionX; i <= endPositionX; i++) {
+                        for (var j: int = startPositionY; j <= endPositionY; j++) {
+                            points.push(new Point (i, j));
+                        }
+                    }
+                    //очищаем данные о первой выделеной точке:
+                    firstSelectedPointForEditingDefenderZones = null;
+                }
+                else {
+                    //добавляем данные о первой выделеной точке:
+                    firstSelectedPointForEditingDefenderZones = new Point (_currentCell.positionX, _currentCell.positionY);
+                }
+            }
+            uiController.editPointsToCurrentDefenderZone (points);
         }
     }
 
