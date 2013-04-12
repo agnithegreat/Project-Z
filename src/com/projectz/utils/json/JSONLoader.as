@@ -19,6 +19,8 @@ public class JSONLoader extends EventDispatcher {
         return _file.exists;
     }
 
+    private var _name: String;
+
     protected var _data: Object;
     public function get data():Object {
         if (!_data) {
@@ -36,9 +38,10 @@ public class JSONLoader extends EventDispatcher {
     }
 
     public function save($data: Object):void {
+        _name = _name || _file.name;
         var text: String = JSON.stringify($data);
         _file.addEventListener(Event.COMPLETE, handleComplete_save);
-        _file.save(text, _file.name);
+        _file.save(text, _name);
     }
 
     public function load():void {
