@@ -34,6 +34,8 @@ public class FieldObjectView extends Sprite {
 
     private var _currentPart: ObjectView;
 
+    private var _selectMode: int = -1;
+
     public function FieldObjectView($object: ObjectData, $assets: AssetManager) {
         _object = $object;
         _assets = $assets;
@@ -146,7 +148,7 @@ public class FieldObjectView extends Sprite {
     }
 
     private function handleTouch($event: TouchEvent):void {
-        var touch: Touch = $event.getTouch(_cells, TouchPhase.BEGAN);
+        var touch: Touch = $event.getTouch(_cells);
         if (touch) {
             var pos: Point = touch.getLocation(_cells).add(new Point(PositionView.cellWidth*0.5, PositionView.cellHeight*0.5));
             if (_currentPart) {
@@ -155,9 +157,16 @@ public class FieldObjectView extends Sprite {
                 var cx: int = Math.round(ty-tx);
                 var cy: int = Math.round(cx+tx*2);
 
-                // TODO: вынести в панель редактора
-                _currentPart.partData.setWalkable(cx, cy, 1-_currentPart.partData.getWalkable(cx, cy));
-                updateField();
+                if (touch.phase == TouchPhase.BEGAN) {
+                    _selectMode = 1-_currentPart.partData.getWalkable(cx, cy);
+                } else if (touch.phase == TouchPhase.ENDED) {
+                    _selectMode = -1;
+                }
+                if (_selectMode >= 0) {
+                    // TODO: вынести в панель редактора
+                    _currentPart.partData.setWalkable(cx, cy, _selectMode);
+                    updateField();
+                }
             }
         }
     }

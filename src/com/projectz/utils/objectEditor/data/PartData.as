@@ -93,6 +93,9 @@ public class PartData {
         return _mask[$x][$y];
     }
     public function setWalkable($x: int, $y: int, $walkable: int):void {
+        if ($x<0 || $y<0) {
+            return;
+        }
         _mask[$x][$y] = $walkable;
 //        _mask[$x][$y] = WALKABLE*$walkable + SHOTABLE*getShotable($x, $y);
     }
