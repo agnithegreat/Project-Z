@@ -10,6 +10,7 @@ import com.projectz.game.view.PositionView;
 
 import starling.core.Starling;
 import starling.display.Image;
+import starling.display.MovieClip;
 import starling.textures.Texture;
 
 public class Effect extends PositionView {
@@ -17,7 +18,7 @@ public class Effect extends PositionView {
     public static const BLOOD: String = "die";
     public static const DIE: String = "blood";
 
-    private var _image: Image;
+    private var _clip: MovieClip;
 
     private var _x: Number;
     override public function get positionX():Number {
@@ -28,16 +29,19 @@ public class Effect extends PositionView {
         return _y;
     }
 
-    public function Effect($x: Number, $y: Number, $texture: Texture) {
+    public function Effect($x: Number, $y: Number, $textures: Vector.<Texture>) {
         _x = $x;
         _y = $y;
 
         super();
 
-        _image = new Image($texture);
-        _image.pivotX = _image.width/2;
-        _image.pivotY = _image.height/2;
-        addChild(_image);
+        _clip = new MovieClip($textures);
+        _clip.loop = false;
+        _clip.pivotX = _clip.width/2;
+        _clip.pivotY = _clip.height/2;
+        addChild(_clip);
+
+        Starling.juggler.add(_clip);
     }
 
     public function hide($delay: Number, $time: Number):void {
@@ -52,8 +56,8 @@ public class Effect extends PositionView {
     }
 
     override public function destroy():void {
-        _image.removeFromParent(true);
-        _image = null;
+        _clip.removeFromParent(true);
+        _clip = null;
     }
 }
 }

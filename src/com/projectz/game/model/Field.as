@@ -475,6 +475,18 @@ public class Field extends EventDispatcher {
     }
 
     private function handleUpdateCell($e: Event):void {
+        var cell: Cell = $e.currentTarget as Cell;
+        _grid.setWalkable(cell.x, cell.y, cell.walkable);
+
+        var enemy: Enemy;
+        var len: int = _enemies.length;
+        for (var i:int = 0; i < len; i++) {
+            enemy = _enemies[i];
+            if (cell.object!=enemy && enemy.target==cell) {
+                var target: Cell = getTargetCell(enemy.target);
+                enemy.go(getWay(enemy.target, getCell(target.x, target.y), enemy.path)[0]);
+            }
+        }
     }
 
     public function destroy():void {

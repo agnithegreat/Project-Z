@@ -19,6 +19,9 @@ public class PositionView extends Sprite {
     public static var cellHeight: int = 18;
 
     protected var _cell: Cell;
+    public function get cell():Cell {
+        return _cell;
+    }
     public function get positionX():Number {
         return _cell.x;
     }

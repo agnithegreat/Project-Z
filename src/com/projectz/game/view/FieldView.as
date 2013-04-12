@@ -128,13 +128,13 @@ public class FieldView extends Sprite {
         var target: PositionView = $event.target as PositionView;
         var effect: Effect;
         if ($event.data == Effect.BLOOD) {
-            rand = Math.random()*2+1;
-            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTexture("blood_0"+rand));
+            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTextures("effect_brain"));
+            effect.pivotY += 40;
             _overallEffects.addChild(effect);
-            effect.hide(0, 1);
+            effect.hide(2, 1);
         } else if ($event.data == Effect.DIE) {
             var rand: int = Math.random()*2+1;
-            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTexture("blood_0"+rand));
+            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTextures("effect_blood_0"+rand));
             _floorEffects.addChild(effect);
             effect.hide(3, 1);
         }

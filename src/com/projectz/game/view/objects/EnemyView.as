@@ -55,6 +55,10 @@ public class EnemyView extends PersonageView {
     }
 
     private function handleDamage($event: Event):void {
+        // TODO: отброс анимации персонажа
+//        _currentState.currentFrame += _currentState.numFrames-1;
+//        _currentState.currentFrame = _currentState.currentFrame%_currentState.numFrames;
+
         dispatchEventWith(GameEvent.SHOW_EFFECT, true, Effect.BLOOD);
     }
 
