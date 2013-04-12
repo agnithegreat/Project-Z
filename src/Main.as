@@ -93,8 +93,8 @@ public class Main extends Sprite {
             _assets.verbose = false;
             _assets.enqueue(
                 dir.resolvePath("sounds"),
-//                appDir.resolvePath("fonts"),
-                    dir.resolvePath(basicAssetsPath)
+                dir.resolvePath("fonts"),
+                dir.resolvePath(basicAssetsPath)
             );
             initApp ();
         }
@@ -124,7 +124,7 @@ public class Main extends Sprite {
         _starling = new Starling(App, stage, viewPort);
         _starling.stage.stageWidth  = Constants.WIDTH;
         _starling.stage.stageHeight = Constants.HEIGHT;
-        _starling.showStats = true;
+//        _starling.showStats = true;
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
 

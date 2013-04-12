@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.ui {
+import com.projectz.game.ui.buttons.ButtonBase;
+
 import starling.display.Sprite;
 import starling.utils.AssetManager;
 
@@ -15,6 +17,8 @@ public class UI extends Sprite {
     private var _bottomPanel: BottomPanel;
 
     public function UI($assets: AssetManager) {
+        ButtonBase.init($assets);
+
         _topPanel = new TopPanel($assets);
         addChild(_topPanel);
 
