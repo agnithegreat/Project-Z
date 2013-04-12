@@ -29,6 +29,10 @@ public class UI extends Sprite {
         appear();
     }
 
+    public function update():void {
+        _topPanel.update();
+    }
+
     public function appear():void {
         _topPanel.appear();
         _bottomPanel.appear();

@@ -16,13 +16,15 @@ public class TopPanel extends Sprite {
 
     private var _bg: Image;
 
+    private var _supplies: SuppliesIndicator;
+
     public function TopPanel($assets: AssetManager) {
         _bg = new Image($assets.getTexture("panel-top"));
         _bg.touchable = false;
         addChild(_bg);
 
-        var supplies: SuppliesIndicator = new SuppliesIndicator($assets);
-        addChild(supplies);
+        _supplies = new SuppliesIndicator($assets);
+        addChild(_supplies);
 
         var menu: Button = new Button($assets.getTexture("btn-temp-02"));
         menu.x = _bg.width-menu.width-10;
@@ -33,6 +35,10 @@ public class TopPanel extends Sprite {
 //        button.scaleX = button.scaleY = 0.5;
 //        button.x = _bg.width-button.width;
 //        addChild(button);
+    }
+
+    public function update():void {
+        _supplies.update(0);
     }
 
     public function appear():void {

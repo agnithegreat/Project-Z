@@ -42,9 +42,9 @@ public class Main extends Sprite {
 //    // Startup image for HD screens
 //    [Embed(source="../assets/textures/loaderHD.png")]
 //    private static var BackgroundHD:Class;
-//
-//    [Embed(source="../assets/fonts/segoepr.ttf", embedAsCFF="false", fontFamily="Segoe Print")]
-//    private static const Segoe:Class;
+
+    [Embed(source="../fonts/poplarstd.ttf", embedAsCFF="false", fontFamily="Polar Std")]
+    private static const Polar:Class;
 
     private var _assets: AssetManager;
     private var _background: Bitmap;
@@ -90,7 +90,7 @@ public class Main extends Sprite {
 
         CONFIG::desktop {
             var dir: File = new File(_config.data.path);
-            _assets.verbose = false;
+//            _assets.verbose = false;
             _assets.enqueue(
                 dir.resolvePath("sounds"),
                 dir.resolvePath("fonts"),
@@ -98,7 +98,6 @@ public class Main extends Sprite {
             );
             initApp ();
         }
-
 
 
         CONFIG::web {
