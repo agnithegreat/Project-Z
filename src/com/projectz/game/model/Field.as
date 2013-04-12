@@ -320,14 +320,18 @@ public class Field extends EventDispatcher {
         return false;
     }
 
-    private function getArea($x: int, $y: int, $radius: int):Vector.<Cell> {
+    private function getArea($cells: Vector.<Point>, $x: int, $y: int, $radius: int):Vector.<Cell> {
         var area: Vector.<Cell> = new <Cell>[];
-        for (var i:int = -$radius; i <= $radius; i++) {
-            for (var j:int = -$radius; j <= $radius; j++) {
-                var cell: Cell = getCell($x+i, $y+j);
-                if (cell && i*i+j*j <= $radius*$radius) {
-                    area.push(cell);
-                }
+        var len: int = $cells.length;
+        for (var i:int = 0; i < len; i++) {
+            var point: Point = $cells[i];
+            var dx: int = $x-point.x;
+            var dy: int = $y-point.y;
+            var d: int = dx*dx+dy*dy;
+
+            var cell: Cell = getCell(point.x, point.y);
+            if (cell && d <= $radius*$radius) {
+                area.push(cell);
             }
         }
         return area;
@@ -445,7 +449,6 @@ public class Field extends EventDispatcher {
             _enemies.push(enemy);
         } else if ($data is DefenderData) {
             var defender: Defender = new Defender($data as DefenderData);
-            defender.watch(getArea($x, $y, defender.radius));
             _defenders.push(defender);
             personage = defender;
         }
@@ -455,7 +458,8 @@ public class Field extends EventDispatcher {
             personage.place(cell);
 
             if (personage is Defender) {
-                createAttackArea(personage);
+                defender.watch(getArea(cell.positionData.area, $x, $y, defender.radius));
+//                createAttackArea(personage);
             }
 
             dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);

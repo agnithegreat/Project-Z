@@ -25,6 +25,11 @@ public class DefenderPositionData {
         return _availablePoints;
     }
 
+    private var _area: Vector.<Point>;
+    public function get area():Vector.<Point> {
+        return _area;
+    }
+
     public function DefenderPositionData() {
         _availablePoints = new <String>[];
     }
@@ -41,11 +46,15 @@ public class DefenderPositionData {
     public function parse($data: Object):void {
         _x = $data.x;
         _y = $data.y;
+
+        _area = new <Point>[];
+
         var len:int = $data.availablePoints ? $data.availablePoints.length : 0;
         for (var i:int = 0; i < len; i++) {
             var pointData:Object = $data.availablePoints[i];
             var pointAsString:String = String(pointData.x + "_"  + pointData.y);
             _availablePoints.push(pointAsString);
+            _area.push(new Point(pointData.x, pointData.y));
         }
     }
 
