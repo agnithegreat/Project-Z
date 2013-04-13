@@ -43,8 +43,10 @@ public class Main extends Sprite {
 //    [Embed(source="../assets/textures/loaderHD.png")]
 //    private static var BackgroundHD:Class;
 
-    [Embed(source="../fonts/poplarstd.ttf", embedAsCFF="false", fontFamily="Polar Std")]
-    private static const Polar:Class;
+//    [Embed(source="../fonts/poplarstd.ttf", embedAsCFF="false", fontFamily="Polar Std")]
+//    private static const Polar:Class;
+
+    private static var fontFileName:String = "PoplarStd.swf";
 
     private var _assets: AssetManager;
     private var _background: Bitmap;
@@ -74,6 +76,8 @@ public class Main extends Sprite {
         var iOS:Boolean = Capabilities.manufacturer.indexOf("iOS") != -1;
         Starling.multitouchEnabled = true;
         Starling.handleLostContext = !iOS;
+
+        Fonts.init(_config.data.path+"/fonts/", [fontFileName]);
 
         viewPort = RectangleUtil.fit(
                 new Rectangle(0, 0, Constants.WIDTH, Constants.HEIGHT),
