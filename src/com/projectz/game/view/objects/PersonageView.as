@@ -35,6 +35,10 @@ public class PersonageView extends PositionView {
     protected var _currentState: MovieClip;
     protected var _states: Dictionary;
 
+    override public function get animated():Boolean {
+        return true;
+    }
+
     public function PersonageView($personage: Personage) {
         _personage = $personage;
         _personage.addEventListener(GameEvent.UPDATE, handleUpdate);

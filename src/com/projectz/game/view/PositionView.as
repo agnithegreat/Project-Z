@@ -35,6 +35,10 @@ public class PositionView extends Sprite {
         return _cell.depth;
     }
 
+    public function get animated():Boolean {
+        return false;
+    }
+
     public function PositionView() {
         x = (positionY-positionX)*cellWidth*0.5;
         y = (positionY+positionX)*cellHeight*0.5;
