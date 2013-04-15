@@ -47,6 +47,9 @@ public class Enemy extends Personage {
     }
 
     protected var _hp: int;
+    public function get hp():int {
+        return _hp;
+    }
 
     private var _cooldown: int;
 
@@ -76,12 +79,16 @@ public class Enemy extends Personage {
     }
 
     public function go($cells: Vector.<Cell>):void {
-        _target = $cells[0];
-        _lastTarget = $cells[$cells.length-1];
-        if (_target.attackObject) {
-            _target.walkable = false;
+        if ($cells.length>0) {
+            _target = $cells[0];
+            _lastTarget = $cells[$cells.length-1];
+
+            _target.addObject(this);
+            if (_target.attackObject) {
+                _target.walkable = false;
+            }
+            walk(true);
         }
-        walk(true);
     }
 
     public function step($delta: Number):void {
@@ -100,7 +107,6 @@ public class Enemy extends Personage {
 
         if (!_halfWay && _progress>=0.5) {
             leave();
-            _target.addObject(this);
             _halfWay = true;
         }
 

@@ -458,8 +458,9 @@ public class Field extends EventDispatcher {
             personage.place(cell);
 
             if (personage is Defender) {
+                cell.walkable = false;
                 defender.watch(getArea(cell.positionData.area, $x, $y, defender.radius));
-//                createAttackArea(personage);
+                createAttackArea(personage);
             }
 
             dispatchEventWith(GameEvent.OBJECT_ADDED, false, personage);

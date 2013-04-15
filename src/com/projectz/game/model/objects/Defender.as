@@ -29,6 +29,16 @@ public class Defender extends Personage {
     private var _area: Vector.<Cell>;
     private var _aim: Enemy;
 
+    private var _meleeEnemies: Vector.<Enemy>;
+    public function get melee():Boolean {
+        return _meleeEnemies && _meleeEnemies.length>0;
+    }
+
+    private var _rangeEnemies: Vector.<Enemy>;
+    public function get range():Boolean {
+        return _rangeEnemies && _rangeEnemies.length>0;
+    }
+
     public function Defender($data:DefenderData) {
         _defenderData = $data;
         super(_defenderData.getPart(), _defenderData.shadow);
@@ -59,13 +69,16 @@ public class Defender extends Personage {
             return;
         }
 
-        if (!_aim || !_aim.alive || Cell.getDistance(_cell, _aim.cell)>radius) {
+        if (melee || !_aim || !_aim.alive || Cell.getDistance(_cell, _aim.cell)>radius) {
             _aim = null;
-            var enemies: Vector.<Enemy> = rangeEnemies;
-            if (enemies.length) {
-                // TODO: сортировка по количеству зомби в клетке, сортировка по здоровью, etc
-                enemies.sort(sortEnemies);
-                _aim = enemies[0];
+            getEnemies();
+
+            if (melee) {
+                _meleeEnemies.sort(sortMeleeEnemies);
+                _aim = _meleeEnemies[0];
+            } else if (range) {
+                _rangeEnemies.sort(sortRangeEnemies);
+                _aim = _rangeEnemies[0];
             }
         }
         if (_aim) {
@@ -96,7 +109,6 @@ public class Defender extends Personage {
     }
 
     private function damageTargets($targets: Vector.<Enemy>):void {
-        var melee: Boolean = Cell.getDistance(_cell, _target) <= Math.SQRT2;
         var len: int = $targets.length;
         for (var i: int = 0; i < len; i++) {
             Starling.juggler.delayCall($targets[i].damage, 0.25, melee ? _defenderData.defence : _defenderData.strength);
@@ -110,18 +122,34 @@ public class Defender extends Personage {
         }
     }
 
-    private function get rangeEnemies():Vector.<Enemy> {
+    private function getEnemies():void {
+        _meleeEnemies = new <Enemy>[];
+        _rangeEnemies = new <Enemy>[];
         var enemies: Vector.<Enemy> = new <Enemy>[];
         var len: int = _area.length;
         for (var i:int = 0; i < len; i++) {
-            enemies = enemies.concat(_area[i].enemies);
+            if (Cell.getDistance(_area[i], _cell) < 2) {
+                _meleeEnemies = _meleeEnemies.concat(_area[i].enemies);
+            } else {
+                _rangeEnemies = _rangeEnemies.concat(_area[i].enemies);
+            }
         }
-        return enemies;
     }
 
-    private function sortEnemies($enemy1: Enemy, $enemy2: Enemy):int {
-        var d1: int = Cell.getDistance($enemy1.lastTarget, $enemy1.cell);
-        var d2: int = Cell.getDistance($enemy2.lastTarget, $enemy2.cell);
+    // сортируем милишных врагов по здоровью
+    private function sortMeleeEnemies($enemy1: Enemy, $enemy2: Enemy):int {
+        if ($enemy1.hp > $enemy2.hp) {
+            return 1;
+        } else if ($enemy1.hp < $enemy2.hp) {
+            return -1;
+        }
+        return 0;
+    }
+
+    // сортируем ранжевиков по расстоянию до цели
+    private function sortRangeEnemies($enemy1: Enemy, $enemy2: Enemy):int {
+        var d1: int = Cell.getDistance($enemy1.cell, $enemy1.lastTarget);
+        var d2: int = Cell.getDistance($enemy2.cell, $enemy1.lastTarget);
         if (d1 > d2) {
             return 1;
         } else if (d1 < d2) {
