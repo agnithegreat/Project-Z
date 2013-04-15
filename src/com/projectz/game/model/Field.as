@@ -243,7 +243,7 @@ public class Field extends EventDispatcher {
         var way: Vector.<Cell> = new <Cell>[];
         _grid.setStartNode($start.x, $start.y);
         _grid.setEndNode($end.x, $end.y);
-        var path: Path = PathFinder.findPath(_grid, $path);
+        var path: Path = PathFinder.findPath(_grid, true, $path);
         var len: int = path.path.length;
         for (var i:int = 1; i < len; i++) {
             way.push(getCell(path.path[i].x, path.path[i].y));
@@ -404,7 +404,10 @@ public class Field extends EventDispatcher {
                 var cell: Cell = getCell(i, j);
                 if (cell) {
                     if ($object.checkCell(i, j)) {
-                        _targetCells.push(cell);
+                        _grid.setSpecial(i, j, true);
+                        if ($object is Building) {
+                            _targetCells.push(cell);
+                        }
                     } else {
                         cell.attackObject = $object;
                     }

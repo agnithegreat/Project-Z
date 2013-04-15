@@ -60,6 +60,10 @@ package com.projectz.utils.pathFinding {
             (_nodes[x][y] as Node).paths[path] = path;
         }
 
+        public function setSpecial(x:int, y:int, special: Boolean):void {
+            (_nodes[x][y] as Node).special = special;
+        }
+
         public function destroy():void {
             _startNode = null;
             _endNode = null;

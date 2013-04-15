@@ -12,6 +12,7 @@ package com.projectz.utils.pathFinding {
 
         public var paths: Object = {};
 		public var walkable:Boolean = true;
+        public var special: Boolean;
 		
 		public var parent:Node;
 		
