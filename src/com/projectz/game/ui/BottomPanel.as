@@ -25,7 +25,6 @@ public class BottomPanel extends Sprite {
         addChild(_bg);
 
         _defenders = new Sprite();
-        _defenders.y = -30;
         addChild(_defenders);
 
         var boy: DefenderBar = new DefenderBar($assets);

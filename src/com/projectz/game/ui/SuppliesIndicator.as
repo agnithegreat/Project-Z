@@ -23,7 +23,7 @@ public class SuppliesIndicator extends Sprite {
         _icon = new Image($assets.getTexture("icon-supplies"));
         addChild(_icon);
 
-        _tf = new TextField(60, 60, "x0", "Polar Std", 30, 0xFFFFFF);
+        _tf = new TextField(60, 60, "x0", "Poplar Std", 30, 0xFFFFFF);
         _tf.hAlign = HAlign.LEFT;
         _tf.x = _icon.width+10;
         addChild(_tf);
