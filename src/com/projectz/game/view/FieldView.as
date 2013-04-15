@@ -38,7 +38,8 @@ public class FieldView extends Sprite {
     private var _container: Sprite;
 
     private var _cells: Sprite;
-    private var _shadows: Sprite;
+    private var _staticShadows: Sprite;
+    private var _dynamicShadows: Sprite;
     private var _floorEffects: Sprite;
     private var _objects: Sprite;
     private var _overallEffects: Sprite;
@@ -72,9 +73,14 @@ public class FieldView extends Sprite {
         _container.x = (Constants.WIDTH+PositionView.cellWidth)*0.5;
         _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
 
-        _shadows = new Sprite();
-        _shadows.touchable = false;
-        _container.addChild(_shadows);
+        _staticShadows = new Sprite();
+        _staticShadows.touchable = false;
+        _container.addChild(_staticShadows);
+        _staticShadows.flatten();
+
+        _dynamicShadows = new Sprite();
+        _dynamicShadows.touchable = false;
+        _container.addChild(_dynamicShadows);
 
         _floorEffects = new Sprite();
         _floorEffects.touchable = false;
@@ -111,16 +117,24 @@ public class FieldView extends Sprite {
         _objects.addChild(object);
         if (fieldObject.shadow) {
             var shadow: ShadowView = new ShadowView(fieldObject.shadow, object);
-            _shadows.addChild(shadow);
+
+            if (object.animated) {
+                _dynamicShadows.addChild(shadow);
+            } else {
+                _staticShadows.unflatten();
+                _staticShadows.addChild(shadow)
+                shadow.updatePosition();
+                _staticShadows.flatten();
+            }
         }
     }
 
     private function handleUpdate($event: Event):void {
         update();
 
-        var len: int = _shadows.numChildren;
+        var len: int = _dynamicShadows.numChildren;
         for (var i:int = 0; i < len; i++) {
-            (_shadows.getChildAt(i) as ShadowView).updatePosition();
+            (_dynamicShadows.getChildAt(i) as ShadowView).updatePosition();
         }
     }
 
@@ -207,14 +221,23 @@ public class FieldView extends Sprite {
         _objects.removeFromParent(true);
         _objects = null;
 
-        while (_shadows.numChildren>0) {
-            object = _shadows.removeChildAt(0, true) as ObjectView;
+        while (_staticShadows.numChildren>0) {
+            object = _staticShadows.removeChildAt(0, true) as ObjectView;
             if (object) {
                 object.destroy();
             }
         }
-        _shadows.removeFromParent(true);
-        _shadows = null;
+        _staticShadows.removeFromParent(true);
+        _staticShadows = null;
+
+        while (_dynamicShadows.numChildren>0) {
+            object = _dynamicShadows.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
+            }
+        }
+        _dynamicShadows.removeFromParent(true);
+        _dynamicShadows = null;
 
         _container.removeFromParent(true);
         _container = null;
