@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.json {
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
+
 import starling.events.EventDispatcher;
 
 import flash.utils.ByteArray;
@@ -14,12 +17,12 @@ import flash.filesystem.File;
 
 public class JSONLoader extends EventDispatcher {
 
+    private static var fs: FileStream = new FileStream();
+
     protected var _file: File;
     public function get exists():Boolean {
         return _file.exists;
     }
-
-    private var _name: String;
 
     protected var _data: Object;
     public function get data():Object {
@@ -38,10 +41,16 @@ public class JSONLoader extends EventDispatcher {
     }
 
     public function save($data: Object):void {
-        _name = _name || _file.name;
         var text: String = JSON.stringify($data);
-        _file.addEventListener(Event.COMPLETE, handleComplete_save);
-        _file.save(text, _name);
+        fs.addEventListener(Event.COMPLETE, handleComplete_save);
+        fs.open(_file, FileMode.WRITE);
+        fs.writeUTFBytes(text);
+        fs.close();
+    }
+
+    protected function handleComplete_save(event:Event):void {
+        fs.removeEventListener(Event.COMPLETE, handleComplete_save);
+        dispatchEventWith(Event.COMPLETE, false, data);
     }
 
     public function load():void {
@@ -60,12 +69,6 @@ public class JSONLoader extends EventDispatcher {
         var bytes: ByteArray = _file.data;
         _data = JSON.parse(bytes.readUTFBytes(bytes.length));
         parse(_data);
-
-        dispatchEventWith(Event.COMPLETE, false, data);
-    }
-
-    protected function handleComplete_save(event:Event):void {
-        _file.removeEventListener(Event.COMPLETE, handleComplete_save);
 
         dispatchEventWith(Event.COMPLETE, false, data);
     }
