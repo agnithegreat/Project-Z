@@ -127,7 +127,7 @@ public class Main extends Sprite {
         _starling = new Starling(App, stage, viewPort);
         _starling.stage.stageWidth  = Constants.WIDTH;
         _starling.stage.stageHeight = Constants.HEIGHT;
-//        _starling.showStats = true;
+        _starling.showStats = true;
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
 

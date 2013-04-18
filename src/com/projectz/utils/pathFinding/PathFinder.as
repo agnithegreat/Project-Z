@@ -25,7 +25,7 @@ package com.projectz.utils.pathFinding {
 		private static var _straightCost : Number = 1.0;
 		private static var _diagCost : Number = Math.SQRT2;
 
-		public static function findPath(grid : Grid, special: Boolean = false, path: int = 0) : Path {
+		public static function findPath(grid : Grid, path: int = 0) : Path {
 			_grid = grid;
 			_open = new Array();
 			_closed = new Array();
@@ -37,15 +37,16 @@ package com.projectz.utils.pathFinding {
 			_startNode.h = _heuristic(_startNode);
 			_startNode.f = _startNode.g + _startNode.h;
 
-            search(special, path);
+            search(path);
             buildPath();
 
 			return _path;
 		}
 
-		private static function search(special: Boolean = false, path: int = 0) : Boolean {
+		private static function search(path: int = 0) : Boolean {
 			var node : Node = _startNode;
-			while (node != _endNode) {
+            var end: Node = _endNode;
+			while (node != end) {
 				var startX : int = Math.max(0, node.x - 1);
 				var endX : int = Math.min(_grid.numCols - 1, node.x + 1);
 				var startY : int = Math.max(0, node.y - 1);
@@ -90,7 +91,7 @@ package com.projectz.utils.pathFinding {
 				_open.sortOn("f", Array.NUMERIC);
 				node = _open.shift() as Node;
 
-                if (special && node.special && node.f<_endNode.f) {
+                if (node.f<_endNode.f) {
                     _endNode = node;
                 }
 			}
