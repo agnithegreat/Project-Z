@@ -15,6 +15,7 @@ import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.LevelEditorUI;
 import com.projectz.utils.levelEditor.view.FieldView;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import starling.events.Event;
@@ -107,7 +108,7 @@ public class App extends Sprite {
         //init application:
         _model.levelData = _levelsStorage.getLevelData(2);
         _uiController.mode = UIControllerMode.EDIT_OBJECTS;
-        _uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
+        _uiController.selectCurrentObjectType(ObjectType.STATIC_OBJECT);
         _uiController.selectCurrentObject(null);
     }
 }

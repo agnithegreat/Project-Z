@@ -34,7 +34,7 @@ import starling.events.EventDispatcher;
 /**
  * Класс-контроллер, предназначенный для взаимодействия ui и view (возможна работа с нескольким ui).
  * <p>Сохраняет состояние режима работы (редактор объектов, редактор путей и т.д.)</p>
- * <p>Таккже реализует функционал классического контролера (композиция, ссылка на контролер редактора (классический mvc контроллер)).</p>
+ * <p>Также реализует функционал классического контролера (композиция, ссылка на контролер редактора (классический mvc контроллер)).</p>
  */
 public class UIController extends EventDispatcher {
 
@@ -42,12 +42,15 @@ public class UIController extends EventDispatcher {
 
     private var _mode:String;//режим работы ui-контролера (редактор объектов, редактор путей и т.д.);
 
+    //редактирование путей:
     private var _currentEditingPath:PathData;//текущий редактируемый путь
     private var _editPathMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании пути (удаление точек или добавление);
     private var _editPathAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании путей.
 
+    //редактирование генераторов:
     private var _currentEditingGenerator:GeneratorData;//текущий редактируемый генератор
 
+    //редактирование зон защитников:
     private var _currentEditingDefenderPosition:DefenderPositionData;//текущая редактируемая позиция защитника
     private var _editDefenderZonesMode:String = EditMode.ADD_POINTS;//режим работы ui-контролера при редактировании зон защитников (удаление точек или добавление);
     private var _editDefenderZonesAreaMode:Boolean;//значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании зон защитников.
@@ -67,7 +70,6 @@ public class UIController extends EventDispatcher {
 
     /**
      * Режим работы контролера (редактор объектов, редактор путей и т.д.).
-     *
      * @see com.projectz.utils.levelEditor.controller.UIControllerMode
      */
     public function get mode():String {
@@ -124,12 +126,21 @@ public class UIController extends EventDispatcher {
     //OBJECTS:
     /////////////////////////////////////////////
 
+    /**
+     * Выбор объекта для реадкктирования
+     * @param objectData Выбранный объект
+     */
     public function selectCurrentObject(objectData:ObjectData):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
             dispatchEvent(new SelectObjectEvent(objectData));
         }
     }
 
+    /**
+     * Выбор типа объекта для реадкктирования
+     * @param objectsType Выбранный тип
+     * @see ObjectData
+     */
     public function selectCurrentObjectType(objectsType:String):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
             dispatchEvent(new SelectObjectsTypeEvent(objectsType));
@@ -140,6 +151,9 @@ public class UIController extends EventDispatcher {
     //GENERATORS:
     /////////////////////////////////////////////
 
+    /**
+     * Текущий редактируемый генератор
+     */
     public function get currentEditingGenerator():GeneratorData {
         return _currentEditingGenerator;
     }
@@ -194,13 +208,16 @@ public class UIController extends EventDispatcher {
     //INFO:
     /////////////////////////////////////////////
 
+    /**
+     * Вывод информации о клетке поля
+     */
     public function showCellInfo($cell:Cell):void {
         dispatchEvent(new ShowCellInfoEvent($cell));
     }
 
 /////////////////////////////////////////////
 //LEVEL EDITOR CONTROLLER:
-//Методы классического mvc контроллера
+//Методы классического mvc контроллера (выполняются соответствующие функции в переменной levelEditorController)
 /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -322,28 +339,47 @@ public class UIController extends EventDispatcher {
         }
     }
 
-    //устанавливаем время для волны:
+    /**
+     * Устанавливаем время для волны. Время устанавливается для всех генераторов в волне.
+     * @param time Время
+     * @param waveData Волна
+     */
+
     public function setWaveTime (time:int, waveData:WaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
             levelEditorController.setWaveTime(time, waveData);
         }
     }
 
-    //устанавливаем задержку для волны генератора:
+    /**
+     * Устанавливаем задержку для волны генератора
+     * @param delay
+     * @param generatorWaveData Волна генератора
+     */
     public function setDelayOfGeneratorWave (delay:int, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
             levelEditorController.setDelayOfGeneratorWave(delay, generatorWaveData);
         }
     }
 
-    //добавляем тип врага для волны генератора:
+    /**
+     * Добавляем врага для волны генератора
+     * @param enemyId Id'шник врага
+     * @param positionId Позиция в списке врагов (влияет на очередность появления врагов)
+     * @param count Количество добавляемых врагов с таким именем
+     * @param generatorWaveData Волна генератора
+     */
     public function addEnemyToGeneratorWave (enemyId:String, positionId:int, count:int, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
             levelEditorController.addEnemyToGeneratorWave(enemyId, positionId, count, generatorWaveData);
         }
     }
 
-    //убираем тип врага для волны генератора:
+    /**
+     * Убираем врага для волны генератора
+     * @param positionId Позиция в списке врагов (влияет на очередность появления врагов)
+     * @param generatorWaveData Волна генератора
+     */
     public function removeEnemyFromGeneratorWave (positionId:int, generatorWaveData:GeneratorWaveData):void {
         if (mode == UIControllerMode.EDIT_GENERATORS) {
             levelEditorController.removeEnemyToGeneratorWave(positionId, generatorWaveData);
@@ -354,7 +390,34 @@ public class UIController extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
-    public function editPointsToCurrentDefenderZone (points:Vector.<Point>):void {
+    /**
+     * Добавление новой зоны защитников
+     */
+    public function addNewDefenderPosition ():void {
+        if (
+                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS)
+        ) {
+            levelEditorController.addNewDefenderPosition();
+        }
+    }
+
+    /**
+     * Удаление текущей выбранной зоны защитников
+     */
+    public function removeCurrentDefenderPosition ():void {
+        if (
+                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
+                currentEditingDefenderPosition
+        ) {
+            levelEditorController.removeDefenderPosition(currentEditingDefenderPosition);
+        }
+    }
+
+    /**
+     * Редактирование точек в текущей выбранной зоне защитников. Способ редактирования (добавление, удаление) зависит от режима ui контроллера.
+     * @param points Редактируемые точки
+     */
+    public function editPointsToCurrentDefenderPosition (points:Vector.<Point>):void {
         if (
                 (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
                 currentEditingDefenderPosition
@@ -368,36 +431,26 @@ public class UIController extends EventDispatcher {
         }
     }
 
-    public function setCurrentDefenderZonePosition (point:Point):void {
+    /**
+     * Установка позиции текущей выбранной зоны защитников.
+     * @param point Точка установки
+     */
+    public function setPositionOfCurrentDefenderPosition (point:Point):void {
         if (
                 (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
                 (editDefenderZonesMode == EditMode.SET_POINT) &&
                 currentEditingDefenderPosition
         ) {
-            levelEditorController.setCurrentDefenderZonePosition (point, currentEditingDefenderPosition);
+            levelEditorController.setPositionOfDefenderPosition (point, currentEditingDefenderPosition);
         }
     }
 
-    public function addNewDefenderPosition ():void {
-        if (
-                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS)
-        ) {
-            levelEditorController.addNewDefenderPosition();
-        }
-    }
-
-    public function removeCurrentDefenderPosition ():void {
-        if (
-                (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
-                currentEditingDefenderPosition
-        ) {
-            levelEditorController.removeDefenderPosition(currentEditingDefenderPosition);
-        }
-    }
-
-    public function clearAllDefenderZonesPoint ():void {
+    /**
+     * Удаление всех точек текущей выбранной зоны защитников
+     */
+    public function clearAllPointsFromCurrentDefenderPosition ():void {
         if (currentEditingDefenderPosition) {
-            levelEditorController.clearAllDefenderZonesPoint(currentEditingDefenderPosition);
+            levelEditorController.clearAllPointsFromDefenderPosition(currentEditingDefenderPosition);
         }
     }
 
@@ -405,6 +458,9 @@ public class UIController extends EventDispatcher {
     //OTHER:
     /////////////////////////////////////////////
 
+    /**
+     * Сохранение файла с настройками уровня
+     */
     public function save ():void {
         levelEditorController.save();
     }
@@ -412,7 +468,6 @@ public class UIController extends EventDispatcher {
     public function export ():void {
         levelEditorController.export();
     }
-
 
 }
 }

@@ -368,6 +368,9 @@ public class Field extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
+    /**
+     * Добавление новой зоны защитников
+     */
     public function addNewDefenderPosition ():void {
         if (_levelData) {
             var newDefenderPositionData:DefenderPositionData = new DefenderPositionData();
@@ -378,6 +381,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление зоны защитников
+     * @param defenderPositionData Зона защтников
+     */
     public function removeDefenderPosition (defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             var positionIndex:int = _levelData.defenderPositions.indexOf(defenderPositionData);
@@ -388,6 +395,11 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Добавление точек в зону защитников.
+     * @param points Удаляемые точки
+     * @param defenderPositionData Зона защтников
+     */
     public function addPointsToDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
@@ -405,6 +417,11 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление точек в зоне защитников.
+     * @param points Удаляемые точки
+     * @param defenderPositionData Зона защтников
+     */
     public function removePointsFromDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             if (_levelData) {
@@ -424,14 +441,12 @@ public class Field extends EventDispatcher {
         }
     }
 
-    public function clearAllPointsFromDefenderZone (defenderPositionData:DefenderPositionData):void {
-        if (_levelData) {
-            defenderPositionData.clearAllDefenderZonesPoint();
-            dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED));
-        }
-    }
-
-    public function setCurrentDefenderZonePosition (point:Point, defenderPositionData:DefenderPositionData):void {
+    /**
+     * Установка позиции зоны защитников.
+     * @param point Точка установки
+     * @param defenderPositionData Зона защтников
+     */
+    public function setPositionOfDefenderPosition (point:Point, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             if (_levelData) {
                 if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
@@ -442,10 +457,24 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление всех точек зоны защитников
+     * @param defenderPositionData Зона защтников
+     */
+    public function clearAllPointsFromDefenderPosition (defenderPositionData:DefenderPositionData):void {
+        if (_levelData) {
+            defenderPositionData.clearAllDefenderZonesPoint();
+            dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED));
+        }
+    }
+
     /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////
 
+    /**
+     * Сохранение файла с настройками уровня
+     */
     public function save ():void {
         levelData.save(levelData.export());
     }

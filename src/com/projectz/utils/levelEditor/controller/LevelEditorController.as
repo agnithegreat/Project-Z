@@ -136,34 +136,63 @@ public class LevelEditorController extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
+    /**
+     * Добавление новой зоны защитников
+     */
     public function addNewDefenderPosition ():void {
         model.addNewDefenderPosition();
     }
 
+    /**
+     * Удаление зоны защитников
+     * @param defenderPositionData Зона защтников
+     */
     public function removeDefenderPosition (defenderPositionData:DefenderPositionData):void {
         model.removeDefenderPosition(defenderPositionData);
     }
 
+    /**
+     * Добавление точек в зону защитников.
+     * @param points Удаляемые точки
+     * @param defenderPositionData Зона защтников
+     */
     public function addPointsToDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         model.addPointsToDefenderPosition(points, defenderPositionData);
     }
 
+    /**
+     * Удаление точек в зоне защитников.
+     * @param points Удаляемые точки
+     * @param defenderPositionData Зона защтников
+     */
     public function removePointsFromDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         model.removePointsFromDefenderPosition(points, defenderPositionData);
     }
 
-    public function clearAllDefenderZonesPoint (defenderPositionData:DefenderPositionData):void {
-        model.clearAllPointsFromDefenderZone(defenderPositionData);
+    /**
+     * Установка позиции зоны защитников.
+     * @param point Точка установки
+     * @param defenderPositionData Зона защтников
+     */
+    public function setPositionOfDefenderPosition (point:Point, defenderPositionData:DefenderPositionData):void {
+        model.setPositionOfDefenderPosition (point, defenderPositionData);
     }
 
-    public function setCurrentDefenderZonePosition (point:Point, defenderPositionData:DefenderPositionData):void {
-        model.setCurrentDefenderZonePosition (point, defenderPositionData);
+    /**
+     * Удаление всех точек зоны защитников
+     * @param defenderPositionData Зона защтников
+     */
+    public function clearAllPointsFromDefenderPosition (defenderPositionData:DefenderPositionData):void {
+        model.clearAllPointsFromDefenderPosition(defenderPositionData);
     }
 
     /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////
 
+    /**
+     * Сохранение файла с настройками уровня
+     */
     public function save ():void {
         model.save();
     }

@@ -20,6 +20,7 @@ import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorE
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import fl.controls.ComboBox;
@@ -144,7 +145,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 
         //формируем список врагов:
         var dataProvider:DataProvider = new DataProvider();
-        var objects:Dictionary = objectStorage.getType(ObjectData.ENEMY);
+        var objects:Dictionary = objectStorage.getType(ObjectType.ENEMY);
         var object:ObjectData;
         for each (object in objects) {
             var objectData:ObjectData = ObjectData(object);

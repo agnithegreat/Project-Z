@@ -13,6 +13,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editObjects
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import fl.controls.ComboBox;
@@ -62,14 +63,14 @@ public class EditObjectsPanel extends BasicPanel {
         cbxBackgrounds.focusEnabled = false;
 
         var dataProvider:DataProvider = new DataProvider();
-        dataProvider.addItem({label:"static object (" + ObjectData.STATIC_OBJECT + ")",data:ObjectData.STATIC_OBJECT});
-        dataProvider.addItem({label:"target object (" + ObjectData.TARGET_OBJECT + ")",data:ObjectData.TARGET_OBJECT});
-        dataProvider.addItem({label:"animated object (" + ObjectData.ANIMATED_OBJECT + ")",data:ObjectData.ANIMATED_OBJECT});
+        dataProvider.addItem({label:"static object (" + ObjectType.STATIC_OBJECT + ")",data:ObjectType.STATIC_OBJECT});
+        dataProvider.addItem({label:"target object (" + ObjectType.TARGET_OBJECT + ")",data:ObjectType.TARGET_OBJECT});
+        dataProvider.addItem({label:"animated object (" + ObjectType.ANIMATED_OBJECT + ")",data:ObjectType.ANIMATED_OBJECT});
         cbxObjectsType.dataProvider = dataProvider;
         dataProvider = new DataProvider ();
 
         var object: ObjectData;
-        var objects: Dictionary = objectStorage.getType(ObjectData.BACKGROUND);
+        var objects: Dictionary = objectStorage.getType(ObjectType.BACKGROUND);
         for each (object in objects) {
             var objectData:ObjectData = ObjectData (object);
             dataProvider.addItem({label:objectData.name,data:objectData});

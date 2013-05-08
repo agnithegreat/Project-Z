@@ -33,6 +33,7 @@ import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.geom.Point;
@@ -502,7 +503,7 @@ public class FieldView extends Sprite {
 
     private function editDefenderPositions():void {
         if (uiController.editDefenderZonesMode == EditMode.SET_POINT) {
-            uiController.setCurrentDefenderZonePosition(new Point(_currentCell.positionX, _currentCell.positionY));
+            uiController.setPositionOfCurrentDefenderPosition(new Point(_currentCell.positionX, _currentCell.positionY));
         }
         else {
             var points: Vector.<Point> = new <Point>[];
@@ -527,7 +528,7 @@ public class FieldView extends Sprite {
                     firstSelectedPointForEditingDefenderZones = new Point (_currentCell.positionX, _currentCell.positionY);
                 }
             }
-            uiController.editPointsToCurrentDefenderZone (points);
+            uiController.editPointsToCurrentDefenderPosition (points);
         }
     }
 
@@ -604,13 +605,13 @@ public class FieldView extends Sprite {
     }
 
     private function selectObjectsTypeListener(event:SelectObjectsTypeEvent):void {
-        _objectsContainer.visible = event.objectsType != ObjectData.ENEMY;
+        _objectsContainer.visible = event.objectsType != ObjectType.ENEMY;
         addObject(null);
     }
 
     private function backgroundWasChangedListener(event:EditBackgroundEvent):void {
         var objectData:ObjectData = event.objectData;
-        if (objectData.type == ObjectData.BACKGROUND) {
+        if (objectData.type == ObjectType.BACKGROUND) {
             if (_field.levelData) {
                 if (!_bg) {
                     _bg = new Image(_assets.getTexture(_field.levelData.bg));
