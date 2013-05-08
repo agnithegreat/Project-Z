@@ -7,8 +7,15 @@
  */
 package com.hogargames.errors {
 
+    /**
+     * Исключение отправляемое при попытке реализации классса-синглтона.
+     */
     public class SingletonError extends Error {
 
+        /**
+         * @param message Содержит сообщение, связанное с объектом Error.
+         * @param id Ссылочный номер, связываемый с конкретным сообщением об ошибке.
+         */
         public function SingletonError (message:String = "Class is singleton", id:int = 0) {
             super (message, id);
         }

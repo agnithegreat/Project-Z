@@ -21,7 +21,7 @@ import flash.geom.Point;
 import starling.events.EventDispatcher;
 
 /**
- * Класс-контроллер, предназначенный редактирования карты уровня. Получая команды, диспатчит события.
+ * Класс-контроллер, классический mvc-контроллер.
  */
 public class LevelEditorController extends EventDispatcher {
 
