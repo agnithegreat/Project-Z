@@ -7,14 +7,19 @@
  */
 package com.projectz.utils.levelEditor.controller {
 
+/**
+ * Класс, хранящий список режимов работы ui-контроллера в виде констант.
+ */
 public class UIControllerMode {
 
-    public static var EDIT_OBJECTS:String = "edit objects";//режим редактирования объектов
-    public static var EDIT_PATHS:String = "edit paths";//режим редактирования путей
-    public static var EDIT_GENERATORS:String = "edit generators";//режим редактирования генераторов
-    public static var EDIT_DEFENDER_POSITIONS:String = "edit defender positions";//режим редактирования зон, в которых находятся защитники
-    public static var EDIT_LEVELS:String = "edit levels";//режим редактирования файлов уровней
-    public static var EDIT_SETTINGS:String = "edit settings";//режим редактирования настроек
+    public static var EDIT_OBJECTS:String = "edit objects";//Режим редактирования объектов.
+    public static var EDIT_PATHS:String = "edit paths";//Режим редактирования путей.
+    public static var EDIT_GENERATORS:String = "edit generators";//Режим редактирования генераторов.
+    public static var EDIT_DEFENDER_POSITIONS:String = "edit defender positions";//Режим редактирования зон, в которых находятся защитники.
+    public static var EDIT_ASSETS:String = "edit assets";//Режим редактирования ресурсов.
+    public static var EDIT_UNITS:String = "edit units";//Режим редактирования юнитов.
+    public static var EDIT_LEVELS:String = "edit levels";//Режим редактирования файлов уровней.
+    public static var EDIT_SETTINGS:String = "edit settings";//Режим редактирования настроек.
 
 }
 }

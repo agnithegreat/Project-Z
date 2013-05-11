@@ -10,24 +10,34 @@ import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.json.JSONLoader;
 
+import flash.display.Sprite;
+
 import flash.events.MouseEvent;
 import flash.filesystem.File;
 import flash.text.TextField;
 
 import starling.events.Event;
 
-public class SelectConfigPanel extends GraphicStorage {
+/**
+ * Стартовая панель редактора уровней для настройки работы редактора.
+ * В этой панели создаётся и сохраняется файлик с конфигом редактора.
+ * В файле конфига содержиться ссылка на папку с файлами в dropbox.
+ */
+public class ConfigPanel extends GraphicStorage {
 
-    public var btnSelectPath:ButtonWithText;
-    public var btnStart:ButtonWithText;
-    public var btnSaveConfig:ButtonWithText;
-    public var tfPath:TextField;
+    private var mcStep1:Sprite;
+    private var mcStep2:Sprite;
+    private var btnSelectPath:ButtonWithText;
+    private var btnStart:ButtonWithText;
+    private var btnSaveConfig:ButtonWithText;
+    private var tfDropBoxPath:TextField;
+    private var tfConfigPath:TextField;
 
     private var config: JSONLoader;
     private var directory: File;
 
-    public function SelectConfigPanel(config: JSONLoader, directory: File) {
-        super (new mcSelectConfigPanel);
+    public function ConfigPanel(config: JSONLoader, directory: File) {
+        super (new mcConfigPanel);
         this.config = config;
         this.directory = directory;
         addEventListener(Event.ADDED_TO_STAGE, addedToStageListener);
@@ -45,10 +55,14 @@ public class SelectConfigPanel extends GraphicStorage {
     override protected function initGraphicElements ():void {
         super.initGraphicElements();
 
-        btnSelectPath = new ButtonWithText (mc ["btnSelectPath"]);
+        mcStep1 = getElement ("mcStep1");
+        mcStep2 = getElement ("mcStep2");
+        btnSelectPath = new ButtonWithText (mcStep1 ["btnSelectPath"]);
+        tfDropBoxPath = TextField (getElement("tfDropBoxPath", mcStep1));
         btnStart = new ButtonWithText (mc ["btnStart"]);
-        btnSaveConfig = new ButtonWithText (mc ["btnSaveConfig"]);
-        tfPath = TextField (getElement("tfPath"));
+        btnSaveConfig = new ButtonWithText (mcStep2 ["btnSaveConfig"]);
+        tfConfigPath = TextField (getElement("tfConfigPath", mcStep2));
+
 
         btnSelectPath.text = "выбрать";
         btnSaveConfig.text = "сохранить";
@@ -64,28 +78,34 @@ public class SelectConfigPanel extends GraphicStorage {
 /////////////////////////////////////////////
 
     private function selectPathStep ():void {
+        mcStep2.visible = false;
         btnSelectPath.enable = true;
         btnSelectPath.text = "выбрать";
         btnSaveConfig.enable = false;
-        btnStart.enable = false;
+        btnStart.visible = false;
     }
 
     private function saveConfigStep ():void {
+        mcStep2.visible = true;
         btnSelectPath.enable = true;
         btnSelectPath.text = "изменить";
         btnSaveConfig.enable = true;
-        btnStart.enable = false;
+        btnStart.visible = false;
     }
 
     private function finalStep ():void {
         btnSelectPath.enable = true;
         btnSelectPath.text = "изменить";
         btnSaveConfig.enable = true;
-        btnStart.enable = true;
+        btnStart.visible = true;
     }
 
-    private function showPath (text:String):void {
-        tfPath.text = text;
+    private function showDropBoxPath (text:String):void {
+        tfDropBoxPath.text = "Путь указан: \n" + text;
+    }
+
+    private function showConfigPath (text:String):void {
+        tfConfigPath.text = "Путь указан: \n" + text;
     }
 
 /////////////////////////////////////////////
@@ -104,6 +124,7 @@ public class SelectConfigPanel extends GraphicStorage {
 
     private function completeListener_saveConfigFile(event:Event):void {
         trace("completeListener_saveConfigFile");
+        showConfigPath(config.path);
         finalStep();
     }
 
@@ -126,7 +147,7 @@ public class SelectConfigPanel extends GraphicStorage {
     private function handleSelect(event:Object):void {
         trace("handleSelect");
         config.data.path = directory.nativePath;
-        showPath(config.data.path);
+        showDropBoxPath(config.data.path);
         saveConfigStep();
     }
 

@@ -24,6 +24,9 @@ import starling.display.Sprite;
 import starling.utils.AssetManager;
 import starling.utils.formatString;
 
+/**
+ * Редактор уровней.
+ */
 public class App extends Sprite {
 
     private var _assets: AssetManager;

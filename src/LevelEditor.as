@@ -8,7 +8,7 @@
 package {
 import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.levelEditor.App;
-import com.projectz.utils.levelEditor.ui.SelectConfigPanel;
+import com.projectz.utils.levelEditor.ui.ConfigPanel;
 
 import flash.display.Sprite;
 
@@ -27,34 +27,22 @@ public class LevelEditor extends Sprite {
     private var _assets: AssetManager;
     private var _starling: Starling;
 
-    private var _config: JSONLoader;
+    private var _config: JSONLoader;//Файлик с настройками самомго редактора (хранит ссылку на папку с файлами в dropbox).
     private var _directory: File;
-    private var selectConfigPanel: SelectConfigPanel;
+    private var configPanel: ConfigPanel;//Стартовая панель редактора уровней для настройки работы редактора.
 
+    /**
+     * Основной класс редактора уровней.
+     */
     public function LevelEditor() {
         _config = new JSONLoader(File.applicationDirectory.resolvePath("config.json"));
         _config.addEventListener(Event.COMPLETE, completeListener_loadConfigFile);
         _config.load();
     }
 
-    private function completeListener_loadConfigFile(event:Event):void {
-        _config.removeEventListener(Event.COMPLETE, completeListener_loadConfigFile);
-        if (_config.data.path) {
-            _directory = new File(_config.data.path);
-            init();
-        } else {
-            _directory = new File();
-
-            selectConfigPanel = new SelectConfigPanel(_config, _directory);
-            addChild (selectConfigPanel);
-            selectConfigPanel.addEventListener(Event.COMPLETE, completeListener_start);
-        }
-    }
-
-    private function completeListener_start(event:*):void {
-        removeChild (selectConfigPanel);
-        init();
-    }
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
 
     private function init():void {
         Starling.multitouchEnabled = true;
@@ -78,6 +66,29 @@ public class LevelEditor extends Sprite {
         _starling.simulateMultitouch = false;
         _starling.enableErrorChecking = Capabilities.isDebugger;
         _starling.addEventListener(Event.ROOT_CREATED, handleRootCreated);
+    }
+
+/////////////////////////////////////////////
+//LISTENERS:
+/////////////////////////////////////////////
+
+    private function completeListener_loadConfigFile(event:Event):void {
+        _config.removeEventListener(Event.COMPLETE, completeListener_loadConfigFile);
+        if (_config.data.path) {
+            _directory = new File(_config.data.path);
+            init();
+        } else {
+            _directory = new File();
+            //Отображаем панель первого запуска редактора уровней для настройки пути к ассетам.
+            configPanel = new ConfigPanel(_config, _directory);
+            addChild (configPanel);
+            configPanel.addEventListener(Event.COMPLETE, completeListener_start);
+        }
+    }
+
+    private function completeListener_start(event:*):void {
+        removeChild (configPanel);
+        init();
     }
 
     private function handleRootCreated(event: Object,  app: App):void {

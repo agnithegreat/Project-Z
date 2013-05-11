@@ -12,6 +12,10 @@ import flash.utils.ByteArray;
 import flash.events.Event;
 import flash.filesystem.File;
 
+/**
+ * Класс, хранящий сслыку на файл в формаке json.
+ * Загружает, парсит и сохраняет файл.
+ */
 public class JSONLoader extends EventDispatcher {
 
     protected var _file: File;
@@ -52,6 +56,10 @@ public class JSONLoader extends EventDispatcher {
         } else {
             dispatchEventWith(Event.COMPLETE, false, data);
         }
+    }
+
+    public function get path():String {
+        return _file.nativePath;
     }
 
     protected function handleComplete(event:Event):void {

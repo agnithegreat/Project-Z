@@ -29,11 +29,15 @@ import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
+/**
+ * Панель редактора уровней для редактирования путей.
+ */
 public class EditPathsPanel extends BasicPanel {
 
-    private var model:Field;
-    private var uiController:UIController;
+    private var model:Field;//Ссылка на модель (mvc).
+    private var uiController:UIController;//Ссылка на контроллер (mvc).
 
+    //элементы ui:
     private var listPaths:List;
     private var clpPathColor:ColorPicker;
     private var chxAreaMode:CheckBox;
@@ -43,6 +47,11 @@ public class EditPathsPanel extends BasicPanel {
     private var btnDelete:ButtonWithText;
     private var btnNew:ButtonWithText;
 
+    /**
+     * @param mc Мувиклип с графикой для панели.
+     * @param model Ссылка на модель (mvc).
+     * @param uiController Ссылка на контроллер (mvc).
+     */
     public function EditPathsPanel(mc:MovieClip, model:Field, uiController:UIController) {
         this.model = model;
         this.uiController = uiController;
@@ -60,37 +69,46 @@ public class EditPathsPanel extends BasicPanel {
 //PROTECTED:
 /////////////////////////////////////////////
 
+    /**
+     * @inheritDoc
+     */
     override protected function initGraphicElements():void {
         super.initGraphicElements();
 
+        //Инициализируем компоненты:
         listPaths = List(getElement("listPaths"));
         clpPathColor = ColorPicker(getElement("clpPathColor"));
         chxAreaMode = CheckBox(getElement("chxAreaMode"));
 
+        //Добавляем слушателей для компонентов:
         listPaths.addEventListener(Event.CHANGE, changeListener_listPaths);
         clpPathColor.addEventListener(Event.CHANGE, changeListener_clpPathColor);
         chxAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
 
+        //Отключаем фокус для компонентов:
         listPaths.focusEnabled = false;
         clpPathColor.focusEnabled = false;
         listPaths.focusEnabled = false;
         clpPathColor.focusEnabled = false;
         chxAreaMode.focusEnabled = false;
 
-        //создание кнопок:
+        //Создаём кнопки:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
         btnRemovePathPoint = new ButtonWithText(mc["btnRemovePathPoint"]);
         btnDelete = new ButtonWithText(mc["btnDelete"]);
         btnNew = new ButtonWithText(mc["btnNew"]);
 
+        //Устанавливаем выделение кнопок:
         btnAddPathPoint.selected = (uiController.editPathMode == EditMode.ADD_POINTS);
         btnRemovePathPoint.selected = (uiController.editPathMode == EditMode.REMOVE_POINTS);
 
+        //Устанавливаем тексты на кнопках:
         btnAddPathPoint.text = "Добавление";
         btnRemovePathPoint.text = "Удаление";
         btnDelete.text = "<FONT size = '13'>Удалить путь<FONT>";
         btnNew.text = "<FONT size = '13'>Создать путь<FONT>";
 
+        //Добавляем слушателей для кнопок:
         btnAddPathPoint.addEventListener(MouseEvent.CLICK, clickListener);
         btnRemovePathPoint.addEventListener(MouseEvent.CLICK, clickListener);
         btnDelete.addEventListener(MouseEvent.CLICK, clickListener);
@@ -104,10 +122,10 @@ public class EditPathsPanel extends BasicPanel {
 
     private function reInitPathsList():void {
         if (model.levelData) {
-            //формируем список всех путей текущего уровня:
+            //Формируем список всех путей текущего уровня:
             initPathsList(model.levelData.paths);
 
-            //устанавливаем текущий редактируемый путь:
+            //Устанавливаем текущий редактируемый путь:
             var currentEditingPath:PathData;
             if (model.levelData.paths.length > 0) {
                 currentEditingPath = model.levelData.paths [0];
@@ -119,6 +137,7 @@ public class EditPathsPanel extends BasicPanel {
 
 
     private function initPathsList(paths:Vector.<PathData>):void {
+        //Формируем список всех путей текущего уровня:
         var dataProvider:DataProvider = new DataProvider();
         for (var i:int = 0; i < paths.length; i++) {
             var pathData:PathData = paths [i];
@@ -150,7 +169,7 @@ public class EditPathsPanel extends BasicPanel {
 
     private function selectPathListener(event:SelectPathEvent):void {
         var pathData:PathData = event.pathData;
-        //устанавливаем позицию листа для выбранноо пути:
+        //Устанавливаем позицию листа для выбранноо пути:
         var dataProvider:DataProvider = listPaths.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);
@@ -162,7 +181,7 @@ public class EditPathsPanel extends BasicPanel {
         }
 
         if (pathData) {
-            //устанавливаем цвет в колорпикере:
+            //Устанавливаем цвет пути в колорпикере:
             clpPathColor.selectedColor = pathData.color;
         }
 
@@ -170,6 +189,7 @@ public class EditPathsPanel extends BasicPanel {
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_PATHS) {
+            //Формируем список путей при переключении контроллера в режим редактирования путей.
             reInitPathsList();
         }
     }

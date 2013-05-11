@@ -106,7 +106,17 @@ public class FieldObjectView extends Sprite {
         var len: int = _cells.numChildren;
         for (var i:int = 0; i < len; i++) {
             cell = _cells.getChildAt(i) as CellView;
-            cell.alpha = _currentPart && _currentPart.partData.name!=PartData.SHADOW ? _currentPart.partData.mask[cell.position.x][cell.position.y] : _object.mask[cell.position.x][cell.position.y];
+            if (
+                    _currentPart &&
+                    _currentPart.partData.name!=PartData.SHADOW
+            ) {
+                //используем для отрисовки данные части (currentPart):
+                cell.alpha = _currentPart.partData.mask[cell.position.x][cell.position.y];
+            }
+            else {
+                //используем для отрисовки данные объекта (_object):
+                cell.alpha = _object.mask[cell.position.x][cell.position.y];
+            }
         }
     }
 
@@ -158,7 +168,9 @@ public class FieldObjectView extends Sprite {
                 var cy: int = Math.round(cx+tx*2);
 
                 if (touch.phase == TouchPhase.BEGAN) {
-                    _selectMode = 1-_currentPart.partData.getWalkable(cx, cy);
+                    if (_currentPart.partData.name!=PartData.SHADOW) {
+                        _selectMode = 1-_currentPart.partData.getWalkable(cx, cy);
+                    }
                 } else if (touch.phase == TouchPhase.ENDED) {
                     _selectMode = -1;
                 }

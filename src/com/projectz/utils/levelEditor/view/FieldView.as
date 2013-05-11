@@ -502,7 +502,7 @@ public class FieldView extends Sprite {
     }
 
     private function editDefenderPositions():void {
-        if (uiController.editDefenderZonesMode == EditMode.SET_POINT) {
+        if (uiController.editDefenderPositionsMode == EditMode.SET_POINT) {
             uiController.setPositionOfCurrentDefenderPosition(new Point(_currentCell.positionX, _currentCell.positionY));
         }
         else {

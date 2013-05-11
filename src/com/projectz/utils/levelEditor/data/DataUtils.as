@@ -14,10 +14,10 @@ public class DataUtils {
         var point:Point = new Point();
         var pointAsArray:Array = string.split("_");
         if (pointAsArray.length > 0) {
-            point.x = pointAsArray[0];
+            point.x = parseInt (pointAsArray[0]);
         }
         if (pointAsArray.length > 1) {
-            point.y = pointAsArray[1];
+            point.y = parseInt (pointAsArray[1]);
         }
         return point;
     }

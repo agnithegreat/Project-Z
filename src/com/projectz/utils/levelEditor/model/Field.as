@@ -116,6 +116,11 @@ public class Field extends EventDispatcher {
         return true;
     }
 
+    /**
+     * Ищем объект в указанной позиции. Если нашли, то удаляем его и диспатчим событие с этим объектом.
+     * @param $x
+     * @param $y
+     */
     public function selectObject($x: int,  $y: int):void {
         if (_levelData) {
             var object: PlaceData;
@@ -178,7 +183,7 @@ public class Field extends EventDispatcher {
         }
     }
 
-    public function removePointFromPath (points:Vector.<Point>, pathData:PathData):void {
+    public function removePointsFromPath (points:Vector.<Point>, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
@@ -205,6 +210,9 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Создаём новый путь в текущем выбранном уровне.
+     */
     public function addNewPath ():void {
         if (_levelData) {
             var pathData:PathData = _levelData.addNewPath ();
@@ -212,6 +220,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаляем выбранный путь в текущем выбранном уровне.
+     * @param pathData Удаляемый путь.
+     */
     public function deletePath (pathData:PathData):void {
         if (_levelData) {
             if (_levelData.deletePath (pathData)) {
@@ -224,6 +236,9 @@ public class Field extends EventDispatcher {
     //GENERATORS & WAVES:
     /////////////////////////////////////////////
 
+    /**
+     * Добавляем новый генератов в текущем выбранном уровне.
+     */
     public function addNewGenerator ():void {
         if (_levelData) {
             var generatorData:GeneratorData = _levelData.addNewGenerator ();
@@ -238,6 +253,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаляем выбранный генератор в текущем выбранном уровне.
+     * @param generatorData Удаляемый генератор.
+     */
     public function removeGenerator (generatorData:GeneratorData):void {
         if (_levelData) {
             if (_levelData.removeGenerator(generatorData)) {
