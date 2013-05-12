@@ -20,6 +20,8 @@ import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import flash.events.MouseEvent;
 import flash.text.TextField;
 
+import starling.utils.AssetManager;
+
 /**
  * UI для редактора уровней.
  */
@@ -29,6 +31,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var model:Field;//Ссылка на модель.
     private var objectStorage:ObjectsStorage;//Хранилище ассетов.
     private var levelsStorage:LevelStorage;//Хранилище всех уровней игры.
+    private var assetsManager:AssetManager;//Менеджер ресурсов старлинга.
 
     //панели:
     private var infoPanel:InfoPanel;
@@ -64,12 +67,14 @@ public class LevelEditorUI extends GraphicStorage {
      * @param uiController Ссылка на контроллер (mvc).
      * @param objectStorage Хранилище всех игровых ассетов.
      * @param levelsStorage Хранилище всех уровней игры.
+     * @param assetsManager Менеджер ресурсов старлинга.
      */
-    public function LevelEditorUI(uiController:UIController, model:Field, objectStorage:ObjectsStorage, levelsStorage:LevelStorage) {
+    public function LevelEditorUI(uiController:UIController, model:Field, objectStorage:ObjectsStorage, levelsStorage:LevelStorage, assetsManager:AssetManager) {
         this.uiController = uiController;
         this.model = model;
         this.objectStorage = objectStorage;
         this.levelsStorage = levelsStorage;
+        this.assetsManager = assetsManager;
 
         super(new mcLevelEditorPanel);
 
@@ -93,9 +98,9 @@ public class LevelEditorUI extends GraphicStorage {
 
         //панели:
         infoPanel = new InfoPanel(mc["mcInfoPanel"], uiController);
-        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
+        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage, assetsManager);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
-        editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage);
+        editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage, assetsManager);
         editDefenderPositionsPanel = new EditDefenderPositionsPanel(mc["mcEditDefenderPositionsPanel"], model, uiController);
         editAssetsPanel = new EditAssetsPanel(mc["mcEditAssetsPanel"], model, uiController, objectStorage);
 
@@ -252,7 +257,7 @@ public class LevelEditorUI extends GraphicStorage {
                 outputInfo("Редактирование ресурсов времено не работает.");
                 break;
             case (UIControllerMode.EDIT_UNITS):
-                selectTab(btnTabEditLevels);
+                selectTab(btnTabEditUnits);
                 showPanel(editUnitsPanel);
                 outputInfo("Редактирование юнитов времено не работает.");
                 break;

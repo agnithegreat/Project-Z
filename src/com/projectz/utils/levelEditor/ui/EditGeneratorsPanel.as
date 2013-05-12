@@ -23,11 +23,15 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
+import fl.containers.ScrollPane;
+
 import fl.controls.ComboBox;
 
 import fl.controls.List;
 import fl.controls.NumericStepper;
 import fl.data.DataProvider;
+
+import flash.display.DisplayObject;
 
 import flash.display.MovieClip;
 import flash.display.Sprite;
@@ -35,6 +39,8 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.utils.Dictionary;
+
+import starling.utils.AssetManager;
 
 /**
  * Панель редактора уровней для редактирования генераторов.
@@ -44,10 +50,11 @@ public class EditGeneratorsPanel extends BasicPanel {
     private var model:Field;//Ссылка на модель (mvc).
     private var uiController:UIController;//Ссылка на контроллер (mvc).
     private var objectStorage:ObjectsStorage;//Хранилище всех игровых ассетов (для формирования списка врагов).
+    private var assetsManager:AssetManager;//Менеджер ресурсов старлинга.
 
     //элементы ui:
     private var mcAddEnemyPanel:Sprite;
-    private var listAddEnemy:List;
+    private var scpAddEnemies:ScrollPane;
     private var nstNumEnemies:NumericStepper;
     private var listGenerators:List;
     private var listWaves:List;
@@ -64,16 +71,28 @@ public class EditGeneratorsPanel extends BasicPanel {
     private var nstTime:NumericStepper;
     private var nstDelay:NumericStepper;
 
+    private var objectsContainer:Sprite = new Sprite ();//Контейнер для отображения списка врагов для добавления в стек.
+
+    private static const NUM_ELEMENTS_IN_ROW:int = 3;
+    private static const ELEMENTS_START_X:int = 1;
+    private static const ELEMENTS_START_Y:int = 1;
+    private static const ELEMENT_WIDTH:int = 120;
+    private static const ELEMENT_HEIGHT:int = ELEMENT_WIDTH + 20;
+    private static const ELEMENT_DISTANCE_X:int = ELEMENT_WIDTH + 1;
+    private static const ELEMENT_DISTANCE_Y:int = ELEMENT_DISTANCE_X + 20;
+
     /**
      * @param mc Мувиклип с графикой для панели.
      * @param model Ссылка на модель (mvc).
      * @param uiController Ссылка на контроллер (mvc).
      * @param objectStorage Хранилище всех игровых ассетов.
+     * @param assetsManager Менеджер ресурсов старлинга.
      */
-    public function EditGeneratorsPanel(mc:MovieClip, model:Field, uiController:UIController, objectStorage:ObjectsStorage) {
+    public function EditGeneratorsPanel(mc:MovieClip, model:Field, uiController:UIController, objectStorage:ObjectsStorage, assetsManager:AssetManager) {
         this.model = model;
         this.uiController = uiController;
         this.objectStorage = objectStorage;
+        this.assetsManager = assetsManager;
         super(mc);
 
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
@@ -99,7 +118,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 
         //Инициализируем элементы ui:
         mcAddEnemyPanel = Sprite(getElement("mcAddEnemyPanel"));
-        listAddEnemy = List(getElement("listAddEnemy", mcAddEnemyPanel));
+        scpAddEnemies = ScrollPane(getElement("scpAddEnemies", mcAddEnemyPanel));
         nstNumEnemies = NumericStepper(getElement("nstNumEnemies", mcAddEnemyPanel));
         listGenerators = List(getElement("listGenerators"));
         listWaves = List(getElement("listWaves"));
@@ -121,7 +140,7 @@ public class EditGeneratorsPanel extends BasicPanel {
         nstDelay.maximum = 1000;
 
         //Отключаем фокус для компонентов:
-        listAddEnemy.focusEnabled = false;
+        scpAddEnemies.focusEnabled = false;
         nstNumEnemies.focusEnabled = false;
         listGenerators.focusEnabled = false;
         listWaves.focusEnabled = false;
@@ -150,19 +169,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 
         mcAddEnemyPanel.visible = false;//убираем видимость панели с врагами.
 
-        //Формируем список врагов:
-        var dataProvider:DataProvider = new DataProvider();
-        var objects:Dictionary = objectStorage.getType(ObjectType.ENEMY);
-        var object:ObjectData;
-        for each (object in objects) {
-            var objectData:ObjectData = ObjectData(object);
-            dataProvider.addItem({label: objectData.name, data: objectData.name});
-        }
-        dataProvider.sortOn("name");
-        listAddEnemy.dataProvider = dataProvider;
-
         //Добавляем слушателей для компонентов:
-        listAddEnemy.addEventListener(Event.CHANGE, changeListener_listAddEnemy);
         listGenerators.addEventListener(Event.CHANGE, changeListener_listGenerators);
         listWaves.addEventListener(Event.CHANGE, changeListener_listWaves);
         cbxPaths.addEventListener(Event.CHANGE, changeListener_cbxPaths);
@@ -194,6 +201,42 @@ public class EditGeneratorsPanel extends BasicPanel {
             currentEditingGenerator = GeneratorData(listGenerators.selectedItem.data);
         }
         uiController.currentEditingGenerator = currentEditingGenerator;
+    }
+
+    /**
+     * Формирование списка всех врагов для добавления врагов в стек.
+     */
+    private function initAddEnemiesList ():void {
+        //Очищаем список врагов:
+        var objectPreView:ObjectPreView;
+        while (objectsContainer.numChildren > 0) {
+            var child:DisplayObject = objectsContainer.getChildAt(0);
+            objectPreView = ObjectPreView (child);
+            objectPreView.removeEventListener(MouseEvent.CLICK, clickListener_objectPreView);
+            objectsContainer.removeChild(child);
+        }
+
+        //Формируем список врагов:
+        var dataProvider:DataProvider = new DataProvider();
+        var objects:Dictionary = objectStorage.getType(ObjectType.ENEMY);
+        var object:ObjectData;
+        var i:int = 0;
+        var curColumn:int;
+        var curRow:int;
+        for each (object in objects) {
+            var objectData:ObjectData = ObjectData (object);
+            objectPreView = new ObjectPreView (objectData, assetsManager);
+            objectsContainer.addChild (objectPreView);
+            curRow = Math.floor (i / NUM_ELEMENTS_IN_ROW);
+            curColumn = i - curRow * NUM_ELEMENTS_IN_ROW;
+            objectPreView.x = ELEMENTS_START_X + curColumn * ELEMENT_DISTANCE_X;
+            objectPreView.y = ELEMENTS_START_Y + curRow * ELEMENT_DISTANCE_Y;
+            objectPreView.containerWidth = ELEMENT_WIDTH;
+            objectPreView.containerHeight = ELEMENT_HEIGHT;
+            objectPreView.addEventListener(MouseEvent.CLICK, clickListener_objectPreView);
+            i++;
+        }
+        scpAddEnemies.source = objectsContainer;
     }
 
     /**
@@ -383,24 +426,25 @@ public class EditGeneratorsPanel extends BasicPanel {
         if (event.mode == UIControllerMode.EDIT_GENERATORS) {
             //Формируем новый список генераторов при переключении контроллера в режим редактирования генераторов.
             resetGeneratorsList();
+            //Обновляем список возможных для добавления врагов:
+            initAddEnemiesList();
         }
     }
 
-    private function changeListener_listAddEnemy(event:Event):void {
+    private function clickListener_objectPreView (event:MouseEvent):void {
         //Добавляем новых врагов в стек врагов.
-        if (listWaves.selectedItem) {
-            var currentGeneratorWaveData:GeneratorWaveData = listWaves.selectedItem.data;
-            if (currentGeneratorWaveData && listAddEnemy.selectedItem) {
-                var positionId:int = currentGeneratorWaveData.sequence.length - 1;
-                if (listEnemies.selectedItem) {
-                    positionId = listEnemies.selectedIndex + 1;
-                }
-                var count:int = nstNumEnemies.value;
-                uiController.addEnemyToGeneratorWave(listAddEnemy.selectedItem.data, positionId, count, currentGeneratorWaveData);
+
+        var objectPreView:ObjectPreView = ObjectPreView (event.currentTarget);
+        var currentGeneratorWaveData:GeneratorWaveData = listWaves.selectedItem.data;
+        if (currentGeneratorWaveData) {
+            var positionId:int = currentGeneratorWaveData.sequence.length - 1;
+            if (listEnemies.selectedItem) {
+                positionId = listEnemies.selectedIndex + 1;
             }
+            var count:int = nstNumEnemies.value;
+            uiController.addEnemyToGeneratorWave(objectPreView.objectData.name, positionId, count, currentGeneratorWaveData);
         }
         //Скрываем панель добавления врагов:
-        listAddEnemy.selectedItem = null;
         mcAddEnemyPanel.visible = false;
     }
 

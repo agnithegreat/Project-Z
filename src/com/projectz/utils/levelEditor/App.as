@@ -29,7 +29,9 @@ import starling.utils.formatString;
  */
 public class App extends Sprite {
 
-    private var _assets: AssetManager;
+    public static var testSprite:Sprite = new Sprite();
+
+    private var _assetsManager: AssetManager;
     private var _objectsStorage: ObjectsStorage;
     private var _levelsStorage: LevelStorage;
 
@@ -47,13 +49,15 @@ public class App extends Sprite {
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
+
+        addChild(testSprite);
     }
 
     //Запустаем приложение, начав загрузку ассетов:
     public function startLoading($assets: AssetManager, $path: String):void {
         _path = $path;
-        _assets = $assets;
-        _assets.loadQueue(handleProgress);
+        _assetsManager = $assets;
+        _assetsManager.loadQueue(handleProgress);
     }
 
     private function handleProgress(ratio: Number):void {
@@ -70,7 +74,7 @@ public class App extends Sprite {
         _jsonManager.addEventListener(Event.CHANGE, handleLoadProgress);
         _jsonManager.addEventListener(Event.COMPLETE, handleLoaded);
 
-        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/final/level_elements", _assets.scaleFactor), _assets);
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/final/level_elements", _assetsManager.scaleFactor), _assetsManager);
         _jsonManager.addFiles(_objectsStorage.objects);
 
         _levelsStorage.parseDirectory(_path+"/levels");
@@ -97,13 +101,13 @@ public class App extends Sprite {
         _controller = new LevelEditorController(_model);
         _uiController = new UIController(_controller);
 
-        _view = new FieldView(_model, _assets, _uiController);
+        _view = new FieldView(_model, _assetsManager, _uiController);
 
         addChild(_view);
 
 
         //add ui:
-        _levelEditorUI = new LevelEditorUI(_uiController, _model, _objectsStorage, _levelsStorage);
+        _levelEditorUI = new LevelEditorUI(_uiController, _model, _objectsStorage, _levelsStorage, _assetsManager);
 
         _levelEditorUI.x = Constants.WIDTH;
         Starling.current.nativeStage.addChild(_levelEditorUI);

@@ -6,8 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.view {
+import com.projectz.utils.StarlingUtils;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
+
+import flash.display.BitmapData;
 
 import flash.geom.Point;
 
@@ -55,6 +58,87 @@ public class FieldObjectView extends Sprite {
         addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
     }
 
+    public function addX():void {
+        _object.size(_object.width+1, _object.height);
+        showField();
+    }
+    public function subX():void {
+        _object.size(Math.max(1, _object.width-1), _object.height);
+        showField();
+    }
+    public function addY():void {
+        _object.size(_object.width, _object.height+1);
+        showField();
+    }
+    public function subY():void {
+        _object.size(_object.width, Math.max(1, _object.height-1));
+        showField();
+    }
+    public function save():void {
+        _object.save(_object.export());
+    }
+
+    public function moveParts($dx: int, $dy: int):void {
+        var len: int = _objects.numChildren;
+        var child: ObjectView;
+        for (var i:int = 0; i < len; i++) {
+            child = _objects.getChildAt(i) as ObjectView;
+            if (_currentPart==child || !_currentPart) {
+                child.partData.place(child.partData.pivotX-$dx, child.partData.pivotY-$dy);
+                child.update();
+            }
+        }
+    }
+
+    public function destroy():void {
+        removeEventListeners();
+
+        var cell: CellView;
+        while (_cells.numChildren>0) {
+            cell = _cells.getChildAt(0) as CellView;
+            cell.destroy();
+            cell.removeFromParent(true);
+        }
+        _cells.removeFromParent(true);
+        _cells = null;
+
+        var object: ObjectView;
+        while (_objects.numChildren>0) {
+            object = _objects.removeChildAt(0, true) as ObjectView;
+            if (object) {
+                object.destroy();
+            }
+        }
+        _objects.removeFromParent(true);
+        _objects = null;
+
+        _container.removeFromParent(true);
+        _container = null;
+    }
+
+    public function showPart($part: PartData):void {
+        _currentPart = null;
+        var len: int = _objects.numChildren;
+        var child: ObjectView;
+        for (var i:int = 0; i < len; i++) {
+            child = _objects.getChildAt(i) as ObjectView;
+            child.visible = $part==child.partData || !$part;
+            if ($part==child.partData) {
+                _currentPart = child;
+            }
+        }
+        if (_currentPart) {
+            _currentPart.update();
+        }
+        updateField();
+    }
+
+    public function convertToBitmapData (backgroundColor:uint = 0xffffff):BitmapData {
+        init ();
+        _objects.alpha = 1;
+        var bitmapData:BitmapData = StarlingUtils.asBitmapData(this, backgroundColor);
+        return bitmapData;
+    }
 
     private function init():void {
         var obj: ObjectView;
@@ -120,43 +204,6 @@ public class FieldObjectView extends Sprite {
         }
     }
 
-    public function showPart($part: PartData):void {
-        _currentPart = null;
-        var len: int = _objects.numChildren;
-        var child: ObjectView;
-        for (var i:int = 0; i < len; i++) {
-            child = _objects.getChildAt(i) as ObjectView;
-            child.visible = $part==child.partData || !$part;
-            if ($part==child.partData) {
-                _currentPart = child;
-            }
-        }
-        if (_currentPart) {
-            _currentPart.update();
-        }
-        updateField();
-    }
-
-    public function addX():void {
-        _object.size(_object.width+1, _object.height);
-        showField();
-    }
-    public function subX():void {
-        _object.size(Math.max(1, _object.width-1), _object.height);
-        showField();
-    }
-    public function addY():void {
-        _object.size(_object.width, _object.height+1);
-        showField();
-    }
-    public function subY():void {
-        _object.size(_object.width, Math.max(1, _object.height-1));
-        showField();
-    }
-    public function save():void {
-        _object.save(_object.export());
-    }
-
     private function handleTouch($event: TouchEvent):void {
         var touch: Touch = $event.getTouch(_cells);
         if (touch) {
@@ -183,42 +230,5 @@ public class FieldObjectView extends Sprite {
         }
     }
 
-    public function moveParts($dx: int, $dy: int):void {
-        var len: int = _objects.numChildren;
-        var child: ObjectView;
-        for (var i:int = 0; i < len; i++) {
-            child = _objects.getChildAt(i) as ObjectView;
-            if (_currentPart==child || !_currentPart) {
-                child.partData.place(child.partData.pivotX-$dx, child.partData.pivotY-$dy);
-                child.update();
-            }
-        }
-    }
-
-    public function destroy():void {
-        removeEventListeners();
-
-        var cell: CellView;
-        while (_cells.numChildren>0) {
-            cell = _cells.getChildAt(0) as CellView;
-            cell.destroy();
-            cell.removeFromParent(true);
-        }
-        _cells.removeFromParent(true);
-        _cells = null;
-
-        var object: ObjectView;
-        while (_objects.numChildren>0) {
-            object = _objects.removeChildAt(0, true) as ObjectView;
-            if (object) {
-                object.destroy();
-            }
-        }
-        _objects.removeFromParent(true);
-        _objects = null;
-
-        _container.removeFromParent(true);
-        _container = null;
-    }
 }
 }

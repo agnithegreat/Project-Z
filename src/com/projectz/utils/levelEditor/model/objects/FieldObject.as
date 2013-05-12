@@ -13,7 +13,9 @@ import com.projectz.utils.objectEditor.data.PartData;
 
 import starling.events.EventDispatcher;
 
-//Любая часть любого объекта, создана для того, чтобы сортировать все части всех объектов
+/**
+ * Любая часть любого объекта, создана для того, чтобы сортировать все части всех объектов.
+ */
 public class FieldObject extends EventDispatcher {
 
     protected var _cell: Cell;

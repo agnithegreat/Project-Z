@@ -467,7 +467,8 @@ public class FieldView extends Sprite {
                 if (_shift) {
                     addObject(_currentObject.object);
                 } else {
-                    addObject(null);
+//                    addObject(null);
+                    uiController.selectCurrentObject(null);
                 }
             }
         } else {
@@ -574,7 +575,8 @@ public class FieldView extends Sprite {
         switch ($event.keyCode) {
             case Keyboard.ESCAPE:
             case Keyboard.DELETE:
-                addObject(null);
+//                addObject(null);
+                uiController.selectCurrentObject(null);
                 break;
             case Keyboard.SHIFT:
                 _shift = true;
@@ -606,7 +608,8 @@ public class FieldView extends Sprite {
 
     private function selectObjectsTypeListener(event:SelectObjectsTypeEvent):void {
         _objectsContainer.visible = event.objectsType != ObjectType.ENEMY;
-        addObject(null);
+//        addObject(null);
+        uiController.selectCurrentObject(null);
     }
 
     private function backgroundWasChangedListener(event:EditBackgroundEvent):void {
@@ -674,7 +677,8 @@ public class FieldView extends Sprite {
     /////////////////////////////////////////////
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
-        addObject(null);
+//        addObject(null);
+        uiController.selectCurrentObject(null);
         clearAllCells(true, true, true);
         _objectsContainer.visible = false;
         switch (event.mode) {
