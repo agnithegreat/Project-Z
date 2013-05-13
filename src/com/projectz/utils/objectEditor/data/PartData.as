@@ -76,7 +76,7 @@ public class PartData {
         _pivotY = $y;
     }
 
-    public function size($width: int, $height: int):void {
+    public function setSize($width: int, $height: int):void {
         _mask = [];
         for (var i:int = 0; i < $width; i++) {
             _mask[i] = [];

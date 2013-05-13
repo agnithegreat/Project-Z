@@ -80,9 +80,9 @@ public class ObjectData extends JSONLoader {
         _parts = new Dictionary();
     }
 
-    public function size($width: int, $height: int):void {
+    public function setSize($width: int, $height: int):void {
         for each (var part:PartData in parts) {
-            part.size($width, $height);
+            part.setSize($width, $height);
         }
     }
 
@@ -98,8 +98,15 @@ public class ObjectData extends JSONLoader {
         return pts;
     }
 
+    /**
+     * Сохранение текущего состояния файла.
+     */
+    public function saveFile ():void {
+        save(export());
+    }
+
     override public function parse($data: Object):void {
-        size($data.mask.length, $data.mask[0].length);
+        setSize($data.mask.length, $data.mask[0].length);
 
         var index: String;
         var part: Object;

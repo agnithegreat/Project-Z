@@ -8,9 +8,13 @@
 
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetsTypeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitsTypeEvent;
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
@@ -26,6 +30,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.S
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.Cell;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.PartData;
 
 import flash.geom.Point;
 
@@ -43,7 +48,6 @@ public class UIController extends EventDispatcher {
 
     private var _mode:String;//Режим работы ui-контролера (редактор объектов, редактор путей и т.д.);
 
-
     //Редактирование путей:
     private var _currentEditingPath:PathData;//Текущий редактируемый путь
     private var _editPathMode:String = EditMode.ADD_POINTS;//Режим работы ui-контролера при редактировании пути (удаление точек или добавление);
@@ -56,6 +60,13 @@ public class UIController extends EventDispatcher {
     private var _currentEditingDefenderPosition:DefenderPositionData;//Текущая редактируемая зона защитника
     private var _editDefenderPositionsMode:String = EditMode.ADD_POINTS;//Режим работы ui-контролера при редактировании зон защитников (удаление точек или добавление);
     private var _editDefenderZonesAreaMode:Boolean;//Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании зон защитников.
+
+    //Редактирование ассетов:
+    private var _currentEditingAsset:ObjectData;//Текущий редактируемый ассет.
+    private var _currentEditingAssetPart:PartData;//Текущая редактируемая часть ассета.
+
+    //Редактирование юнитов:
+    private var _currentEditingUnit:ObjectData;//Текущий редактируемый юнит.
 
     /**
      * @param levelEditorController Ссылка на классический mvc контроллер.
@@ -85,6 +96,32 @@ public class UIController extends EventDispatcher {
     public function set mode(value:String):void {
         _mode = value;
         dispatchEvent(new SelectUIControllerModeEvent(_mode));
+    }
+
+    /////////////////////////////////////////////
+    //OBJECTS:
+    /////////////////////////////////////////////
+
+    /**
+     * Выбор объекта для редактирования.
+     * @param objectData Выбранный объект.
+     * @see com.projectz.utils.objectEditor.data.ObjectData
+     */
+    public function selectCurrentEditingObject(objectData:ObjectData):void {
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            dispatchEvent(new SelectObjectEvent(objectData));
+        }
+    }
+
+    /**
+     * Выбор типа объектов для редактирования.
+     * @param objectsType Тип объекта.
+     * @see com.projectz.utils.objectEditor.data.ObjectType
+     */
+    public function selectCurrentEditingObjectType(objectsType:String):void {
+        if (mode == UIControllerMode.EDIT_OBJECTS) {
+            dispatchEvent(new SelectObjectsTypeEvent(objectsType));
+        }
     }
 
     /////////////////////////////////////////////
@@ -126,32 +163,6 @@ public class UIController extends EventDispatcher {
 
     public function set editPathAreaMode(value:Boolean):void {
         _editPathAreaMode = value;
-    }
-
-    /////////////////////////////////////////////
-    //OBJECTS:
-    /////////////////////////////////////////////
-
-    /**
-     * Выбор объекта для редактирования.
-     * @param objectData Выбранный объект.
-     * @see com.projectz.utils.objectEditor.data.ObjectData
-     */
-    public function selectCurrentObject(objectData:ObjectData):void {
-        if (mode == UIControllerMode.EDIT_OBJECTS) {
-            dispatchEvent(new SelectObjectEvent(objectData));
-        }
-    }
-
-    /**
-     * Выбор типа объекта для редактирования.
-     * @param objectsType Тип объекта.
-     * @see com.projectz.utils.objectEditor.data.ObjectType
-     */
-    public function selectCurrentObjectType(objectsType:String):void {
-        if (mode == UIControllerMode.EDIT_OBJECTS) {
-            dispatchEvent(new SelectObjectsTypeEvent(objectsType));
-        }
     }
 
     /////////////////////////////////////////////
@@ -209,6 +220,70 @@ public class UIController extends EventDispatcher {
 
     public function set editDefenderZonesAreaMode(value:Boolean):void {
         _editDefenderZonesAreaMode = value;
+    }
+
+    /////////////////////////////////////////////
+    //ASSETS:
+    /////////////////////////////////////////////
+
+    /**
+     * Выбор типа ассетов для редактирования.
+     * @param objectsType Тип объекта.
+     */
+    public function selectCurrentEditingAssetType(objectsType:String):void {
+        if (mode == UIControllerMode.EDIT_ASSETS) {
+            dispatchEvent(new SelectAssetsTypeEvent(objectsType));
+        }
+    }
+
+    /**
+     * Текущий редактируемый ассет.
+     */
+    public function get currentEditingAsset():ObjectData {
+        return _currentEditingAsset;
+    }
+
+    public function set currentEditingAsset(objectData:ObjectData):void {
+        _currentEditingAsset = objectData;
+        dispatchEvent(new SelectAssetEvent(objectData));
+    }
+
+    /**
+     * Текущая редактируемая часть ассета.
+     */
+    public function get currentEditingAssetPart():PartData {
+        return _currentEditingAssetPart;
+    }
+
+    public function set currentEditingAssetPart(partData:PartData):void {
+        _currentEditingAssetPart = partData;
+    }
+
+    /////////////////////////////////////////////
+    //UNITS:
+    /////////////////////////////////////////////
+
+    /**
+     * Выбор типа юнитов для редактирования.
+     * @param objectsType Тип объекта.
+     */
+    public function selectCurrentEditingUnitType(objectsType:String):void {
+        if (mode == UIControllerMode.EDIT_UNITS) {
+            dispatchEvent(new SelectUnitsTypeEvent(objectsType));
+        }
+    }
+
+    /**
+     * Текущий редактируемый юнит.
+     */
+    public function get currentEditingUnit():ObjectData {
+        return _currentEditingUnit;
+
+    }
+
+    public function set currentEditingUnit(objectData:ObjectData):void {
+        _currentEditingUnit = objectData;
+        dispatchEvent(new SelectUnitEvent(objectData));
     }
 
     /////////////////////////////////////////////
@@ -279,11 +354,12 @@ public class UIController extends EventDispatcher {
     /////////////////////////////////////////////
 
     /**
-     * Редактирование точек текущего выбранного пути.
+     * Редактирование точек текущего выбранного пути (currentEditingPath).
      * Способ редактирования (добавление, удаление) зависит от режима ui контроллера (editPathMode).
      * @param points Редактируемые точки
      *
      * @see #editPathMode
+     * @see #currentEditingPath
      */
     public function editPointToCurrentPath (points:Vector.<Point>):void {
         if (
@@ -325,6 +401,7 @@ public class UIController extends EventDispatcher {
 
     /**
      * Удаление текущего редактируемого пути (currentEditingPath).
+     *
      * @see #currentEditingPath
      */
     public function deleteCurrentEditingPath ():void {
@@ -470,7 +547,9 @@ public class UIController extends EventDispatcher {
     }
 
     /**
-     * Удаление текущей выбранной зоны защитников.
+     * Удаление текущей редактируемой зоны защитников (currentEditingDefenderPosition).
+     *
+     * @see #currentEditingDefenderPosition
      */
     public function removeCurrentDefenderPosition ():void {
         if (
@@ -482,7 +561,7 @@ public class UIController extends EventDispatcher {
     }
 
     /**
-     * Редактирование точек в текущей выбранной зоне защитников.
+     * Редактирование точек в текущей редактируемой зоне защитников.
      * Способ редактирования (добавление, удаление) зависит от режима ui контроллера (editDefenderPositionsMode).
      * @param points Редактируемые точки.
      *
@@ -503,8 +582,11 @@ public class UIController extends EventDispatcher {
     }
 
     /**
-     * Установка позиции текущей выбранной зоны защитников.
+     * Установка позиции текущей редактируемой зоны защитников (editDefenderPositionsMode).
+     *
      * @param point Точка установки.
+     *
+     * @see #editDefenderPositionsMode
      */
     public function setPositionOfCurrentDefenderPosition (point:Point):void {
         if (
@@ -517,13 +599,20 @@ public class UIController extends EventDispatcher {
     }
 
     /**
-     * Удаление всех точек текущей выбранной зоны защитников.
+     * Удаление всех точек текущей редактируемой зоны защитников.
+     *
+     * @see #editDefenderPositionsMode
      */
     public function clearAllPointsFromCurrentDefenderPosition ():void {
         if (currentEditingDefenderPosition) {
             levelEditorController.clearAllPointsFromDefenderPosition(currentEditingDefenderPosition);
         }
     }
+
+    /////////////////////////////////////////////
+    //ASSETS:
+    /////////////////////////////////////////////
+
 
     /////////////////////////////////////////////
     //OTHER:
@@ -533,7 +622,14 @@ public class UIController extends EventDispatcher {
      * Сохранение файла с настройками уровня.
      */
     public function save ():void {
-        levelEditorController.save();
+        if (mode == UIControllerMode.EDIT_UNITS) {
+            if (currentEditingUnit) {
+                currentEditingUnit.saveFile();
+            }
+        }
+        else {
+            levelEditorController.save();
+        }
     }
 
     /**

@@ -116,7 +116,7 @@ public class EditGeneratorsPanel extends BasicPanel {
     override protected function initGraphicElements():void {
         super.initGraphicElements();
 
-        //Инициализируем элементы ui:
+        //Инициализируем компоненты:
         mcAddEnemyPanel = Sprite(getElement("mcAddEnemyPanel"));
         scpAddEnemies = ScrollPane(getElement("scpAddEnemies", mcAddEnemyPanel));
         nstNumEnemies = NumericStepper(getElement("nstNumEnemies", mcAddEnemyPanel));
@@ -126,12 +126,6 @@ public class EditGeneratorsPanel extends BasicPanel {
         cbxPaths = ComboBox(getElement("cbxPaths"));
         tfX = TextField(getElement("tfX"));
         tfY = TextField(getElement("tfY"));
-        btnAddGenerator = new ButtonWithText(mc ["btnAddGenerator"]);
-        btnRemoveGenerator = new ButtonWithText(mc ["btnRemoveGenerator"]);
-        btnAddWave = new ButtonWithText(mc ["btnAddWave"]);
-        btnRemoveWave = new ButtonWithText(mc ["btnRemoveWave"]);
-        btnAddEnemy = new ButtonWithText(mc ["btnAddEnemy"]);
-        btnRemoveEnemy = new ButtonWithText(mc ["btnRemoveEnemy"]);
         nstTime = NumericStepper(getElement("nstTime"));
         nstDelay = NumericStepper(getElement("nstDelay"));
         nstTime.minimum = 0;
@@ -149,7 +143,22 @@ public class EditGeneratorsPanel extends BasicPanel {
         nstTime.focusEnabled = false;
         nstDelay.focusEnabled = false;
 
-        //Устанавливаем тексты:
+        //Добавляем слушателей для компонентов:
+        listGenerators.addEventListener(Event.CHANGE, changeListener_listGenerators);
+        listWaves.addEventListener(Event.CHANGE, changeListener_listWaves);
+        cbxPaths.addEventListener(Event.CHANGE, changeListener_cbxPaths);
+        nstTime.addEventListener(Event.CHANGE, changeListener_nstTime);
+        nstDelay.addEventListener(Event.CHANGE, changeListener_nstDelay);
+
+        //Создаём кнопки:
+        btnAddGenerator = new ButtonWithText(mc ["btnAddGenerator"]);
+        btnRemoveGenerator = new ButtonWithText(mc ["btnRemoveGenerator"]);
+        btnAddWave = new ButtonWithText(mc ["btnAddWave"]);
+        btnRemoveWave = new ButtonWithText(mc ["btnRemoveWave"]);
+        btnAddEnemy = new ButtonWithText(mc ["btnAddEnemy"]);
+        btnRemoveEnemy = new ButtonWithText(mc ["btnRemoveEnemy"]);
+
+        //Устанавливаем тексты для кнопок:
         btnAddGenerator.text = "Добавить";
         btnRemoveGenerator.text = "Удалить";
         btnAddWave.text = "Добавить";
@@ -168,13 +177,6 @@ public class EditGeneratorsPanel extends BasicPanel {
         btnRemoveEnemy.addEventListener(MouseEvent.CLICK, clickListener);
 
         mcAddEnemyPanel.visible = false;//убираем видимость панели с врагами.
-
-        //Добавляем слушателей для компонентов:
-        listGenerators.addEventListener(Event.CHANGE, changeListener_listGenerators);
-        listWaves.addEventListener(Event.CHANGE, changeListener_listWaves);
-        cbxPaths.addEventListener(Event.CHANGE, changeListener_cbxPaths);
-        nstTime.addEventListener(Event.CHANGE, changeListener_nstTime);
-        nstDelay.addEventListener(Event.CHANGE, changeListener_nstDelay);
     }
 
 /////////////////////////////////////////////
@@ -218,7 +220,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 
         //Формируем список врагов:
         var dataProvider:DataProvider = new DataProvider();
-        var objects:Dictionary = objectStorage.getType(ObjectType.ENEMY);
+        var objects:Dictionary = objectStorage.getObjectsByType(ObjectType.ENEMY);
         var object:ObjectData;
         var i:int = 0;
         var curColumn:int;

@@ -108,22 +108,22 @@ public class App extends Sprite {
                 break;
             case PartLine.SELECT_PART:
                 var part: PartData = $event.data as PartData;
-                _view.currentObject.showPart(part);
+                _view.currentAsset.showPart(part);
                 break;
             case UI.ADD_X:
-                _view.currentObject.addX();
+                _view.currentAsset.addX();
                 break;
             case UI.SUB_X:
-                _view.currentObject.subX();
+                _view.currentAsset.subX();
                 break;
             case UI.ADD_Y:
-                _view.currentObject.addY();
+                _view.currentAsset.addY();
                 break;
             case UI.SUB_Y:
-                _view.currentObject.subY();
+                _view.currentAsset.subY();
                 break;
             case UI.SAVE:
-                _view.currentObject.save();
+                _view.currentAsset.save();
                 break;
             case UI.EXPORT:
                 saveObjectsList(_objectsStorage.objectsList);

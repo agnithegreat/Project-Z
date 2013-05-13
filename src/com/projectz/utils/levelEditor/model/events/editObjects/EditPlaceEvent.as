@@ -14,7 +14,7 @@ public class EditPlaceEvent extends Event{
 
     private var _objectData:ObjectData;
 
-    public static const PLACE_ADDED: String = "place_added";
+    public static const PLACE_WAS_CHANGED: String = "place was added";
 
     public function EditPlaceEvent(objectData:ObjectData, type:String, bubbles:Boolean = false):void {
             this.objectData = objectData;

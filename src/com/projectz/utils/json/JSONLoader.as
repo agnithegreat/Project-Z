@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.json {
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
+
 import starling.events.EventDispatcher;
 
 import flash.utils.ByteArray;
@@ -17,6 +20,8 @@ import flash.filesystem.File;
  * Загружает, парсит и сохраняет файл.
  */
 public class JSONLoader extends EventDispatcher {
+
+    private var fileStream:FileStream = new FileStream();
 
     protected var _file: File;
     public function get exists():Boolean {
@@ -41,11 +46,18 @@ public class JSONLoader extends EventDispatcher {
 
     }
 
-    public function save($data: Object):void {
+    public function saveAs($data: Object):void {
         _name = _name || _file.name;
         var text: String = JSON.stringify($data);
         _file.addEventListener(Event.COMPLETE, handleComplete_save);
         _file.save(text, _name);
+    }
+
+    public function save($data: Object):void {
+        fileStream.open (_file, FileMode.WRITE);
+        var dataAsString: String = JSON.stringify($data);
+        fileStream.writeUTFBytes (dataAsString);
+        fileStream.close ();
     }
 
     public function load():void {

@@ -40,7 +40,7 @@ public class EditPathsPanel extends BasicPanel {
     //элементы ui:
     private var listPaths:List;
     private var clpPathColor:ColorPicker;
-    private var chxAreaMode:CheckBox;
+    private var chbAreaMode:CheckBox;
 
     private var btnAddPathPoint:ButtonWithText;
     private var btnRemovePathPoint:ButtonWithText;
@@ -78,19 +78,19 @@ public class EditPathsPanel extends BasicPanel {
         //Инициализируем компоненты:
         listPaths = List(getElement("listPaths"));
         clpPathColor = ColorPicker(getElement("clpPathColor"));
-        chxAreaMode = CheckBox(getElement("chxAreaMode"));
-
-        //Добавляем слушателей для компонентов:
-        listPaths.addEventListener(Event.CHANGE, changeListener_listPaths);
-        clpPathColor.addEventListener(Event.CHANGE, changeListener_clpPathColor);
-        chxAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
+        chbAreaMode = CheckBox(getElement("chbAreaMode"));
 
         //Отключаем фокус для компонентов:
         listPaths.focusEnabled = false;
         clpPathColor.focusEnabled = false;
         listPaths.focusEnabled = false;
         clpPathColor.focusEnabled = false;
-        chxAreaMode.focusEnabled = false;
+        chbAreaMode.focusEnabled = false;
+
+        //Добавляем слушателей для компонентов:
+        listPaths.addEventListener(Event.CHANGE, changeListener_listPaths);
+        clpPathColor.addEventListener(Event.CHANGE, changeListener_clpPathColor);
+        chbAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
 
         //Создаём кнопки:
         btnAddPathPoint = new ButtonWithText(mc["btnAddPathPoint"]);
@@ -214,7 +214,7 @@ public class EditPathsPanel extends BasicPanel {
     }
 
     private function changeListener_chxAreaMode(event:Event):void {
-        uiController.editPathAreaMode = chxAreaMode.selected;
+        uiController.editPathAreaMode = chbAreaMode.selected;
     }
 
     private function colorWasChangedEvent(event:EditPathEvent):void {

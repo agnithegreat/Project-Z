@@ -59,23 +59,23 @@ public class FieldObjectView extends Sprite {
     }
 
     public function addX():void {
-        _object.size(_object.width+1, _object.height);
+        _object.setSize(_object.width+1, _object.height);
         showField();
     }
     public function subX():void {
-        _object.size(Math.max(1, _object.width-1), _object.height);
+        _object.setSize(Math.max(1, _object.width-1), _object.height);
         showField();
     }
     public function addY():void {
-        _object.size(_object.width, _object.height+1);
+        _object.setSize(_object.width, _object.height+1);
         showField();
     }
     public function subY():void {
-        _object.size(_object.width, Math.max(1, _object.height-1));
+        _object.setSize(_object.width, Math.max(1, _object.height-1));
         showField();
     }
     public function save():void {
-        _object.save(_object.export());
+        _object.saveAs(_object.export());
     }
 
     public function moveParts($dx: int, $dy: int):void {

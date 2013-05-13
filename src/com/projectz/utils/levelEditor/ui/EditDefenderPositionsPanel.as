@@ -35,7 +35,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     private var uiController:UIController;//Ссылка на контроллер (mvc).
 
     //Элементы ui:
-    private var chxAreaMode:CheckBox;
+    private var chbAreaMode:CheckBox;
 
     private var btnAddDefenderPositionPoints:ButtonWithText;
     private var btnRemoveDefenderPositionPoints:ButtonWithText;
@@ -72,16 +72,16 @@ public class EditDefenderPositionsPanel extends BasicPanel {
         super.initGraphicElements();
 
         //Инициализируем компоненты:
-        chxAreaMode = CheckBox(getElement("chxAreaMode"));
+        chbAreaMode = CheckBox(getElement("chbAreaMode"));
         listDefenderPositions = List(getElement("listDefenderPositions"));
 
-        //Добавляем слушателей для компонентов:
-        chxAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
-        listDefenderPositions.addEventListener(Event.CHANGE, selectListener_listDefenderPositions);
-
         //Отключаем фокус для компонентов:
-        chxAreaMode.focusEnabled = false;
+        chbAreaMode.focusEnabled = false;
         listDefenderPositions.focusEnabled = false;
+
+        //Добавляем слушателей для компонентов:
+        chbAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
+        listDefenderPositions.addEventListener(Event.CHANGE, selectListener_listDefenderPositions);
 
         //Создаём кнопки:
         btnAddDefenderPositionPoints = new ButtonWithText(mc["btnAddDefenderPositionPoints"]);
@@ -198,7 +198,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
 
     private function changeListener_chxAreaMode(event:Event):void {
         //Устанавливаем режим редактирования зон защитников по двум точкам.
-        uiController.editDefenderZonesAreaMode = chxAreaMode.selected;
+        uiController.editDefenderZonesAreaMode = chbAreaMode.selected;
     }
 
     private function selectListener_listDefenderPositions(event:Event):void {

@@ -117,9 +117,11 @@ public class Field extends EventDispatcher {
     }
 
     /**
-     * Ищем объект в указанной позиции. Если нашли, то удаляем его и диспатчим событие с этим объектом.
-     * @param $x
-     * @param $y
+     * Поиск объекта в указанной позиции.
+     * Если объект найден, то он удаляется и диспатчся событие с этим объектом для его дальнейшего редактирования.
+     *
+     * @param $x Координата x на карте для поиска объекта.
+     * @param $y Координата y на карте для поиска объекта.
      */
     public function selectObject($x: int,  $y: int):void {
         if (_levelData) {
@@ -137,7 +139,7 @@ public class Field extends EventDispatcher {
 
             if (object) {
                 removeObject(object);
-                dispatchEvent(new EditPlaceEvent (_objectsStorage.getObjectData(object.object), EditPlaceEvent.PLACE_ADDED));
+                dispatchEvent(new EditPlaceEvent (_objectsStorage.getObjectData(object.object), EditPlaceEvent.PLACE_WAS_CHANGED));
             }
         }
     }
@@ -495,7 +497,7 @@ public class Field extends EventDispatcher {
      * Сохранение файла с настройками уровня
      */
     public function save ():void {
-        levelData.save(levelData.export());
+        levelData.saveAs(levelData.export());
     }
 
     public function export ():void {
@@ -626,7 +628,7 @@ public class Field extends EventDispatcher {
 
                     _objects.splice(i--, 1);
                     len--;
-                    dispatchEvent(new EditObjectEvent(obj, EditObjectEvent.OBJECT_REMOVED));
+                    dispatchEvent(new EditObjectEvent(obj, EditObjectEvent.OBJECT_WAS_REMOVED));
                 }
             }
         }
@@ -699,7 +701,7 @@ public class Field extends EventDispatcher {
             object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
             _objects.push(object);
 
-            dispatchEvent(new EditObjectEvent (object, EditObjectEvent.OBJECT_ADDED));
+            dispatchEvent(new EditObjectEvent (object, EditObjectEvent.OBJECT_WAS_ADDED));
         }
     }
 

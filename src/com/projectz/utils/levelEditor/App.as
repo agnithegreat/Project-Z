@@ -115,8 +115,6 @@ public class App extends Sprite {
         //init application:
         _model.levelData = _levelsStorage.getLevelData(2);
         _uiController.mode = UIControllerMode.EDIT_OBJECTS;
-        _uiController.selectCurrentObjectType(ObjectType.STATIC_OBJECT);
-        _uiController.selectCurrentObject(null);
     }
 }
 }

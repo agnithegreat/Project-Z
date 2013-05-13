@@ -148,7 +148,7 @@ public class ObjectPreView extends Sprite implements IResizableContainer {
         tf.y = _containerHeight - tf.height;
 
         //Масштабируем картинку, если она большая:
-        if ((bitmap.bitmapData.width > _containerWidth) || (bitmap.bitmapData.height > _containerHeight)) {
+        if ((bitmap.bitmapData.width > _containerWidth) || (bitmap.bitmapData.height > _containerHeight - TEXT_HEIGHT)) {
             ResizeUtilities.resizeObj(bitmap, _containerWidth, _containerHeight - TEXT_HEIGHT, ResizeUtilities.MODE_SCALING);
         }
         //Позиционируем картинку:

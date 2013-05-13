@@ -102,13 +102,15 @@ public class LevelEditorUI extends GraphicStorage {
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
         editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage, assetsManager);
         editDefenderPositionsPanel = new EditDefenderPositionsPanel(mc["mcEditDefenderPositionsPanel"], model, uiController);
-        editAssetsPanel = new EditAssetsPanel(mc["mcEditAssetsPanel"], model, uiController, objectStorage);
+        editAssetsPanel = new EditAssetsPanel(mc["mcEditAssetsPanel"], model, uiController, objectStorage, assetsManager);
+        editUnitsPanel = new EditUnitsPanel(mc["mcEditUnitsPanel"], model, uiController, objectStorage, assetsManager);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
         panels.push(editGeneratorsPanel);
         panels.push(editDefenderPositionsPanel);
         panels.push(editAssetsPanel);
+        panels.push(editUnitsPanel);
 
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);

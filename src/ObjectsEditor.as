@@ -47,7 +47,7 @@ public class ObjectsEditor extends Sprite {
 
     private function handleSelect(event:Object):void {
         _config.data.path = _directory.nativePath;
-        _config.save(_config.data);
+        _config.saveAs(_config.data);
 
         init();
     }

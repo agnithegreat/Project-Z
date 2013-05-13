@@ -137,7 +137,7 @@ public class ConfigPanel extends GraphicStorage {
     private function clickListener_btnSaveConfig (event:MouseEvent):void {
         trace("clickListener_btnSaveConfig");
         config.addEventListener(Event.COMPLETE, completeListener_saveConfigFile);
-        config.save(config.data);
+        config.saveAs(config.data);
     }
 
     private function clickListener_btnStart (event:MouseEvent):void {

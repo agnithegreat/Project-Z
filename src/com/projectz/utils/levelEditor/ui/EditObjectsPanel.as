@@ -9,6 +9,8 @@ package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
+import com.projectz.utils.levelEditor.controller.UIControllerMode;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
@@ -71,6 +73,7 @@ public class EditObjectsPanel extends BasicPanel {
         uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
         uiController.addEventListener(SelectBackgroundEvent.SELECT_BACKGROUND, selectBackGroundListener);
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
+        uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
 
         super (mc);
     }
@@ -87,6 +90,7 @@ public class EditObjectsPanel extends BasicPanel {
         scpObjects = ScrollPane (getElement("scpObjects"));
         cbxBackgrounds = ComboBox (getElement("cbxBackgrounds"));
 
+        //Отключаем фокус для компонентов:
         cbxObjectsType.focusEnabled = false;
         scpObjects.focusEnabled = false;
         cbxBackgrounds.focusEnabled = false;
@@ -97,11 +101,11 @@ public class EditObjectsPanel extends BasicPanel {
         dataProvider.addItem({label:"target object (" + ObjectType.TARGET_OBJECT + ")",data:ObjectType.TARGET_OBJECT});
         dataProvider.addItem({label:"animated object (" + ObjectType.ANIMATED_OBJECT + ")",data:ObjectType.ANIMATED_OBJECT});
         cbxObjectsType.dataProvider = dataProvider;
-        dataProvider = new DataProvider ();
 
         //Формируем список бэкграундов:
+        dataProvider = new DataProvider ();
         var object: ObjectData;
-        var objects: Dictionary = objectStorage.getType(ObjectType.BACKGROUND);
+        var objects: Dictionary = objectStorage.getObjectsByType(ObjectType.BACKGROUND);
         for each (object in objects) {
             var objectData:ObjectData = ObjectData (object);
             dataProvider.addItem({label:objectData.name,data:objectData});
@@ -110,7 +114,7 @@ public class EditObjectsPanel extends BasicPanel {
 
         //Добавляем слушателей для компонентов:
         cbxObjectsType.addEventListener (Event.CHANGE, changeListener_cbxObjectsType);
-        cbxBackgrounds.addEventListener (Event.CLOSE, changeListener_cbxBackgrounds);
+        cbxBackgrounds.addEventListener (Event.CHANGE, changeListener_cbxBackgrounds);
 
         //Создаём кнопки:
         btnClearAll = new ButtonWithText (mc["btnClearAll"]);
@@ -135,6 +139,7 @@ public class EditObjectsPanel extends BasicPanel {
     }
 
     private function selectObjectListener (event:SelectObjectEvent):void {
+        //Выделяем текущий редактируемый объект и снимаем выделения с остальных:
         var numObjects:int = objectsContainer.numChildren;
         for (var i:int = 0; i < numObjects; i++) {
             var child:DisplayObject = objectsContainer.getChildAt(i);
@@ -144,7 +149,7 @@ public class EditObjectsPanel extends BasicPanel {
     }
 
     private function selectBackGroundListener (event:SelectBackgroundEvent):void {
-        //устанавливаем позицию комбобокса для выбранноо фона:
+        //Устанавливаем позицию комбобокса для выбранноо фона:
         var dataProvider:DataProvider = cbxBackgrounds.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);
@@ -180,7 +185,7 @@ public class EditObjectsPanel extends BasicPanel {
 
         //Формируем список объектов выбранного типа:
         var object: ObjectData;
-        var objects: Dictionary = objectStorage.getType(event.objectsType);
+        var objects: Dictionary = objectStorage.getObjectsByType(event.objectsType);
         i = 0;
         var curColumn:int;
         var curRow:int;
@@ -201,18 +206,25 @@ public class EditObjectsPanel extends BasicPanel {
     }
 
     private function changeListener_cbxObjectsType (event:Event):void {
-        //Устанавливаем тип объекта для редактирования в контроллере:
-        uiController.selectCurrentObjectType(String (cbxObjectsType.selectedItem.data));
+        //Устанавливаем тип объектов для редактирования в контроллере:
+        uiController.selectCurrentEditingObjectType(String (cbxObjectsType.selectedItem.data));
     }
 
     private function clickListener_objectPreView (event:MouseEvent):void {
         var objectPreView:ObjectPreView = ObjectPreView (event.currentTarget);
-        uiController.selectCurrentObject(objectPreView.objectData);
+        uiController.selectCurrentEditingObject(objectPreView.objectData);
     }
 
     private function changeListener_cbxBackgrounds (event:Event):void {
         //Устанавливаем фон:
         uiController.selectLevelBackground(ObjectData (cbxBackgrounds.selectedItem.data));
+    }
+
+    private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
+        if (event.mode == UIControllerMode.EDIT_OBJECTS) {
+            //Формируем новый список объектов при переключении контроллера в режим редактирования объектов.
+            uiController.selectCurrentEditingObjectType(String (cbxObjectsType.getItemAt(0).data));
+        }
     }
 
 }

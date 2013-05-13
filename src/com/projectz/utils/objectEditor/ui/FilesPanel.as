@@ -81,7 +81,7 @@ public class FilesPanel extends Sprite {
 
         _files = [];
         var object: ObjectData;
-        var objects: Dictionary = _storage.getType(_tab);
+        var objects: Dictionary = _storage.getObjectsByType(_tab);
         for each (object in objects) {
             _files.push(new FileLine(object));
         }
