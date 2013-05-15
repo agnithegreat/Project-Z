@@ -31,7 +31,8 @@ public class JSONLoader extends EventDispatcher {
     private var _fileName: String;
 
     public function get fileName():String {
-        return _fileName || _file.name;
+        _fileName = _fileName || _file.name;
+        return _fileName;
     }
 
     protected var _data: Object;

@@ -35,10 +35,22 @@ public class LevelStorage extends EventDispatcher {
      * Добавление нового уровня.
      */
     public function addNewLevel ():void {
-        var levelData:LevelData = new LevelData();
+        var i:int = 1;
+        var currentLevelId:String;
+        for (currentLevelId in _levels) {
+            i++;
+        }
+        var id: String = LEVEL + i;
+        var levelData:LevelData = new LevelData(_folder.resolvePath(id+".json"));
+        _levels[id] = levelData;
+        levelData.save(levelData.export());
         dispatchEvent(new EditLevelsEvent (levelData, EditLevelsEvent.LEVEL_WAS_ADDED));
     }
 
+    /**
+     * Удаление уровня.
+     * @param levelData Уровень для удаления.
+     */
     public function removeLevel (levelData:LevelData):void {
         if (levelData) {
             var currentLevelId:String;
@@ -56,7 +68,7 @@ public class LevelStorage extends EventDispatcher {
     }
 
     /**
-     * Формирует список уровней в виде объектов LevelData и сохраняет эти объекты в переменную _levels
+     * Формирует список уровней в виде объектов LevelData и сохраняет эти объекты в переменную _levels.
      *
      * @param $path Путь к директории
      */
@@ -66,16 +78,12 @@ public class LevelStorage extends EventDispatcher {
     }
 
     /**
-     * Получение объекта LevelData, представляющего данные об уровне
+     * Получение объекта LevelData, представляющего данные об уровне.
      *
      * @param $id Id'шник уровня.
      */
     public function getLevelData ($id: int):LevelData {
         var id: String = LEVEL+$id;
-        if (!_levels[id]) {
-            _levels[id] = new LevelData(_folder.resolvePath(id+".json"));
-            _levels[id].id = $id;
-        }
         return _levels[id];
     }
 }

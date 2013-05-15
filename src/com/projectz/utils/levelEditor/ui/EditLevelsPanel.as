@@ -107,7 +107,7 @@ public class EditLevelsPanel extends BasicPanel {
             }
         }
         trace ("dataProvider.length = " + dataProvider.length);
-//        dataProvider.sort("label");
+        dataProvider.sortOn("label");
         listLevels.dataProvider = dataProvider;
     }
 

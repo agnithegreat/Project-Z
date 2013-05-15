@@ -499,7 +499,7 @@ public class Field extends EventDispatcher {
      * Сохранение файла с настройками уровня
      */
     public function save ():void {
-        levelData.saveAs(levelData.export());
+        levelData.save(levelData.export());
     }
 
     public function export ():void {
