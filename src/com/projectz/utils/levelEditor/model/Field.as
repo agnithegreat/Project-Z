@@ -22,6 +22,7 @@ import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefende
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
+import com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent;
@@ -79,9 +80,10 @@ public class Field extends EventDispatcher {
         return _height;
     }
 
-    public function set levelData(value:LevelData):void {
-        _levelData = value;
+    public function set levelData(levelData:LevelData):void {
+        _levelData = levelData;
         if (_levelData) {
+            dispatchEvent(new EditLevelsEvent (levelData, EditLevelsEvent.SET_LEVEL));
             createObjects(_levelData.objects);
             changeBackground(_levelData.bg);
         }

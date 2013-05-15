@@ -18,6 +18,8 @@ import com.projectz.utils.objectEditor.data.EnemyData;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
+import com.projectz.utils.objectEditor.data.events.EditDefenderDataEvent;
+import com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent;
 
 import fl.containers.ScrollPane;
 import fl.controls.ComboBox;
@@ -93,6 +95,8 @@ public class EditUnitsPanel extends BasicPanel {
         uiController.addEventListener(SelectUnitEvent.SELECT_UNIT, selectUnitListener);
         uiController.addEventListener(SelectUnitsTypeEvent.SELECT_UNITS_TYPE, selectUnitsTypeListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
+        uiController.addEventListener(EditDefenderDataEvent.DEFENDER_DATA_WAS_CHANGED, defenderDataWasChangedListener);
+        uiController.addEventListener(EditEnemyDataEvent.ENEMY_DATA_WAS_CHANGED, enemyDataWasChangedListener);
     }
 
 /////////////////////////////////////////////
@@ -191,6 +195,31 @@ public class EditUnitsPanel extends BasicPanel {
         nstEnemyCooldown.addEventListener (Event.CHANGE, changeListener_enemy);
         nstEnemyReward.addEventListener (Event.CHANGE, changeListener_enemy);
     }
+
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
+
+    private function setDefenderDataParams (defenderData:DefenderData):void {
+        trace ("setDefenderDataParams");
+        nstDefenderCost.value = defenderData.cost;
+        nstDefenderStrength.value = defenderData.strength;
+        nstDefenderRadius.value = defenderData.radius;
+        nstDefenderPower.value = defenderData.power;
+        nstDefenderCooldown.value = defenderData.cooldown;
+        nstDefenderAmmo.value = defenderData.ammo;
+        nstDefenderDefence.value = defenderData.defence;
+    }
+
+    private function setEnemyDataParams (enemyData:EnemyData):void {
+        trace ("setEnemyDataParams");
+        nstEnemyHP.value = enemyData.hp;
+        nstEnemySpeed.value = enemyData.speed;
+        nstEnemyStrength.value = enemyData.strength;
+        nstEnemyCooldown.value = enemyData.cooldown;
+        nstEnemyReward.value = enemyData.reward;
+    }
+
 /////////////////////////////////////////////
 //LISTENERS:
 /////////////////////////////////////////////
@@ -212,13 +241,7 @@ public class EditUnitsPanel extends BasicPanel {
             if (objectData is DefenderData) {
                 mcDefenderPanel.visible = true;
                 var defenderData:DefenderData = DefenderData (objectData);
-                nstDefenderCost.value = defenderData.cost;
-                nstDefenderStrength.value = defenderData.strength;
-                nstDefenderRadius.value = defenderData.radius;
-                nstDefenderPower.value = defenderData.power;
-                nstDefenderCooldown.value = defenderData.cooldown;
-                nstDefenderAmmo.value = defenderData.ammo;
-                nstDefenderDefence.value = defenderData.defence;
+                setDefenderDataParams (defenderData);
             }
             else if (objectData is EnemyData) {
                 mcEnemyPanel.visible = true;
@@ -338,6 +361,16 @@ public class EditUnitsPanel extends BasicPanel {
                 }
             }
         }
+    }
+
+    private function defenderDataWasChangedListener (event:EditDefenderDataEvent):void {
+        var defenderData:DefenderData = event.defenderData;
+        setDefenderDataParams (defenderData);
+    }
+
+    private function enemyDataWasChangedListener (event:EditEnemyDataEvent):void {
+        var enemyData:EnemyData = event.enemyData;
+        setEnemyDataParams(enemyData);
     }
 
     private function clickListener_objectPreView (event:MouseEvent):void {

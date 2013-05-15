@@ -8,11 +8,10 @@
 package com.projectz.utils.levelEditor.ui {
 import com.hogargames.display.IResizableContainer;
 import com.hogargames.utils.ResizeUtilities;
+import com.projectz.utils.objectEditor.ObjectDataBitmapsManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.display.Bitmap;
-import flash.display.BitmapData;
 import flash.display.Shape;
 import flash.display.Sprite;
 import flash.text.TextField;
@@ -50,7 +49,9 @@ public class ObjectPreView extends Sprite implements IResizableContainer {
     private static const SELECT_BORDER_SIZE:int = 3;
     private static const SELECT_BORDER_ALPHA:Number = .4;
     private static const SELECT_BORDER_COLOR:uint = 0xff6666;
+
     private static const BACKGROUND_COLOR:uint = 0xffffff;
+
 
     /**
      * @param objectData
@@ -60,10 +61,7 @@ public class ObjectPreView extends Sprite implements IResizableContainer {
         this._objectData = objectData;
 
         //Создаём картинку:
-        var fieldObjectView:FieldObjectView = new FieldObjectView(objectData, assetsManager);
-        var bitmapData:BitmapData = fieldObjectView.convertToBitmapData(BACKGROUND_COLOR);
-        bitmap = new Bitmap(bitmapData);
-        bitmap.smoothing = true;
+        bitmap = ObjectDataBitmapsManager.getBitmap(objectData, assetsManager);
         addChild(bitmap);
 
         //Создаём текстовое поле:

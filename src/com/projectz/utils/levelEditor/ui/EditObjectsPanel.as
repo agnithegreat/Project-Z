@@ -162,7 +162,7 @@ public class EditObjectsPanel extends BasicPanel {
     }
 
     private function selectObjectsTypeListener (event:SelectObjectsTypeEvent):void {
-        //Устанавливаем позицию комбобокса типов объектов для выбранноо типа:
+        //Устанавливаем позицию комбобокса типов объектов для выбранного типа:
         var dataProvider:DataProvider = cbxObjectsType.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);

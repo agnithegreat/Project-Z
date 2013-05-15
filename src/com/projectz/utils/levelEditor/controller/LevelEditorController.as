@@ -10,6 +10,7 @@ package com.projectz.utils.levelEditor.controller {
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
+import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.data.WaveData;
@@ -268,6 +269,18 @@ public class LevelEditorController extends EventDispatcher {
      */
     public function clearAllPointsFromDefenderPosition (defenderPositionData:DefenderPositionData):void {
         model.clearAllPointsFromDefenderPosition(defenderPositionData);
+    }
+
+    /////////////////////////////////////////////
+    //LEVELS:
+    /////////////////////////////////////////////
+
+    /**
+     * Выбор текущего уровня.
+     * @param levelData Уровень.
+     */
+    public function setCurrentLevel (levelData:LevelData):void {
+        model.levelData = levelData;
     }
 
     /////////////////////////////////////////////

@@ -18,6 +18,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editUnits.S
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
+import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
@@ -29,18 +30,27 @@ import com.projectz.utils.levelEditor.controller.events.uiController.SelectUICon
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.Cell;
+import com.projectz.utils.objectEditor.data.DefenderData;
+import com.projectz.utils.objectEditor.data.EnemyData;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.objectEditor.data.events.EditDefenderDataEvent;
+import com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent;
 
 import flash.geom.Point;
 
 import starling.events.EventDispatcher;
 
 /**
- * Класс-контроллер, предназначенный для взаимодействия ui и view (возможна работа с нескольким ui).
+ * Класс-контроллер, предназначенный для взаимодействия ui (панели) и view (отображение игрового поля).
+ * Возможна работа с нескольким ui.
  * <p><img src="../../../../../images/MVC_and_Cui.png"/></p>
  * <p>Сохраняет состояние режима работы (редактор объектов, редактор путей и т.д.).</p>
- * <p>Также реализует функционал классического контролера (композиция, ссылка на контролер редактора (классический mvc контроллер)).</p>
+ * <p>Хранит данные о текущих выбранных для редактирования объектах (текущий редактируемый путь, текущий редактируемый ассет и т.д.).</p>
+ * <p>Также реализует функционал классического контролера через композицию (ссылка на контролер редактора (классический mvc контроллер)).
+ * Иногда сам выступает в качестве классического mvc контролера.
+ * Например, при редактировании ассетов или юнитов является прослойкой между текущими редактируемыми данными (model) и ui (view).
+ * Контроллер отлавливает события изменения текущих редактируемых данных и диспатчит события для ui.</p>
  */
 public class UIController extends EventDispatcher {
 
@@ -282,7 +292,15 @@ public class UIController extends EventDispatcher {
     }
 
     public function set currentEditingUnit(objectData:ObjectData):void {
+        if (_currentEditingUnit) {
+            _currentEditingUnit.removeEventListener(EditEnemyDataEvent.ENEMY_DATA_WAS_CHANGED, enemyDataWasChangedListener);
+            _currentEditingUnit.removeEventListener(EditDefenderDataEvent.DEFENDER_DATA_WAS_CHANGED, defenderDataWasChangedListener);
+        }
         _currentEditingUnit = objectData;
+        if (_currentEditingUnit) {
+            _currentEditingUnit.addEventListener(EditEnemyDataEvent.ENEMY_DATA_WAS_CHANGED, enemyDataWasChangedListener);
+            _currentEditingUnit.addEventListener(EditDefenderDataEvent.DEFENDER_DATA_WAS_CHANGED, defenderDataWasChangedListener);
+        }
         dispatchEvent(new SelectUnitEvent(objectData));
     }
 
@@ -613,6 +631,17 @@ public class UIController extends EventDispatcher {
     //ASSETS:
     /////////////////////////////////////////////
 
+    /////////////////////////////////////////////
+    //LEVELS:
+    /////////////////////////////////////////////
+
+    /**
+     * Выбор текущего уровня.
+     * @param levelData Уровень.
+     */
+    public function setCurrentLevel (levelData:LevelData):void {
+        levelEditorController.setCurrentLevel(levelData);
+    }
 
     /////////////////////////////////////////////
     //OTHER:
@@ -637,6 +666,30 @@ public class UIController extends EventDispatcher {
      */
     public function export ():void {
         levelEditorController.export();
+    }
+
+/////////////////////////////////////////////
+//LISTENERS:
+/////////////////////////////////////////////
+
+    /**
+     * Слушатель события изменения текущего редактируемого юнита, как объекта EnemyData.
+     *
+     * @see com.projectz.utils.objectEditor.data.EnemyData
+     */
+    private function enemyDataWasChangedListener (event:EditEnemyDataEvent):void {
+        var enemyData:EnemyData = event.enemyData;
+        dispatchEvent(new EditEnemyDataEvent(enemyData));
+    }
+
+    /**
+     * Слушатель события изменения текущего редактируемого юнита, как объекта DefenderData.
+     *
+     * @see com.projectz.utils.objectEditor.data.DefenderData
+     */
+    private function defenderDataWasChangedListener (event:EditDefenderDataEvent):void {
+        var defenderData:DefenderData = event.defenderData;
+        dispatchEvent(new EditDefenderDataEvent(defenderData));
     }
 
 }

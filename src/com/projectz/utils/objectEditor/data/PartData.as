@@ -12,56 +12,95 @@ import flash.utils.Dictionary;
 import starling.textures.Texture;
 import starling.utils.AssetManager;
 
+/**
+ * Класс, хранящий данные о части игрового объекта.
+ */
 public class PartData {
 
-    public static const BACK: String = "back";
     public static const SHADOW: String = "shadow";
 
     public static const WALKABLE: int = 1;
     public static const SHOTABLE: int = 2;
 
     private var _name: String;
+    /**
+     * Имя части объекта.
+     */
     public function get name():String {
         return _name;
     }
 
     private var _mask: Array = [[1]];
+    /**
+     * Массив массивов данных о клетках, которые занимает часть объект.
+     * Хначения массива определяют свойтсва клеток
+     * (0 = непростреливаемый непроходимый, 1 = проходимый, 2 = простреливаемый, 3 = простреливаемый проходимый).
+     */
     public function get mask():Array {
         return _mask;
     }
     private var _width: int;
+    /**
+     * Ширина части объекта (в клетках).
+     */
     public function get width():int {
         return _width;
     }
     private var _height: int;
+    /**
+     * Высота части объекта (в клетках).
+     */
     public function get height():int {
         return _height;
     }
 
     private var _pivotX: int = 0;
+    /**
+     * Отступ по оси X.
+     */
     public function get pivotX():int {
         return _pivotX;
     }
     private var _pivotY: int = 0;
+    /**
+     * Отступ по оси Y.
+     */
     public function get pivotY():int {
         return _pivotY;
     }
 
     private var _states: Dictionary;
+    /**
+     * Состояния части объекта.
+     */
     public function get states():Dictionary {
         return _states;
     }
 
     private var _animated: Boolean;
+    /**
+     * Является ли часть объекта анимированной.
+     */
     public function get animated():Boolean {
         return _animated;
     }
 
+    /**
+     *
+     * @param $name Имя части объекта.
+     */
     public function PartData($name: String) {
         _name = $name;
         _states = new Dictionary();
     }
 
+    /**
+     * Добавления текстур к соответствующему состоянию частей объекта.
+     * @param $state Состояние объекта.
+     * @param $textures Текстуры. Может быть объектом Texture или Vector.<Texture>.
+     *
+     * @see starling.textures.Texture
+     */
     public function addTextures($state: String, $textures: *):void {
         if ($textures) {
             _states[$state] = $textures;
@@ -71,11 +110,24 @@ public class PartData {
         }
     }
 
+    /**
+     * Установка части объекта, установка значений отступов.
+     * @param $x Отступ по оси X.
+     * @param $y Отступ по оси Y.
+     *
+     * @see #pivotX
+     * @see #pivotY
+     */
     public function place($x: int, $y: int):void {
         _pivotX = $x;
         _pivotY = $y;
     }
 
+    /**
+     * Устаноска размера части объекта (в клетках).
+     * @param $width Ширина части объекта (в клетках).
+     * @param $height Высота части объекта (в клетках).
+     */
     public function setSize($width: int, $height: int):void {
         _mask = [];
         for (var i:int = 0; i < $width; i++) {
@@ -88,6 +140,12 @@ public class PartData {
         _height = _mask[0].length;
     }
 
+    /**
+     * Проверка, является ли указанная клетка проходимой.
+     * @param $x Координата x клетки.
+     * @param $y Координата y клетки.
+     * @return
+     */
     public function getWalkable($x: int, $y: int):int {
 //        return (WALKABLE & _mask[$x][$y]);
         return _mask[$x][$y];

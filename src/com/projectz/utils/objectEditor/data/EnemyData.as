@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+
 import com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent;
 
 import flash.filesystem.File;

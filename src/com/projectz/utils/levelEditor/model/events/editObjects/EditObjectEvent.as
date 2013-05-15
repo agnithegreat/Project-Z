@@ -30,7 +30,5 @@ public class EditObjectEvent extends Event {
         _fieldObject = value;
     }
 
-
-
 }
 }

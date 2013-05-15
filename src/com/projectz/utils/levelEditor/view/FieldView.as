@@ -22,6 +22,7 @@ import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
+import com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent;
 import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
@@ -39,6 +40,8 @@ import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.geom.Point;
 import flash.ui.Keyboard;
+
+import starling.display.DisplayObject;
 
 import starling.display.Image;
 import starling.display.Sprite;
@@ -114,6 +117,7 @@ public class FieldView extends Sprite {
         _field.addEventListener(EditPathEvent.PATH_WAS_CHANGED, pathWasChangedListener);
         _field.addEventListener(EditPathEvent.COLOR_WAS_CHANGED, pathWasChangedListener);
         _field.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED, defenderPositionWasChangedListener);
+        _field.addEventListener(EditLevelsEvent.SET_LEVEL, setLevelListener);
 
         //Создаём основной контейнер редактора уровней:
         _levelEditorContainer = new Sprite();
@@ -414,8 +418,15 @@ public class FieldView extends Sprite {
         _cellsContainer.flatten();
     }
 
+    private function clearAllObjects ():void {
+        while (_objectsContainer.numChildren > 0) {
+            var child:DisplayObject = _objectsContainer.getChildAt(0);
+            _objectsContainer.removeChild(child);
+        }
+    }
+
     /**
-     * Редактирование объектов на карте.
+     * Редактирование объектов.
      */
     private function editObjects():void {
         if (_currentAddingObject) {
@@ -524,6 +535,11 @@ public class FieldView extends Sprite {
         }
     }
 
+    /**
+     * Получение позиции (точки) по событию точа.
+     * @param touch
+     * @return Позиция на игровом поле.
+     */
     private function getPositionByTouchEvent(touch:Touch):Point {
         var point:Point;
         if (touch) {
@@ -650,6 +666,9 @@ public class FieldView extends Sprite {
         _editAssetsContainer.visible = false;
         switch (event.mode) {
             case UIControllerMode.EDIT_OBJECTS:
+            case UIControllerMode.EDIT_UNITS:
+            case UIControllerMode.EDIT_LEVELS:
+            case UIControllerMode.EDIT_SETTINGS:
                 redrawPaths(null);
                 _objectsContainer.visible = true;
                 break;
@@ -851,12 +870,23 @@ public class FieldView extends Sprite {
     private function defenderPositionWasChangedListener($event:EditDefenderPositionEvent):void {
         redrawDefenderPositions($event.defenderPositionData);
     }
-
     /**
      * Слушатель события выбора режима редактирования зон защитников.
      */
     private function selectEditDefenderPositionModeListener(event:SelectEditDefenderPositionModeEvent):void {
         firstSelectedPointForEditingDefenderZones = null;
+    }
+
+    /////////////////////////////////////////////
+    //LEVELS:
+    /////////////////////////////////////////////
+
+    /**
+     * Слушатель события выбора текущего уровня.
+     */
+    private function setLevelListener($event:EditLevelsEvent):void {
+        clearAllCells(true, true, true, true);
+        clearAllObjects ();
     }
 
     /////////////////////////////////////////////

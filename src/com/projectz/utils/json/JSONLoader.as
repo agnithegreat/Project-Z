@@ -28,7 +28,11 @@ public class JSONLoader extends EventDispatcher {
         return _file.exists;
     }
 
-    private var _name: String;
+    private var _fileName: String;
+
+    public function get fileName():String {
+        return _fileName || _file.name;
+    }
 
     protected var _data: Object;
     public function get data():Object {
@@ -42,15 +46,18 @@ public class JSONLoader extends EventDispatcher {
         _file = $file;
     }
 
+    /**
+     * Парсинг данных об объекте.
+     * @param $data Данные.
+     */
     public function parse($data: Object):void {
 
     }
 
     public function saveAs($data: Object):void {
-        _name = _name || _file.name;
         var text: String = JSON.stringify($data);
         _file.addEventListener(Event.COMPLETE, handleComplete_save);
-        _file.save(text, _name);
+        _file.save(text, fileName);
     }
 
     public function save($data: Object):void {
@@ -58,6 +65,10 @@ public class JSONLoader extends EventDispatcher {
         var dataAsString: String = JSON.stringify($data);
         fileStream.writeUTFBytes (dataAsString);
         fileStream.close ();
+    }
+
+    public function deleteFile():void {
+        _file.deleteFile();
     }
 
     public function load():void {

@@ -9,6 +9,7 @@ package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
+import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.LevelStorage;
@@ -32,6 +33,7 @@ public class LevelEditorUI extends GraphicStorage {
     private var objectStorage:ObjectsStorage;//Хранилище ассетов.
     private var levelsStorage:LevelStorage;//Хранилище всех уровней игры.
     private var assetsManager:AssetManager;//Менеджер ресурсов старлинга.
+    private var config:JSONLoader;//Файлик с настройками редактора уровней (хранит ссылку на папку с файлами в dropbox).
 
     //панели:
     private var infoPanel:InfoPanel;
@@ -68,13 +70,22 @@ public class LevelEditorUI extends GraphicStorage {
      * @param objectStorage Хранилище всех игровых ассетов.
      * @param levelsStorage Хранилище всех уровней игры.
      * @param assetsManager Менеджер ресурсов старлинга.
+     * @param config Файлик с настройками редактора уровней (хранит ссылку на папку с файлами в dropbox).
      */
-    public function LevelEditorUI(uiController:UIController, model:Field, objectStorage:ObjectsStorage, levelsStorage:LevelStorage, assetsManager:AssetManager) {
+    public function LevelEditorUI(
+            uiController:UIController,
+            model:Field,
+            objectStorage:ObjectsStorage,
+            levelsStorage:LevelStorage,
+            assetsManager:AssetManager,
+            config:JSONLoader
+     ) {
         this.uiController = uiController;
         this.model = model;
         this.objectStorage = objectStorage;
         this.levelsStorage = levelsStorage;
         this.assetsManager = assetsManager;
+        this.config = config;
 
         super(new mcLevelEditorPanel);
 
@@ -104,6 +115,7 @@ public class LevelEditorUI extends GraphicStorage {
         editDefenderPositionsPanel = new EditDefenderPositionsPanel(mc["mcEditDefenderPositionsPanel"], model, uiController);
         editAssetsPanel = new EditAssetsPanel(mc["mcEditAssetsPanel"], model, uiController, objectStorage, assetsManager);
         editUnitsPanel = new EditUnitsPanel(mc["mcEditUnitsPanel"], model, uiController, objectStorage, assetsManager);
+        editLevelsPanel = new EditLevelsPanel(mc["mcEditLevelsPanel"], model, uiController, levelsStorage);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
@@ -111,6 +123,7 @@ public class LevelEditorUI extends GraphicStorage {
         panels.push(editDefenderPositionsPanel);
         panels.push(editAssetsPanel);
         panels.push(editUnitsPanel);
+        panels.push(editLevelsPanel);
 
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);
@@ -261,12 +274,15 @@ public class LevelEditorUI extends GraphicStorage {
             case (UIControllerMode.EDIT_UNITS):
                 selectTab(btnTabEditUnits);
                 showPanel(editUnitsPanel);
-                outputInfo("Редактирование юнитов времено не работает.");
+                outputInfo(
+                        'Выберите юнита. Измените его характеристики. ' +
+                        'Нажмите кнопку "Сохранить" для сохраниния изменений текущего редактируемого юнита.'
+                );
                 break;
             case (UIControllerMode.EDIT_LEVELS):
                 selectTab(btnTabEditLevels);
                 showPanel(editLevelsPanel);
-                outputInfo("Редактирование уровней времено не работает.");
+                outputInfo("Выбор уровня для редактирования, добавление новых уровней, удаление уровней.");
                 break;
             case (UIControllerMode.EDIT_SETTINGS):
                 selectTab(btnTabEditSettings);
