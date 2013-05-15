@@ -18,15 +18,17 @@ import flash.utils.Dictionary;
 import starling.utils.AssetManager;
 
 /**
- * Класс, предназначенный для преобразования данных ObjectData в картинку и хранения этих картинок.
+ * Менеджер работы с объектами ObjectData.
+ * Содержит функции для преобразования данных ObjectData в картинку и хранения этих картинок.
+ * А также содержит функции сортировки для вектора объектов ObjectData.
  */
-public class ObjectDataBitmapsManager {
+public class ObjectDataManager {
 
     private static var _bitmapsData:Dictionary = new Dictionary();//Объект дл\ хранени
 
     private static const BACKGROUND_COLOR:uint = 0xffffff;
 
-    public function ObjectDataBitmapsManager () {
+    public function ObjectDataManager () {
 
     }
 
@@ -50,6 +52,18 @@ public class ObjectDataBitmapsManager {
         var bitmap:Bitmap = new Bitmap(bitmapData);
         bitmap.smoothing = true;
         return bitmap;
+    }
+
+    public static function sortByName (objectData1:ObjectData, objectData2:ObjectData):int {
+        if (objectData1.name > objectData2.name) {
+            return 1;
+        }
+        else if (objectData1.name < objectData2.name) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
     }
 }
 }

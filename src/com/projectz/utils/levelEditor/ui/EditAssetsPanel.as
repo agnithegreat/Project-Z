@@ -13,6 +13,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.SelectUICon
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetsTypeEvent;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.objectEditor.ObjectDataManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
@@ -153,7 +154,7 @@ public class EditAssetsPanel extends BasicPanel {
         var numObjects:int = objectsContainer.numChildren;
         for (var i:int = 0; i < numObjects; i++) {
             var child:DisplayObject = objectsContainer.getChildAt(i);
-            var objectPreView:ObjectPreView = ObjectPreView (child);
+            var objectPreView:ObjectPreview = ObjectPreview (child);
             objectPreView.select = (objectPreView.objectData == event.objectData);
         }
     }
@@ -171,11 +172,11 @@ public class EditAssetsPanel extends BasicPanel {
         }
 
         //Очищаем список объектов:
-        var objectPreView:ObjectPreView;
+        var objectPreview:ObjectPreview;
         while (objectsContainer.numChildren > 0) {
             var child:DisplayObject = objectsContainer.getChildAt(0);
-            objectPreView = ObjectPreView (child);
-            objectPreView.removeEventListener(MouseEvent.CLICK, clickListener_objectPreView);
+            objectPreview = ObjectPreview (child);
+            objectPreview.removeEventListener(MouseEvent.CLICK, clickListener_objectPreView);
             objectsContainer.removeChild(child);
         }
 
@@ -183,27 +184,32 @@ public class EditAssetsPanel extends BasicPanel {
         //Формируем список объектов выбранного типа:
         var object: ObjectData;
         var objects: Dictionary = objectStorage.getObjectsByType(event.objectsType);
-        i = 0;
+        var objectsAsVector:Vector.<ObjectData> = new Vector.<ObjectData>();
+        for each (object in objects) {
+            objectsAsVector.push(ObjectData (object));
+        }
+
+        objectsAsVector.sort(ObjectDataManager.sortByName);
+
         var curColumn:int;
         var curRow:int;
-        for each (object in objects) {
-            var objectData:ObjectData = ObjectData (object);
-            objectPreView = new ObjectPreView (objectData, assetsManager);
-            objectsContainer.addChild (objectPreView);
+        var numPreviewObjects:int = objectsAsVector.length;
+        for (i = 0; i < numPreviewObjects; i++) {
+            objectPreview = new ObjectPreview (objectsAsVector [i], assetsManager);
+            objectsContainer.addChild (objectPreview);
             curRow = Math.floor (i / NUM_ELEMENTS_IN_ROW);
             curColumn = i - curRow * NUM_ELEMENTS_IN_ROW;
-            objectPreView.x = ELEMENTS_START_X + curColumn * ELEMENT_DISTANCE_X;
-            objectPreView.y = ELEMENTS_START_Y + curRow * ELEMENT_DISTANCE_Y;
-            objectPreView.containerWidth = ELEMENT_WIDTH;
-            objectPreView.containerHeight = ELEMENT_HEIGHT;
-            objectPreView.addEventListener(MouseEvent.CLICK, clickListener_objectPreView);
-            i++;
+            objectPreview.x = ELEMENTS_START_X + curColumn * ELEMENT_DISTANCE_X;
+            objectPreview.y = ELEMENTS_START_Y + curRow * ELEMENT_DISTANCE_Y;
+            objectPreview.containerWidth = ELEMENT_WIDTH;
+            objectPreview.containerHeight = ELEMENT_HEIGHT;
+            objectPreview.addEventListener(MouseEvent.CLICK, clickListener_objectPreView);
         }
         scpObjects.source = objectsContainer;
     }
 
     private function clickListener_objectPreView (event:MouseEvent):void {
-        var objectPreView:ObjectPreView = ObjectPreView (event.currentTarget);
+        var objectPreView:ObjectPreview = ObjectPreview (event.currentTarget);
         uiController.currentEditingAsset = objectPreView.objectData;
     }
 

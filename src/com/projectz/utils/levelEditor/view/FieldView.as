@@ -298,7 +298,7 @@ public class FieldView extends Sprite {
      * @param pathData Путь для выделения штриховкой.
      */
     private function redrawPaths (pathData:PathData):void {
-        _cellsContainer.unflatten();
+//        _cellsContainer.unflatten();
         clearAllCells(true, true, true);
         var levelData:LevelData = _field.levelData;
         if (levelData) {
@@ -313,7 +313,8 @@ public class FieldView extends Sprite {
         }
         //pathData рисуем в последнюю очередь (последний слой)!
         drawPath (pathData, true);
-        _cellsContainer.flatten();
+//        _cellsContainer.flatten();
+        updateCellsContainerView();
     }
 
     /**
@@ -345,7 +346,7 @@ public class FieldView extends Sprite {
         clearAllCells(false, true, true);
         var levelData:LevelData = _field.levelData;
         if (levelData) {
-            _cellsContainer.unflatten();
+//            _cellsContainer.unflatten();
             var numDefenderPositions:int = levelData.defenderPositions.length;
             for (var i:int = 0; i < numDefenderPositions; i++) {
                 var defenderPosition:DefenderPositionData = levelData.defenderPositions [i];
@@ -360,8 +361,9 @@ public class FieldView extends Sprite {
                 cellView.showHatching = true;
                 drawDefenderPosition (currentDefenderPositionData, true);
             }
-            _cellsContainer.flatten();
+//            _cellsContainer.flatten();
         }
+        updateCellsContainerView();
     }
 
     /**
@@ -371,7 +373,7 @@ public class FieldView extends Sprite {
      */
     private function drawDefenderPosition (defenderPositionData:DefenderPositionData, showExtraHatching:Boolean = false):void {
         if (defenderPositionData) {
-            _cellsContainer.unflatten();
+//            _cellsContainer.unflatten();
             var availablePoints:Vector.<String> = defenderPositionData.availablePoints;
             var numAvailablePoints:int = availablePoints.length;
             for (var i:int = 0; i < numAvailablePoints; i++) {
@@ -386,7 +388,7 @@ public class FieldView extends Sprite {
             }
             cellView = getCellViewByPosition(defenderPositionData.x, defenderPositionData.y);
             cellView.showFlag = true;
-            _cellsContainer.flatten();
+//            _cellsContainer.flatten();
         }
     }
 
@@ -398,7 +400,7 @@ public class FieldView extends Sprite {
      * @param clearLock Удаление значка блокировки у всех клеток поля.
      */
     private function clearAllCells (clearColor:Boolean = true, clearFlag:Boolean = true, clearHatching:Boolean = true, clearLock:Boolean = false):void {
-        _cellsContainer.unflatten();
+//        _cellsContainer.unflatten();
         var numCells:int = _cellsContainer.numChildren;
         for (var i:int = 0; i < numCells; i++) {
             var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
@@ -415,7 +417,7 @@ public class FieldView extends Sprite {
                 cellView.showLock = false;
             }
         }
-        _cellsContainer.flatten();
+//        _cellsContainer.flatten();
     }
 
     private function clearAllObjects ():void {
@@ -553,6 +555,22 @@ public class FieldView extends Sprite {
         return point;
     }
 
+    /**
+     * Обновление отображения контейнера поля.
+     * Метод помогает оптимизировать работу редактора.
+     * В обычном состоянии к контейнеру поля применяется flatten().
+     * Этот метод времено снимает flatten() и отображает клетки, как отдельные объекты.
+     */
+    private function updateCellsContainerView ():void {
+        _cellsContainer.unflatten();
+        var numCells:int = _cellsContainer.numChildren;
+        for (var i:int = 0; i < numCells; i++) {
+            var cellView:CellView = CellView (_cellsContainer.getChildAt(i));
+            cellView.updateView();
+        }
+        _cellsContainer.flatten();
+    }
+
 /////////////////////////////////////////////
 //LISTENERS:
 /////////////////////////////////////////////
@@ -687,6 +705,7 @@ public class FieldView extends Sprite {
                 _editAssetsContainer.visible = true;
                 break;
         }
+        updateCellsContainerView();
     }
 
     /**
@@ -831,7 +850,7 @@ public class FieldView extends Sprite {
         if (generatorData && levelData) {
             var pathData:PathData = levelData.getPathDataById(generatorData.pathId);
             if (pathData) {
-                _cellsContainer.unflatten();
+//                _cellsContainer.unflatten();
                 //рисуем путь для текущего выбраного генератора:
                 drawPath(pathData);
                 //показываем подсветку (штриховку) для всех генераторов:
@@ -848,9 +867,10 @@ public class FieldView extends Sprite {
                 if (cellView) {
                     cellView.showFlag = true;
                 }
-                _cellsContainer.flatten();
+//                _cellsContainer.flatten();
             }
         }
+        updateCellsContainerView();
     }
 
     /////////////////////////////////////////////
@@ -886,6 +906,7 @@ public class FieldView extends Sprite {
      */
     private function setLevelListener($event:EditLevelsEvent):void {
         clearAllCells(true, true, true, true);
+        updateCellsContainerView();
         clearAllObjects ();
     }
 

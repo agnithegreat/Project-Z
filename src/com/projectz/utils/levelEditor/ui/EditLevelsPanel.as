@@ -96,14 +96,9 @@ public class EditLevelsPanel extends BasicPanel {
         var levels:Dictionary = levelsStorage.levels;
         var dataProvider:DataProvider = new DataProvider();
         var currentLevelData:LevelData;
-        trace("------------");
         for each (currentLevelData in levels) {
             if (currentLevelData) {
-                trace ("currentLevelData.fileName = " + currentLevelData.fileName);
                 dataProvider.addItem({label: (currentLevelData.fileName), data: currentLevelData});
-            }
-            else {
-                trace("AHA!!!!");
             }
         }
         trace ("dataProvider.length = " + dataProvider.length);

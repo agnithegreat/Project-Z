@@ -19,6 +19,7 @@ import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
+import com.projectz.utils.objectEditor.ObjectDataManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
@@ -210,33 +211,37 @@ public class EditGeneratorsPanel extends BasicPanel {
      */
     private function initAddEnemiesList ():void {
         //Очищаем список врагов:
-        var objectPreView:ObjectPreView;
+        var objectPreview:ObjectPreview;
         while (objectsContainer.numChildren > 0) {
             var child:DisplayObject = objectsContainer.getChildAt(0);
-            objectPreView = ObjectPreView (child);
-            objectPreView.removeEventListener(MouseEvent.CLICK, clickListener_objectPreView);
+            objectPreview = ObjectPreview (child);
+            objectPreview.removeEventListener(MouseEvent.CLICK, clickListener_objectPreView);
             objectsContainer.removeChild(child);
         }
 
         //Формируем список врагов:
-        var dataProvider:DataProvider = new DataProvider();
         var objects:Dictionary = objectStorage.getObjectsByType(ObjectType.ENEMY);
-        var object:ObjectData;
-        var i:int = 0;
+        var object: ObjectData;
+        var objectsAsVector:Vector.<ObjectData> = new Vector.<ObjectData>();
+        for each (object in objects) {
+            objectsAsVector.push(ObjectData (object));
+        }
+
+        objectsAsVector.sort(ObjectDataManager.sortByName);
+
         var curColumn:int;
         var curRow:int;
-        for each (object in objects) {
-            var objectData:ObjectData = ObjectData (object);
-            objectPreView = new ObjectPreView (objectData, assetsManager);
-            objectsContainer.addChild (objectPreView);
+        var numPreviewObjects:int = objectsAsVector.length;
+        for (var i:int = 0; i < numPreviewObjects; i++) {
+            objectPreview = new ObjectPreview (objectsAsVector [i], assetsManager);
+            objectsContainer.addChild (objectPreview);
             curRow = Math.floor (i / NUM_ELEMENTS_IN_ROW);
             curColumn = i - curRow * NUM_ELEMENTS_IN_ROW;
-            objectPreView.x = ELEMENTS_START_X + curColumn * ELEMENT_DISTANCE_X;
-            objectPreView.y = ELEMENTS_START_Y + curRow * ELEMENT_DISTANCE_Y;
-            objectPreView.containerWidth = ELEMENT_WIDTH;
-            objectPreView.containerHeight = ELEMENT_HEIGHT;
-            objectPreView.addEventListener(MouseEvent.CLICK, clickListener_objectPreView);
-            i++;
+            objectPreview.x = ELEMENTS_START_X + curColumn * ELEMENT_DISTANCE_X;
+            objectPreview.y = ELEMENTS_START_Y + curRow * ELEMENT_DISTANCE_Y;
+            objectPreview.containerWidth = ELEMENT_WIDTH;
+            objectPreview.containerHeight = ELEMENT_HEIGHT;
+            objectPreview.addEventListener(MouseEvent.CLICK, clickListener_objectPreView);
         }
         scpAddEnemies.source = objectsContainer;
     }
@@ -436,7 +441,7 @@ public class EditGeneratorsPanel extends BasicPanel {
     private function clickListener_objectPreView (event:MouseEvent):void {
         //Добавляем новых врагов в стек врагов.
 
-        var objectPreView:ObjectPreView = ObjectPreView (event.currentTarget);
+        var objectPreView:ObjectPreview = ObjectPreview (event.currentTarget);
         var currentGeneratorWaveData:GeneratorWaveData = listWaves.selectedItem.data;
         if (currentGeneratorWaveData) {
             var positionId:int = currentGeneratorWaveData.sequence.length - 1;

@@ -189,6 +189,10 @@ public class CellView extends PositionView {
         _bg.alpha = ROLL_CLICK;
     }
 
+    public function updateView ():void {
+        visible = visible;
+    }
+
     override public function destroy():void {
         super.destroy();
 

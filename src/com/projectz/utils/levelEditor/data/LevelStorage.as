@@ -35,13 +35,17 @@ public class LevelStorage extends EventDispatcher {
      * Добавление нового уровня.
      */
     public function addNewLevel ():void {
-        var i:int = 1;
         var currentLevelId:String;
+        var maxId:int = 1;
         for (currentLevelId in _levels) {
-            i++;
+            var currentLevelData:LevelData = _levels[currentLevelId];
+            if (currentLevelData) {
+                maxId = Math.max(maxId, currentLevelData.id + 1);
+            }
         }
-        var id: String = LEVEL + i;
+        var id: String = LEVEL + maxId;
         var levelData:LevelData = new LevelData(_folder.resolvePath(id+".json"));
+        levelData.id = maxId;
         _levels[id] = levelData;
         levelData.save(levelData.export());
         dispatchEvent(new EditLevelsEvent (levelData, EditLevelsEvent.LEVEL_WAS_ADDED));

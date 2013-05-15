@@ -8,7 +8,7 @@
 package com.projectz.utils.levelEditor.ui {
 import com.hogargames.display.IResizableContainer;
 import com.hogargames.utils.ResizeUtilities;
-import com.projectz.utils.objectEditor.ObjectDataBitmapsManager;
+import com.projectz.utils.objectEditor.ObjectDataManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
 import flash.display.Bitmap;
@@ -23,7 +23,7 @@ import starling.utils.AssetManager;
 /**
  * Превью объекта для отображения в панелях редактора уровней.
  */
-public class ObjectPreView extends Sprite implements IResizableContainer {
+public class ObjectPreview extends Sprite implements IResizableContainer {
 
     private var _objectData:ObjectData;
 
@@ -57,11 +57,11 @@ public class ObjectPreView extends Sprite implements IResizableContainer {
      * @param objectData
      * @param assetsManager Менеджер ресурсов старлинга.
      */
-    public function ObjectPreView (objectData:ObjectData, assetsManager:AssetManager) {
+    public function ObjectPreview (objectData:ObjectData, assetsManager:AssetManager) {
         this._objectData = objectData;
 
         //Создаём картинку:
-        bitmap = ObjectDataBitmapsManager.getBitmap(objectData, assetsManager);
+        bitmap = ObjectDataManager.getBitmap(objectData, assetsManager);
         addChild(bitmap);
 
         //Создаём текстовое поле:
