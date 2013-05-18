@@ -11,9 +11,11 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.controller.EditMode;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEditionModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetPartEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
 import com.projectz.utils.levelEditor.data.DataUtils;
@@ -71,7 +73,7 @@ public class FieldView extends Sprite {
     private var _currentCell:CellView;//Текущая выделенная клетка.
 
     //Элементы контейнера для редактирования ассетов:
-    private var _currentAsset: FieldObjectView;//Текущий редактируемый ассет.
+    private var _currentEditingAsset: FieldObjectView;//Текущий редактируемый ассет.
 
     //
     private var _shift:Boolean;//Параметр, указывающий, нажата ли клавиша shift.
@@ -102,20 +104,22 @@ public class FieldView extends Sprite {
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
-        uiController.addEventListener(SelectEditDefenderPositionModeEvent.SELECT_EDIT_DEFENDER_POSITION_MODE, selectEditDefenderPositionModeListener);
+        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectEditDefenderPositionModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
         uiController.addEventListener(SelectGeneratorEvent.SELECT_GENERATOR, selectGeneratorListener);
         uiController.addEventListener(SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION, selectDefenderPositionListener);
         uiController.addEventListener(SelectAssetEvent.SELECT_ASSET, selectAssetListener);
+        uiController.addEventListener(SelectAssetPartEvent.SELECT_ASSET_PART, selectAssetPartListener);
+        uiController.addEventListener(SelectAssetEditionModeEvent.SELECT_ASSET_EDITING_MODE, selectAssetEditionModeListener);
 
         _field = $field;
         _field.addEventListener(EditBackgroundEvent.BACKGROUND_WAS_CHANGED, backgroundWasChangedListener);
         _field.addEventListener(GameEvent.UPDATE, updateListener);
-        _field.addEventListener(EditObjectEvent.OBJECT_WAS_ADDED, objectWasAddedListener);
-        _field.addEventListener(EditObjectEvent.OBJECT_WAS_REMOVED, objectWasRemovedListener);
+        _field.addEventListener(EditObjectEvent.FIELD_OBJECT_WAS_ADDED, objectWasAddedListener);
+        _field.addEventListener(EditObjectEvent.FIELD_OBJECT_WAS_REMOVED, objectWasRemovedListener);
         _field.addEventListener(EditPlaceEvent.PLACE_WAS_CHANGED, placeWasChangedListener);
         _field.addEventListener(EditPathEvent.PATH_WAS_CHANGED, pathWasChangedListener);
-        _field.addEventListener(EditPathEvent.COLOR_WAS_CHANGED, pathWasChangedListener);
+        _field.addEventListener(EditPathEvent.PATH_COLOR_WAS_CHANGED, pathWasChangedListener);
         _field.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED, defenderPositionWasChangedListener);
         _field.addEventListener(EditLevelsEvent.SET_LEVEL, setLevelListener);
 
@@ -236,17 +240,19 @@ public class FieldView extends Sprite {
      * Установка текущего ассета для редактирования.
      * @param _objectData Ассет для редактирования.
      */
-    private function selectCurrentEditingAsset (_objectData:ObjectData):void {
-        if (_currentAsset) {
-            _currentAsset.destroy();
-            _currentAsset.removeFromParent(true);
-            _currentAsset = null;
+    private function setCurrentEditingAsset (_objectData:ObjectData):void {
+        if (_currentEditingAsset) {
+            _currentEditingAsset.destroy();
+            _currentEditingAsset.removeFromParent(true);
+            _currentEditingAsset = null;
         }
 
-        _currentAsset = new FieldObjectView(_objectData, _assets);
-        _currentAsset.x = (Constants.WIDTH - 200 + PositionView.cellWidth) / 2;
-        _currentAsset.y = (Constants.HEIGHT + 200 + (1 - (_objectData.height + _objectData.width) / 2) * PositionView.cellHeight) / 2;
-        _editAssetsContainer.addChild(_currentAsset);
+        _currentEditingAsset = new FieldObjectView(_objectData, _assets);
+        _currentEditingAsset.editShotableMode = uiController.editAssetShotableMode;
+        _currentEditingAsset.editWalkableMode = uiController.editAssetWalkableMode;
+        _currentEditingAsset.x = (Constants.WIDTH - 200 + PositionView.cellWidth) / 2;
+        _currentEditingAsset.y = (Constants.HEIGHT + 200 + (1 - (_objectData.height + _objectData.width) / 2) * PositionView.cellHeight) / 2;
+        _editAssetsContainer.addChild(_currentEditingAsset);
     }
 
     /**
@@ -445,7 +451,7 @@ public class FieldView extends Sprite {
                 }
             }
         } else {
-            uiController.selectObject(_currentCell.positionX, _currentCell.positionY);
+            uiController.selectAndRemoveObject(_currentCell.positionX, _currentCell.positionY);
         }
     }
 
@@ -644,19 +650,19 @@ public class FieldView extends Sprite {
                 _shift = true;
                 break;
         }
-        if (_currentAsset) {
+        if (_currentEditingAsset) {
             switch ($event.keyCode) {
                 case Keyboard.LEFT:
-                    _currentAsset.moveParts(-1, 0);
+                    _currentEditingAsset.moveParts(-1, 0);
                     break;
                 case Keyboard.RIGHT:
-                    _currentAsset.moveParts(1, 0);
+                    _currentEditingAsset.moveParts(1, 0);
                     break;
                 case Keyboard.UP:
-                    _currentAsset.moveParts(0, -1);
+                    _currentEditingAsset.moveParts(0, -1);
                     break;
                 case Keyboard.DOWN:
-                    _currentAsset.moveParts(0, 1);
+                    _currentEditingAsset.moveParts(0, 1);
                     break;
             }
         }
@@ -893,7 +899,7 @@ public class FieldView extends Sprite {
     /**
      * Слушатель события выбора режима редактирования зон защитников.
      */
-    private function selectEditDefenderPositionModeListener(event:SelectEditDefenderPositionModeEvent):void {
+    private function selectEditDefenderPositionModeListener(event:SelectDefenderPositionEditingModeEvent):void {
         firstSelectedPointForEditingDefenderZones = null;
     }
 
@@ -915,7 +921,20 @@ public class FieldView extends Sprite {
     /////////////////////////////////////////////
 
     private function selectAssetListener (event:SelectAssetEvent):void {
-        selectCurrentEditingAsset(event.objectData);
+        setCurrentEditingAsset(event.objectData);
+    }
+
+    private function selectAssetPartListener (event:SelectAssetPartEvent):void {
+        if (_currentEditingAsset) {
+            _currentEditingAsset.showPart(event.partData);
+        }
+    }
+
+    private function selectAssetEditionModeListener (event:SelectAssetEditionModeEvent):void {
+        if (_currentEditingAsset) {
+            _currentEditingAsset.editShotableMode = uiController.editAssetShotableMode;
+            _currentEditingAsset.editWalkableMode = uiController.editAssetWalkableMode;
+        }
     }
 
 }

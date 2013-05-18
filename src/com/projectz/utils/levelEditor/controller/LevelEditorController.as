@@ -58,8 +58,8 @@ public class LevelEditorController extends EventDispatcher {
      * @param $x
      * @param $y
      */
-    public function selectObject ($x: int, $y: int):void {
-        model.selectObject($x,  $y);
+    public function selectAndRemoveObject ($x: int, $y: int):void {
+        model.selectAndRemoveObject($x,  $y);
     }
 
     /**

@@ -23,6 +23,9 @@ import starling.utils.AssetManager;
 
 public class FieldObjectView extends Sprite {
 
+    private var _editWalkableMode:Boolean = true;
+    private var _editShotableMode:Boolean = false;
+
     private var _assets: AssetManager;
 
     private var _object: ObjectData;
@@ -140,6 +143,22 @@ public class FieldObjectView extends Sprite {
         return bitmapData;
     }
 
+    public function get editWalkableMode():Boolean {
+        return _editWalkableMode;
+    }
+
+    public function set editWalkableMode(value:Boolean):void {
+        _editWalkableMode = value;
+    }
+
+    public function get editShotableMode():Boolean {
+        return _editShotableMode;
+    }
+
+    public function set editShotableMode(value:Boolean):void {
+        _editShotableMode = value;
+    }
+
     private function init():void {
         var obj: ObjectView;
         while (_objects.numChildren>0) {
@@ -213,19 +232,21 @@ public class FieldObjectView extends Sprite {
                 var ty: Number = pos.y/PositionView.cellHeight;
                 var cx: int = Math.round(ty-tx);
                 var cy: int = Math.round(cx+tx*2);
-
-                if (touch.phase == TouchPhase.BEGAN) {
-                    if (_currentPart.partData.name!=PartData.SHADOW) {
-                        _selectMode = 1-_currentPart.partData.getWalkable(cx, cy);
+                if ((cx < _currentPart.width) && (cy < _currentPart.height)) {
+                    if (touch.phase == TouchPhase.BEGAN) {
+                        if (_currentPart.partData.name!=PartData.SHADOW) {
+                            _selectMode = 1-_currentPart.partData.getWalkable(cx, cy);
+                        }
+                    } else if (touch.phase == TouchPhase.ENDED) {
+                        _selectMode = -1;
                     }
-                } else if (touch.phase == TouchPhase.ENDED) {
-                    _selectMode = -1;
+                    if (_selectMode >= 0) {
+                        // TODO: вынести в панель редактора
+                        _currentPart.partData.setWalkable(cx, cy, _selectMode);
+                        updateField();
+                    }
                 }
-                if (_selectMode >= 0) {
-                    // TODO: вынести в панель редактора
-                    _currentPart.partData.setWalkable(cx, cy, _selectMode);
-                    updateField();
-                }
+
             }
         }
     }

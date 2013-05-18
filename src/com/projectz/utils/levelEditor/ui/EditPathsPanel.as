@@ -60,7 +60,7 @@ public class EditPathsPanel extends BasicPanel {
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
         uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
-        model.addEventListener(EditPathEvent.COLOR_WAS_CHANGED, colorWasChangedEvent);
+        model.addEventListener(EditPathEvent.PATH_COLOR_WAS_CHANGED, colorWasChangedEvent);
         model.addEventListener(EditPathEvent.PATH_WAS_ADDED, pathWasAddedListener);
         model.addEventListener(EditPathEvent.PATH_WAS_REMOVED, pathWasRemovedListener);
     }

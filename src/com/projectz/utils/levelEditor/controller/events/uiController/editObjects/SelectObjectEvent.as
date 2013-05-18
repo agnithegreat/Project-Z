@@ -11,10 +11,16 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;
 
+/**
+ * Событие выбора объекта для редактирования (добавления не карту).
+ */
 public class SelectObjectEvent extends Event {
 
     private var _objectData:ObjectData;
 
+    /**
+     * Выбор объекта для редактирования (добавления на карту).
+     */
     public static const SELECT_OBJECT:String = "select object";
 
     public function SelectObjectEvent(objectData:ObjectData, type:String = SELECT_OBJECT, bubbles:Boolean = false) {
@@ -22,6 +28,9 @@ public class SelectObjectEvent extends Event {
         super (type, bubbles, objectData);
     }
 
+    /**
+     * Объект для редактирования (добавления на карту).
+     */
     public function get objectData():ObjectData {
         return _objectData;
     }

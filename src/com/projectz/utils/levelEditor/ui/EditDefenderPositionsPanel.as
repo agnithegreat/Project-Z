@@ -13,7 +13,7 @@ import com.projectz.utils.levelEditor.controller.EditMode;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent;
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent;
@@ -56,7 +56,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
 
         model.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_ADDED, defenderPositionWasAddedListener);
         model.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED, defenderPositionWasRemovedListener);
-        uiController.addEventListener(SelectEditDefenderPositionModeEvent.SELECT_EDIT_DEFENDER_POSITION_MODE, selectEditDefenderPositionModeListener);
+        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectEditDefenderPositionModeListener);
         uiController.addEventListener(SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION, selectDefenderPositionListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
     }
@@ -164,7 +164,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
         }
     }
 
-    private function selectEditDefenderPositionModeListener(event:SelectEditDefenderPositionModeEvent):void {
+    private function selectEditDefenderPositionModeListener(event:SelectDefenderPositionEditingModeEvent):void {
         //Устанавливаем выделение кнопок в зависимости от установленного в контроллере режима редактирования:
         if (event.mode == EditMode.ADD_POINTS) {
             btnAddDefenderPositionPoints.selected = true;

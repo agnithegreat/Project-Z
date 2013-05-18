@@ -8,12 +8,14 @@
 package com.projectz.utils.objectEditor.data.events {
 import com.projectz.utils.objectEditor.data.ObjectData;
 
+import starling.events.Event;
+
 /**
  * Событие, отправляемое при изменении данных в объекте ObjectData.
  *
  * @see com.projectz.utils.objectEditor.data.ObjectData
  */
-public class EditObjectDataEvent {
+public class EditObjectDataEvent extends Event {
 
     private var _objectData:ObjectData;
 

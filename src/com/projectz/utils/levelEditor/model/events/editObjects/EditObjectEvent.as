@@ -10,18 +10,30 @@ import com.projectz.utils.levelEditor.model.objects.FieldObject;
 
 import starling.events.Event;
 
+/**
+ * Событие удаление/добавления частей объектов (FieldObject) на карте.
+ */
 public class EditObjectEvent extends Event {
 
     private var _fieldObject:FieldObject;
 
-    public static const OBJECT_WAS_ADDED: String = "object was added";
-    public static const OBJECT_WAS_REMOVED: String = "object was removed";
+    /**
+     * Объект был добавлен на карту.
+     */
+    public static const FIELD_OBJECT_WAS_ADDED: String = "object was added";
+    /**
+     * Объект был удалён с карты.
+     */
+    public static const FIELD_OBJECT_WAS_REMOVED: String = "object was removed";
 
     public function EditObjectEvent (objectData:FieldObject, type:String, bubbles:Boolean = false):void {
         this.fieldObject = objectData;
         super (type, bubbles, objectData);
     }
 
+    /**
+     * Часть объекта.
+     */
     public function get fieldObject():FieldObject {
         return _fieldObject;
     }

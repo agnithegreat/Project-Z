@@ -7,6 +7,7 @@
  */
 package com.projectz.utils.objectEditor.data {
 import com.projectz.utils.json.JSONLoader;
+import com.projectz.utils.objectEditor.data.events.EditObjectDataEvent;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
@@ -27,6 +28,7 @@ public class ObjectData extends JSONLoader {
     private var _type: String;
     /**
      * Тип объекта.
+     *
      * @see com.projectz.utils.objectEditor.data.ObjectType
      */
     public function get type():String {
@@ -36,8 +38,15 @@ public class ObjectData extends JSONLoader {
     protected var _mask: Array/*of Array(of int)*/;
     /**
      * Массив массивов данных о клетках, которые занимает объект.
-     * Хначения массива определяют свойтсва клеток
-     * (0 = непростреливаемый непроходимый, 1 = проходимый, 2 = простреливаемый, 3 = простреливаемый проходимый).
+     * Значения определяют свойства клетки:
+     * <p>
+     * <ul>
+     *  <li>0 - простреливаемый проходимый;</li>
+     *  <li>1 - простреливаемый непроходимый;</li>
+     *  <li>2 - простреливаемый непроходимый;</li>
+     *  <li>3 - непростреливаемый непроходимый.</li>
+     * </ul>
+     * </p>
      */
     public function get mask():Array/*of Array(of int)*/ {
         _mask = [[1]];
@@ -129,6 +138,7 @@ public class ObjectData extends JSONLoader {
         for each (var part:PartData in parts) {
             part.setSize($width, $height);
         }
+        dispatchEvent(new EditObjectDataEvent(this, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
     }
 
     private function getParts():Object {
@@ -154,10 +164,10 @@ public class ObjectData extends JSONLoader {
      * @inheritDoc
      */
     override public function parse($data: Object):void {
-        setSize($data.mask.length, $data.mask[0].length);
+        setSize($data.parts[""].mask.length, $data.parts[""].mask.length);
 
         var index: String;
-        var part: Object;
+        var part: PartData;
         for (index in $data.parts) {
             part = getPart(index);
             part.parse($data.parts[index]);
@@ -169,7 +179,7 @@ public class ObjectData extends JSONLoader {
      * @return Объект, хранящий данные.
      */
     public function export():Object {
-        return {'name': _name, 'mask': mask, 'parts': getParts()};
+        return {'name': _name, 'parts': getParts()};
     }
 }
 }

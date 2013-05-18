@@ -6,21 +6,24 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
+
 import flash.geom.Point;
 import flash.utils.Dictionary;
 
+import starling.events.EventDispatcher;
+
 import starling.textures.Texture;
-import starling.utils.AssetManager;
 
 /**
  * Класс, хранящий данные о части игрового объекта.
  */
-public class PartData {
+public class PartData extends EventDispatcher {
 
     public static const SHADOW: String = "shadow";
 
-    public static const WALKABLE: int = 1;
-    public static const SHOTABLE: int = 2;
+    public static const UNWALKABLE: int = 1;
+    public static const UNSHOTABLE: int = 2;
 
     private var _name: String;
     /**
@@ -32,9 +35,16 @@ public class PartData {
 
     private var _mask: Array = [[1]];
     /**
-     * Массив массивов данных о клетках, которые занимает часть объект.
-     * Хначения массива определяют свойтсва клеток
-     * (0 = непростреливаемый непроходимый, 1 = проходимый, 2 = простреливаемый, 3 = простреливаемый проходимый).
+     * Массив массивов данных о клетках, которые занимает часть объекта.
+     * Значения определяют свойства клетки:
+     * <p>
+     * <ul>
+     *  <li>0 - простреливаемый проходимый;</li>
+     *  <li>1 - простреливаемый непроходимый;</li>
+     *  <li>2 - простреливаемый непроходимый;</li>
+     *  <li>3 - непростреливаемый непроходимый.</li>
+     * </ul>
+     * </p>
      */
     public function get mask():Array {
         return _mask;
@@ -97,7 +107,7 @@ public class PartData {
     /**
      * Добавления текстур к соответствующему состоянию частей объекта.
      * @param $state Состояние объекта.
-     * @param $textures Текстуры. Может быть объектом Texture или Vector.<Texture>.
+     * @param $textures Текстуры. Может быть объектом Texture или Vector.&lt;Texture&gt;>.
      *
      * @see starling.textures.Texture
      */
@@ -121,6 +131,7 @@ public class PartData {
     public function place($x: int, $y: int):void {
         _pivotX = $x;
         _pivotY = $y;
+        dispatchEvent(new EditPartDataEvent(this, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
 
     /**
@@ -138,37 +149,68 @@ public class PartData {
         }
         _width = _mask.length;
         _height = _mask[0].length;
+        dispatchEvent(new EditPartDataEvent(this, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
 
     /**
      * Проверка, является ли указанная клетка проходимой.
      * @param $x Координата x клетки.
      * @param $y Координата y клетки.
-     * @return
+     * @return Возвращает 0, если клетка проходимая. Возвращает 1, если клетка непроходимая.
      */
     public function getWalkable($x: int, $y: int):int {
+        if (($x < _width) && ($y < _height)) {
 //        return (WALKABLE & _mask[$x][$y]);
-        return _mask[$x][$y];
-    }
-    public function setWalkable($x: int, $y: int, $walkable: int):void {
-        if ($x<0 || $y<0) {
-            return;
+            return _mask[$x][$y];
         }
-        _mask[$x][$y] = $walkable;
-//        _mask[$x][$y] = WALKABLE*$walkable + SHOTABLE*getShotable($x, $y);
+        else {
+            return -1;
+        }
     }
 
-    public function getShotable($x: int, $y: int):int {
-        return (SHOTABLE & _mask[$x][$y]);
+    /**
+     * Установка проходимости клетки.
+     * @param $x Координата x клетки.
+     * @param $y Координата x клетки.
+     * @param $walkable Если значение равно 0, то клетка станет проходимой, если 1, то непроходимой.
+     */
+    public function setWalkable($x: int, $y: int, $walkable: int):void {
+        if ($x<0 || $y<0 || $x > _width || $y > _height) {
+            return;
+        }
+//        _mask[$x][$y] = $walkable;
+        _mask[$x][$y] = $walkable + getShotable($x, $y);
+        dispatchEvent(new EditPartDataEvent(this, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
+
+    /**
+     * Проверка, является ли клекта проcтреливаемой.
+     * @param $x Координата x клетки.
+     * @param $y Координата y клетки.
+     * @return Возвращает 0, если клетка простреливаемая, возвращает 2, если клетка непростреливаемая.
+     */
+    public function getShotable($x: int, $y: int):int {
+        return (UNSHOTABLE & _mask[$x][$y]);
+    }
+
+    /**
+     * Установка простреливаемости клетки.
+     * @param $x Координата x клетки.
+     * @param $y Координата x клетки.
+     * @param $shotable Если значение равно 0, то клетка станет простреливаемой, если 1, то непростреливаемой.
+     */
     public function setShotable($x: int, $y: int, $shotable: int):void {
-        _mask[$x][$y] = WALKABLE*getWalkable($x, $y) + SHOTABLE*$shotable;
+        if ($x<0 || $y<0 || $x > _width || $y > _height) {
+            return;
+        }
+        _mask[$x][$y] = UNWALKABLE*getWalkable($x, $y) + UNSHOTABLE*$shotable;
+        dispatchEvent(new EditPartDataEvent(this, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
 
     private function getTop():Point {
         for (var i: int = 0; i < width+height; i++) {
             for (var j:int = 0; j <= i; j++) {
-                if (i-j<width && j<height && _mask[i-j][j]) {
+                if (i-j < width && j < height && _mask[i-j][j]) {
                     return new Point(i-j, j);
                 }
             }

@@ -8,10 +8,12 @@
 
 package com.projectz.utils.levelEditor.controller {
 
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEditionModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetPartEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetsTypeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitsTypeEvent;
@@ -36,6 +38,8 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.objectEditor.data.events.EditDefenderDataEvent;
 import com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent;
+import com.projectz.utils.objectEditor.data.events.EditObjectDataEvent;
+import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
 
 import flash.geom.Point;
 
@@ -74,6 +78,8 @@ public class UIController extends EventDispatcher {
     //Редактирование ассетов:
     private var _currentEditingAsset:ObjectData;//Текущий редактируемый ассет.
     private var _currentEditingAssetPart:PartData;//Текущая редактируемая часть ассета.
+    private var _editAssetWalkableMode:Boolean;//Режим работы контроллера в котором происходит редактирование проходимости клеток у текущего выбранного ассета.
+    private var _editAssetShotableMode:Boolean;//Режим работы контроллера в котором происходит редактирование простреливаемости клеток у текущего выбранного ассета.
 
     //Редактирование юнитов:
     private var _currentEditingUnit:ObjectData;//Текущий редактируемый юнит.
@@ -218,11 +224,11 @@ public class UIController extends EventDispatcher {
 
     public function set editDefenderPositionsMode(value:String):void {
         _editDefenderPositionsMode = value;
-        dispatchEvent(new SelectEditDefenderPositionModeEvent(_editDefenderPositionsMode));
+        dispatchEvent(new SelectDefenderPositionEditingModeEvent(_editDefenderPositionsMode));
     }
 
     /**
-     * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при зон защитнико.
+     * Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при зон защитников.
      */
     public function get editDefenderZonesAreaMode():Boolean {
         return _editDefenderZonesAreaMode;
@@ -254,7 +260,13 @@ public class UIController extends EventDispatcher {
     }
 
     public function set currentEditingAsset(objectData:ObjectData):void {
+        if (_currentEditingAsset) {
+            _currentEditingAsset.removeEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
+        }
         _currentEditingAsset = objectData;
+        if (_currentEditingAsset) {
+            _currentEditingAsset.addEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
+        }
         dispatchEvent(new SelectAssetEvent(objectData));
     }
 
@@ -266,7 +278,35 @@ public class UIController extends EventDispatcher {
     }
 
     public function set currentEditingAssetPart(partData:PartData):void {
+        if (_currentEditingAssetPart) {
+            _currentEditingAssetPart.removeEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, partDataWasChangedListener);
+        }
         _currentEditingAssetPart = partData;
+        dispatchEvent(new SelectAssetPartEvent(partData));
+    }
+
+    /**
+     * Значение, которое определяет, включен ли режим редактирования проходимости клеток у текущего выбранного ассета.
+     */
+    public function get editAssetWalkableMode():Boolean {
+        return _editAssetWalkableMode;
+    }
+
+    public function set editAssetWalkableMode(value:Boolean):void {
+        _editAssetWalkableMode = value;
+        dispatchEvent(new SelectAssetEditionModeEvent());
+    }
+
+    /**
+     * Значение, которое определяет, включен ли режим редактирования простреливаемости клеток у текущего выбранного ассета.
+     */
+    public function get editAssetShotableMode():Boolean {
+        return _editAssetShotableMode;
+    }
+
+    public function set editAssetShotableMode(value:Boolean):void {
+        _editAssetShotableMode = value;
+        dispatchEvent(new SelectAssetEditionModeEvent());
     }
 
     /////////////////////////////////////////////
@@ -352,9 +392,9 @@ public class UIController extends EventDispatcher {
      * @param $x
      * @param $y
      */
-    public function selectObject ($x: int, $y: int):void {
+    public function selectAndRemoveObject ($x: int, $y: int):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
-            levelEditorController.selectObject($x,  $y);
+            levelEditorController.selectAndRemoveObject($x,  $y);
         }
     }
 
@@ -690,6 +730,26 @@ public class UIController extends EventDispatcher {
     private function defenderDataWasChangedListener (event:EditDefenderDataEvent):void {
         var defenderData:DefenderData = event.defenderData;
         dispatchEvent(new EditDefenderDataEvent(defenderData));
+    }
+
+    /**
+     * Слушатель события изменения текущего редактируемого ассета.
+     *
+     * @see com.projectz.utils.objectEditor.data.ObjectData
+     */
+    private function objectDataWasChangedListener (event:EditObjectDataEvent):void {
+        var objectData:ObjectData = event.objectData;
+        dispatchEvent(new EditObjectDataEvent(objectData));
+    }
+
+    /**
+     * Слушатель события изменения текущей редактируемой части текущего редактируемого ассета.
+     *
+     * @see com.projectz.utils.objectEditor.data.ObjectData
+     */
+    private function partDataWasChangedListener (event:EditPartDataEvent):void {
+        var partData:PartData = event.partData;
+        dispatchEvent(new EditPartDataEvent(partData));
     }
 
 }

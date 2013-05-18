@@ -10,10 +10,16 @@ import com.projectz.utils.levelEditor.data.DefenderPositionData;
 
 import starling.events.Event;
 
+/**
+ * Событие выбора зоны защитника для редактирования.
+ */
 public class SelectDefenderPositionEvent extends Event {
 
     private var _defenderPositionData:DefenderPositionData;
 
+    /**
+     * Выбор зоны защитника для редактирования.
+     */
     public static const SELECT_DEFENDER_POSITION:String = "select defender position";
 
     public function SelectDefenderPositionEvent(defenderPositionData:DefenderPositionData, type:String = SELECT_DEFENDER_POSITION, bubbles:Boolean = false) {
@@ -21,6 +27,9 @@ public class SelectDefenderPositionEvent extends Event {
         super(type, bubbles, defenderPositionData);
     }
 
+    /**
+     * Зона защитника.
+     */
     public function get defenderPositionData():DefenderPositionData {
         return _defenderPositionData;
     }

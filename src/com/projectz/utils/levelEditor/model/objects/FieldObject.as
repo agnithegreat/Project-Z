@@ -14,6 +14,7 @@ import com.projectz.utils.objectEditor.data.PartData;
 import starling.events.EventDispatcher;
 
 /**
+ * Часть объекта для отображения на карте.
  * Любая часть любого объекта, создана для того, чтобы сортировать все части всех объектов.
  */
 public class FieldObject extends EventDispatcher {

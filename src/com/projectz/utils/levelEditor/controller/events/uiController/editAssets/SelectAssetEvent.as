@@ -11,10 +11,16 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;
 
+/**
+ * Событие выбора ассета для редактирования.
+ */
 public class SelectAssetEvent extends Event {
 
     private var _objectData:ObjectData;
 
+    /**
+     * Выбор ассета для редактирования.
+     */
     public static const SELECT_ASSET:String = "select asset";
 
     public function SelectAssetEvent(objectData:ObjectData, type:String = SELECT_ASSET, bubbles:Boolean = false) {
@@ -22,6 +28,9 @@ public class SelectAssetEvent extends Event {
         super (type, bubbles, objectData);
     }
 
+    /**
+     * Ассет.
+     */
     public function get objectData():ObjectData {
         return _objectData;
     }
