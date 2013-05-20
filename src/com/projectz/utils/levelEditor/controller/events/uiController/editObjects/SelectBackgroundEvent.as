@@ -28,7 +28,7 @@ public class SelectBackgroundEvent extends Event {
     }
 
     /**
-     * Бэкграунд.
+     * Бэкграунд в виде объекта ObjectData.
      */
     public function get objectData():ObjectData {
         return _objectData;

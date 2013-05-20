@@ -10,7 +10,7 @@ package com.projectz.utils.levelEditor.controller {
 /**
  * Класс, хранящий список режимов редактирования в виде констант.
  */
-public class EditMode {
+public class EditingMode {
 
     public static const ADD_POINTS:String = "add points";
     public static const REMOVE_POINTS:String = "remove points";

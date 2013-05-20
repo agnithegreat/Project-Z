@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+
 import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
 
 import flash.geom.Point;
@@ -14,6 +15,13 @@ import flash.utils.Dictionary;
 import starling.events.EventDispatcher;
 
 import starling.textures.Texture;
+
+/**
+ * Отправляется при изменении данных.
+ *
+ * @eventType com.projectz.utils.objectEditor.data.events.EditPartDataEvent.PART_DATA_WAS_CHANGED
+ */
+[Event(name="part data was changed", type="com.projectz.utils.objectEditor.data.events.EditPartDataEvent")]
 
 /**
  * Класс, хранящий данные о части игрового объекта.

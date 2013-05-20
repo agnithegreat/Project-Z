@@ -19,6 +19,9 @@ public class EditObjectDataEvent extends Event {
 
     private var _objectData:ObjectData;
 
+    /**
+     * Изменение данных в объекте ObjectData.
+     */
     public static const OBJECT_DATA_WAS_CHANGED:String = "object data was changed";
 
     public function EditObjectDataEvent(objectData:ObjectData, type:String = OBJECT_DATA_WAS_CHANGED, bubbles:Boolean = false) {
@@ -26,6 +29,9 @@ public class EditObjectDataEvent extends Event {
         super(type, bubbles, objectData);
     }
 
+    /**
+     * Объект ObjectData.
+     */
     public function get objectData():ObjectData {
         return _objectData;
     }

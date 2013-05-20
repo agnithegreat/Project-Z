@@ -20,7 +20,9 @@ public class ObjectType {
      * Объект с анимацией
      */
     public static var ANIMATED_OBJECT: String = "ao";
-
+    /**
+     * Объект-цель (машина, фургон и т.д.)
+     */
     public static var TARGET_OBJECT: String = "to";
     /**
      * Защитник

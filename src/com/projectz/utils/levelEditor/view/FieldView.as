@@ -8,7 +8,7 @@
 package com.projectz.utils.levelEditor.view {
 
 import com.projectz.game.event.GameEvent;
-import com.projectz.utils.levelEditor.controller.EditMode;
+import com.projectz.utils.levelEditor.controller.EditingMode;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEditionModeEvent;
@@ -17,7 +17,7 @@ import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEditingModeEvent;
 import com.projectz.utils.levelEditor.data.DataUtils;
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
 import com.projectz.utils.levelEditor.data.GeneratorData;
@@ -38,6 +38,7 @@ import com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent;
 import com.projectz.utils.levelEditor.model.objects.FieldObject;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectType;
+import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.geom.Point;
@@ -103,8 +104,8 @@ public class FieldView extends Sprite {
         uiController.addEventListener(SelectObjectEvent.SELECT_OBJECT, selectObjectListener);
         uiController.addEventListener(SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE, selectObjectsTypeListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
-        uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
-        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectEditDefenderPositionModeListener);
+        uiController.addEventListener(SelectPathEditingModeEvent.SELECT_PATH_EDITING_MODE, selectPathEditingModeListener);
+        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectDefenderPositionEditingModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
         uiController.addEventListener(SelectGeneratorEvent.SELECT_GENERATOR, selectGeneratorListener);
         uiController.addEventListener(SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION, selectDefenderPositionListener);
@@ -488,7 +489,7 @@ public class FieldView extends Sprite {
      * Редактирование зон защитников.
      */
     private function editDefenderPositions():void {
-        if (uiController.editDefenderPositionsMode == EditMode.SET_POINT) {
+        if (uiController.editDefenderPositionsMode == EditingMode.SET_POINT) {
             uiController.setPositionOfCurrentDefenderPosition(new Point(_currentCell.positionX, _currentCell.positionY));
         }
         else {
@@ -651,20 +652,23 @@ public class FieldView extends Sprite {
                 break;
         }
         if (_currentEditingAsset) {
+            var toX:int = 0;
+            var toY:int = 0;
             switch ($event.keyCode) {
                 case Keyboard.LEFT:
-                    _currentEditingAsset.moveParts(-1, 0);
+                    toX = 1;
                     break;
                 case Keyboard.RIGHT:
-                    _currentEditingAsset.moveParts(1, 0);
+                    toX = -1;
                     break;
                 case Keyboard.UP:
-                    _currentEditingAsset.moveParts(0, -1);
+                    toY = 1;
                     break;
                 case Keyboard.DOWN:
-                    _currentEditingAsset.moveParts(0, 1);
+                    toY = -1;
                     break;
             }
+            uiController.moveAsset (toX, toY);
         }
     }
 
@@ -837,7 +841,7 @@ public class FieldView extends Sprite {
     /**
      * Слушатель события выбора режима редактирования путей.
      */
-    private function selectEditPathModeListener(event:SelectEditPathModeEvent):void {
+    private function selectPathEditingModeListener(event:SelectPathEditingModeEvent):void {
         firstSelectedPointForEditingPath = null;
     }
 
@@ -899,7 +903,7 @@ public class FieldView extends Sprite {
     /**
      * Слушатель события выбора режима редактирования зон защитников.
      */
-    private function selectEditDefenderPositionModeListener(event:SelectDefenderPositionEditingModeEvent):void {
+    private function selectDefenderPositionEditingModeListener(event:SelectDefenderPositionEditingModeEvent):void {
         firstSelectedPointForEditingDefenderZones = null;
     }
 

@@ -10,12 +10,24 @@ import com.projectz.utils.levelEditor.data.LevelData;
 
 import starling.events.Event;
 
+/**
+ * Событие изменения уровней.
+ */
 public class EditLevelsEvent extends Event {
 
     private var _levelData:LevelData;
 
+    /**
+     * Добавление нового уровня.
+     */
     public static const LEVEL_WAS_ADDED: String = "level was added";
+    /**
+     * Установка текущенго уровня игры.
+     */
     public static const SET_LEVEL: String = "set level";
+    /**
+     * Удаление уровня.
+     */
     public static const LEVEL_WAS_REMOVED: String = "level was removed";
 
     public function EditLevelsEvent (levelData:LevelData, type:String, bubbles:Boolean = false):void {

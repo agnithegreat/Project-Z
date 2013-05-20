@@ -9,6 +9,7 @@ package com.projectz.utils.objectEditor.view {
 import com.projectz.utils.StarlingUtils;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.objectEditor.data.events.EditObjectDataEvent;
 
 import flash.display.BitmapData;
 
@@ -59,6 +60,7 @@ public class FieldObjectView extends Sprite {
         _container.addChild(_objects);
 
         addEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+        $object.addEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
     }
 
     public function addX():void {
@@ -114,6 +116,9 @@ public class FieldObjectView extends Sprite {
         }
         _objects.removeFromParent(true);
         _objects = null;
+
+        _object.removeEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
+        _object = null;
 
         _container.removeFromParent(true);
         _container = null;
@@ -223,6 +228,15 @@ public class FieldObjectView extends Sprite {
         }
     }
 
+    private function updatePartsView ():void {
+        var len: int = _objects.numChildren;
+        var child: ObjectView;
+        for (var i:int = 0; i < len; i++) {
+            child = _objects.getChildAt(i) as ObjectView;
+            child.update();
+        }
+    }
+
     private function handleTouch($event: TouchEvent):void {
         var touch: Touch = $event.getTouch(_cells);
         if (touch) {
@@ -249,6 +263,11 @@ public class FieldObjectView extends Sprite {
 
             }
         }
+    }
+
+    private function objectDataWasChangedListener (event:EditObjectDataEvent):void {
+        updatePartsView();
+        showField();
     }
 
 }
