@@ -6,6 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.event {
+
+/**
+ * Игровое событие.
+ */
 public class GameEvent {
 
     public static const OBJECT_ADDED: String = "object_added_GameEvent";

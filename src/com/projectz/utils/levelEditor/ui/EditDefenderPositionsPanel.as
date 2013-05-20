@@ -13,9 +13,8 @@ import com.projectz.utils.levelEditor.controller.EditMode;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectEditDefenderPositionModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent;
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
-import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent;
 
@@ -27,12 +26,16 @@ import flash.display.MovieClip;
 import flash.events.Event;
 import flash.events.MouseEvent;
 
+/**
+ * Панель редактора уровней для редактирования зон защитников.
+ */
 public class EditDefenderPositionsPanel extends BasicPanel {
 
-    private var model:Field;
-    private var uiController:UIController;
+    private var model:Field;//Ссылка на модель (mvc).
+    private var uiController:UIController;//Ссылка на контроллер (mvc).
 
-    private var chxAreaMode:CheckBox;
+    //Элементы ui:
+    private var chbAreaMode:CheckBox;
 
     private var btnAddDefenderPositionPoints:ButtonWithText;
     private var btnRemoveDefenderPositionPoints:ButtonWithText;
@@ -41,6 +44,11 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     private var btnNew:ButtonWithText;
     private var btnDelete:ButtonWithText;
 
+    /**
+     * @param mc Мувиклип с графикой для панели.
+     * @param model Ссылка на модель (mvc).
+     * @param uiController Ссылка на контроллер (mvc).
+     */
     public function EditDefenderPositionsPanel(mc:MovieClip, model:Field, uiController:UIController) {
         this.uiController = uiController;
         this.model = model;
@@ -48,7 +56,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
 
         model.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_ADDED, defenderPositionWasAddedListener);
         model.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED, defenderPositionWasRemovedListener);
-        uiController.addEventListener(SelectEditDefenderPositionModeEvent.SELECT_EDIT_DEFENDER_POSITION_MODE, selectEditDefenderPositionModeListener);
+        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectEditDefenderPositionModeListener);
         uiController.addEventListener(SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION, selectDefenderPositionListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
     }
@@ -57,37 +65,44 @@ public class EditDefenderPositionsPanel extends BasicPanel {
 //PROTECTED:
 /////////////////////////////////////////////
 
+    /**
+     * @inheritDoc
+     */
     override protected function initGraphicElements():void {
         super.initGraphicElements();
 
-        chxAreaMode = CheckBox(getElement("chxAreaMode"));
+        //Инициализируем компоненты:
+        chbAreaMode = CheckBox(getElement("chbAreaMode"));
         listDefenderPositions = List(getElement("listDefenderPositions"));
 
-        chxAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
-        listDefenderPositions.addEventListener(Event.CHANGE, selectListener_listDefenderPositions);
-
-        chxAreaMode.focusEnabled = false;
+        //Отключаем фокус для компонентов:
+        chbAreaMode.focusEnabled = false;
         listDefenderPositions.focusEnabled = false;
 
-        //создание кнопок:
+        //Добавляем слушателей для компонентов:
+        chbAreaMode.addEventListener(Event.CHANGE, changeListener_chxAreaMode);
+        listDefenderPositions.addEventListener(Event.CHANGE, selectListener_listDefenderPositions);
+
+        //Создаём кнопки:
         btnAddDefenderPositionPoints = new ButtonWithText(mc["btnAddDefenderPositionPoints"]);
         btnRemoveDefenderPositionPoints = new ButtonWithText(mc["btnRemoveDefenderPositionPoints"]);
         btnSetDefenderPositionPoint = new ButtonWithText(mc["btnSetDefenderPositionPoint"]);
         btnNew = new ButtonWithText(mc["btnNew"]);
         btnDelete = new ButtonWithText(mc["btnDelete"]);
 
+        //Устанавливаем выделение кнопок:
+        btnAddDefenderPositionPoints.selected = (uiController.editDefenderPositionsMode == EditMode.ADD_POINTS);
+        btnRemoveDefenderPositionPoints.selected = (uiController.editDefenderPositionsMode == EditMode.REMOVE_POINTS);
+        btnSetDefenderPositionPoint.selected = (uiController.editDefenderPositionsMode == EditMode.SET_POINT);
 
-        btnAddDefenderPositionPoints.selected = (uiController.editDefenderZonesMode == EditMode.ADD_POINTS);
-        btnRemoveDefenderPositionPoints.selected = (uiController.editDefenderZonesMode == EditMode.REMOVE_POINTS);
-        btnSetDefenderPositionPoint.selected = (uiController.editDefenderZonesMode == EditMode.SET_POINT);
-
+        //Устанавливаем тексты на кнопках:
         btnAddDefenderPositionPoints.text = "Добавление";
         btnRemoveDefenderPositionPoints.text = "Удаление";
         btnSetDefenderPositionPoint.text = "Позиция";
         btnDelete.text = "<FONT size = '13'>Удалить зону<FONT>";
         btnNew.text = "<FONT size = '13'>Создать зону<FONT>";
 
-
+        //Добавляем слушателей для кнопок:
         btnAddDefenderPositionPoints.addEventListener(MouseEvent.CLICK, clickListener);
         btnRemoveDefenderPositionPoints.addEventListener(MouseEvent.CLICK, clickListener);
         btnSetDefenderPositionPoint.addEventListener(MouseEvent.CLICK, clickListener);
@@ -102,10 +117,10 @@ public class EditDefenderPositionsPanel extends BasicPanel {
 
     private function reInitDefenderPositionsList ():void {
         if (model.levelData) {
-            //формируем список всех позиций защитников текущего уровня:
+            //Формируем список всех зон защитников текущего уровня:
             initDefenderPositionsList(model.levelData.defenderPositions);
 
-            //устанавливаем текущий редактируемый путь:
+            //Устанавливаем текущую выбранную зону защитников в контроллере, как первую зону в списке зон:
             var currentEditingDefenderPosition:DefenderPositionData;
             if (model.levelData.defenderPositions.length > 0) {
                 currentEditingDefenderPosition = model.levelData.defenderPositions [0];
@@ -116,6 +131,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     }
 
     private function initDefenderPositionsList(defenderPositions:Vector.<DefenderPositionData>):void {
+        //Формируем список всех зон защитников текущего уровня:
         var dataProvider:DataProvider = new DataProvider();
         for (var i:int = 0; i < defenderPositions.length; i++) {
             var defenderPositionData:DefenderPositionData = defenderPositions [i];
@@ -131,13 +147,13 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     private function clickListener(event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnAddDefenderPositionPoints):
-                uiController.editDefenderZonesMode = EditMode.ADD_POINTS;
+                uiController.editDefenderPositionsMode = EditMode.ADD_POINTS;
                 break;
             case (btnRemoveDefenderPositionPoints):
-                uiController.editDefenderZonesMode = EditMode.REMOVE_POINTS;
+                uiController.editDefenderPositionsMode = EditMode.REMOVE_POINTS;
                 break;
             case (btnSetDefenderPositionPoint):
-                uiController.editDefenderZonesMode = EditMode.SET_POINT;
+                uiController.editDefenderPositionsMode = EditMode.SET_POINT;
                 break;
             case (btnNew):
                 uiController.addNewDefenderPosition();
@@ -148,7 +164,8 @@ public class EditDefenderPositionsPanel extends BasicPanel {
         }
     }
 
-    private function selectEditDefenderPositionModeListener(event:SelectEditDefenderPositionModeEvent):void {
+    private function selectEditDefenderPositionModeListener(event:SelectDefenderPositionEditingModeEvent):void {
+        //Устанавливаем выделение кнопок в зависимости от установленного в контроллере режима редактирования:
         if (event.mode == EditMode.ADD_POINTS) {
             btnAddDefenderPositionPoints.selected = true;
             btnRemoveDefenderPositionPoints.selected = false;
@@ -167,7 +184,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     }
 
     private function selectDefenderPositionListener (event:SelectDefenderPositionEvent):void {
-        //устанавливаем позицию листа для выбраной позиции защитника:
+        //Устанавливаем позицию листа для выбраной зоны защитника:
         var dataProvider:DataProvider = listDefenderPositions.dataProvider;
         var defenderPositionData:DefenderPositionData = event.defenderPositionData;
         for (var i:int = 0; i < dataProvider.length; i++) {
@@ -180,24 +197,29 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     }
 
     private function changeListener_chxAreaMode(event:Event):void {
-        uiController.editDefenderZonesAreaMode = chxAreaMode.selected;
+        //Устанавливаем режим редактирования зон защитников по двум точкам.
+        uiController.editDefenderZonesAreaMode = chbAreaMode.selected;
     }
 
     private function selectListener_listDefenderPositions(event:Event):void {
+        //Выбираем текущуую редактируемую зону защитника в контроллере.
         uiController.currentEditingDefenderPosition = listDefenderPositions.selectedItem.data;
     }
 
     private function defenderPositionWasAddedListener (event:EditDefenderPositionEvent):void {
-        reInitDefenderPositionsList();
-        uiController.currentEditingDefenderPosition = event.defenderPositionData;
+        //Обрабатываем добавление новой зоны защитника:
+        reInitDefenderPositionsList();//формируем новый список зон.
+        uiController.currentEditingDefenderPosition = event.defenderPositionData;//устанавливаем новую зону в контроллере в качестве текущей редактируемой.
     }
 
     private function defenderPositionWasRemovedListener (event:EditDefenderPositionEvent):void {
+        //Обрабатываем удаление зоны защитника:
         reInitDefenderPositionsList();
     }
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) {
+            //Формируем новый список зон при переключении контроллера в режим редактирования зон защитников.
             reInitDefenderPositionsList();
         }
     }

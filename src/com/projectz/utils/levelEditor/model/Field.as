@@ -12,16 +12,13 @@ import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
-import com.projectz.utils.levelEditor.data.PathData;
-import com.projectz.utils.levelEditor.data.PathData;
-import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
-import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
+import com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent;
 import com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent;
@@ -31,12 +28,158 @@ import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.levelEditor.data.PlaceData;
+import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
 
 import flash.geom.Point;
 
-import starling.events.Event;
-
 import starling.events.EventDispatcher;
+
+/**
+ * Отправляется при выборе текущего уровня.
+ *
+ * @eventType com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent.SET_LEVEL
+ */
+[Event(name="set level", type="com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent")]
+
+/**
+ * Отправляется при обновлении игры.
+ *
+ * @eventType com.projectz.game.event.GameEvent.UPDATE
+ */
+[Event(name="update_GameEvent", type="starling.events.Event")]
+
+/**
+ * Отправляется при изменении места на поле. Был выбран и удалён объект на карте.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent.PLACE_WAS_CHANGED
+ */
+[Event(name="place was changed", type="com.projectz.utils.levelEditor.model.events.editObjects.EditPlaceEvent")]
+
+/**
+ * Отправляется при изменении бэкграунда.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent.BACKGROUND_WAS_CHANGED
+ */
+[Event(name="background was changed", type="com.projectz.utils.levelEditor.model.events.editObjects.EditBackgroundEvent")]
+
+/**
+ * Отправляется при части объекта.
+ *
+ * @eventType com.projectz.utils.objectEditor.data.events.EditPartDataEvent.PART_DATA_WAS_CHANGED
+ */
+[Event(name="part data was changed", type="com.projectz.utils.objectEditor.data.events.EditPartDataEvent")]
+
+/**
+ * Отправляется при добавлении пути.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent.PATH_WAS_ADDED
+ */
+[Event(name="path was added", type="com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent")]
+
+/**
+ * Отправляется при изменении пути.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent.PATH_WAS_CHANGED
+ */
+[Event(name="path was changed", type="com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent")]
+
+/**
+ * Отправляется при изменении цвета пути.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent.PATH_COLOR_WAS_CHANGED
+ */
+[Event(name="path color was changed", type="com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent")]
+
+/**
+ * Отправляется при удалении пути.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent.PATH_WAS_REMOVED
+ */
+[Event(name="path was removed", type="com.projectz.utils.levelEditor.model.events.editPaths.EditPathEvent")]
+
+/**
+ * Отправляется при добавлении генератора.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent.GENERATOR_WAS_ADDED
+ */
+[Event(name="generator was added", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent")]
+
+/**
+ * Отправляется при изменении генератора.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent.GENERATOR_WAS_CHANGED
+ */
+[Event(name="generator was changed", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent")]
+
+/**
+ * Отправляется при удалении генератора.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent.GENERATOR_WAS_REMOVED
+ */
+[Event(name="generator was removed", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent")]
+
+/**
+ * Отправляется при добавлении волны.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent.WAVE_WAS_ADDED
+ */
+[Event(name="wave was added", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent")]
+
+/**
+ * Отправляется при изменении волны.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent.WAVE_WAS_CHANGED
+ */
+[Event(name="wave was changed", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent")]
+
+/**
+ * Отправляется при удалении волны.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent.WAVE_WAS_REMOVED
+ */
+[Event(name="wave was removed", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent")]
+
+/**
+ * Отправляется при изменении волны генератора.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent.GENERATOR_WAVE_WAS_CHANGED
+ */
+[Event(name="generator wave was changed", type="com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent")]
+
+/**
+ * Отправляется при добавлении зоны защитников.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent.DEFENDER_POSITION_WAS_ADDED
+ */
+[Event(name="defender position was added", type="com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent")]
+
+/**
+ * Отправляется при изменении зоны защитников.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED
+ */
+[Event(name="defender position was changed", type="com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent")]
+
+/**
+ * Отправляется при удалении зоны защитников.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED
+ */
+[Event(name="defender position was removed", type="com.projectz.utils.levelEditor.model.events.editDefenderZones.EditDefenderPositionEvent")]
+
+/**
+ * Отправляется при добавлении части объекта на поле.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent.FIELD_OBJECT_WAS_ADDED
+ */
+[Event(name="defender position was added", type="com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent")]
+
+/**
+ * Отправляется при удалении части объекта с поля.
+ *
+ * @eventType com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent.FIELD_OBJECT_WAS_REMOVED
+ */
+[Event(name="defender position was removed", type="com.projectz.utils.levelEditor.model.events.editObjects.EditObjectEvent")]
 
 public class Field extends EventDispatcher {
 
@@ -71,30 +214,46 @@ public class Field extends EventDispatcher {
     //GET & SET:
     /////////////////////////////////////////////
 
+    /**
+     * Ширина поля (в клетках).
+     */
     public function get width():int {
         return _width;
     }
 
+    /**
+     * Высота поля (в клетках).
+     */
     public function get height():int {
         return _height;
     }
 
-    public function set levelData(value:LevelData):void {
-        _levelData = value;
+    public function set levelData(levelData:LevelData):void {
+        _levelData = levelData;
         if (_levelData) {
+            dispatchEvent(new EditLevelsEvent (levelData, EditLevelsEvent.SET_LEVEL));
             createObjects(_levelData.objects);
             changeBackground(_levelData.bg);
         }
     }
 
+    /**
+     * Текущий уровень.
+     */
     public function get levelData():LevelData {
         return _levelData;
     }
 
+    /**
+     * Объекты на карте в виде массива частей объектов.
+     */
     public function get objects():Vector.<FieldObject> {
         return _objects;
     }
 
+    /**
+     * Поле клеток.
+     */
     public function get field():Vector.<Cell> {
         return _field;
     }
@@ -103,6 +262,11 @@ public class Field extends EventDispatcher {
     //OBJECTS:
     /////////////////////////////////////////////
 
+    /**
+     * Добавление объекта.
+     * @param $placeData Объект для добавления.
+     * @return Возвращает <code>true</code>, если объект был успешно добавлен.
+     */
     public function addObject($placeData: PlaceData):Boolean {
         if (!checkObject($placeData.x, $placeData.y, $placeData.realObject)) {
             return false;
@@ -116,7 +280,14 @@ public class Field extends EventDispatcher {
         return true;
     }
 
-    public function selectObject($x: int,  $y: int):void {
+    /**
+     * Поиск объекта в указанной позиции.
+     * Если объект найден, то он удаляется и диспатчся событие с этим объектом для его дальнейшего редактирования.
+     *
+     * @param $x Координата x на карте для поиска объекта.
+     * @param $y Координата y на карте для поиска объекта.
+     */
+    public function selectAndRemoveObject($x: int,  $y: int):void {
         if (_levelData) {
             var object: PlaceData;
 
@@ -132,21 +303,28 @@ public class Field extends EventDispatcher {
 
             if (object) {
                 removeObject(object);
-                dispatchEvent(new EditPlaceEvent (_objectsStorage.getObjectData(object.object), EditPlaceEvent.PLACE_ADDED));
+                dispatchEvent(new EditPlaceEvent (_objectsStorage.getObjectData(object.object), EditPlaceEvent.PLACE_WAS_CHANGED));
             }
         }
     }
 
+    /**
+     * Узменение бэкграунда.
+     * @param backgroundId Бэкграунд.
+     */
     public function changeBackground (backgroundId:String):void {
         if (_levelData) {
             _levelData.bg = backgroundId;
             if (backgroundId) {
                 var objectData:ObjectData = _objectsStorage.getObjectData (backgroundId);
-                dispatchEvent(new EditBackgroundEvent(objectData));
+                dispatchEvent(new EditBackgroundEvent(objectData, EditBackgroundEvent.BACKGROUND_WAS_CHANGED));
             }
         }
     }
 
+    /**
+     * Удаление всех объектов в текущем уровне.
+     */
     public function removeAllObject():void {
         if (_levelData) {
             var placeData: PlaceData;
@@ -162,6 +340,11 @@ public class Field extends EventDispatcher {
     //PATHS:
     /////////////////////////////////////////////
 
+    /**
+     * Добавление точек в путь.
+     * @param points Массив точек.
+     * @param pathData Путь.
+     */
     public function addPointsToPath (points:Vector.<Point>, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);
@@ -173,12 +356,17 @@ public class Field extends EventDispatcher {
                         pathData.points.push(pointAsString);
                     }
                 }
-                dispatchEvent(new EditPathEvent (pathData));
+                dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_WAS_CHANGED));
             }
         }
     }
 
-    public function removePointFromPath (points:Vector.<Point>, pathData:PathData):void {
+    /**
+     * Удаление точек из пути.
+     * @param points Массив точек.
+     * @param pathData Путь.
+     */
+    public function removePointsFromPath (points:Vector.<Point>, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
@@ -190,21 +378,29 @@ public class Field extends EventDispatcher {
                         pathData.points.splice(pointIndex, 1);
                     }
                 }
-                dispatchEvent(new EditPathEvent (pathData));
+                dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_WAS_CHANGED));
             }
         }
     }
 
+    /**
+     * Установка цвета пути.
+     * @param color Цвент пути.
+     * @param pathData Путь.
+     */
     public function setPathColor (color:uint, pathData:PathData):void {
         if (_levelData) {
             var index:int = _levelData.paths.indexOf(pathData);
             if (index != -1) {
                 pathData.color = color;
-                dispatchEvent(new EditPathEvent (pathData, EditPathEvent.COLOR_WAS_CHANGED));
+                dispatchEvent(new EditPathEvent (pathData, EditPathEvent.PATH_COLOR_WAS_CHANGED));
             }
         }
     }
 
+    /**
+     * Добавление пути в текущем уровне.
+     */
     public function addNewPath ():void {
         if (_levelData) {
             var pathData:PathData = _levelData.addNewPath ();
@@ -212,6 +408,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление пути в текущем уровне.
+     * @param pathData Удаляемый путь.
+     */
     public function deletePath (pathData:PathData):void {
         if (_levelData) {
             if (_levelData.deletePath (pathData)) {
@@ -224,6 +424,9 @@ public class Field extends EventDispatcher {
     //GENERATORS & WAVES:
     /////////////////////////////////////////////
 
+    /**
+     * Добавление нового генерата в текущем уровне.
+     */
     public function addNewGenerator ():void {
         if (_levelData) {
             var generatorData:GeneratorData = _levelData.addNewGenerator ();
@@ -238,6 +441,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление генератора в текущем уровне.
+     * @param generatorData Удаляемый генератор.
+     */
     public function removeGenerator (generatorData:GeneratorData):void {
         if (_levelData) {
             if (_levelData.removeGenerator(generatorData)) {
@@ -246,6 +453,11 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Установка пути для генератора.
+     * @param pathId Id'шник пути.
+     * @param generatorData Генератор.
+     */
     public function setGeneratorPath (pathId:int, generatorData:GeneratorData):void {
         if (_levelData) {
             var index:int = _levelData.generators.indexOf (generatorData);
@@ -268,6 +480,11 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Установка позиции генератора.
+     * @param point Позиция генератора.
+     * @param generatorData Генератор.
+     */
     public function setGeneratorPosition (point:Point, generatorData:GeneratorData):void {
         if (_levelData) {
             var index:int = _levelData.generators.indexOf (generatorData);
@@ -294,6 +511,9 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Добавление новой волны в текущем уровне.
+     */
     public function addNewWave():void {
         if (_levelData) {
             var waveData:WaveData = _levelData.addNewWave ();
@@ -301,6 +521,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление волны в текущем уровне.
+     * @param waveId Id'шник волны.
+     */
     public function removeWave(waveId:int):void {
         if (_levelData) {
             var waveData:WaveData = _levelData.getWaveDataById(waveId);
@@ -314,7 +538,9 @@ public class Field extends EventDispatcher {
         }
     }
 
-    //устанавливаем время для волны:
+    /**
+     * Установка времени для волны в текущем уровне.
+    */
     public function setWaveTime (time:int, waveData:WaveData):void {
         if (_levelData) {
             var index:int = _levelData.waves.indexOf (waveData);
@@ -325,7 +551,9 @@ public class Field extends EventDispatcher {
         }
     }
 
-    //устанавливаем задержку для волны генератора:
+    /**
+     * Установка задержки для волны генератора в текущем уровне.
+     */
     public function setDelayOfGeneratorWave (delay:int, generatorWaveData:GeneratorWaveData):void {
         if (_levelData) {
             var numGenerators:int = _levelData.generators.length;
@@ -342,7 +570,9 @@ public class Field extends EventDispatcher {
         }
     }
 
-    //добавляем врага в стек волны генератора:
+    /**
+     * Добавление врага в стек волны генератора.
+     */
     public function addEnemyToGeneratorWave (enemyId:String, positionId:int, count:int, generatorWaveData:GeneratorWaveData):void {
         if (_levelData && hasGeneratorWaveData (generatorWaveData)) {
             if (generatorWaveData.sequence.length >= positionId) {
@@ -354,7 +584,9 @@ public class Field extends EventDispatcher {
         }
     }
 
-    //убираем врага из стека волны генератора:
+    /**
+     * Удаление врага из стека волны генератора.
+     */
     public function removeEnemyToGeneratorWave (positionId:int, generatorWaveData:GeneratorWaveData):void {
         if (_levelData && hasGeneratorWaveData (generatorWaveData)) {
             if (generatorWaveData.sequence.length > positionId) {
@@ -368,6 +600,9 @@ public class Field extends EventDispatcher {
     //DEFENDER ZONES:
     /////////////////////////////////////////////
 
+    /**
+     * Добавление новой зоны защитников.
+     */
     public function addNewDefenderPosition ():void {
         if (_levelData) {
             var newDefenderPositionData:DefenderPositionData = new DefenderPositionData();
@@ -378,6 +613,10 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление зоны защитников.
+     * @param defenderPositionData Зона защтников.
+     */
     public function removeDefenderPosition (defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             var positionIndex:int = _levelData.defenderPositions.indexOf(defenderPositionData);
@@ -388,6 +627,11 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Добавление точек в зону защитников.
+     * @param points Удаляемые точки.
+     * @param defenderPositionData Зона защтников.
+     */
     public function addPointsToDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
@@ -405,6 +649,11 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление точек в зоне защитников.
+     * @param points Удаляемые точки.
+     * @param defenderPositionData Зона защтников.
+     */
     public function removePointsFromDefenderPosition (points:Vector.<Point>, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             if (_levelData) {
@@ -424,14 +673,12 @@ public class Field extends EventDispatcher {
         }
     }
 
-    public function clearAllPointsFromDefenderZone (defenderPositionData:DefenderPositionData):void {
-        if (_levelData) {
-            defenderPositionData.clearAllDefenderZonesPoint();
-            dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED));
-        }
-    }
-
-    public function setCurrentDefenderZonePosition (point:Point, defenderPositionData:DefenderPositionData):void {
+    /**
+     * Установка позиции зоны защитников.
+     * @param point Точка установки.
+     * @param defenderPositionData Зона защтников.
+     */
+    public function setPositionOfDefenderPosition (point:Point, defenderPositionData:DefenderPositionData):void {
         if (_levelData) {
             if (_levelData) {
                 if (_levelData.defenderPositions.indexOf(defenderPositionData) != -1) {
@@ -442,10 +689,24 @@ public class Field extends EventDispatcher {
         }
     }
 
+    /**
+     * Удаление всех точек зоны защитников.
+     * @param defenderPositionData Зона защтников.
+     */
+    public function clearAllPointsFromDefenderPosition (defenderPositionData:DefenderPositionData):void {
+        if (_levelData) {
+            defenderPositionData.clearAllDefenderZonesPoint();
+            dispatchEvent(new EditDefenderPositionEvent (defenderPositionData, EditDefenderPositionEvent.DEFENDER_POSITION_WAS_CHANGED));
+        }
+    }
+
     /////////////////////////////////////////////
     //OTHER:
     /////////////////////////////////////////////
 
+    /**
+     * Сохранение файла с настройками уровня.
+     */
     public function save ():void {
         levelData.save(levelData.export());
     }
@@ -454,6 +715,9 @@ public class Field extends EventDispatcher {
         //
     }
 
+    /**
+     * Деактивация.
+     */
     public function destroy():void {
         while (_field.length>0) {
             _field.pop().destroy();
@@ -578,7 +842,7 @@ public class Field extends EventDispatcher {
 
                     _objects.splice(i--, 1);
                     len--;
-                    dispatchEvent(new EditObjectEvent(obj, EditObjectEvent.OBJECT_REMOVED));
+                    dispatchEvent(new EditObjectEvent(obj, EditObjectEvent.FIELD_OBJECT_WAS_REMOVED));
                 }
             }
         }
@@ -600,6 +864,7 @@ public class Field extends EventDispatcher {
     }
 
     private function createObjects($objects: Vector.<PlaceData>):void {
+        _objects = new <FieldObject>[];
         var len: int = $objects.length;
         for (var i: int = 0; i < len; i++) {
             var obj: PlaceData = $objects[i];
@@ -651,7 +916,7 @@ public class Field extends EventDispatcher {
             object.place(getCell($x+object.data.top.x, $y+object.data.top.y));
             _objects.push(object);
 
-            dispatchEvent(new EditObjectEvent (object, EditObjectEvent.OBJECT_ADDED));
+            dispatchEvent(new EditObjectEvent (object, EditObjectEvent.FIELD_OBJECT_WAS_ADDED));
         }
     }
 

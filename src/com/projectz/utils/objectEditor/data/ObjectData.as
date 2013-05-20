@@ -7,31 +7,48 @@
  */
 package com.projectz.utils.objectEditor.data {
 import com.projectz.utils.json.JSONLoader;
+import com.projectz.utils.objectEditor.data.events.EditObjectDataEvent;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
 
+/**
+ * Класс, хранящий данные об игровом объекте.
+ */
 public class ObjectData extends JSONLoader {
 
-    public static var STATIC_OBJECT: String = "so";
-    public static var ANIMATED_OBJECT: String = "ao";
-    public static var TARGET_OBJECT: String = "to";
-    public static var DEFENDER: String = "de";
-    public static var ENEMY: String = "en";
-    public static var BACKGROUND: String = "bg";
-
     private var _name: String;
+    /**
+     * Название объекта.
+     */
     public function get name():String {
         return _name;
     }
 
     private var _type: String;
+    /**
+     * Тип объекта.
+     *
+     * @see com.projectz.utils.objectEditor.data.ObjectType
+     */
     public function get type():String {
         return _type;
     }
 
-    protected var _mask: Array;
-    public function get mask():Array {
+    protected var _mask: Array/*of Array(of int)*/;
+    /**
+     * Массив массивов данных о клетках, которые занимает объект.
+     * Значения определяют свойства клетки:
+     * <p>
+     * <ul>
+     *  <li>0 - простреливаемый проходимый;</li>
+     *  <li>1 - простреливаемый непроходимый;</li>
+     *  <li>2 - простреливаемый непроходимый;</li>
+     *  <li>3 - непростреливаемый непроходимый.</li>
+     * </ul>
+     * </p>
+     */
+    public function get mask():Array/*of Array(of int)*/ {
         _mask = [[1]];
         for each (var part:PartData in _parts) {
             for (var i:int = 0; i < part.width; i++) {
@@ -50,17 +67,34 @@ public class ObjectData extends JSONLoader {
         }
         return _mask;
     }
+
+    /**
+     * Ширина объекта (в клетках).
+     */
     public function get width():int {
         return mask.length;
     }
+
+    /**
+     * Высота объекта (в клетках).
+     */
     public function get height():int {
         return mask[0].length;
     }
 
     private var _parts: Dictionary;
+    /**
+     * Части объекта в виде объекта Dictionary.
+     */
     public function get parts():Dictionary {
         return _parts;
     }
+
+    /**
+     * Получение части объекта по имени.
+     * @param $name Имя части объекта.
+     * @return Часть объекта.
+     */
     public function getPart($name: String = ""):PartData {
         if ($name == PartData.SHADOW) {
             if (!_shadow) {
@@ -75,10 +109,18 @@ public class ObjectData extends JSONLoader {
     }
 
     private var _shadow: PartData;
+    /**
+     * Часть объекта, являющеяся тенью.
+     */
     public function get shadow():PartData {
         return _shadow;
     }
 
+    /**
+     *
+     * @param $name Имя объекта.
+     * @param $config Файл, хранящий данные об объекте.
+     */
     public function ObjectData($name: String, $config: File = null) {
         super($config);
 
@@ -87,10 +129,16 @@ public class ObjectData extends JSONLoader {
         _parts = new Dictionary();
     }
 
-    public function size($width: int, $height: int):void {
+    /**
+     * Устаноска размера объекта (в клетках).
+     * @param $width Ширина объекта (в клетках).
+     * @param $height Высота объекта (в клетках).
+     */
+    public function setSize($width: int, $height: int):void {
         for each (var part:PartData in parts) {
-            part.size($width, $height);
+            part.setSize($width, $height);
         }
+        dispatchEvent(new EditObjectDataEvent(this, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
     }
 
     private function getParts():Object {
@@ -105,19 +153,33 @@ public class ObjectData extends JSONLoader {
         return pts;
     }
 
+    /**
+     * Сохранение текущего состояния объекта в файл.
+     */
+    public function saveFile ():void {
+        save(export());
+    }
+
+    /**
+     * @inheritDoc
+     */
     override public function parse($data: Object):void {
-        size($data.mask.length, $data.mask[0].length);
+        setSize($data.parts[""].mask.length, $data.parts[""].mask.length);
 
         var index: String;
-        var part: Object;
+        var part: PartData;
         for (index in $data.parts) {
             part = getPart(index);
             part.parse($data.parts[index]);
         }
     }
 
+    /**
+     * Представление текущего состояния в виде объекта.
+     * @return Объект, хранящий данные.
+     */
     public function export():Object {
-        return {'name': _name, 'mask': mask, 'parts': getParts()};
+        return {'name': _name, 'parts': getParts()};
     }
 }
 }

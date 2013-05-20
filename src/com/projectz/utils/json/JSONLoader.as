@@ -6,20 +6,34 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.json {
+import flash.filesystem.FileMode;
+import flash.filesystem.FileStream;
+
 import starling.events.EventDispatcher;
 
 import flash.utils.ByteArray;
 import flash.events.Event;
 import flash.filesystem.File;
 
+/**
+ * Класс, хранящий сслыку на файл в формаке json.
+ * Загружает, парсит и сохраняет файл.
+ */
 public class JSONLoader extends EventDispatcher {
+
+    private var fileStream:FileStream = new FileStream();
 
     protected var _file: File;
     public function get exists():Boolean {
         return _file.exists;
     }
 
-    private var _name: String;
+    private var _fileName: String;
+
+    public function get fileName():String {
+        _fileName = _fileName || _file.name;
+        return _fileName;
+    }
 
     protected var _data: Object;
     public function get data():Object {
@@ -33,15 +47,29 @@ public class JSONLoader extends EventDispatcher {
         _file = $file;
     }
 
+    /**
+     * Парсинг данных об объекте.
+     * @param $data Данные.
+     */
     public function parse($data: Object):void {
 
     }
 
-    public function save($data: Object):void {
-        _name = _name || _file.name;
+    public function saveAs($data: Object):void {
         var text: String = JSON.stringify($data);
         _file.addEventListener(Event.COMPLETE, handleComplete_save);
-        _file.save(text, _name);
+        _file.save(text, fileName);
+    }
+
+    public function save($data: Object):void {
+        fileStream.open (_file, FileMode.WRITE);
+        var dataAsString: String = JSON.stringify($data);
+        fileStream.writeUTFBytes (dataAsString);
+        fileStream.close ();
+    }
+
+    public function deleteFile():void {
+        _file.deleteFile();
     }
 
     public function load():void {
@@ -52,6 +80,10 @@ public class JSONLoader extends EventDispatcher {
         } else {
             dispatchEventWith(Event.COMPLETE, false, data);
         }
+    }
+
+    public function get path():String {
+        return _file.nativePath;
     }
 
     protected function handleComplete(event:Event):void {

@@ -10,8 +10,14 @@ import com.hogargames.display.GraphicStorage;
 
 import flash.display.MovieClip;
 
+/**
+ * Базовый класс для панели редактора уровней.
+ */
 public class BasicPanel extends GraphicStorage implements IPanel {
 
+    /**
+     * @inheritDoc
+     */
     public function BasicPanel(mc:MovieClip) {
         super (mc);
     }
@@ -20,10 +26,16 @@ public class BasicPanel extends GraphicStorage implements IPanel {
 //PUBLIC:
 /////////////////////////////////////////////
 
+    /**
+     * @inheritDoc
+     */
     public function show():void {
         visible = true;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function hide():void {
         visible = false;
     }

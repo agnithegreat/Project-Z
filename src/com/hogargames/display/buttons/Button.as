@@ -36,7 +36,7 @@ package com.hogargames.display.buttons {
 /////////////////////////////////////////////
 
         /**
-         * Установка скина (переход в кадр) <code>SELECT</code>.
+         * Установка скина <code>Button.SELECT</code> (переход в кадр).
          * @see #SELECT
          */
         public function get selected ():Boolean {
@@ -57,7 +57,7 @@ package com.hogargames.display.buttons {
         }
 
         /**
-         * Включение/выключение кнопки. При выключении установка скина (переход в кадр) <code>DISABLE</code>.
+         * Включение/выключение кнопки. При выключении установка скина <code>Button.DISABLE</code> (переход в кадр).
          * @see #DISABLE
          */
         public function get enable ():Boolean {

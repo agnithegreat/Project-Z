@@ -6,14 +6,21 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.model.events.editGenerators {
+
 import com.projectz.utils.levelEditor.data.GeneratorWaveData;
 
 import starling.events.Event;
 
+/**
+ * Событие изменения волны генератора.
+ */
 public class EditGeneratorWaveEvent extends Event {
 
     private var _generatorWaveData:GeneratorWaveData;
 
+    /**
+     * Изменение волны генератора.
+     */
     public static const GENERATOR_WAVE_WAS_CHANGED:String = "generator wave was changed";
 
     public function EditGeneratorWaveEvent(generatorWaveData:GeneratorWaveData, type:String = GENERATOR_WAVE_WAS_CHANGED, bubbles:Boolean = false) {
@@ -21,6 +28,9 @@ public class EditGeneratorWaveEvent extends Event {
         super(type, bubbles, generatorWaveData);
     }
 
+    /**
+     * Волна генератора.
+     */
     public function get generatorWaveData():GeneratorWaveData {
         return _generatorWaveData;
     }

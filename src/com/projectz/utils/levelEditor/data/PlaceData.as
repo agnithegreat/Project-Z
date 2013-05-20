@@ -8,6 +8,11 @@
 package com.projectz.utils.levelEditor.data {
 import com.projectz.utils.objectEditor.data.ObjectData;
 
+/**
+ * Объект, хранящий данные о расположение объекта ObjectData на карте.
+ *
+ * @see com.projectz.utils.objectEditor.data.ObjectData
+ */
 public class PlaceData {
 
     private var _x: int;

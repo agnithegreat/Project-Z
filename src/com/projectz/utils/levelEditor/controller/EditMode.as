@@ -6,6 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.controller {
+
+/**
+ * Класс, хранящий список режимов редактирования в виде констант.
+ */
 public class EditMode {
 
     public static const ADD_POINTS:String = "add points";

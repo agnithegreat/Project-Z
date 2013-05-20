@@ -19,7 +19,7 @@ package com.hogargames.display {
 
         /**
          * Элемент определяющий размеры.
-         * <p>Если в используемом для инициализации класса MovieClip'е присутвует ребенок с именем MC_HIT,
+         * <p>Если в используемом для инициализации класса MovieClip'е присутвует ребенок с именем <code>GraphicStorage.MC_HIT</code>,
          * то этот ребенок присваивается переменной hit.
          * В этом случае размеры переменной hit будут переопределять свойства класса
          * <code>height</code> и <code>width</code>.</p>
@@ -67,6 +67,9 @@ package com.hogargames.display {
             initGraphicElements ();
         }
 
+        /**
+         * Инициализация отдельных элементов графического ресурса.
+         */
         protected function initGraphicElements ():void {
 
         }
@@ -116,13 +119,14 @@ package com.hogargames.display {
          * Получение элемента графического ресурса по названию.
          *
          * @param name Имя элемента.
-         * @param parentMc Объект для поиска. Если <code>parentMc = null</code>, поиск производится в <code>mc</code>
+         * @param parentMc Объект для поиска. Если <code>parentMc</code> равен <code>null</code>, поиск производится в <code>mc</code>
+         * @return Элемент графического ресурса.
          *
          * @throw Error Отправляется, если элемент с таким именем не найден (равен <code>null</code>).
          *
          * @see #mc
          */
-        protected function getElement (name:String, parentMc:DisplayObjectContainer = null):DisplayObject {
+        protected function getElement (name:String, parentMc:DisplayObjectContainer = null):* {
             if (parentMc == null) {
                 parentMc = mc;
             }
@@ -134,9 +138,8 @@ package com.hogargames.display {
         }
 
         /**
-         * Присвоение свойств графического ресурса классу, сброс этих свойств у графического ресурса.
+         * Присвоение свойств графического ресурса экземпляру класса, сброс этих свойств у графического ресурса.
          */
-
         protected function imitateGraphicProperties ():void {
             //set properties by mc properties:
             this.x = mc.x;
