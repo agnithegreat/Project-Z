@@ -24,10 +24,10 @@ import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.PlaceData;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEditingModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent;
-import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectCellEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.data.WaveData;
@@ -44,6 +44,148 @@ import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
 import flash.geom.Point;
 
 import starling.events.EventDispatcher;
+
+/**
+ * Отправляется при выборе режима работы ui-конитроллера.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE
+ */
+[Event(name="select ui controller mode", type="com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent")]
+
+/**
+ * Отправляется при выборе объекта для редактирования (добавления не карту).
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent.SELECT_OBJECT
+ */
+[Event(name="select object", type="com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectEvent")]
+
+/**
+ * Отправляется при выборе типа объектов для редактирования (добавления на карту).
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE
+ */
+[Event(name="select objects type", type="com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectObjectsTypeEvent")]
+
+/**
+* Отправляется при выборе бэкграунда.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent.SELECT_BACKGROUND
+*/
+[Event(name="select background", type="com.projectz.utils.levelEditor.controller.events.uiController.editObjects.SelectBackgroundEvent")]
+
+/**
+ * Отправляется при выборе пути для редактирования.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent.SELECT_PATH
+ */
+[Event(name="select path", type="com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent")]
+
+/**
+ * Отправляется при выборе режима редактирования пути.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEditingModeEvent.SELECT_PATH_EDITING_MODE
+ */
+[Event(name="select path editing mode", type="com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEditingModeEvent")]
+
+/**
+ * Отправляется при выборе генератора для редактирования.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent.SELECT_GENERATOR
+ */
+[Event(name="select generator", type="com.projectz.utils.levelEditor.controller.events.uiController.editGenerators.SelectGeneratorEvent")]
+
+/**
+ * Отправляется при выборе зоны защитника для редактирования.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION
+ */
+[Event(name="select defender position", type="com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent")]
+
+/**
+ * Отправляется при выборе режима редактирования зон защитников.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE
+ */
+[Event(name="select defender position editing mode", type="com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEditingModeEvent")]
+
+/**
+ * Отправляется при выборе ассета для редактирования.
+ *
+ * @eventType com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent.SELECT_ASSET
+ */
+[Event(name="select asset", type="com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent")]
+
+/**
+* Отправляется при выборе типа ассетов для редактирования.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetsTypeEvent.SELECT_ASSETS_TYPE
+*/
+[Event(name="select assets type", type="com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetsTypeEvent")]
+
+/**
+* Отправляется при выборе части ассета для редактирования.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetPartEvent.SELECT_ASSET_PART
+*/
+[Event(name="select asset part", type="com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetPartEvent")]
+
+/**
+* Отправляется при выборе режима редактирования ассетов.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEditionModeEvent.SELECT_ASSET_EDITING_MODE
+*/
+[Event(name="select asset editing mode", type="com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEditionModeEvent")]
+
+/**
+* Отправляется при выборе типа юнитов для редактирования.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitsTypeEvent.SELECT_UNITS_TYPE
+*/
+[Event(name="select units type", type="com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitsTypeEvent")]
+
+/**
+* Отправляется при выборе юнита для редактирования.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitEvent.SELECT_UNIT
+*/
+[Event(name="select unit", type="com.projectz.utils.levelEditor.controller.events.uiController.editUnits.SelectUnitEvent")]
+
+/**
+* Отправляется при выборе клетки поля. Используется для отображения информации о клетках.
+*
+* @eventType com.projectz.utils.levelEditor.controller.events.uiController.SelectCellEvent.SELECT_CELL
+*/
+[Event(name="select cell", type="com.projectz.utils.levelEditor.controller.events.uiController.SelectCellEvent")]
+
+/**
+* Отправляется при изменении данных текущего редактируемого юнита, если он является объектом EnemyData.
+*
+* @eventType com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent.ENEMY_DATA_WAS_CHANGED
+*/
+[Event(name="enemy data was changed", type="com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent")]
+
+/**
+* Отправляется при изменении данных текущего редактируемого юнита, если он является объектом DefenderData.
+*
+* @eventType com.projectz.utils.objectEditor.data.events.EditDefenderDataEvent.DEFENDER_DATA_WAS_CHANGED
+*/
+[Event(name="defender data was changed", type="com.projectz.utils.objectEditor.data.events.EditDefenderDataEvent")]
+
+/**
+* Отправляется при изменении данных текущей редактируемой части текущего ассета.
+*
+* @eventType com.projectz.utils.objectEditor.data.events.EditPartDataEvent.PART_DATA_WAS_CHANGED
+*/
+[Event(name="part data was changed", type="com.projectz.utils.objectEditor.data.events.EditPartDataEvent")]
+
+/**
+* Отправляется при изменении данных текущего редактируемого ассета.
+*
+* @eventType com.projectz.utils.objectEditor.data.events.EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED
+*/
+[Event(name="object data was changed", type="com.projectz.utils.objectEditor.data.events.EditObjectDataEvent")]
+/*
+
 
 /**
  * Класс-контроллер, предназначенный для взаимодействия ui (панели) и view (отображение игрового поля).
@@ -64,7 +206,7 @@ public class UIController extends EventDispatcher {
 
     //Редактирование путей:
     private var _currentEditingPath:PathData;//Текущий редактируемый путь
-    private var _editPathMode:String = EditMode.ADD_POINTS;//Режим работы ui-контролера при редактировании пути (удаление точек или добавление);
+    private var _editPathMode:String = EditingMode.ADD_POINTS;//Режим работы ui-контролера при редактировании пути (удаление точек или добавление);
     private var _editPathAreaMode:Boolean;//Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании путей.
 
     //Редактирование генераторов:
@@ -72,7 +214,7 @@ public class UIController extends EventDispatcher {
 
     //Редактирование зон защитников:
     private var _currentEditingDefenderPosition:DefenderPositionData;//Текущая редактируемая зона защитника
-    private var _editDefenderPositionsMode:String = EditMode.ADD_POINTS;//Режим работы ui-контролера при редактировании зон защитников (удаление точек или добавление);
+    private var _editDefenderPositionsMode:String = EditingMode.ADD_POINTS;//Режим работы ui-контролера при редактировании зон защитников (удаление точек или добавление);
     private var _editDefenderZonesAreaMode:Boolean;//Значение, которое определяет, включен ли режим редактирования областей по двум точкам или нет при редактировании зон защитников.
 
     //Редактирование ассетов:
@@ -111,7 +253,7 @@ public class UIController extends EventDispatcher {
 
     public function set mode(value:String):void {
         _mode = value;
-        dispatchEvent(new SelectUIControllerModeEvent(_mode));
+        dispatchEvent(new SelectUIControllerModeEvent(_mode, SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE));
     }
 
     /////////////////////////////////////////////
@@ -125,7 +267,7 @@ public class UIController extends EventDispatcher {
      */
     public function selectCurrentEditingObject(objectData:ObjectData):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
-            dispatchEvent(new SelectObjectEvent(objectData));
+            dispatchEvent(new SelectObjectEvent(objectData, SelectObjectEvent.SELECT_OBJECT));
         }
     }
 
@@ -136,7 +278,7 @@ public class UIController extends EventDispatcher {
      */
     public function selectCurrentEditingObjectType(objectsType:String):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
-            dispatchEvent(new SelectObjectsTypeEvent(objectsType));
+            dispatchEvent(new SelectObjectsTypeEvent(objectsType, SelectObjectsTypeEvent.SELECT_OBJECTS_TYPE));
         }
     }
 
@@ -153,13 +295,13 @@ public class UIController extends EventDispatcher {
 
     public function set currentEditingPath(value:PathData):void {
         _currentEditingPath = value;
-        dispatchEvent(new SelectPathEvent(_currentEditingPath));
+        dispatchEvent(new SelectPathEvent(_currentEditingPath, SelectPathEvent.SELECT_PATH));
     }
 
     /**
      * Режим работы контролера при редактировании пути (удаление точек или добавление).
      *
-     * @see com.projectz.utils.levelEditor.controller.EditMode
+     * @see com.projectz.utils.levelEditor.controller.EditingMode
      */
     public function get editPathMode():String {
         return _editPathMode;
@@ -167,7 +309,7 @@ public class UIController extends EventDispatcher {
 
     public function set editPathMode(value:String):void {
         _editPathMode = value;
-        dispatchEvent(new SelectEditPathModeEvent(_editPathMode));
+        dispatchEvent(new SelectPathEditingModeEvent(_editPathMode, SelectPathEditingModeEvent.SELECT_PATH_EDITING_MODE));
     }
 
     /**
@@ -194,7 +336,7 @@ public class UIController extends EventDispatcher {
 
     public function set currentEditingGenerator(value:GeneratorData):void {
         _currentEditingGenerator = value;
-        dispatchEvent(new SelectGeneratorEvent(_currentEditingGenerator));
+        dispatchEvent(new SelectGeneratorEvent(_currentEditingGenerator, SelectGeneratorEvent.SELECT_GENERATOR));
     }
 
     /////////////////////////////////////////////
@@ -210,13 +352,13 @@ public class UIController extends EventDispatcher {
 
     public function set currentEditingDefenderPosition(value:DefenderPositionData):void {
         _currentEditingDefenderPosition = value;
-        dispatchEvent(new SelectDefenderPositionEvent(_currentEditingDefenderPosition));
+        dispatchEvent(new SelectDefenderPositionEvent(_currentEditingDefenderPosition, SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION));
     }
 
     /**
      * Режим работы контролера при редактировании зон защитников (удаление точек или добавление).
      *
-     * @see com.projectz.utils.levelEditor.controller.EditMode
+     * @see com.projectz.utils.levelEditor.controller.EditingMode
      */
     public function get editDefenderPositionsMode():String {
         return _editDefenderPositionsMode;
@@ -224,7 +366,7 @@ public class UIController extends EventDispatcher {
 
     public function set editDefenderPositionsMode(value:String):void {
         _editDefenderPositionsMode = value;
-        dispatchEvent(new SelectDefenderPositionEditingModeEvent(_editDefenderPositionsMode));
+        dispatchEvent(new SelectDefenderPositionEditingModeEvent(_editDefenderPositionsMode, SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE));
     }
 
     /**
@@ -248,7 +390,7 @@ public class UIController extends EventDispatcher {
      */
     public function selectCurrentEditingAssetType(objectsType:String):void {
         if (mode == UIControllerMode.EDIT_ASSETS) {
-            dispatchEvent(new SelectAssetsTypeEvent(objectsType));
+            dispatchEvent(new SelectAssetsTypeEvent(objectsType, SelectAssetsTypeEvent.SELECT_ASSETS_TYPE));
         }
     }
 
@@ -260,6 +402,7 @@ public class UIController extends EventDispatcher {
     }
 
     public function set currentEditingAsset(objectData:ObjectData):void {
+        currentEditingAssetPart = null;
         if (_currentEditingAsset) {
             _currentEditingAsset.removeEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
         }
@@ -267,7 +410,7 @@ public class UIController extends EventDispatcher {
         if (_currentEditingAsset) {
             _currentEditingAsset.addEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
         }
-        dispatchEvent(new SelectAssetEvent(objectData));
+        dispatchEvent(new SelectAssetEvent(objectData, SelectAssetEvent.SELECT_ASSET));
     }
 
     /**
@@ -282,7 +425,10 @@ public class UIController extends EventDispatcher {
             _currentEditingAssetPart.removeEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, partDataWasChangedListener);
         }
         _currentEditingAssetPart = partData;
-        dispatchEvent(new SelectAssetPartEvent(partData));
+        if (_currentEditingAssetPart) {
+            _currentEditingAssetPart.addEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, partDataWasChangedListener);
+        }
+        dispatchEvent(new SelectAssetPartEvent(partData, SelectAssetPartEvent.SELECT_ASSET_PART));
     }
 
     /**
@@ -294,7 +440,7 @@ public class UIController extends EventDispatcher {
 
     public function set editAssetWalkableMode(value:Boolean):void {
         _editAssetWalkableMode = value;
-        dispatchEvent(new SelectAssetEditionModeEvent());
+        dispatchEvent(new SelectAssetEditionModeEvent(SelectAssetEditionModeEvent.SELECT_ASSET_EDITING_MODE));
     }
 
     /**
@@ -306,7 +452,17 @@ public class UIController extends EventDispatcher {
 
     public function set editAssetShotableMode(value:Boolean):void {
         _editAssetShotableMode = value;
-        dispatchEvent(new SelectAssetEditionModeEvent());
+        dispatchEvent(new SelectAssetEditionModeEvent(SelectAssetEditionModeEvent.SELECT_ASSET_EDITING_MODE));
+    }
+
+    public function moveAsset (toX:int, toY:int):void {
+        if (currentEditingAssetPart) {
+            var partData:PartData = currentEditingAssetPart;
+            partData.place(partData.pivotX + toX, partData.pivotY + toY);
+        }
+        else if (currentEditingAsset) {
+            currentEditingAsset.moveParts(toX, toY);
+        }
     }
 
     /////////////////////////////////////////////
@@ -319,7 +475,7 @@ public class UIController extends EventDispatcher {
      */
     public function selectCurrentEditingUnitType(objectsType:String):void {
         if (mode == UIControllerMode.EDIT_UNITS) {
-            dispatchEvent(new SelectUnitsTypeEvent(objectsType));
+            dispatchEvent(new SelectUnitsTypeEvent(objectsType, SelectUnitsTypeEvent.SELECT_UNITS_TYPE));
         }
     }
 
@@ -341,7 +497,7 @@ public class UIController extends EventDispatcher {
             _currentEditingUnit.addEventListener(EditEnemyDataEvent.ENEMY_DATA_WAS_CHANGED, enemyDataWasChangedListener);
             _currentEditingUnit.addEventListener(EditDefenderDataEvent.DEFENDER_DATA_WAS_CHANGED, defenderDataWasChangedListener);
         }
-        dispatchEvent(new SelectUnitEvent(objectData));
+        dispatchEvent(new SelectUnitEvent(objectData, SelectUnitEvent.SELECT_UNIT));
     }
 
     /////////////////////////////////////////////
@@ -352,7 +508,7 @@ public class UIController extends EventDispatcher {
      * Вывод информации о клетке поля.
      */
     public function showCellInfo($cell:Cell):void {
-        dispatchEvent(new ShowCellInfoEvent($cell));
+        dispatchEvent(new SelectCellEvent($cell, SelectCellEvent.SELECT_CELL));
     }
 
 /////////////////////////////////////////////
@@ -370,7 +526,7 @@ public class UIController extends EventDispatcher {
      */
     public function selectLevelBackground(objectData:ObjectData):void {
         if (mode == UIControllerMode.EDIT_OBJECTS) {
-            dispatchEvent(new SelectBackgroundEvent(objectData));
+            dispatchEvent(new SelectBackgroundEvent(objectData, SelectBackgroundEvent.SELECT_BACKGROUND));
             levelEditorController.changeBackground(objectData);
         }
     }
@@ -424,10 +580,10 @@ public class UIController extends EventDispatcher {
                 (mode == UIControllerMode.EDIT_PATHS) &&
                 currentEditingPath
         ) {
-            if (editPathMode == EditMode.ADD_POINTS) {
+            if (editPathMode == EditingMode.ADD_POINTS) {
                 levelEditorController.addPointsToPath (points, currentEditingPath);
             }
-            else if (editPathMode == EditMode.REMOVE_POINTS) {
+            else if (editPathMode == EditingMode.REMOVE_POINTS) {
                 levelEditorController.removePointsFromPath (points, currentEditingPath);
             }
         }
@@ -630,10 +786,10 @@ public class UIController extends EventDispatcher {
                 (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
                 currentEditingDefenderPosition
         ) {
-            if (editDefenderPositionsMode == EditMode.ADD_POINTS) {
+            if (editDefenderPositionsMode == EditingMode.ADD_POINTS) {
                 levelEditorController.addPointsToDefenderPosition (points, currentEditingDefenderPosition);
             }
-            else if (editDefenderPositionsMode == EditMode.REMOVE_POINTS) {
+            else if (editDefenderPositionsMode == EditingMode.REMOVE_POINTS) {
                 levelEditorController.removePointsFromDefenderPosition (points, currentEditingDefenderPosition);
             }
         }
@@ -649,7 +805,7 @@ public class UIController extends EventDispatcher {
     public function setPositionOfCurrentDefenderPosition (point:Point):void {
         if (
                 (mode == UIControllerMode.EDIT_DEFENDER_POSITIONS) &&
-                (editDefenderPositionsMode == EditMode.SET_POINT) &&
+                (editDefenderPositionsMode == EditingMode.SET_POINT) &&
                 currentEditingDefenderPosition
         ) {
             levelEditorController.setPositionOfDefenderPosition (point, currentEditingDefenderPosition);
@@ -666,10 +822,6 @@ public class UIController extends EventDispatcher {
             levelEditorController.clearAllPointsFromDefenderPosition(currentEditingDefenderPosition);
         }
     }
-
-    /////////////////////////////////////////////
-    //ASSETS:
-    /////////////////////////////////////////////
 
     /////////////////////////////////////////////
     //LEVELS:
@@ -691,7 +843,12 @@ public class UIController extends EventDispatcher {
      * Сохранение файла с настройками уровня.
      */
     public function save ():void {
-        if (mode == UIControllerMode.EDIT_UNITS) {
+        if (mode == UIControllerMode.EDIT_ASSETS) {
+            if (currentEditingAsset) {
+                currentEditingAsset.saveFile();
+            }
+        }
+        else if (mode == UIControllerMode.EDIT_UNITS) {
             if (currentEditingUnit) {
                 currentEditingUnit.saveFile();
             }
@@ -719,7 +876,7 @@ public class UIController extends EventDispatcher {
      */
     private function enemyDataWasChangedListener (event:EditEnemyDataEvent):void {
         var enemyData:EnemyData = event.enemyData;
-        dispatchEvent(new EditEnemyDataEvent(enemyData));
+        dispatchEvent(new EditEnemyDataEvent(enemyData, EditEnemyDataEvent.ENEMY_DATA_WAS_CHANGED));
     }
 
     /**
@@ -729,7 +886,7 @@ public class UIController extends EventDispatcher {
      */
     private function defenderDataWasChangedListener (event:EditDefenderDataEvent):void {
         var defenderData:DefenderData = event.defenderData;
-        dispatchEvent(new EditDefenderDataEvent(defenderData));
+        dispatchEvent(new EditDefenderDataEvent(defenderData, EditDefenderDataEvent.DEFENDER_DATA_WAS_CHANGED));
     }
 
     /**
@@ -739,7 +896,7 @@ public class UIController extends EventDispatcher {
      */
     private function objectDataWasChangedListener (event:EditObjectDataEvent):void {
         var objectData:ObjectData = event.objectData;
-        dispatchEvent(new EditObjectDataEvent(objectData));
+        dispatchEvent(new EditObjectDataEvent(objectData, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
     }
 
     /**
@@ -749,7 +906,7 @@ public class UIController extends EventDispatcher {
      */
     private function partDataWasChangedListener (event:EditPartDataEvent):void {
         var partData:PartData = event.partData;
-        dispatchEvent(new EditPartDataEvent(partData));
+        dispatchEvent(new EditPartDataEvent(partData, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
 
 }

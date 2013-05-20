@@ -14,6 +14,22 @@ import flash.utils.Dictionary;
 import starling.events.EventDispatcher;
 
 /**
+* Отправляется при добавлении нового уровня.
+*
+* @eventType com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent.LEVEL_WAS_ADDED
+*/
+[Event(name="level was added", type="com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent")]
+/*
+
+/**
+* Отправляется при удвлении уровня.
+*
+* @eventType com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent.LEVEL_WAS_REMOVED
+*/
+[Event(name="level was removed", type="com.projectz.utils.levelEditor.data.events.editLevels.EditLevelsEvent")]
+/*
+
+/**
  * Класс, предназначенный для хранения массива обектов LevelData и получения конкретного LevelData по его id.
  */
 public class LevelStorage extends EventDispatcher {

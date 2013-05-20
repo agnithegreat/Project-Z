@@ -9,10 +9,10 @@ package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.controller.EditMode;
+import com.projectz.utils.levelEditor.controller.EditingMode;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.PathData;
-import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectEditPathModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEditingModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editPaths.SelectPathEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.model.Field;
@@ -59,7 +59,7 @@ public class EditPathsPanel extends BasicPanel {
 
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(SelectPathEvent.SELECT_PATH, selectPathListener);
-        uiController.addEventListener(SelectEditPathModeEvent.SELECT_EDIT_PATH_MODE, selectEditPathModeListener);
+        uiController.addEventListener(SelectPathEditingModeEvent.SELECT_PATH_EDITING_MODE, selectPathEditingModeListener);
         model.addEventListener(EditPathEvent.PATH_COLOR_WAS_CHANGED, colorWasChangedEvent);
         model.addEventListener(EditPathEvent.PATH_WAS_ADDED, pathWasAddedListener);
         model.addEventListener(EditPathEvent.PATH_WAS_REMOVED, pathWasRemovedListener);
@@ -99,8 +99,8 @@ public class EditPathsPanel extends BasicPanel {
         btnNew = new ButtonWithText(mc["btnNew"]);
 
         //Устанавливаем выделение кнопок:
-        btnAddPathPoint.selected = (uiController.editPathMode == EditMode.ADD_POINTS);
-        btnRemovePathPoint.selected = (uiController.editPathMode == EditMode.REMOVE_POINTS);
+        btnAddPathPoint.selected = (uiController.editPathMode == EditingMode.ADD_POINTS);
+        btnRemovePathPoint.selected = (uiController.editPathMode == EditingMode.REMOVE_POINTS);
 
         //Устанавливаем тексты на кнопках:
         btnAddPathPoint.text = "Добавление";
@@ -153,10 +153,10 @@ public class EditPathsPanel extends BasicPanel {
     private function clickListener(event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnAddPathPoint):
-                uiController.editPathMode = EditMode.ADD_POINTS;
+                uiController.editPathMode = EditingMode.ADD_POINTS;
                 break;
             case (btnRemovePathPoint):
-                uiController.editPathMode = EditMode.REMOVE_POINTS;
+                uiController.editPathMode = EditingMode.REMOVE_POINTS;
                 break;
             case (btnDelete):
                 uiController.deleteCurrentEditingPath();
@@ -194,12 +194,12 @@ public class EditPathsPanel extends BasicPanel {
         }
     }
 
-    private function selectEditPathModeListener(event:SelectEditPathModeEvent):void {
-        if (event.mode == EditMode.ADD_POINTS) {
+    private function selectPathEditingModeListener(event:SelectPathEditingModeEvent):void {
+        if (event.mode == EditingMode.ADD_POINTS) {
             btnAddPathPoint.selected = true;
             btnRemovePathPoint.selected = false;
         }
-        else if (event.mode == EditMode.REMOVE_POINTS) {
+        else if (event.mode == EditingMode.REMOVE_POINTS) {
             btnAddPathPoint.selected = false;
             btnRemovePathPoint.selected = true;
         }

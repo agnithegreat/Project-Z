@@ -10,17 +10,26 @@ import com.projectz.utils.levelEditor.model.Cell;
 
 import starling.events.Event;
 
-public class ShowCellInfoEvent extends Event {
+/**
+ * Событие выбора клетки поля. Используется для отображения информации о клетках.
+ */
+public class SelectCellEvent extends Event {
 
     private var _cell:Cell;
 
-    public static const SHOW_CELL_INFO:String = "show cell info";
+    /**
+     * Выбор клетки поля.
+     */
+    public static const SELECT_CELL:String = "select cell";
 
-    public function ShowCellInfoEvent($cell:Cell, type:String = SHOW_CELL_INFO, bubbles:Boolean = false) {
+    public function SelectCellEvent($cell:Cell, type:String = SELECT_CELL, bubbles:Boolean = false) {
         this.cell = $cell;
         super (type, bubbles, $cell);
     }
 
+    /**
+     * Клетка поля.
+     */
     public function get cell():Cell {
         return _cell;
     }

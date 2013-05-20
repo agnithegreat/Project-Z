@@ -9,7 +9,7 @@ package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.GraphicStorage;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.controller.events.uiController.ShowCellInfoEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.SelectCellEvent;
 import com.projectz.utils.levelEditor.model.Cell;
 
 import flash.display.MovieClip;
@@ -29,7 +29,7 @@ public class InfoPanel extends GraphicStorage {
     public function InfoPanel(mc:MovieClip, uiController:UIController) {
         this.uiController = uiController;
         super (mc);
-        uiController.addEventListener (ShowCellInfoEvent.SHOW_CELL_INFO, showCellInfoListener);
+        uiController.addEventListener (SelectCellEvent.SELECT_CELL, selectCellListener);
     }
 
     /**
@@ -42,7 +42,7 @@ public class InfoPanel extends GraphicStorage {
         tfEnable = TextField (getElement("tfEnable"));
     }
 
-    private function showCellInfoListener (event:ShowCellInfoEvent):void {
+    private function selectCellListener (event:SelectCellEvent):void {
         var cell:Cell = event.cell;
         tfX.text = String (cell.x);
         tfY.text = String (cell.y);

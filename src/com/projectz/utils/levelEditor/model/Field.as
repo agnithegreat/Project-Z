@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.model {
+
 import com.projectz.game.event.GameEvent;
 import com.projectz.utils.levelEditor.data.DataUtils;
 import com.projectz.utils.levelEditor.data.GeneratorData;
@@ -28,7 +29,6 @@ import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
 import com.projectz.utils.levelEditor.data.PlaceData;
-import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
 
 import flash.geom.Point;
 

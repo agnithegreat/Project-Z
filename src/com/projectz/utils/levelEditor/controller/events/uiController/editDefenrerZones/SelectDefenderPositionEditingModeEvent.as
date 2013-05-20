@@ -28,7 +28,7 @@ public class SelectDefenderPositionEditingModeEvent extends Event {
     /**
      * Режим редактирования зон защитников.
      *
-     * @see com.projectz.utils.levelEditor.controller.EditMode
+     * @see com.projectz.utils.levelEditor.controller.EditingMode
      */
     public function get mode():String {
         return _mode;

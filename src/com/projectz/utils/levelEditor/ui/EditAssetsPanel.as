@@ -160,20 +160,20 @@ public class EditAssetsPanel extends BasicPanel {
      */
     private function updateData():void {
         if (uiController.currentEditingAssetPart) {
-            trace ("show current asset part.");
+            trace ("show current asset part info.");
             var partData:PartData = uiController.currentEditingAssetPart;
             nstPivotX.value = partData.pivotX;
             nstPivotY.value = partData.pivotY;
-            nstColumns.value = partData.width;
-            nstRows.value = partData.height;
+            nstRows.value = partData.width;
+            nstColumns.value = partData.height;
         }
         else if (uiController.currentEditingAsset) {
-            trace ("show current asset.");
+            trace ("show current asset info.");
             var objectData:ObjectData = uiController.currentEditingAsset;
             nstPivotX.value = 0;
             nstPivotY.value = 0;
-            nstColumns.value = objectData.width;
-            nstRows.value = objectData.height;
+            nstRows.value = objectData.width;
+            nstColumns.value = objectData.height;
         }
         else {
             trace ("clear all data.");
@@ -181,6 +181,26 @@ public class EditAssetsPanel extends BasicPanel {
             nstPivotY.value = 0;
             nstColumns.value = 0;
             nstRows.value = 0;
+        }
+    }
+
+    /**
+     * Устанавливаем размер текущей редактируемой в контроллере части ассета по данным из соответствующих NumericStepper'ов.
+     */
+    private function setPartSize ():void {
+        var objectData:ObjectData = uiController.currentEditingAsset;
+        if (objectData) {
+            objectData.setSize(nstRows.value, nstColumns.value);
+        }
+    }
+
+    /**
+     * Устанавливаем отступы текущей редактируемой в контроллере части ассета по данным из соответствующих NumericStepper'ов.
+     */
+    private function setPartPivots ():void {
+        var partData:PartData = uiController.currentEditingAssetPart;
+        if (partData) {
+            partData.place(nstPivotX.value, nstPivotY.value);
         }
     }
 
@@ -287,27 +307,27 @@ public class EditAssetsPanel extends BasicPanel {
     }
 
     private function changeListener_nstRows (event:Event):void {
-        uiController
+        setPartSize ();
     }
 
     private function changeListener_nstColumns (event:Event):void {
-        //
+        setPartSize ();
     }
 
     private function changeListener_nstPivotX (event:Event):void {
-        //
+        setPartPivots ();
     }
 
     private function changeListener_nstPivotY (event:Event):void {
-        //
+        setPartPivots ();
     }
 
     private function changeListener_chbShotable (event:Event):void {
-        //
+        uiController.editAssetShotableMode = chbShotable.toggle;
     }
 
     private function changeListener_chbWalkable (event:Event):void {
-        //
+        uiController.editAssetShotableMode = chbWalkable.toggle;
     }
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {

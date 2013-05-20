@@ -9,7 +9,7 @@ package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.buttons.ButtonWithText;
 import com.projectz.utils.levelEditor.controller.UIController;
-import com.projectz.utils.levelEditor.controller.EditMode;
+import com.projectz.utils.levelEditor.controller.EditingMode;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editDefenrerZones.SelectDefenderPositionEvent;
@@ -56,7 +56,7 @@ public class EditDefenderPositionsPanel extends BasicPanel {
 
         model.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_ADDED, defenderPositionWasAddedListener);
         model.addEventListener(EditDefenderPositionEvent.DEFENDER_POSITION_WAS_REMOVED, defenderPositionWasRemovedListener);
-        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectEditDefenderPositionModeListener);
+        uiController.addEventListener(SelectDefenderPositionEditingModeEvent.SELECT_DEFENDER_POSITION_EDITING_MODE, selectDefenderPositionEditingModeListener);
         uiController.addEventListener(SelectDefenderPositionEvent.SELECT_DEFENDER_POSITION, selectDefenderPositionListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
     }
@@ -91,9 +91,9 @@ public class EditDefenderPositionsPanel extends BasicPanel {
         btnDelete = new ButtonWithText(mc["btnDelete"]);
 
         //Устанавливаем выделение кнопок:
-        btnAddDefenderPositionPoints.selected = (uiController.editDefenderPositionsMode == EditMode.ADD_POINTS);
-        btnRemoveDefenderPositionPoints.selected = (uiController.editDefenderPositionsMode == EditMode.REMOVE_POINTS);
-        btnSetDefenderPositionPoint.selected = (uiController.editDefenderPositionsMode == EditMode.SET_POINT);
+        btnAddDefenderPositionPoints.selected = (uiController.editDefenderPositionsMode == EditingMode.ADD_POINTS);
+        btnRemoveDefenderPositionPoints.selected = (uiController.editDefenderPositionsMode == EditingMode.REMOVE_POINTS);
+        btnSetDefenderPositionPoint.selected = (uiController.editDefenderPositionsMode == EditingMode.SET_POINT);
 
         //Устанавливаем тексты на кнопках:
         btnAddDefenderPositionPoints.text = "Добавление";
@@ -147,13 +147,13 @@ public class EditDefenderPositionsPanel extends BasicPanel {
     private function clickListener(event:MouseEvent):void {
         switch (event.currentTarget) {
             case (btnAddDefenderPositionPoints):
-                uiController.editDefenderPositionsMode = EditMode.ADD_POINTS;
+                uiController.editDefenderPositionsMode = EditingMode.ADD_POINTS;
                 break;
             case (btnRemoveDefenderPositionPoints):
-                uiController.editDefenderPositionsMode = EditMode.REMOVE_POINTS;
+                uiController.editDefenderPositionsMode = EditingMode.REMOVE_POINTS;
                 break;
             case (btnSetDefenderPositionPoint):
-                uiController.editDefenderPositionsMode = EditMode.SET_POINT;
+                uiController.editDefenderPositionsMode = EditingMode.SET_POINT;
                 break;
             case (btnNew):
                 uiController.addNewDefenderPosition();
@@ -164,19 +164,19 @@ public class EditDefenderPositionsPanel extends BasicPanel {
         }
     }
 
-    private function selectEditDefenderPositionModeListener(event:SelectDefenderPositionEditingModeEvent):void {
+    private function selectDefenderPositionEditingModeListener(event:SelectDefenderPositionEditingModeEvent):void {
         //Устанавливаем выделение кнопок в зависимости от установленного в контроллере режима редактирования:
-        if (event.mode == EditMode.ADD_POINTS) {
+        if (event.mode == EditingMode.ADD_POINTS) {
             btnAddDefenderPositionPoints.selected = true;
             btnRemoveDefenderPositionPoints.selected = false;
             btnSetDefenderPositionPoint.selected = false;
         }
-        else if (event.mode == EditMode.REMOVE_POINTS) {
+        else if (event.mode == EditingMode.REMOVE_POINTS) {
             btnAddDefenderPositionPoints.selected = false;
             btnRemoveDefenderPositionPoints.selected = true;
             btnSetDefenderPositionPoint.selected = false;
         }
-        else if (event.mode == EditMode.SET_POINT) {
+        else if (event.mode == EditingMode.SET_POINT) {
             btnAddDefenderPositionPoints.selected = false;
             btnRemoveDefenderPositionPoints.selected = false;
             btnSetDefenderPositionPoint.selected = true;

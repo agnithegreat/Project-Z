@@ -6,11 +6,19 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+
 import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.objectEditor.data.events.EditObjectDataEvent;
 
 import flash.filesystem.File;
 import flash.utils.Dictionary;
+
+/**
+ * Отправляется при изменении данных.
+ *
+ * @eventType com.projectz.utils.objectEditor.data.events.EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED
+ */
+[Event(name="object data was changed", type="com.projectz.utils.objectEditor.data.events.EditObjectDataEvent")]
 
 /**
  * Класс, хранящий данные об игровом объекте.
@@ -130,13 +138,24 @@ public class ObjectData extends JSONLoader {
     }
 
     /**
-     * Устаноска размера объекта (в клетках).
+     * Установка размера объекта (в клетках).
      * @param $width Ширина объекта (в клетках).
      * @param $height Высота объекта (в клетках).
      */
     public function setSize($width: int, $height: int):void {
         for each (var part:PartData in parts) {
             part.setSize($width, $height);
+        }
+        dispatchEvent(new EditObjectDataEvent(this, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
+    }
+
+    public function moveParts($dx: int, $dy: int):void {
+        var partData:PartData;
+        for each (partData in _parts) {
+            partData.place(partData.pivotX + $dx, partData.pivotY + $dy);
+        }
+        if (_shadow) {
+            _shadow.place(_shadow.pivotX + $dx, _shadow.pivotY + $dy);
         }
         dispatchEvent(new EditObjectDataEvent(this, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
     }
@@ -164,13 +183,13 @@ public class ObjectData extends JSONLoader {
      * @inheritDoc
      */
     override public function parse($data: Object):void {
-        setSize($data.parts[""].mask.length, $data.parts[""].mask.length);
-
+//        setSize($data.parts[""].mask.length, $data.parts[""].mask.length);
         var index: String;
         var part: PartData;
         for (index in $data.parts) {
             part = getPart(index);
             part.parse($data.parts[index]);
+            trace ("part (" + index + "): W = " + part.width + "; H = " + part.height);
         }
     }
 

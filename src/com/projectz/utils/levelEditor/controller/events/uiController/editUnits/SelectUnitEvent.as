@@ -10,10 +10,16 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;
 
+/**
+ * Событие выбора юнита для редактирования.
+ */
 public class SelectUnitEvent extends Event {
 
     private var _objectData:ObjectData;
 
+    /**
+     * Выбор юнита.
+     */
     public static const SELECT_UNIT:String = "select unit";
 
     public function SelectUnitEvent(objectData:ObjectData, type:String = SELECT_UNIT, bubbles:Boolean = false) {
@@ -21,6 +27,9 @@ public class SelectUnitEvent extends Event {
         super (type, bubbles, objectData);
     }
 
+    /**
+     * Юнит для редактирования в виде объекта ObjectData.
+     */
     public function get objectData():ObjectData {
         return _objectData;
     }
