@@ -10,6 +10,7 @@ package com.projectz.utils.levelEditor.ui {
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
+import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEditionModeEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetPartEvent;
 import com.projectz.utils.levelEditor.controller.events.uiController.editAssets.SelectAssetsTypeEvent;
@@ -87,6 +88,7 @@ public class EditAssetsPanel extends BasicPanel {
         uiController.addEventListener(SelectAssetEvent.SELECT_ASSET, selectAssetListener);
         uiController.addEventListener(SelectAssetPartEvent.SELECT_ASSET_PART, selectAssetPartListener);
         uiController.addEventListener(SelectAssetsTypeEvent.SELECT_ASSETS_TYPE, selectAssetsTypeListener);
+        uiController.addEventListener(SelectAssetEditionModeEvent.SELECT_ASSET_EDITING_MODE, selectAssetsEditionModeListener);
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
         uiController.addEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, assetWasChangedListener);
         uiController.addEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, assetPartWasChangedListener);
@@ -160,7 +162,7 @@ public class EditAssetsPanel extends BasicPanel {
      */
     private function updateData():void {
         if (uiController.currentEditingAssetPart) {
-            trace ("show current asset part info.");
+            //отображаем информацию о текущей редактируемой части ассета:
             var partData:PartData = uiController.currentEditingAssetPart;
             nstPivotX.value = partData.pivotX;
             nstPivotY.value = partData.pivotY;
@@ -168,7 +170,7 @@ public class EditAssetsPanel extends BasicPanel {
             nstColumns.value = partData.height;
         }
         else if (uiController.currentEditingAsset) {
-            trace ("show current asset info.");
+            //отображаем информацию о текущем редактируемом ассете:
             var objectData:ObjectData = uiController.currentEditingAsset;
             nstPivotX.value = 0;
             nstPivotY.value = 0;
@@ -176,7 +178,7 @@ public class EditAssetsPanel extends BasicPanel {
             nstColumns.value = objectData.height;
         }
         else {
-            trace ("clear all data.");
+            //очищаем информационное поле:
             nstPivotX.value = 0;
             nstPivotY.value = 0;
             nstColumns.value = 0;
@@ -240,7 +242,6 @@ public class EditAssetsPanel extends BasicPanel {
 
     private function selectAssetPartListener (event:SelectAssetPartEvent):void {
         var partData:PartData = event.partData;
-
         updateData();
     }
 
@@ -293,6 +294,11 @@ public class EditAssetsPanel extends BasicPanel {
         scpObjects.source = objectsContainer;
     }
 
+    private function selectAssetsEditionModeListener (event:SelectAssetEditionModeEvent):void {
+        chbShotable.selected = uiController.editAssetShotableMode;
+        chbWalkable.selected = uiController.editAssetWalkableMode;
+    }
+
     private function clickListener_objectPreView (event:MouseEvent):void {
         var objectPreView:ObjectPreview = ObjectPreview (event.currentTarget);
         uiController.currentEditingAsset = objectPreView.objectData;
@@ -323,17 +329,19 @@ public class EditAssetsPanel extends BasicPanel {
     }
 
     private function changeListener_chbShotable (event:Event):void {
-        uiController.editAssetShotableMode = chbShotable.toggle;
+        uiController.editAssetShotableMode = chbShotable.selected;
     }
 
     private function changeListener_chbWalkable (event:Event):void {
-        uiController.editAssetShotableMode = chbWalkable.toggle;
+        uiController.editAssetWalkableMode = chbWalkable.selected;
     }
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_ASSETS) {
             //Формируем новый список ассетов при переключении контроллера в режим редактирования ассетов.
             uiController.selectCurrentEditingAssetType(String (cbxObjectsType.getItemAt(0).data));
+            chbShotable.selected = uiController.editAssetShotableMode;
+            chbWalkable.selected = uiController.editAssetWalkableMode;
         }
     }
 

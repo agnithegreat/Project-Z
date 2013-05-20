@@ -77,6 +77,38 @@ public class ObjectData extends JSONLoader {
     }
 
     /**
+     * Проверка, является ли указанная клетка проходимой.
+     * @param $x Координата x клетки.
+     * @param $y Координата y клетки.
+     * @return Возвращает 0, если клетка проходимая. Возвращает 1, если клетка непроходимая.
+     * Возвращает -1, если клетки не существует.
+     */
+    public function getUnwalkable($x: int, $y: int):int {
+        if (($x < width) && ($y < height)) {
+            return (PartData.UNWALKABLE & _mask[$x][$y]);
+        }
+        else {
+            return -1;
+        }
+    }
+
+    /**
+     * Проверка, является ли клекта проcтреливаемой.
+     * @param $x Координата x клетки.
+     * @param $y Координата y клетки.
+     * @return Возвращает 0, если клетка простреливаемая, возвращает 2, если клетка непростреливаемая.
+     * Возвращает -1, если клетки не существует.
+     */
+    public function getUnshotable($x: int, $y: int):int {
+        if (($x < width) && ($y < height)) {
+            return (PartData.UNSHOTABLE & _mask[$x][$y]);
+        }
+        else {
+            return -1;
+        }
+    }
+
+    /**
      * Ширина объекта (в клетках).
      */
     public function get width():int {
@@ -125,7 +157,6 @@ public class ObjectData extends JSONLoader {
     }
 
     /**
-     *
      * @param $name Имя объекта.
      * @param $config Файл, хранящий данные об объекте.
      */
@@ -149,6 +180,11 @@ public class ObjectData extends JSONLoader {
         dispatchEvent(new EditObjectDataEvent(this, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
     }
 
+    /**
+     * Смещение всех частей или текущей выбранной части на указанное расстояние.
+     * @param $dx Расстояние по оси x.
+     * @param $dy Расстояние по оси y.
+     */
     public function moveParts($dx: int, $dy: int):void {
         var partData:PartData;
         for each (partData in _parts) {
@@ -157,19 +193,6 @@ public class ObjectData extends JSONLoader {
         if (_shadow) {
             _shadow.place(_shadow.pivotX + $dx, _shadow.pivotY + $dy);
         }
-        dispatchEvent(new EditObjectDataEvent(this, EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED));
-    }
-
-    private function getParts():Object {
-        var pts: Object = {};
-        var index: String;
-        for (index in _parts) {
-           pts[index] = _parts[index].export();
-        }
-        if (_shadow) {
-            pts[PartData.SHADOW] = _shadow.export();
-        }
-        return pts;
     }
 
     /**
@@ -189,7 +212,6 @@ public class ObjectData extends JSONLoader {
         for (index in $data.parts) {
             part = getPart(index);
             part.parse($data.parts[index]);
-            trace ("part (" + index + "): W = " + part.width + "; H = " + part.height);
         }
     }
 
@@ -199,6 +221,18 @@ public class ObjectData extends JSONLoader {
      */
     public function export():Object {
         return {'name': _name, 'parts': getParts()};
+    }
+
+    private function getParts():Object {
+        var pts: Object = {};
+        var index: String;
+        for (index in _parts) {
+           pts[index] = _parts[index].export();
+        }
+        if (_shadow) {
+            pts[PartData.SHADOW] = _shadow.export();
+        }
+        return pts;
     }
 }
 }

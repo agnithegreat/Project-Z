@@ -184,8 +184,6 @@ import starling.events.EventDispatcher;
 * @eventType com.projectz.utils.objectEditor.data.events.EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED
 */
 [Event(name="object data was changed", type="com.projectz.utils.objectEditor.data.events.EditObjectDataEvent")]
-/*
-
 
 /**
  * Класс-контроллер, предназначенный для взаимодействия ui (панели) и view (отображение игрового поля).
@@ -220,8 +218,8 @@ public class UIController extends EventDispatcher {
     //Редактирование ассетов:
     private var _currentEditingAsset:ObjectData;//Текущий редактируемый ассет.
     private var _currentEditingAssetPart:PartData;//Текущая редактируемая часть ассета.
-    private var _editAssetWalkableMode:Boolean;//Режим работы контроллера в котором происходит редактирование проходимости клеток у текущего выбранного ассета.
-    private var _editAssetShotableMode:Boolean;//Режим работы контроллера в котором происходит редактирование простреливаемости клеток у текущего выбранного ассета.
+    private var _editAssetWalkableMode:Boolean = true;//Режим работы контроллера в котором происходит редактирование проходимости клеток у текущего выбранного ассета.
+    private var _editAssetShotableMode:Boolean = false;//Режим работы контроллера в котором происходит редактирование простреливаемости клеток у текущего выбранного ассета.
 
     //Редактирование юнитов:
     private var _currentEditingUnit:ObjectData;//Текущий редактируемый юнит.
@@ -455,6 +453,12 @@ public class UIController extends EventDispatcher {
         dispatchEvent(new SelectAssetEditionModeEvent(SelectAssetEditionModeEvent.SELECT_ASSET_EDITING_MODE));
     }
 
+    /**
+     * Смещение текущей редактируемой части ассета (если она не равна <code>null</code>)
+     * или всех частей текущего редактируемого ассета на указанное значение.
+     * @param toX Смещение по оси x.
+     * @param toY Смещение по оси y.
+     */
     public function moveAsset (toX:int, toY:int):void {
         if (currentEditingAssetPart) {
             var partData:PartData = currentEditingAssetPart;

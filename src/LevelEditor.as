@@ -56,7 +56,8 @@ public class LevelEditor extends Sprite {
         _assets.verbose = false;
         _assets.enqueue(
                 _directory.resolvePath(formatString("textures/{0}x", 1)),
-                _directory.resolvePath(formatString("utils/level_editor", 1))
+                _directory.resolvePath(formatString("utils/level_editor", 1)),
+                _directory.resolvePath(formatString("utils/object_editor", 1))
         );
 
         _starling = new Starling(App, stage, viewPort);
