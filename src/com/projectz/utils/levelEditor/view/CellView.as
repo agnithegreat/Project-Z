@@ -43,10 +43,10 @@ public class CellView extends PositionView {
      * @param $cell Ссылка на модель (mvc).
      * @param $texture Текстура для клетки редактора уровней.
      * @param $lockTexture Текстура для значка блокировки.
-     * @param $flagView Текстура для значка флага.
-     * @param $hatchingView Текстура для штриховки.
+     * @param $flagTexture Текстура для значка флага.
+     * @param $hatchingTexture Текстура для штриховки.
      */
-    public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null, $flagView:Texture = null, $hatchingView:Texture = null) {
+    public function CellView($cell:Cell, $texture:Texture, $lockTexture:Texture = null, $flagTexture:Texture = null, $hatchingTexture:Texture = null) {
         _cell = $cell;
 
         super();
@@ -57,12 +57,16 @@ public class CellView extends PositionView {
         if ($lockTexture) {
             setLockView($lockTexture);
         }
-        if ($flagView) {
-            setFlagView($flagView);
+        if ($flagTexture) {
+            setFlagView($flagTexture);
         }
-        if ($flagView) {
-            setHatchingView($hatchingView);
+        if ($flagTexture) {
+            setHatchingView($hatchingTexture);
         }
+
+        showLock = showLock;
+        showFlag = showFlag;
+        showHatching = showHatching;
 
 //        addEventListener(TouchEvent.TOUCH, handleTouch);
     }

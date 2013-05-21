@@ -258,7 +258,7 @@ public class LevelEditorUI extends GraphicStorage {
                 selectTab(btnTabEditDefenderZones);
                 showPanel(editDefenderPositionsPanel);
                 outputInfo(
-                        "Выберете позицию защитника из списка. " +
+                        "Выберите позицию защитника из списка. " +
                         "Установите режим редактирования (добавление, удаление, указание позиции). " +
                         "Кликами по карте редактируйте зону позиции защитника." +
                         "\n" +
@@ -269,7 +269,11 @@ public class LevelEditorUI extends GraphicStorage {
             case (UIControllerMode.EDIT_ASSETS):
                 selectTab(btnTabEditAssets);
                 showPanel(editAssetsPanel);
-                outputInfo("Редактирование ресурсов времено не работает.");
+                outputInfo(
+                        "Выберите ассет. Можно выбрать часть ассета. \n" +
+                        "Стрелками ВВЕРХ, ВНИЗ, ВПРАВО, ВЛЕВО задайте отступ для всех частей ассета или для его выбранной части. \n" +
+                        "Кликами по карте редактируйте простреливаемость и проходимость клеток в отдельных частях ассета."
+                );
                 break;
             case (UIControllerMode.EDIT_UNITS):
                 selectTab(btnTabEditUnits);

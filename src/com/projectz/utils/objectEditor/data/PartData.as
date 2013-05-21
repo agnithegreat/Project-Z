@@ -165,11 +165,12 @@ public class PartData extends EventDispatcher {
      * @param $x Координата x клетки.
      * @param $y Координата y клетки.
      * @return Возвращает 0, если клетка проходимая. Возвращает 1, если клетка непроходимая.
+     * Возвращает -1, если клетки не существует.
      */
-    public function getWalkable($x: int, $y: int):int {
-        if (($x < _width) && ($y < _height)) {
-//        return (WALKABLE & _mask[$x][$y]);
-            return _mask[$x][$y];
+    public function getUnwalkable($x: int, $y: int):int {
+        if (($x <= _width) && ($y <= _height)) {
+            var cellValue:int = _mask[$x][$y];
+            return (UNWALKABLE & cellValue);
         }
         else {
             return -1;
@@ -180,14 +181,13 @@ public class PartData extends EventDispatcher {
      * Установка проходимости клетки.
      * @param $x Координата x клетки.
      * @param $y Координата x клетки.
-     * @param $walkable Если значение равно 0, то клетка станет проходимой, если 1, то непроходимой.
+     * @param $walkable Если значение равно 0, то клетка станет проходимой, если 2, то непроходимой.
      */
-    public function setWalkable($x: int, $y: int, $walkable: int):void {
-        if ($x<0 || $y<0 || $x > _width || $y > _height) {
+    public function setUnwalkable($x: int, $y: int, $walkable: int):void {
+        if ($x<0 || $y<0 || $x >= _width || $y >= _height) {
             return;
         }
-//        _mask[$x][$y] = $walkable;
-        _mask[$x][$y] = $walkable + getShotable($x, $y);
+        _mask[$x][$y] = $walkable + getUnshotable($x, $y);
         dispatchEvent(new EditPartDataEvent(this, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
 
@@ -196,22 +196,28 @@ public class PartData extends EventDispatcher {
      * @param $x Координата x клетки.
      * @param $y Координата y клетки.
      * @return Возвращает 0, если клетка простреливаемая, возвращает 2, если клетка непростреливаемая.
+     * Возвращает -1, если клетки не существует.
      */
-    public function getShotable($x: int, $y: int):int {
-        return (UNSHOTABLE & _mask[$x][$y]);
+    public function getUnshotable($x: int, $y: int):int {
+        if (($x <= _width) && ($y <= _height)) {
+            return (UNSHOTABLE & _mask[$x][$y]);
+        }
+        else {
+            return -1;
+        }
     }
 
     /**
      * Установка простреливаемости клетки.
      * @param $x Координата x клетки.
      * @param $y Координата x клетки.
-     * @param $shotable Если значение равно 0, то клетка станет простреливаемой, если 1, то непростреливаемой.
+     * @param $unshotable Если значение равно 0, то клетка станет простреливаемой, если 2, то непростреливаемой.
      */
-    public function setShotable($x: int, $y: int, $shotable: int):void {
-        if ($x<0 || $y<0 || $x > _width || $y > _height) {
+    public function setUnshotable($x: int, $y: int, $unshotable: int):void {
+        if ($x<0 || $y<0 || $x >= _width || $y >= _height) {
             return;
         }
-        _mask[$x][$y] = UNWALKABLE*getWalkable($x, $y) + UNSHOTABLE*$shotable;
+        _mask[$x][$y] = UNWALKABLE * getUnwalkable($x, $y) + $unshotable;
         dispatchEvent(new EditPartDataEvent(this, EditPartDataEvent.PART_DATA_WAS_CHANGED));
     }
 

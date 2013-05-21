@@ -41,7 +41,8 @@ public class FieldObjectView extends Sprite {
 
     private var _currentPart: ObjectView;
 
-    private var _selectMode: int = -1;
+    private var _selectWalkableMode: int = -1;
+    private var _selectShotableMode: int = -1;
 
     public function FieldObjectView($object: ObjectData, $assets: AssetManager) {
         _object = $object;
@@ -51,7 +52,6 @@ public class FieldObjectView extends Sprite {
         addChild(_container);
 
         _cells = new Sprite();
-        _cells.alpha = 0.3;
         _container.addChild(_cells);
 
         _objects = new Sprite();
@@ -201,7 +201,7 @@ public class FieldObjectView extends Sprite {
 
         for (var i:int = 0; i < _object.width; i++) {
             for (var j:int = 0; j < _object.height; j++) {
-                cell = new CellView(new Point(i, j), _assets.getTexture("ms-cell"));
+                cell = new CellView(new Point(i, j), _assets.getTexture("ms-cell-objectEditor"), _assets.getTexture("ms-cell-objectEditor_shotable"));
                 _cells.addChild(cell);
             }
         }
@@ -219,11 +219,15 @@ public class FieldObjectView extends Sprite {
                     _currentPart.partData.name!=PartData.SHADOW
             ) {
                 //используем для отрисовки данные части (currentPart):
-                cell.alpha = _currentPart.partData.mask[cell.position.x][cell.position.y];
+                var partData:PartData = _currentPart.partData;
+                cell.unwalkable = Boolean (partData.getUnwalkable(cell.position.x, cell.position.y));
+                cell.unshotable = Boolean (partData.getUnshotable(cell.position.x, cell.position.y));
             }
             else {
                 //используем для отрисовки данные объекта (_object):
-                cell.alpha = _object.mask[cell.position.x][cell.position.y];
+                var objectData:ObjectData = _object;
+                cell.unwalkable = Boolean (objectData.getUnwalkable(cell.position.x, cell.position.y));
+                cell.unshotable = Boolean (objectData.getUnshotable(cell.position.x, cell.position.y));
             }
         }
     }
@@ -246,17 +250,28 @@ public class FieldObjectView extends Sprite {
                 var ty: Number = pos.y/PositionView.cellHeight;
                 var cx: int = Math.round(ty-tx);
                 var cy: int = Math.round(cx+tx*2);
-                if ((cx < _currentPart.width) && (cy < _currentPart.height)) {
+                if (
+                        (cx >= 0) &&
+                        (cy >= 0) &&
+                        (cx < _currentPart.width) &&
+                        (cx < _currentPart.width) &&
+                        (cy < _currentPart.height)
+                ) {
                     if (touch.phase == TouchPhase.BEGAN) {
                         if (_currentPart.partData.name!=PartData.SHADOW) {
-                            _selectMode = 1-_currentPart.partData.getWalkable(cx, cy);
+                            _selectWalkableMode = 1-_currentPart.partData.getUnwalkable(cx, cy);
+                            _selectShotableMode = 2-_currentPart.partData.getUnshotable(cx, cy);
                         }
                     } else if (touch.phase == TouchPhase.ENDED) {
-                        _selectMode = -1;
+                        _selectWalkableMode = -1;
+                        _selectShotableMode = -1;
                     }
-                    if (_selectMode >= 0) {
-                        // TODO: вынести в панель редактора
-                        _currentPart.partData.setWalkable(cx, cy, _selectMode);
+                    if (_editWalkableMode && _selectWalkableMode >= 0) {
+                        _currentPart.partData.setUnwalkable(cx, cy, _selectWalkableMode);
+                        updateField();
+                    }
+                    if (_editShotableMode && _selectShotableMode >= 0) {
+                        _currentPart.partData.setUnshotable(cx, cy, _selectShotableMode);
                         updateField();
                     }
                 }
@@ -266,7 +281,7 @@ public class FieldObjectView extends Sprite {
     }
 
     private function objectDataWasChangedListener (event:EditObjectDataEvent):void {
-        updatePartsView();
+//        updatePartsView();
         showField();
     }
 
