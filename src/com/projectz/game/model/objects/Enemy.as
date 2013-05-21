@@ -75,6 +75,10 @@ public class Enemy extends Personage {
         _progress = 0;
         _halfWay = false;
 
+        if (_cell.attackObject) {
+            _cell.walkable = false;
+        }
+
         _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
     }
 
@@ -84,9 +88,6 @@ public class Enemy extends Personage {
             _lastTarget = $cells[$cells.length-1];
 
             _target.addObject(this);
-            if (_target.attackObject) {
-                _target.walkable = false;
-            }
             walk(true);
         }
     }
@@ -113,6 +114,10 @@ public class Enemy extends Personage {
         if (_progress>=1) {
             place(_target);
             _target = null;
+
+            if (_cell.attackObject) {
+                _target = _cell.attackObject.cell;
+            }
         }
     }
 
