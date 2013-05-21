@@ -221,6 +221,7 @@ public class EditAssetsPanel extends BasicPanel {
         }
         //Формируем список частей выбранного ассета:
         var dataProvider:DataProvider = new DataProvider();
+        dataProvider.addItem({label:"all", data:null});
         if (objectData) {
             var partData:PartData;
             var parts:Dictionary = objectData.parts;
