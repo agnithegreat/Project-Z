@@ -7,25 +7,24 @@
  */
 package com.projectz.game.ui.buttons {
 
-import starling.display.Image;
-import starling.display.Sprite;
+import com.projectz.utils.objectEditor.data.DefenderData;
+
 import starling.utils.AssetManager;
 
-public class DefenderBar extends Sprite {
+public class DefenderBar extends BasicBar {
 
-    private var _glow: Image;
-    private var _back: Image;
-    private var _progress: Image;
+    private var _defenderData:DefenderData;
 
     public function DefenderBar($assets: AssetManager) {
-        _glow = new Image($assets.getTexture("bar_radial-glow"));
-        addChild(_glow);
+        super($assets);
+    }
 
-        _back = new Image($assets.getTexture("bar_radial-back"));
-        addChild(_back);
+    public function get defenderData():DefenderData {
+        return _defenderData;
+    }
 
-        _progress = new Image($assets.getTexture("bar_radial-progress"));
-        addChild(_progress);
+    public function set defenderData(value:DefenderData):void {
+        _defenderData = value;
     }
 }
 }

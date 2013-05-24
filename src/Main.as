@@ -33,7 +33,7 @@ import starling.utils.RectangleUtil;
 import starling.utils.ScaleMode;
 import starling.utils.formatString;
 
-[SWF(frameRate="60")]
+[SWF(frameRate="60", width="1024", height="768")]
 public class Main extends Sprite {
 
 //    [Embed(source="../assets/textures/loaderSD.png")]

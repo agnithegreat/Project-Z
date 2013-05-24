@@ -17,26 +17,26 @@ public class BottomPanel extends Sprite {
 
     private var _bg: Image;
 
-    private var _defenders: Sprite;
+    private var _defenderBarsContainer: Sprite;//Контейнер для кнопок выбора защитников.
 
     public function BottomPanel($assets: AssetManager) {
         _bg = new Image($assets.getTexture("panel-bottom"));
         _bg.touchable = false;
         addChild(_bg);
 
-        _defenders = new Sprite();
-        addChild(_defenders);
+        _defenderBarsContainer = new Sprite();
+        addChild(_defenderBarsContainer);
 
         var boy: DefenderBar = new DefenderBar($assets);
-        _defenders.addChild(boy);
+        _defenderBarsContainer.addChild(boy);
 
         var farmer: DefenderBar = new DefenderBar($assets);
         farmer.x = boy.x + boy.width;
-        _defenders.addChild(farmer);
+        _defenderBarsContainer.addChild(farmer);
 
         var sheriff: DefenderBar = new DefenderBar($assets);
         sheriff.x = farmer.x + farmer.width;
-        _defenders.addChild(sheriff);
+        _defenderBarsContainer.addChild(sheriff);
     }
 
     public function appear():void {
