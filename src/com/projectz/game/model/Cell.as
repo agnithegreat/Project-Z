@@ -123,7 +123,7 @@ public class Cell extends EventDispatcher {
         var len: int = _objects.length;
         for (var i: int = 0; i < len; i++) {
             var enemy: Enemy = _objects[i] as Enemy;
-            if (enemy) {
+            if (enemy && enemy.cell==this) {
                 targets.push(enemy);
             }
         }

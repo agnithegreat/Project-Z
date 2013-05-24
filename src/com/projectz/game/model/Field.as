@@ -98,15 +98,79 @@ public class Field extends EventDispatcher {
     }
 
     public function init():void {
+        createObjects(_level.objects);
         createPaths(_level.paths);
         createGenerators(_level.generators);
         createPositions(_level.defenderPositions);
-        createObjects(_level.objects);
         updateDepths();
 
         _wave = 0;
         _waveTime = 0;
         nextWave();
+    }
+
+    private function createField():void {
+        _field = new <Cell>[];
+        _fieldObj = {};
+
+        var cell: Cell;
+        for (var j:int = 0; j < _height; j++) {
+            for (var i:int = 0; i < _width; i++) {
+                if (i+j>0.4*_width && i+j<1.6*_width && Math.abs(i-j)<0.4*_height) {
+                    cell = new Cell(i, j);
+                    cell.addEventListener(GameEvent.CELL_WALK, handleUpdateCell);
+                    _field.push(cell);
+                    _targetCells.push(cell);
+                    _fieldObj[i+"."+j] = cell;
+                }
+            }
+        }
+        _field.sort(sortField);
+    }
+
+    private function sortField($cell1: Cell, $cell2: Cell):int {
+        if ($cell1.sorter>$cell2.sorter) {
+            return 1;
+        } else if ($cell1.sorter<$cell2.sorter) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public function step($delta: Number):void {
+        var len: int = _enemies.length;
+
+        var enemy:Enemy;
+        for (var i:int = 0; i < len; i++) {
+            enemy = _enemies[i];
+            if (enemy.alive) {
+                if (!enemy.target) {
+                    updateWay(enemy);
+                }
+                enemy.step($delta);
+            }
+        }
+
+        len = _defenders.length;
+        var defender: Defender;
+        for (i = 0; i < len; i++) {
+            defender = _defenders[i];
+//            defender.step();
+        }
+
+        len = _generators.length;
+        for (i = 0; i < len; i++) {
+            var place: PlaceData = _generators[i].createEnemy($delta);
+            if (place) {
+                createPersonage(place.x, place.y, _objectsStorage.getObjectData(place.object), _generators[i].path);
+            }
+        }
+
+        if (checkWaveEnded($delta)) {
+            nextWave();
+        }
+
+        dispatchEventWith(GameEvent.UPDATE);
     }
 
     public function nextWave():void {
@@ -124,7 +188,8 @@ public class Field extends EventDispatcher {
         }
     }
 
-    private function checkWaveEnded():Boolean {
+    private function checkWaveEnded($delta: Number):Boolean {
+        _waveTime -= $delta;
         if (_waveTime<=0) {
             return true;
         }
@@ -135,6 +200,22 @@ public class Field extends EventDispatcher {
             }
         }
         return !_enemies.length;
+    }
+
+    private function getWay($start: Cell, $end: Cell, $path: int = 0):Vector.<Cell> {
+        var way: Vector.<Cell> = new <Cell>[];
+        _grid.setStartNode($start.x, $start.y);
+        _grid.setEndNode($end.x, $end.y);
+        var path: Path = PathFinder.findPath(_grid, $path);
+        var len: int = path.path.length;
+        for (var i:int = 1; i < len; i++) {
+            way.push(getCell(path.path[i].x, path.path[i].y));
+        }
+        return way;
+    }
+
+    private function getCell(x: int, y: int):Cell {
+        return _fieldObj[x+"."+y];
     }
 
     private function updateDepths():void {
@@ -197,113 +278,6 @@ public class Field extends EventDispatcher {
 
     private function checkUpperCell($cell: Cell, $object: FieldObject):Boolean {
         return !$cell || $cell.depth || ($cell.object && $cell.object==$object);
-    }
-
-    public function step($delta: Number):void {
-        _waveTime -= $delta;
-
-        var len: int = _enemies.length;
-        var cell: Cell;
-
-        var zombie:Enemy;
-        for (var i:int = 0; i < len; i++) {
-            zombie = _enemies[i];
-            if (zombie.alive) {
-                if (!zombie.target) {
-                    cell = getTargetCell(zombie.cell);
-                    zombie.go(getWay(zombie.cell, cell, zombie.path));
-                }
-                zombie.step($delta);
-            }
-        }
-
-        len = _defenders.length;
-        var defender: Defender;
-        for (i = 0; i < len; i++) {
-            defender = _defenders[i];
-            defender.step();
-        }
-
-        len = _generators.length;
-        for (i = 0; i < len; i++) {
-            var enemy: PlaceData = _generators[i].createEnemy();
-            if (enemy) {
-                createPersonage(enemy.x, enemy.y, _objectsStorage.getObjectData(enemy.object), _generators[i].path);
-            }
-        }
-
-        if (checkWaveEnded()) {
-            nextWave();
-        }
-
-        dispatchEventWith(GameEvent.UPDATE);
-    }
-
-    private function getWay($start: Cell, $end: Cell, $path: int = 0):Vector.<Cell> {
-        var way: Vector.<Cell> = new <Cell>[];
-        _grid.setStartNode($start.x, $start.y);
-        _grid.setEndNode($end.x, $end.y);
-        var path: Path = PathFinder.findPath(_grid, true, $path);
-        var len: int = path.path.length;
-        for (var i:int = 1; i < len; i++) {
-            way.push(getCell(path.path[i].x, path.path[i].y));
-        }
-        return way;
-    }
-
-    private function createField():void {
-        _field = new <Cell>[];
-        _fieldObj = {};
-
-        var cell: Cell;
-        for (var j:int = 0; j < _height; j++) {
-            for (var i:int = 0; i < _width; i++) {
-                if (i+j>0.4*_width && i+j<1.6*_width && Math.abs(i-j)<0.4*_height) {
-                    cell = new Cell(i, j);
-                    cell.addEventListener(GameEvent.CELL_WALK, handleUpdateCell);
-                    _field.push(cell);
-                    _fieldObj[i+"."+j] = cell;
-                }
-            }
-        }
-        _field.sort(sortField);
-    }
-
-    private function sortField($cell1: Cell, $cell2: Cell):int {
-        if ($cell1.sorter>$cell2.sorter) {
-            return 1;
-        } else if ($cell1.sorter<$cell2.sorter) {
-            return -1;
-        }
-        return 0;
-    }
-
-    private function getCell(x: int, y: int):Cell {
-        return _fieldObj[x+"."+y];
-    }
-
-    private var _tempCell: Cell;
-    private function getTargetCell($cell: Cell):Cell {
-        _tempCell = $cell;
-        _targetCells.sort(sortTargets);
-        return _targetCells[0];
-    }
-
-    private function sortTargets($cell1: Cell, $cell2: Cell):int {
-        if (!checkCellAvailable($cell1)) {
-            return 1;
-        }
-        if (!checkCellAvailable($cell2)) {
-            return -1;
-        }
-        var d1: int = Cell.getDistance(_tempCell, $cell1);
-        var d2: int = Cell.getDistance(_tempCell, $cell2);
-        if (d1 > d2) {
-            return 1;
-        } else if (d1 < d2) {
-            return -1;
-        }
-        return 0;
     }
 
     private function checkCellAvailable($cell:Cell):Boolean {
@@ -412,9 +386,8 @@ public class Field extends EventDispatcher {
                 var cell: Cell = getCell(i, j);
                 if (cell) {
                     if ($object.checkCell(i, j)) {
-                        _grid.setSpecial(i, j, true);
                         if ($object is Building) {
-                            _targetCells.push(cell);
+//                            _targetCells.push(cell);
                         }
                     } else {
                         cell.attackObject = $object;
@@ -494,11 +467,16 @@ public class Field extends EventDispatcher {
         var len: int = _enemies.length;
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
-            if (cell.object!=enemy && enemy.target==cell) {
-                var target: Cell = getTargetCell(enemy.target);
-                enemy.go(getWay(enemy.target, getCell(target.x, target.y), enemy.path));
+            if (cell.object!=enemy) {
+                updateWay(enemy);
             }
         }
+    }
+
+    private function updateWay($enemy: Enemy):void {
+        var cell: Cell = $enemy.target ? $enemy.target : $enemy.cell;
+//        var target: Cell = getTargetCell(cell);
+//        $enemy.go(getWay(cell, target, $enemy.path));
     }
 
     public function destroy():void {

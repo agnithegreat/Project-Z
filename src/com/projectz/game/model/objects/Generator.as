@@ -17,7 +17,7 @@ public class Generator {
     private var _wave: GeneratorWaveData;
 
     private var _generated: int;
-    private var _time: int;
+    private var _time: Number;
 
     public function get path():int {
         return _data.pathId;
@@ -40,8 +40,9 @@ public class Generator {
         _enabled = _wave.amount>0;
     }
 
-    public function createEnemy():PlaceData {
-        if (!_enabled || ++_time < _wave.delay) {
+    public function createEnemy($delta: Number):PlaceData {
+        _time += $delta;
+        if (!_enabled || _time < _wave.delay) {
             return null;
         }
         _time = 0;
