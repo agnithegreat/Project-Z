@@ -11,9 +11,14 @@ import com.projectz.game.controller.UIController;
 import com.projectz.game.model.Game;
 import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.levelEditor.data.LevelStorage;
+import com.projectz.utils.objectEditor.ObjectDataManager;
+import com.projectz.utils.objectEditor.data.DefenderData;
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.game.view.GameScreen;
 import com.projectz.game.ui.UI;
+
+import flash.utils.Dictionary;
 
 import starling.events.Event;
 import starling.core.Starling;
@@ -89,8 +94,19 @@ public class App extends Sprite {
         _view = new GameScreen(_game, _uiController);
         addChild(_view);
 
-        _ui = new UI(_assets);
+        _ui = new UI(_game, _uiController, _assets);
         addChild(_ui);
+
+        //FOR TESTS+++
+        var allDefendersAsDictionary:Dictionary = _objectsStorage.getObjectsByType (ObjectType.DEFENDER);
+        var allDefendersAsVector:Vector.<DefenderData> = new Vector.<DefenderData>();
+        var defenderData:DefenderData;
+        for each (defenderData in allDefendersAsDictionary) {
+            allDefendersAsVector.push (defenderData);
+        }
+        allDefendersAsVector.sort(ObjectDataManager.sortByName);
+        _ui.initDefenders(allDefendersAsVector);
+        //FOR TESTS---
 
         _game.init();
     }

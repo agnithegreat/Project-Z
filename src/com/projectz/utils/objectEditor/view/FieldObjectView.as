@@ -15,11 +15,14 @@ import flash.display.BitmapData;
 
 import flash.geom.Point;
 
+import starling.core.RenderSupport;
+
 import starling.display.Sprite;
 import starling.events.Event;
 import starling.events.Touch;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
+import starling.textures.RenderTexture;
 import starling.utils.AssetManager;
 
 public class FieldObjectView extends Sprite {
@@ -141,11 +144,50 @@ public class FieldObjectView extends Sprite {
         updateField();
     }
 
+    /**
+     * Преобразование элемента в битмап. Используется для отображения в компонентах редактора уровней (без старлинга).
+     * @param backgroundColor
+     * @return
+     */
     public function convertToBitmapData (backgroundColor:uint = 0xffffff):BitmapData {
-        init ();
+        init();
+        showField();
+        var previousAlpha:Number = _objects.alpha;
         _objects.alpha = 1;
         var bitmapData:BitmapData = StarlingUtils.asBitmapData(this, backgroundColor);
+        _objects.alpha = previousAlpha;
         return bitmapData;
+    }
+
+    /**
+     * Отображение элемента, в виде статичной иконки (скрытие клеток поля, остановка анимации, удаление слушателей).
+     */
+    public function asIcon ():void {
+
+        //Формируем отображаемые элементы:
+        init();
+
+        //Устанавливаем нормальную прозрачность объектов.
+        var previousAlpha:Number = _objects.alpha;
+        _objects.alpha = 1;
+
+        //Останавливаем анимацию:
+        var len: int = _objects.numChildren;
+        var child: ObjectView;
+        for (var i:int = 0; i < len; i++) {
+            child = _objects.getChildAt(i) as ObjectView;
+            child.stopAnimation();
+        }
+
+        //Деактивируем все слушатели:
+        removeEventListener(Event.ADDED_TO_STAGE, handleAddedToStage);
+        object.removeEventListener(EditObjectDataEvent.OBJECT_DATA_WAS_CHANGED, objectDataWasChangedListener);
+        if (stage) {
+            stage.removeEventListener(TouchEvent.TOUCH, handleTouch);
+        }
+
+        //Скрываем клетоки поля:
+        _cells.visible = false;
     }
 
     public function get editWalkableMode():Boolean {
@@ -179,8 +221,6 @@ public class FieldObjectView extends Sprite {
         if (_object.shadow) {
             _objects.addChild(new ObjectView(_object.shadow));
         }
-
-        showField();
     }
 
     private function handleAddedToStage($event: Event):void {
@@ -189,6 +229,7 @@ public class FieldObjectView extends Sprite {
         stage.addEventListener(TouchEvent.TOUCH, handleTouch);
 
         init();
+        showField();
     }
 
     private function showField():void {

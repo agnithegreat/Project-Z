@@ -54,10 +54,25 @@ public class ObjectView extends PositionView {
         }
     }
 
+    public function stopAnimation ():void {
+        if (_bg is MovieClip) {
+            var _mc:MovieClip = MovieClip (_bg);
+            Starling.juggler.remove(_bg as MovieClip);
+            _mc.stop();
+        }
+    }
+
+    public function continueAnimation ():void {
+        if (_bg is MovieClip) {
+            var _mc:MovieClip = MovieClip (_bg);
+            Starling.juggler.add(_bg as MovieClip);
+            _mc.play();
+        }
+    }
+
     override public function destroy():void {
         super.destroy();
         _partData.removeEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, partDataWasChanged);
-
         if (_bg) {
             _bg.removeFromParent(true);
         }

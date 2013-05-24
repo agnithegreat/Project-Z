@@ -7,6 +7,7 @@
  */
 package com.projectz.game.controller {
 import com.projectz.game.model.Game;
+import com.projectz.utils.objectEditor.data.DefenderData;
 
 import starling.events.EventDispatcher;
 
@@ -18,8 +19,14 @@ public class GameController extends EventDispatcher {
         _model = $game;
     }
 
-    public function addDefender($x: int, $y: int):void {
-        _model.field.blockCell($x, $y);
+    /**
+     * Добавление на карту защитника.
+     * @param $defenderData Защитник.
+     * @param $x Координата x защитника для добавления на карту.
+     * @param $y Координата y защитника для добавления на карту.
+     */
+    public function addDefender($defenderData:DefenderData, $x: int, $y: int):void {
+        _model.addDefender($defenderData, $x, $y);
     }
 }
 }

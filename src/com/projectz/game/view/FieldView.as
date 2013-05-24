@@ -111,6 +111,7 @@ public class FieldView extends Sprite {
             object = new EnemyView(fieldObject as Personage);
         } else if (fieldObject is Defender) {
             object = new DefenderView(fieldObject as Personage);
+            _uiController.currentDefenderData = null;
         } else {
             object = new ObjectView(fieldObject, fieldObject.data.name);
         }
@@ -122,7 +123,7 @@ public class FieldView extends Sprite {
                 _dynamicShadows.addChild(shadow);
             } else {
                 _staticShadows.unflatten();
-                _staticShadows.addChild(shadow)
+                _staticShadows.addChild(shadow);
                 shadow.updatePosition();
                 _staticShadows.flatten();
             }

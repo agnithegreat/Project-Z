@@ -27,5 +27,6 @@ public class GameEvent {
     public static const DESTROY: String = "destroy_GameEvent";
 
     public static const SHOW_EFFECT: String = "show_effect_GameEvent";
+    public static const SET_MONEY: String = "set_money_GameEvent";
 }
 }

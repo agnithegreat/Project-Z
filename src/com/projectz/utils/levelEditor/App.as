@@ -28,8 +28,6 @@ import starling.utils.formatString;
  */
 public class App extends Sprite {
 
-    public static var testSprite:Sprite = new Sprite();
-
     private var _assetsManager: AssetManager;//Менеджер ресурсов старлинга.
     private var _objectsStorage: ObjectsStorage;
     private var _levelsStorage: LevelStorage;
@@ -49,8 +47,6 @@ public class App extends Sprite {
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
-
-        addChild(testSprite);
     }
 
     /**

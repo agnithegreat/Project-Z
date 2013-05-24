@@ -9,11 +9,16 @@ package com.projectz.game.ui.buttons {
 
 import com.projectz.utils.objectEditor.data.DefenderData;
 
+import starling.display.DisplayObject;
+
 import starling.utils.AssetManager;
 
 public class DefenderBar extends BasicBar {
 
     private var _defenderData:DefenderData;
+
+    private static const ICON_X:int = 70;
+    private static const ICON_Y:int = 90;
 
     public function DefenderBar($assets: AssetManager) {
         super($assets);
@@ -25,6 +30,13 @@ public class DefenderBar extends BasicBar {
 
     public function set defenderData(value:DefenderData):void {
         _defenderData = value;
+        createIconByObjectData(_defenderData);
+        setText(String (_defenderData.cost));
+    }
+
+    override protected function placeIcon (icon:DisplayObject):void {
+        icon.x = ICON_X;
+        icon.y = ICON_Y;
     }
 }
 }

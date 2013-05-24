@@ -7,6 +7,8 @@
  */
 package com.projectz.game.ui {
 
+import flash.filters.GlowFilter;
+
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.filters.BlurFilter;
@@ -19,13 +21,23 @@ public class SuppliesIndicator extends Sprite {
     private var _icon: Image;
     private var _tf: TextField;
 
-    public function SuppliesIndicator($assets: AssetManager) {
-        _icon = new Image($assets.getTexture("icon-supplies"));
+    /**
+     * @param $assetsManager Менеджер ресурсов старлинга.
+     */
+    public function SuppliesIndicator($assetsManager: AssetManager) {
+        _icon = new Image($assetsManager.getTexture("icon-supplies"));
         addChild(_icon);
 
-        _tf = new TextField(60, 60, "x0", "Poplar Std", 30, 0xFFFFFF);
+        _tf = new TextField(60, 60, "x0", "MyriadPro", 30, 0xFFFFFF);
         _tf.hAlign = HAlign.LEFT;
         _tf.x = _icon.width+10;
+        var glowFilter:GlowFilter = new GlowFilter();
+        glowFilter.color = 0x000000;
+        glowFilter.blurX = 5;
+        glowFilter.blurY = 5;
+        glowFilter.strength = 4;
+//        glowFilter.inner = true;
+        _tf.nativeFilters = [glowFilter];
         addChild(_tf);
 
         _tf.filter = BlurFilter.createGlow(0, 1, 3, 1);

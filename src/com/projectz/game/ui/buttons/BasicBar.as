@@ -7,9 +7,13 @@
  */
 package com.projectz.game.ui.buttons {
 
+import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.view.FieldObjectView;
+
 import flash.filters.GlowFilter;
 
-import starling.core.Starling;
+import starling.display.DisplayObject;
+
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.display.graphics.NGon;
@@ -29,25 +33,35 @@ public class BasicBar extends Sprite {
     private var _tf:TextField;//Текстовоне поле.
     private var _nGonProgress:NGon;//Радиальный прогресс-бар.
 
+    private var _assetsManager:AssetManager;//Менеджер ресурсов старлинга.
+
     private var _glow:Boolean = false;
 
-    //FOR TEST+++
-    private var currentPercent:int = 0;
-    //FOR TEST---
+    private static const PROGRESS_BAR_X:int = 52;
+    private static const PROGRESS_BAR_Y:int = 52;
+    private static const TF_WIDTH:int = 104;
+    private static const TF_Y:int = 56;
+    private static const TF_FONT_SIZE:int = 30;
+    private static const ICON_X:int = 70;
+    private static const ICON_Y:int = 90;
 
-    public function BasicBar($assets: AssetManager) {
-        _imgGlow = new Image($assets.getTexture("bar_radial-glow"));
+    /**
+     * @param $assetsManager Менеджер ресурсов старлинга.
+     */
+    public function BasicBar($assetsManager: AssetManager) {
+        this._assetsManager = $assetsManager;
+        _imgGlow = new Image($assetsManager.getTexture("bar_radial-glow"));
         addChild(_imgGlow);
 
-        _imgBack = new Image($assets.getTexture("bar_radial-back"));
+        _imgBack = new Image($assetsManager.getTexture("bar_radial-back"));
         addChild(_imgBack);
 
-        var progressTexture:Texture = $assets.getTexture("bar_radial-progress_2");
+        var progressTexture:Texture = $assetsManager.getTexture("bar_radial-progress_2");
 
         var textureWidth:int = progressTexture.width;
-        _nGonProgress = new NGon(textureWidth / 2, 50, textureWidth / 4, 0, 0);
-        _nGonProgress.x = 52;
-        _nGonProgress.y = 52;
+        _nGonProgress = new NGon(textureWidth / 2, 50, 0, 0, 0);
+        _nGonProgress.x = PROGRESS_BAR_X;
+        _nGonProgress.y = PROGRESS_BAR_Y;
         _nGonProgress.material = new StandardMaterial( new StandardVertexShader(), new TextureFragmentShader() );
         _nGonProgress.material.textures[0] = progressTexture;
         addChild(_nGonProgress);
@@ -55,7 +69,13 @@ public class BasicBar extends Sprite {
         _iconContainer = new Sprite();
         addChild(_iconContainer);
 
-        _tf = new TextField(104, 40, "", "Poplar Std", 30, 0xffffff);
+        /*
+        PoplarStd
+        a_Concepto
+        MyriadPro
+
+        */
+        _tf = new TextField(TF_WIDTH, TF_FONT_SIZE + 5, "", "MyriadPro", TF_FONT_SIZE, 0xffffff);
         _tf.hAlign = HAlign.CENTER;
 //        _tf.filter = BlurFilter.createGlow(0, 1, 2, 1);
         var glowFilter:GlowFilter = new GlowFilter();
@@ -65,23 +85,17 @@ public class BasicBar extends Sprite {
         glowFilter.strength = 4;
 //        glowFilter.inner = true;
         _tf.nativeFilters = [glowFilter];
+        _tf.y = TF_Y;
         addChild(_tf);
-        _tf.y = 56;
 
         glow = glow;
 
-        //FOR TEST+++
-        setTestPercent();
-        var str:String = String(Math.round(Math.random() * 999));
-        var newStr:String = "";
-        for (var i:int = 0; i < str.length; i++) {
-            newStr += str.charAt(i) + " ";
-        }
-        newStr = newStr.substr (0, newStr.length - 2);
-//        setText(newStr);
-        setText(str);
-        //FOR TEST---
+        setPercent(0);
     }
+
+/////////////////////////////////////////////
+//PUBLIC:
+/////////////////////////////////////////////
 
     /**
      * Свечение бара.
@@ -101,27 +115,71 @@ public class BasicBar extends Sprite {
      */
     public function setPercent (percent:int):void {
         percent = Math.max(0, Math.min (100, percent));
+        glow = (percent == 100);
         _nGonProgress.startAngle = 0;
-        _nGonProgress.endAngle = percent / 100 * 360;
+        _nGonProgress.endAngle = Math.max (1, percent / 100 * 360);
     }
 
+    /**
+     * Установка текста.
+     * @param text Текст.
+     */
     public function setText (text:String):void {
         _tf.text = text;
+
     }
 
-
-    //FOR TEST+++
-    private function setTestPercent ():void {
-
-        var randomPercent:int = Math.random() * 100;
-        setPercent (currentPercent);
-//        setPercent (randomPercent);
-        currentPercent += 5;
-        if (currentPercent == 100) {
-            currentPercent = 0;
+    /**
+     * Создание и отображение иконки по объекту ObjectData.
+     * @param objectData Объект для создания иконки.
+     */
+    public function createIconByObjectData (objectData:ObjectData):void {
+        _iconContainer.removeChildren();
+        if (objectData) {
+            var fieldObjectView:FieldObjectView = new FieldObjectView(objectData, _assetsManager);
+            fieldObjectView.asIcon();
+            placeIcon (fieldObjectView);
+            _iconContainer.addChild(fieldObjectView);
         }
-        Starling.juggler.delayCall(setTestPercent, .5);
     }
-    //FOR TEST---
+
+    /**
+     * Деактивация.
+     */
+    public function destroy ():void {
+        _nGonProgress.dispose();
+        _iconContainer.removeChildren();
+        removeFromParent();
+    }
+
+    /**
+     * Нормальное отображение бара, используется для выделения бара с текущем выбранным предметом.
+     */
+    public function show ():void {
+        alpha = 1;
+    }
+
+    /**
+     * Затетённое отображение бара, используется для затенения бара с не текущем выбранным предметом.
+     */
+    public function hide ():void {
+        alpha = .3;
+    }
+
+/////////////////////////////////////////////
+//PROTECTED:
+/////////////////////////////////////////////
+
+    /**
+     * Позиционирование иконки.
+     * @param icon Иконка для позиционирования.
+     */
+    protected function placeIcon (icon:DisplayObject):void {
+        icon.x = ICON_X;
+        icon.y = ICON_Y;
+    }
+
+
+
 }
 }

@@ -379,11 +379,19 @@ public class Field extends EventDispatcher {
         }
     }
 
-    public function blockCell($x: int, $y: int):void {
+    /**
+     * Добавление на карту защитника.
+     * @param $defenderData Защитник.
+     * @param $x Координата x защитника для добавления на карту.
+     * @param $y Координата y защитника для добавления на карту.
+     */
+    public function addDefender($defenderData:DefenderData, $x: int, $y: int):Boolean {
         var cell: Cell = getCell($x, $y);
         if (cell.positionData && !cell.object) {
-            createPersonage($x, $y, _objectsStorage.getObjectData("de-sheriff"));
+            createPersonage($x, $y, $defenderData);
+            return true;
         }
+        return false;
     }
 
     private function createTarget($x: int, $y: int, $data: TargetData):void {
