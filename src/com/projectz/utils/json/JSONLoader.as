@@ -62,6 +62,7 @@ public class JSONLoader extends EventDispatcher {
     }
 
     public function save($data: Object):void {
+        fileStream.addEventListener(Event.COMPLETE, handleComplete_save);
         fileStream.open (_file, FileMode.WRITE);
         var dataAsString: String = JSON.stringify($data);
         fileStream.writeUTFBytes (dataAsString);
@@ -97,6 +98,7 @@ public class JSONLoader extends EventDispatcher {
     }
 
     protected function handleComplete_save(event:Event):void {
+        fileStream.removeEventListener(Event.COMPLETE, handleComplete_save);
         _file.removeEventListener(Event.COMPLETE, handleComplete_save);
 
         dispatchEventWith(Event.COMPLETE, false, data);
