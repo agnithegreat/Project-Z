@@ -18,6 +18,7 @@ public class PositionView extends Sprite {
     public function get positionX():Number {
         return 0;
     }
+
     public function get positionY():Number {
         return 0;
     }

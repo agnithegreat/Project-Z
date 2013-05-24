@@ -10,10 +10,16 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;
 
+/**
+ * Событие выбора бэкграунда.
+ */
 public class SelectBackgroundEvent extends Event {
 
     private var _objectData:ObjectData;
 
+    /**
+     * Выбор бэкграунда.
+     */
     public static const SELECT_BACKGROUND:String = "select background";
 
     public function SelectBackgroundEvent(objectData:ObjectData, type:String = SELECT_BACKGROUND, bubbles:Boolean = false) {
@@ -21,6 +27,9 @@ public class SelectBackgroundEvent extends Event {
         super(type, bubbles, objectData);
     }
 
+    /**
+     * Бэкграунд в виде объекта ObjectData.
+     */
     public function get objectData():ObjectData {
         return _objectData;
     }

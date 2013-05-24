@@ -9,22 +9,31 @@ package com.projectz.utils.levelEditor.ui {
 
 import com.hogargames.display.GraphicStorage;
 import com.hogargames.display.buttons.ButtonWithText;
+import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.levelEditor.controller.UIController;
 import com.projectz.utils.levelEditor.controller.UIControllerMode;
 import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.controller.events.uiController.SelectUIControllerModeEvent;
 import com.projectz.utils.levelEditor.model.Field;
+import com.projectz.utils.levelEditor.ui.EditSettingsPanel;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import flash.events.MouseEvent;
 import flash.text.TextField;
 
+import starling.utils.AssetManager;
+
+/**
+ * UI для редактора уровней.
+ */
 public class LevelEditorUI extends GraphicStorage {
 
-    private var uiController:UIController;
-    private var model:Field;
-    private var objectStorage:ObjectsStorage;
-    private var levelsStorage:LevelStorage;
+    private var uiController:UIController;//Ссылка на контроллер.
+    private var model:Field;//Ссылка на модель.
+    private var objectStorage:ObjectsStorage;//Хранилище ассетов.
+    private var levelsStorage:LevelStorage;//Хранилище всех уровней игры.
+    private var assetsManager:AssetManager;//Менеджер ресурсов старлинга.
+    private var config:JSONLoader;//Файлик с настройками редактора уровней (хранит ссылку на папку с файлами в dropbox).
 
     //панели:
     private var infoPanel:InfoPanel;
@@ -32,6 +41,10 @@ public class LevelEditorUI extends GraphicStorage {
     private var editPathsPanel:EditPathsPanel;
     private var editGeneratorsPanel:EditGeneratorsPanel;
     private var editDefenderPositionsPanel:EditDefenderPositionsPanel;
+    private var editAssetsPanel:EditAssetsPanel;
+    private var editUnitsPanel:EditUnitsPanel;
+    private var editLevelsPanel:EditLevelsPanel;
+    private var editSettingsPanel:EditSettingsPanel;
 
     private var panels:Vector.<IPanel> = new <IPanel>[];
 
@@ -40,6 +53,8 @@ public class LevelEditorUI extends GraphicStorage {
     private var btnTabEditPaths:ButtonWithText;
     private var btnTabEditGenerators:ButtonWithText;
     private var btnTabEditDefenderZones:ButtonWithText;
+    private var btnTabEditAssets:ButtonWithText;
+    private var btnTabEditUnits:ButtonWithText;
     private var btnTabEditLevels:ButtonWithText;
     private var btnTabEditSettings:ButtonWithText;
     private var btnSave:ButtonWithText;
@@ -49,11 +64,28 @@ public class LevelEditorUI extends GraphicStorage {
     //информационные сообщения:
     private var tfInfo:TextField;
 
-    public function LevelEditorUI(uiController:UIController, model:Field, objectStorage:ObjectsStorage, levelsStorage:LevelStorage) {
+    /**
+     * @param model Ссылка на модель (mvc).
+     * @param uiController Ссылка на контроллер (mvc).
+     * @param objectStorage Хранилище всех игровых ассетов.
+     * @param levelsStorage Хранилище всех уровней игры.
+     * @param assetsManager Менеджер ресурсов старлинга.
+     * @param config Файлик с настройками редактора уровней (хранит ссылку на папку с файлами в dropbox).
+     */
+    public function LevelEditorUI(
+            uiController:UIController,
+            model:Field,
+            objectStorage:ObjectsStorage,
+            levelsStorage:LevelStorage,
+            assetsManager:AssetManager,
+            config:JSONLoader
+     ) {
         this.uiController = uiController;
         this.model = model;
         this.objectStorage = objectStorage;
         this.levelsStorage = levelsStorage;
+        this.assetsManager = assetsManager;
+        this.config = config;
 
         super(new mcLevelEditorPanel);
 
@@ -67,6 +99,9 @@ public class LevelEditorUI extends GraphicStorage {
 //PROTECTED:
 /////////////////////////////////////////////
 
+    /**
+     * @inheritDoc
+     */
     override protected function initGraphicElements():void {
         super.initGraphicElements();
 
@@ -74,38 +109,39 @@ public class LevelEditorUI extends GraphicStorage {
 
         //панели:
         infoPanel = new InfoPanel(mc["mcInfoPanel"], uiController);
-        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage);
+        editObjectsPanel = new EditObjectsPanel(mc["mcEditObjectsPanel"], uiController, objectStorage, assetsManager);
         editPathsPanel = new EditPathsPanel(mc["mcEditPathsPanel"], model, uiController);
-        editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage);
+        editGeneratorsPanel = new EditGeneratorsPanel(mc["mcEditGeneratorsPanel"], model, uiController, objectStorage, assetsManager);
         editDefenderPositionsPanel = new EditDefenderPositionsPanel(mc["mcEditDefenderPositionsPanel"], model, uiController);
+        editAssetsPanel = new EditAssetsPanel(mc["mcEditAssetsPanel"], model, uiController, objectStorage, assetsManager);
+        editUnitsPanel = new EditUnitsPanel(mc["mcEditUnitsPanel"], model, uiController, objectStorage, assetsManager);
+        editLevelsPanel = new EditLevelsPanel(mc["mcEditLevelsPanel"], model, uiController, levelsStorage);
 
         panels.push(editObjectsPanel);
         panels.push(editPathsPanel);
         panels.push(editGeneratorsPanel);
         panels.push(editDefenderPositionsPanel);
+        panels.push(editAssetsPanel);
+        panels.push(editUnitsPanel);
+        panels.push(editLevelsPanel);
 
         //табы:
         btnTabEditObjects = new ButtonWithText(mc["mcBtnTab1"]);
         btnTabEditPaths = new ButtonWithText(mc["mcBtnTab2"]);
         btnTabEditGenerators = new ButtonWithText(mc["mcBtnTab3"]);
         btnTabEditDefenderZones = new ButtonWithText(mc["mcBtnTab4"]);
-        btnTabEditLevels = new ButtonWithText(mc["mcBtnTab5"]);
-        btnTabEditSettings = new ButtonWithText(mc["mcBtnTab6"]);
-        var btn7:ButtonWithText = new ButtonWithText(mc["mcBtnTab7"]);
-        var btn8:ButtonWithText = new ButtonWithText(mc["mcBtnTab8"]);
+        btnTabEditAssets = new ButtonWithText(mc["mcBtnTab5"]);
+        btnTabEditUnits = new ButtonWithText(mc["mcBtnTab6"]);
+        btnTabEditLevels = new ButtonWithText(mc["mcBtnTab7"]);
+        btnTabEditSettings = new ButtonWithText(mc["mcBtnTab8"]);
         btnSave = new ButtonWithText(mc["btnSave"]);
-
-        btn7.enable = false;
-        btn8.enable = false;
-
-        btn7.text = "---";
-        btn8.text = "---";
-//        mc["mcBtnTab5"].visible = false;//убираем видимость неиспользованных (запасных) табов:
 
         tabs.push(btnTabEditObjects);
         tabs.push(btnTabEditPaths);
         tabs.push(btnTabEditGenerators);
         tabs.push(btnTabEditDefenderZones);
+        tabs.push(btnTabEditAssets);
+        tabs.push(btnTabEditSettings);
         tabs.push(btnTabEditLevels);
         tabs.push(btnTabEditSettings);
 
@@ -118,6 +154,8 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditPaths.text = "редактор путей";
         btnTabEditGenerators.text = "редактор генераторов";
         btnTabEditDefenderZones.text = "редактор зон защитников";
+        btnTabEditAssets.text = "редактор ресурсов";
+        btnTabEditUnits.text = "редактор юнитов";
         btnTabEditLevels.text = "редактор уровней";
         btnTabEditSettings.text = "настройки";
         btnSave.text = "сохранить";
@@ -127,6 +165,8 @@ public class LevelEditorUI extends GraphicStorage {
         btnTabEditPaths.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditGenerators.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditDefenderZones.addEventListener(MouseEvent.CLICK, clickListener);
+        btnTabEditAssets.addEventListener(MouseEvent.CLICK, clickListener);
+        btnTabEditUnits.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditLevels.addEventListener(MouseEvent.CLICK, clickListener);
         btnTabEditSettings.addEventListener(MouseEvent.CLICK, clickListener);
         btnSave.addEventListener(MouseEvent.CLICK, clickListener);
@@ -136,6 +176,10 @@ public class LevelEditorUI extends GraphicStorage {
 //PRIVATE:
 /////////////////////////////////////////////                                                                                                                             s
 
+    /**
+     * Выделение таба и снятие выделения с остальных табов.
+     * @param tab Таб для выделения.
+     */
     private function selectTab(tab:ButtonWithText):void {
         for (var i:int = 0; i < tabs.length; i++) {
             tabs [i].selected = (tabs [i] == tab);
@@ -143,6 +187,10 @@ public class LevelEditorUI extends GraphicStorage {
         }
     }
 
+    /**
+     * Отображение выбранной панели и скрытие остальных панелей.
+     * @param panel Панель для отображения.
+     */
     private function showPanel(panel:IPanel):void {
         for (var i:int; i < panels.length; i++) {
             var _panel:IPanel = panels [i];
@@ -155,6 +203,10 @@ public class LevelEditorUI extends GraphicStorage {
         }
     }
 
+    /**
+     * Отображение текстового сообщения в инормационном текстовом поле.
+     * @param value Текст сообщения.
+     */
     private function outputInfo(value:String = null):void {
         if (value == null) {
             value = "";
@@ -172,7 +224,10 @@ public class LevelEditorUI extends GraphicStorage {
                 selectTab(btnTabEditObjects);
                 showPanel(editObjectsPanel);
                 outputInfo(
-                        "1. ДОБАВЛЕНИЕ: Выберете тип объекта. Выберите объект из списка. Укажите место на карте, куда его следует поместить. SHIFT + клик по карте = многократная установка объекта." +
+                        "1. ДОБАВЛЕНИЕ: Выберете тип объекта. " +
+                        "Выберите объект из списка. " +
+                        "Укажите место на карте, куда его следует поместить. " +
+                        "SHIFT + клик по карте = многократная установка объекта." +
                         "\n" +
                         "2. ПЕРЕМЕЩЕНИЕ: Кликните по объекту на карте. Укажите место, куда его следует поместить." +
                         "\n" +
@@ -183,35 +238,59 @@ public class LevelEditorUI extends GraphicStorage {
                 selectTab(btnTabEditPaths);
                 showPanel(editPathsPanel);
                 outputInfo(
-                        "Выберете путь из списка. Установите режим редактирования (добавление или удаление). Кликами по карте редактируйте выбранный путь." +
+                        "Выберете путь из списка. " +
+                        "Установите режим редактирования (добавление или удаление). " +
+                        "Кликами по карте редактируйте выбранный путь." +
                         "\n" +
-                        "Если включена опция 'редактирование областей', то редактируются прямоугольные участки между двумя указанными точками."
+                        "Если включена опция 'редактирование областей', " +
+                        "то редактируются прямоугольные участки между двумя указанными точками."
                 );
                 break;
             case (UIControllerMode.EDIT_GENERATORS):
                 selectTab(btnTabEditGenerators);
                 showPanel(editGeneratorsPanel);
-                outputInfo("Редактирование генараторов, волн и стека каждой волны. " +
-                        "Для указания позиции генератора выберите путь и кликните по карте в пределах этого пути.");
+                outputInfo(
+                        "Редактирование генараторов, волн и стека каждой волны. " +
+                        "Для указания позиции генератора выберите путь и кликните по карте в пределах этого пути."
+                );
                 break;
             case (UIControllerMode.EDIT_DEFENDER_POSITIONS):
                 selectTab(btnTabEditDefenderZones);
                 showPanel(editDefenderPositionsPanel);
                 outputInfo(
-
-                        "Выберете позицию защитника из списка. Установите режим редактирования (добавление, удаление, указание позиции). Кликами по карте редактируйте зону позиции защитника." +
+                        "Выберите позицию защитника из списка. " +
+                        "Установите режим редактирования (добавление, удаление, указание позиции). " +
+                        "Кликами по карте редактируйте зону позиции защитника." +
                         "\n" +
-                        "Если включена опция 'редактирование областей', то редактируются прямоугольные участки между двумя указанными точками."
+                        "Если включена опция 'редактирование областей', " +
+                        "то редактируются прямоугольные участки между двумя указанными точками."
+                );
+                break;
+            case (UIControllerMode.EDIT_ASSETS):
+                selectTab(btnTabEditAssets);
+                showPanel(editAssetsPanel);
+                outputInfo(
+                        "Выберите ассет. Можно выбрать часть ассета. \n" +
+                        "Стрелками ВВЕРХ, ВНИЗ, ВПРАВО, ВЛЕВО задайте отступ для всех частей ассета или для его выбранной части. \n" +
+                        "Кликами по карте редактируйте простреливаемость и проходимость клеток в отдельных частях ассета."
+                );
+                break;
+            case (UIControllerMode.EDIT_UNITS):
+                selectTab(btnTabEditUnits);
+                showPanel(editUnitsPanel);
+                outputInfo(
+                        'Выберите юнита. Измените его характеристики. ' +
+                        'Нажмите кнопку "Сохранить" для сохраниния изменений текущего редактируемого юнита.'
                 );
                 break;
             case (UIControllerMode.EDIT_LEVELS):
                 selectTab(btnTabEditLevels);
-                showPanel(null);
-                outputInfo("Редактирование уровней времено не работает.");
+                showPanel(editLevelsPanel);
+                outputInfo("Выбор уровня для редактирования, добавление новых уровней, удаление уровней.");
                 break;
             case (UIControllerMode.EDIT_SETTINGS):
                 selectTab(btnTabEditSettings);
-                showPanel(null);
+                showPanel(editSettingsPanel);
                 outputInfo("Редактирование настроек времено не работает.");
                 break;
         }
@@ -230,6 +309,12 @@ public class LevelEditorUI extends GraphicStorage {
                 break;
             case (btnTabEditDefenderZones):
                 uiController.mode = UIControllerMode.EDIT_DEFENDER_POSITIONS;
+                break;
+            case (btnTabEditAssets):
+                uiController.mode = UIControllerMode.EDIT_ASSETS;
+                break;
+            case (btnTabEditUnits):
+                uiController.mode = UIControllerMode.EDIT_UNITS;
                 break;
             case (btnTabEditLevels):
                 uiController.mode = UIControllerMode.EDIT_LEVELS;

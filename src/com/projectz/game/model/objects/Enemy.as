@@ -75,7 +75,11 @@ public class Enemy extends Personage {
         _progress = 0;
         _halfWay = false;
 
-//        _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
+        if (_cell.attackObject) {
+            _cell.walkable = false;
+        }
+
+        _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
     }
 
     public function go($cells: Vector.<Cell>):void {
@@ -83,9 +87,7 @@ public class Enemy extends Personage {
             _target = $cells[0];
             _lastTarget = $cells[$cells.length-1];
 
-            if (_target.attackObject) {
-//                _target.walkable = false;
-            }
+            _target.addObject(this);
             walk(true);
         }
     }
@@ -94,29 +96,27 @@ public class Enemy extends Personage {
         if (_target) {
             var aim: FieldObject = _target.object;
             if (aim is ITarget && !(aim is Enemy)) {
-//                damageTarget(aim as ITarget);
+                damageTarget(aim as ITarget);
             } else {
-//                if (!_target.walkable) {
-//                    return;
-////                    _goBack = true;
-//                } else if (aim && aim!=this) {
-//                    return;
-//                }
-//
-                _progress += _enemyData.speed * $delta/distance;
-
-                if (!_halfWay && _progress>=0.5) {
-                    leave();
-                    _target.addObject(this);
-                    _halfWay = true;
+                // TODO: выбрать стиль передвижения персонажей
+                if (!aim || aim==this) {
+                    _progress += _enemyData.speed * $delta/distance;
+                    update();
                 }
+            }
+        }
 
-                if (_progress>=1) {
-                    place(_target);
-                    _target = null;
-                }
+        if (!_halfWay && _progress>=0.5) {
+            leave();
+            _halfWay = true;
+        }
 
-                update();
+        if (_progress>=1) {
+            place(_target);
+            _target = null;
+
+            if (_cell.attackObject) {
+                _target = _cell.attackObject.cell;
             }
         }
     }

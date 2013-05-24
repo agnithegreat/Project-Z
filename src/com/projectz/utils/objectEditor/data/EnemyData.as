@@ -6,8 +6,14 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.data {
+
+import com.projectz.utils.objectEditor.data.events.EditEnemyDataEvent;
+
 import flash.filesystem.File;
 
+/**
+ * Класс для хранения данных о враге.
+ */
 public class EnemyData extends ObjectData {
 
     override public function get mask():Array {
@@ -17,34 +23,70 @@ public class EnemyData extends ObjectData {
         return _mask;
     }
 
-    // Количество жизней.
     private var _hp: int;
+    /**
+     * Количество жизней.
+     */
     public function get hp():int {
         return _hp;
     }
 
-    // Скорость передвижения. Для каждого вида противников свое значение. Если будут позволять ресурсы, то по возможности реализовать скорость не по константному значению, а по диапазону, (чтобы противники не ходили строем).
+    public function set hp(value:int):void {
+        _hp = value;
+        dispatchEvent(new EditEnemyDataEvent(this));
+    }
+
     private var _speed: int;
+    /**
+     * Скорость передвижения. Для каждого вида противников свое значение.
+     * Если будут позволять ресурсы, то по возможности реализовать скорость не по константному значению,
+     * а по диапазону, (чтобы противники не ходили строем).
+     */
     public function get speed():int {
         return _speed;
     }
 
-    // Сила атаки Параметр показывает сколько единиц повреждений данный противник будет наносить цели атаки.
+    public function set speed(value:int):void {
+        _speed = value;
+        dispatchEvent(new EditEnemyDataEvent(this));
+    }
+
     private var _strength: int;
+    /**
+     * Сила атаки.
+     * Параметр показывает сколько единиц повреждений данный противник будет наносить цели атаки.
+     */
     public function get strength():int {
         return _strength;
     }
 
-    // Время между ударами.
+    public function set strength(value:int):void {
+        _strength = value;
+        dispatchEvent(new EditEnemyDataEvent(this));
+    }
+
     private var _cooldown: int;
+    /**
+     * Время между ударами.
+     */
     public function get cooldown():int {
         return _cooldown;
+    }
+
+    public function set cooldown(value:int):void {
+        _cooldown = value;
+        dispatchEvent(new EditEnemyDataEvent(this));
     }
 
     // Выпадающие припасы. Список припасов, которые могут выпасть при уничтожении данного типа противника. Что конкретно выпадет выбирается случайным образом из списка.
     private var _reward: int;
     public function get reward():int {
         return _reward;
+    }
+
+    public function set reward(value:int):void {
+        _reward = value;
+        dispatchEvent(new EditEnemyDataEvent(this));
     }
 
     // TODO: добавить зону эффектов для боссов
@@ -73,5 +115,6 @@ public class EnemyData extends ObjectData {
         obj.reward = _reward;
         return obj;
     }
+
 }
 }

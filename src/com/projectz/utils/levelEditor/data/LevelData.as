@@ -97,10 +97,40 @@ public class LevelData extends JSONLoader {
         return pathData;
     }
 
+    /**
+     * Удаляем путь.
+     * @param pathData Удаляемый путь.
+     * @return
+     */
     public function deletePath (pathData:PathData):Boolean {
         var index:int = _paths.indexOf(pathData);
         if (index != -1) {
+            //удаляем путь:
             _paths.splice(index, 1);
+
+            //проверяем все генераторы, которые могут содержать ссылки на удаляемый путь
+            //и меняем данные на валидный путь, если это возможно:
+            var numGenerators:int = _generators.length;
+            var validPath:PathData;
+            var firstPathPoint:Point;
+            if (_paths.length > 0) {
+                validPath = _paths [0];
+                if (validPath.points.length > 0) {
+                    firstPathPoint = DataUtils.stringDataToPoint(validPath.points [0]);
+                }
+            }
+            for (var i:int = 0; i < numGenerators; i++) {
+                var generatorData:GeneratorData = _generators [i];
+                if (generatorData.pathId == pathData.id) {
+                    if (validPath) {
+                        generatorData.pathId = validPath.id;
+                        if (firstPathPoint) {
+                            generatorData.place(firstPathPoint.x, firstPathPoint.y);
+                        }
+                    }
+                }
+            }
+
             return true;
         }
         return false;
@@ -112,8 +142,8 @@ public class LevelData extends JSONLoader {
             var pathData:PathData = paths [0];
             generatorData.pathId = pathData.id;
             if (pathData.points.length > 0) {
-                var point:Point = DataUtils.stringDataToPoint(pathData.points [0]);
-                generatorData.place (point.x,  point.y);
+                var firstPathPoint:Point = DataUtils.stringDataToPoint(pathData.points [0]);
+                generatorData.place (firstPathPoint.x,  firstPathPoint.y);
             }
         }
         _generators.push (generatorData);

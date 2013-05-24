@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor {
+import com.projectz.utils.json.JSONLoader;
 import com.projectz.utils.json.JSONManager;
 import com.projectz.utils.levelEditor.controller.LevelEditorController;
 import com.projectz.utils.levelEditor.controller.UIController;
@@ -14,7 +15,6 @@ import com.projectz.utils.levelEditor.data.LevelStorage;
 import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.ui.LevelEditorUI;
 import com.projectz.utils.levelEditor.view.FieldView;
-import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 
 import starling.events.Event;
@@ -23,11 +23,17 @@ import starling.display.Sprite;
 import starling.utils.AssetManager;
 import starling.utils.formatString;
 
+/**
+ * Редактор уровней.
+ */
 public class App extends Sprite {
 
-    private var _assets: AssetManager;
+    public static var testSprite:Sprite = new Sprite();
+
+    private var _assetsManager: AssetManager;//Менеджер ресурсов старлинга.
     private var _objectsStorage: ObjectsStorage;
     private var _levelsStorage: LevelStorage;
+    private var _config: JSONLoader;//Файлик с настройками редактора уровней (хранит ссылку на папку с файлами в dropbox).
 
     private var _jsonManager: JSONManager;
 
@@ -43,13 +49,20 @@ public class App extends Sprite {
     public function App() {
         _objectsStorage = new ObjectsStorage();
         _levelsStorage = new LevelStorage();
+
+        addChild(testSprite);
     }
 
-    //Запустаем приложение, начав загрузку ассетов:
-    public function startLoading($assets: AssetManager, $path: String):void {
-        _path = $path;
-        _assets = $assets;
-        _assets.loadQueue(handleProgress);
+    /**
+     * Запустаем приложение, начав загрузку ассетов:
+     * @param $assets Менеджер ресурсов старлинга.
+     * @param $config Файлик с настройками самомго редактора (хранит ссылку на папку с файлами в dropbox).
+     */
+    public function startLoading($assets: AssetManager, $config: JSONLoader):void {
+        _config = $config;
+        _path = _config.data.path;
+        _assetsManager = $assets;
+        _assetsManager.loadQueue(handleProgress);
     }
 
     private function handleProgress(ratio: Number):void {
@@ -66,7 +79,7 @@ public class App extends Sprite {
         _jsonManager.addEventListener(Event.CHANGE, handleLoadProgress);
         _jsonManager.addEventListener(Event.COMPLETE, handleLoaded);
 
-        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/final/level_elements", _assets.scaleFactor), _assets);
+        _objectsStorage.parseDirectory(formatString(_path+"/textures/{0}x/final/level_elements", _assetsManager.scaleFactor), _assetsManager);
         _jsonManager.addFiles(_objectsStorage.objects);
 
         _levelsStorage.parseDirectory(_path+"/levels");
@@ -93,13 +106,13 @@ public class App extends Sprite {
         _controller = new LevelEditorController(_model);
         _uiController = new UIController(_controller);
 
-        _view = new FieldView(_model, _assets, _uiController);
+        _view = new FieldView(_model, _assetsManager, _uiController);
 
         addChild(_view);
 
 
         //add ui:
-        _levelEditorUI = new LevelEditorUI(_uiController, _model, _objectsStorage, _levelsStorage);
+        _levelEditorUI = new LevelEditorUI(_uiController, _model, _objectsStorage, _levelsStorage, _assetsManager, _config);
 
         _levelEditorUI.x = Constants.WIDTH;
         Starling.current.nativeStage.addChild(_levelEditorUI);
@@ -107,8 +120,6 @@ public class App extends Sprite {
         //init application:
         _model.levelData = _levelsStorage.getLevelData(2);
         _uiController.mode = UIControllerMode.EDIT_OBJECTS;
-        _uiController.selectCurrentObjectType(ObjectData.STATIC_OBJECT);
-        _uiController.selectCurrentObject(null);
     }
 }
 }

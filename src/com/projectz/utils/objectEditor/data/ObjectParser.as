@@ -72,11 +72,11 @@ public class ObjectParser {
                 if (animated) {
                     part = objects[name].getPart(partName);
                     for (var j:int = 1; j <= 5; j++) {
-                        if (objects[name].type == ObjectData.ENEMY) {
+                        if (objects[name].type == ObjectType.ENEMY) {
                             part.addTextures(Enemy.WALK+"-0"+j, $assets.getTextures(name+"-"+Enemy.WALK+"-0"+j));
                             part.addTextures(Enemy.ATTACK+"-0"+j, $assets.getTextures(name+"-"+Enemy.ATTACK+"-0"+j));
                             part.addTextures(Enemy.DIE+"-0"+j, $assets.getTextures(name+"-"+Enemy.DIE+"-0"+j));
-                        } else if (objects[name].type == ObjectData.DEFENDER) {
+                        } else if (objects[name].type == ObjectType.DEFENDER) {
                             part.addTextures(Defender.STATIC+"-0"+j, $assets.getTextures(name+"-"+Defender.STATIC+"-0"+j));
                             part.addTextures(Defender.ATTACK+"-0"+j, $assets.getTextures(name+"-"+Defender.ATTACK+"-0"+j));
                             part.addTextures(Defender.FIGHT+"-0"+j, $assets.getTextures(name+"-"+Defender.FIGHT+"-0"+j));
@@ -94,11 +94,11 @@ public class ObjectParser {
 
     private static function getClass($type: String):Class {
         switch ($type) {
-            case ObjectData.DEFENDER:
+            case ObjectType.DEFENDER:
                 return DefenderData;
-            case ObjectData.ENEMY:
+            case ObjectType.ENEMY:
                 return EnemyData;
-            case ObjectData.TARGET_OBJECT:
+            case ObjectType.TARGET_OBJECT:
                 return TargetData;
         }
         return ObjectData;

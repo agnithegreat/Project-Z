@@ -30,7 +30,7 @@ public class ObjectsStorage {
         return _objectsList;
     }
 
-    public function getType($type: String):Dictionary {
+    public function getObjectsByType($type: String):Dictionary {
         return _types[$type];
     }
 

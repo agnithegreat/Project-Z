@@ -8,17 +8,28 @@
 package com.projectz.utils.levelEditor.controller.events.uiController {
 import starling.events.Event;
 
+/**
+ * Событие выбора режима работы ui-конитроллера.
+ */
 public class SelectUIControllerModeEvent extends Event {
 
     private var _mode:String;
 
-    public static const SELECT_UI_CONTROLLER_MODE:String = "select mode";
+    /**
+     * Выбор режима работы ui-конитроллера.
+     */
+    public static const SELECT_UI_CONTROLLER_MODE:String = "select ui controller mode";
 
     public function SelectUIControllerModeEvent(mode:String, type:String = SELECT_UI_CONTROLLER_MODE, bubbles:Boolean = false) {
         this.mode = mode;
         super(type, bubbles, mode);
     }
 
+    /**
+     * Режим работы ui-конитроллера.
+     *
+     * @see com.projectz.utils.levelEditor.controller.UIControllerMode
+     */
     public function get mode():String {
         return _mode;
     }

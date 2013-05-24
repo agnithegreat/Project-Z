@@ -19,14 +19,20 @@ import com.projectz.utils.levelEditor.model.Field;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditGeneratorWaveEvent;
 import com.projectz.utils.levelEditor.model.events.editGenerators.EditWavesEvent;
+import com.projectz.utils.objectEditor.ObjectDataManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
+
+import fl.containers.ScrollPane;
 
 import fl.controls.ComboBox;
 
 import fl.controls.List;
 import fl.controls.NumericStepper;
 import fl.data.DataProvider;
+
+import flash.display.DisplayObject;
 
 import flash.display.MovieClip;
 import flash.display.Sprite;
@@ -35,14 +41,21 @@ import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.utils.Dictionary;
 
+import starling.utils.AssetManager;
+
+/**
+ * Панель редактора уровней для редактирования генераторов.
+ */
 public class EditGeneratorsPanel extends BasicPanel {
 
-    private var model:Field;
-    private var uiController:UIController;
-    private var objectStorage:ObjectsStorage;
+    private var model:Field;//Ссылка на модель (mvc).
+    private var uiController:UIController;//Ссылка на контроллер (mvc).
+    private var objectStorage:ObjectsStorage;//Хранилище всех игровых ассетов (для формирования списка врагов).
+    private var assetsManager:AssetManager;//Менеджер ресурсов старлинга.
 
+    //элементы ui:
     private var mcAddEnemyPanel:Sprite;
-    private var listAddEnemy:List;
+    private var scpAddEnemies:ScrollPane;
     private var nstNumEnemies:NumericStepper;
     private var listGenerators:List;
     private var listWaves:List;
@@ -59,10 +72,28 @@ public class EditGeneratorsPanel extends BasicPanel {
     private var nstTime:NumericStepper;
     private var nstDelay:NumericStepper;
 
-    public function EditGeneratorsPanel(mc:MovieClip, model:Field, uiController:UIController, objectStorage:ObjectsStorage) {
+    private var objectsContainer:Sprite = new Sprite ();//Контейнер для отображения списка врагов для добавления в стек.
+
+    private static const NUM_ELEMENTS_IN_ROW:int = 3;
+    private static const ELEMENTS_START_X:int = 1;
+    private static const ELEMENTS_START_Y:int = 1;
+    private static const ELEMENT_WIDTH:int = 120;
+    private static const ELEMENT_HEIGHT:int = ELEMENT_WIDTH + 20;
+    private static const ELEMENT_DISTANCE_X:int = ELEMENT_WIDTH + 1;
+    private static const ELEMENT_DISTANCE_Y:int = ELEMENT_DISTANCE_X + 20;
+
+    /**
+     * @param mc Мувиклип с графикой для панели.
+     * @param model Ссылка на модель (mvc).
+     * @param uiController Ссылка на контроллер (mvc).
+     * @param objectStorage Хранилище всех игровых ассетов.
+     * @param assetsManager Менеджер ресурсов старлинга.
+     */
+    public function EditGeneratorsPanel(mc:MovieClip, model:Field, uiController:UIController, objectStorage:ObjectsStorage, assetsManager:AssetManager) {
         this.model = model;
         this.uiController = uiController;
         this.objectStorage = objectStorage;
+        this.assetsManager = assetsManager;
         super(mc);
 
         uiController.addEventListener(SelectUIControllerModeEvent.SELECT_UI_CONTROLLER_MODE, selectUIControllerModeListener);
@@ -77,23 +108,18 @@ public class EditGeneratorsPanel extends BasicPanel {
     }
 
 /////////////////////////////////////////////
-//PUBLIC:
-/////////////////////////////////////////////
-
-    override public function show():void {
-        super.show();
-        resetGeneratorsList();
-    }
-
-/////////////////////////////////////////////
 //PROTECTED:
 /////////////////////////////////////////////
 
+    /**
+     * @inheritDoc
+     */
     override protected function initGraphicElements():void {
         super.initGraphicElements();
 
+        //Инициализируем компоненты:
         mcAddEnemyPanel = Sprite(getElement("mcAddEnemyPanel"));
-        listAddEnemy = List(getElement("listAddEnemy", mcAddEnemyPanel));
+        scpAddEnemies = ScrollPane(getElement("scpAddEnemies", mcAddEnemyPanel));
         nstNumEnemies = NumericStepper(getElement("nstNumEnemies", mcAddEnemyPanel));
         listGenerators = List(getElement("listGenerators"));
         listWaves = List(getElement("listWaves"));
@@ -101,12 +127,6 @@ public class EditGeneratorsPanel extends BasicPanel {
         cbxPaths = ComboBox(getElement("cbxPaths"));
         tfX = TextField(getElement("tfX"));
         tfY = TextField(getElement("tfY"));
-        btnAddGenerator = new ButtonWithText(mc ["btnAddGenerator"]);
-        btnRemoveGenerator = new ButtonWithText(mc ["btnRemoveGenerator"]);
-        btnAddWave = new ButtonWithText(mc ["btnAddWave"]);
-        btnRemoveWave = new ButtonWithText(mc ["btnRemoveWave"]);
-        btnAddEnemy = new ButtonWithText(mc ["btnAddEnemy"]);
-        btnRemoveEnemy = new ButtonWithText(mc ["btnRemoveEnemy"]);
         nstTime = NumericStepper(getElement("nstTime"));
         nstDelay = NumericStepper(getElement("nstDelay"));
         nstTime.minimum = 0;
@@ -114,7 +134,8 @@ public class EditGeneratorsPanel extends BasicPanel {
         nstDelay.minimum = 0;
         nstDelay.maximum = 1000;
 
-        listAddEnemy.focusEnabled = false;
+        //Отключаем фокус для компонентов:
+        scpAddEnemies.focusEnabled = false;
         nstNumEnemies.focusEnabled = false;
         listGenerators.focusEnabled = false;
         listWaves.focusEnabled = false;
@@ -123,6 +144,22 @@ public class EditGeneratorsPanel extends BasicPanel {
         nstTime.focusEnabled = false;
         nstDelay.focusEnabled = false;
 
+        //Добавляем слушателей для компонентов:
+        listGenerators.addEventListener(Event.CHANGE, changeListener_listGenerators);
+        listWaves.addEventListener(Event.CHANGE, changeListener_listWaves);
+        cbxPaths.addEventListener(Event.CHANGE, changeListener_cbxPaths);
+        nstTime.addEventListener(Event.CHANGE, changeListener_nstTime);
+        nstDelay.addEventListener(Event.CHANGE, changeListener_nstDelay);
+
+        //Создаём кнопки:
+        btnAddGenerator = new ButtonWithText(mc ["btnAddGenerator"]);
+        btnRemoveGenerator = new ButtonWithText(mc ["btnRemoveGenerator"]);
+        btnAddWave = new ButtonWithText(mc ["btnAddWave"]);
+        btnRemoveWave = new ButtonWithText(mc ["btnRemoveWave"]);
+        btnAddEnemy = new ButtonWithText(mc ["btnAddEnemy"]);
+        btnRemoveEnemy = new ButtonWithText(mc ["btnRemoveEnemy"]);
+
+        //Устанавливаем тексты для кнопок:
         btnAddGenerator.text = "Добавить";
         btnRemoveGenerator.text = "Удалить";
         btnAddWave.text = "Добавить";
@@ -132,7 +169,7 @@ public class EditGeneratorsPanel extends BasicPanel {
         tfX.text = "";
         tfY.text = "";
 
-        //добавляем слушатели:
+        //Добавляем слушатели для кнопок:
         btnAddGenerator.addEventListener(MouseEvent.CLICK, clickListener);
         btnRemoveGenerator.addEventListener(MouseEvent.CLICK, clickListener);
         btnAddWave.addEventListener(MouseEvent.CLICK, clickListener);
@@ -140,25 +177,7 @@ public class EditGeneratorsPanel extends BasicPanel {
         btnAddEnemy.addEventListener(MouseEvent.CLICK, clickListener);
         btnRemoveEnemy.addEventListener(MouseEvent.CLICK, clickListener);
 
-        mcAddEnemyPanel.visible = false;
-
-        //формируем список врагов:
-        var dataProvider:DataProvider = new DataProvider();
-        var objects:Dictionary = objectStorage.getType(ObjectData.ENEMY);
-        var object:ObjectData;
-        for each (object in objects) {
-            var objectData:ObjectData = ObjectData(object);
-            dataProvider.addItem({label: objectData.name, data: objectData.name});
-        }
-        dataProvider.sortOn("name");
-        listAddEnemy.dataProvider = dataProvider;
-
-        listAddEnemy.addEventListener(Event.CHANGE, changeListener_listAddEnemy);
-        listGenerators.addEventListener(Event.CHANGE, changeListener_listGenerators);
-        listWaves.addEventListener(Event.CHANGE, changeListener_listWaves);
-        cbxPaths.addEventListener(Event.CHANGE, changeListener_cbxPaths);
-        nstTime.addEventListener(Event.CHANGE, changeListener_nstTime);
-        nstDelay.addEventListener(Event.CHANGE, changeListener_nstDelay);
+        mcAddEnemyPanel.visible = false;//убираем видимость панели с врагами.
     }
 
 /////////////////////////////////////////////
@@ -166,6 +185,7 @@ public class EditGeneratorsPanel extends BasicPanel {
 /////////////////////////////////////////////
 
     private function resetGeneratorsList():void {
+        //Формируем список генераторов:
         var dataProvider:DataProvider = new DataProvider();
         if (model.levelData) {
             var generators:Vector.<GeneratorData> = model.levelData.generators;
@@ -176,15 +196,61 @@ public class EditGeneratorsPanel extends BasicPanel {
             }
         }
         listGenerators.dataProvider = dataProvider;
+
+        //Устанавливаем текущий выбранный генератор в контроллере, как первый генератор в списке генераторов:
+        var currentEditingGenerator:GeneratorData;
         if (listGenerators.dataProvider.length > 0) {
             listGenerators.selectedIndex = 0;
-            uiController.currentEditingGenerator = GeneratorData(listGenerators.selectedItem.data);
+            currentEditingGenerator = GeneratorData(listGenerators.selectedItem.data);
         }
-        else {
-            uiController.currentEditingGenerator = null;
-        }
+        uiController.currentEditingGenerator = currentEditingGenerator;
     }
 
+    /**
+     * Формирование списка всех врагов для добавления врагов в стек.
+     */
+    private function initAddEnemiesList ():void {
+        //Очищаем список врагов:
+        var objectPreview:ObjectPreview;
+        while (objectsContainer.numChildren > 0) {
+            var child:DisplayObject = objectsContainer.getChildAt(0);
+            objectPreview = ObjectPreview (child);
+            objectPreview.removeEventListener(MouseEvent.CLICK, clickListener_objectPreView);
+            objectsContainer.removeChild(child);
+        }
+
+        //Формируем список врагов:
+        var objects:Dictionary = objectStorage.getObjectsByType(ObjectType.ENEMY);
+        var object: ObjectData;
+        var objectsAsVector:Vector.<ObjectData> = new Vector.<ObjectData>();
+        for each (object in objects) {
+            objectsAsVector.push(ObjectData (object));
+        }
+
+        objectsAsVector.sort(ObjectDataManager.sortByName);
+
+        var curColumn:int;
+        var curRow:int;
+        var numPreviewObjects:int = objectsAsVector.length;
+        for (var i:int = 0; i < numPreviewObjects; i++) {
+            objectPreview = new ObjectPreview (objectsAsVector [i], assetsManager);
+            objectsContainer.addChild (objectPreview);
+            curRow = Math.floor (i / NUM_ELEMENTS_IN_ROW);
+            curColumn = i - curRow * NUM_ELEMENTS_IN_ROW;
+            objectPreview.x = ELEMENTS_START_X + curColumn * ELEMENT_DISTANCE_X;
+            objectPreview.y = ELEMENTS_START_Y + curRow * ELEMENT_DISTANCE_Y;
+            objectPreview.containerWidth = ELEMENT_WIDTH;
+            objectPreview.containerHeight = ELEMENT_HEIGHT;
+            objectPreview.addEventListener(MouseEvent.CLICK, clickListener_objectPreView);
+        }
+        scpAddEnemies.source = objectsContainer;
+    }
+
+    /**
+     * Формирование списка возможных путей для генераторов.
+     * @param pathId Id'шник пути для выделения в списке путей.
+     */
+    //
     private function initPathsList(pathId:int):void {
         var dataProvider:DataProvider = new DataProvider();
         var pathIndex:int = -1;
@@ -205,18 +271,29 @@ public class EditGeneratorsPanel extends BasicPanel {
         }
     }
 
+    /**
+     * Очистка списка путей для генераторов:
+     */
     private function clearPathList():void {
         cbxPaths.dataProvider = new DataProvider();
     }
 
+    /**
+     * Формирование списка волн для выбранного генератора.
+     * @param generatorData Генератор.
+     */
     private function initWavesList(generatorData:GeneratorData):void {
-        //очишаем данные о волне:
+        //Очишаем данные о волне:
         nstDelay.value = 0;
         nstTime.value = 0;
-        var waveIndex:int = -1;//запоминаем последнюю выбранную волну
+
+        //Запоминаем последнюю выбранную волну:
+        var waveIndex:int = -1;
         if (listWaves.selectedItem) {
             waveIndex = listWaves.selectedIndex;
         }
+
+        //Формируем список волн:
         var dataProvider:DataProvider = new DataProvider();
         if (generatorData) {
             var waves:Vector.<GeneratorWaveData> = generatorData.waves;
@@ -227,6 +304,8 @@ public class EditGeneratorsPanel extends BasicPanel {
             }
         }
         listWaves.dataProvider = dataProvider;
+
+        //Устанавливаем список в позицию последней выбранной волны:
         if (waveIndex != -1) {
             if (listWaves.dataProvider.length > waveIndex) {
                 selectWave(waveIndex);
@@ -234,7 +313,12 @@ public class EditGeneratorsPanel extends BasicPanel {
         }
     }
 
+    /**
+     * Формирование списка стека врагов в выбранной волне генератора.
+     * @param generatorWaveData Волна генератора.
+     */
     private function initEnemiesList(generatorWaveData:GeneratorWaveData):void {
+        //Формируем список стека врагов:
         var dataProvider:DataProvider = new DataProvider();
         if (generatorWaveData) {
             var enemies:Array/*of Strings*/ = generatorWaveData.sequence;
@@ -245,17 +329,25 @@ public class EditGeneratorsPanel extends BasicPanel {
             }
         }
         listEnemies.dataProvider = dataProvider;
+
+        //Устанавливаем и прокручиваем список в позицию последненго элемента:
         if (dataProvider.length > 0) {
             listEnemies.selectedIndex = dataProvider.length - 1;
             listEnemies.scrollToIndex(dataProvider.length - 1);
         }
     }
 
+    /**
+     * Выбор волны.
+     * @param id Id'шник выбранной волны в списке.
+     */
     private function selectWave (id:int):void {
         listWaves.selectedIndex = id;
         if (listWaves.selectedItem) {
             var generatorWaveData:GeneratorWaveData = GeneratorWaveData(listWaves.selectedItem.data);
+            //Формирование списка стека врагов для волны:
             initEnemiesList(generatorWaveData);
+            //Обновление данных о волне:
             nstDelay.value = generatorWaveData.delay;
             if (model.levelData) {
                 var waveData:WaveData = model.levelData.getWaveDataById(generatorWaveData.id);
@@ -308,17 +400,18 @@ public class EditGeneratorsPanel extends BasicPanel {
 
     private function selectGeneratorListener(event:SelectGeneratorEvent):void {
         var generatorData:GeneratorData = event.generatorData;
-        //устанавливаем позицию листа для выбранноо генератора:
+
+        //Устанавливаем позицию листа для выбранноо генератора:
         var dataProvider:DataProvider = listGenerators.dataProvider;
         for (var i:int = 0; i < dataProvider.length; i++) {
             var dataProviderItem:Object = dataProvider.getItemAt(i);
             if (dataProviderItem.data == generatorData) {
                 listGenerators.selectedItem = dataProviderItem;
-//                trace ("select path = " + event.pathData.id);
                 break;
             }
         }
 
+        //Выводим инфо:
         if (generatorData) {
             //выводим информацию о позиции генератора:
             tfX.text = String(generatorData.x);
@@ -327,6 +420,7 @@ public class EditGeneratorsPanel extends BasicPanel {
             initPathsList(generatorData.pathId);
         }
         else {
+            //Очищаем данные:
             tfX.text = "";
             tfY.text = "";
             initWavesList(null);
@@ -337,36 +431,43 @@ public class EditGeneratorsPanel extends BasicPanel {
 
     private function selectUIControllerModeListener(event:SelectUIControllerModeEvent):void {
         if (event.mode == UIControllerMode.EDIT_GENERATORS) {
+            //Формируем новый список генераторов при переключении контроллера в режим редактирования генераторов.
             resetGeneratorsList();
+            //Обновляем список возможных для добавления врагов:
+            initAddEnemiesList();
         }
     }
 
-    private function changeListener_listAddEnemy(event:Event):void {
-        if (listWaves.selectedItem) {
-            var currentGeneratorWaveData:GeneratorWaveData = listWaves.selectedItem.data;
-            if (currentGeneratorWaveData && listAddEnemy.selectedItem) {
-                var positionId:int = currentGeneratorWaveData.sequence.length - 1;
-                if (listEnemies.selectedItem) {
-                    positionId = listEnemies.selectedIndex + 1;
-                }
-                var count:int = nstNumEnemies.value;
-                uiController.addEnemyToGeneratorWave(listAddEnemy.selectedItem.data, positionId, count, currentGeneratorWaveData);
+    private function clickListener_objectPreView (event:MouseEvent):void {
+        //Добавляем новых врагов в стек врагов.
+
+        var objectPreView:ObjectPreview = ObjectPreview (event.currentTarget);
+        var currentGeneratorWaveData:GeneratorWaveData = listWaves.selectedItem.data;
+        if (currentGeneratorWaveData) {
+            var positionId:int = currentGeneratorWaveData.sequence.length - 1;
+            if (listEnemies.selectedItem) {
+                positionId = listEnemies.selectedIndex + 1;
             }
+            var count:int = nstNumEnemies.value;
+            uiController.addEnemyToGeneratorWave(objectPreView.objectData.name, positionId, count, currentGeneratorWaveData);
         }
-        listAddEnemy.selectedItem = null;
+        //Скрываем панель добавления врагов:
         mcAddEnemyPanel.visible = false;
     }
 
     private function changeListener_listGenerators(event:Event):void {
+        //Выбираем текущий редактируемый генератор в контроллере.
         uiController.currentEditingGenerator = GeneratorData(listGenerators.selectedItem.data);
     }
 
     private function changeListener_listWaves(event:Event):void {
+        //Выбираем волну, обновляем инфу о волне:
         selectWave(listWaves.selectedIndex);
     }
 
     private function changeListener_cbxPaths(event:Event):void {
         if (cbxPaths.selectedItem) {
+            //Выбираем путь для текущего редактируемого (выбранного в контроллере) генератора:
             uiController.setGeneratorPath (cbxPaths.selectedItem.data);
         }
     }
@@ -377,6 +478,7 @@ public class EditGeneratorsPanel extends BasicPanel {
             if (model.levelData) {
                 var waveData:WaveData = model.levelData.getWaveDataById(generatorWaveData.id);
                 if (waveData) {
+                    //Устанавливаем время для волны:
                     uiController.setWaveTime(nstTime.value,waveData)
                 }
             }
@@ -386,30 +488,40 @@ public class EditGeneratorsPanel extends BasicPanel {
     private function changeListener_nstDelay(event:Event):void {
         if (listWaves.selectedItem){
             var generatorWaveData:GeneratorWaveData = GeneratorWaveData (listWaves.selectedItem.data);
+            //Устанавливаем задержку для волны генератора:
             uiController.setDelayOfGeneratorWave(nstDelay.value,generatorWaveData)
         }
     }
 
     private function generatorWasAddedListener(event:EditGeneratorEvent):void {
-        resetGeneratorsList();
+        //Обрабатываем добавление нового генератора:
+        resetGeneratorsList();//Формируем список генераторов.
+        //Устанавливаем новый генератор в контроллере в качестве текущего редактируемого генератора.
         uiController.currentEditingGenerator = event.generatorData;
     }
 
     private function generatorWasRemovedListener(event:EditGeneratorEvent):void {
+        //Обрабатываем удаление генератора:
         resetGeneratorsList();
     }
 
     private function generatorWasChangedListener(event:EditGeneratorEvent):void {
+        //Обрабатываем изменение генератора.
+        //Повторно устанавливаем новый генератор в контроллере в качестве текущего редактируемого генератора.
+        //Т.о. мы инициализируем обновление данных.
         uiController.currentEditingGenerator = event.generatorData;
     }
 
     private function generatorWaveWasChangedListener(event:EditGeneratorWaveEvent):void {
+        //Обрабатываем изменение волны генератора.
+        //Обновление списка стека врагов.
         initEnemiesList (event.generatorWaveData);
     }
 
     private function waveWasAddedListener(event:EditWavesEvent):void {
+        //Обновляем список волн с учётом добавленной волны.
         initWavesList (uiController.currentEditingGenerator);
-        //устанавливаем значение листа в конец, т.к. волна всегда добавляестя в конец:
+        //Устанавливаем значение листа в конец, т.к. волна всегда добавляестя в конец:
         selectWave (listWaves.dataProvider.length - 1);
     }
 

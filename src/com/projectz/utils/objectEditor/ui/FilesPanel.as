@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.ui {
+import com.projectz.utils.objectEditor.data.ObjectType;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
 import com.projectz.utils.objectEditor.data.ObjectData;
 
@@ -72,7 +73,7 @@ public class FilesPanel extends Sprite {
 
     public function showFiles($names: ObjectsStorage):void {
         _storage = $names;
-        showTab(ObjectData.STATIC_OBJECT);
+        showTab(ObjectType.STATIC_OBJECT);
     }
 
     private function showTab($tab: String):void {
@@ -80,7 +81,7 @@ public class FilesPanel extends Sprite {
 
         _files = [];
         var object: ObjectData;
-        var objects: Dictionary = _storage.getType(_tab);
+        var objects: Dictionary = _storage.getObjectsByType(_tab);
         for each (object in objects) {
             _files.push(new FileLine(object));
         }
@@ -104,19 +105,19 @@ public class FilesPanel extends Sprite {
     private function handleClick($event: Event):void {
         switch ($event.currentTarget) {
             case _staticTab:
-                showTab(ObjectData.STATIC_OBJECT);
+                showTab(ObjectType.STATIC_OBJECT);
                 break;
             case _targetTab:
-                showTab(ObjectData.TARGET_OBJECT);
+                showTab(ObjectType.TARGET_OBJECT);
                 break;
             case _animatedTab:
-                showTab(ObjectData.ANIMATED_OBJECT);
+                showTab(ObjectType.ANIMATED_OBJECT);
                 break;
             case _defendersTab:
-                showTab(ObjectData.DEFENDER);
+                showTab(ObjectType.DEFENDER);
                 break;
             case _enemiesTab:
-                showTab(ObjectData.ENEMY);
+                showTab(ObjectType.ENEMY);
                 break;
         }
     }

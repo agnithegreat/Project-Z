@@ -24,9 +24,9 @@ public class FieldView extends Sprite {
 
     private var _assets: AssetManager;
 
-    private var _currentObject: FieldObjectView;
-    public function get currentObject():FieldObjectView {
-        return _currentObject;
+    private var _currentAsset: FieldObjectView;
+    public function get currentAsset():FieldObjectView {
+        return _currentAsset;
     }
 
     public function FieldView($assets: AssetManager) {
@@ -40,31 +40,31 @@ public class FieldView extends Sprite {
     }
 
     public function addObject($object: ObjectData):void {
-        if (_currentObject) {
-            _currentObject.destroy();
-            _currentObject.removeFromParent(true);
-            _currentObject = null;
+        if (_currentAsset) {
+            _currentAsset.destroy();
+            _currentAsset.removeFromParent(true);
+            _currentAsset = null;
         }
 
-        _currentObject = new FieldObjectView($object, _assets);
-        _currentObject.x = (Constants.WIDTH-200+PositionView.cellWidth)*0.5;
-        _currentObject.y = (Constants.HEIGHT+200+(1-($object.height+$object.width)*0.5)*PositionView.cellHeight)*0.5;
-        addChild(_currentObject);
+        _currentAsset = new FieldObjectView($object, _assets);
+        _currentAsset.x = (Constants.WIDTH-200+PositionView.cellWidth)*0.5;
+        _currentAsset.y = (Constants.HEIGHT+200+(1-($object.height+$object.width)*0.5)*PositionView.cellHeight)*0.5;
+        addChild(_currentAsset);
     }
 
     private function handleKeyDown($event: KeyboardEvent):void {
         switch ($event.keyCode) {
             case Keyboard.LEFT:
-                _currentObject.moveParts(-1, 0);
+                _currentAsset.moveParts(-1, 0);
                 break;
             case Keyboard.RIGHT:
-                _currentObject.moveParts(1, 0);
+                _currentAsset.moveParts(1, 0);
                 break;
             case Keyboard.UP:
-                _currentObject.moveParts(0, -1);
+                _currentAsset.moveParts(0, -1);
                 break;
             case Keyboard.DOWN:
-                _currentObject.moveParts(0, 1);
+                _currentAsset.moveParts(0, 1);
                 break;
         }
     }

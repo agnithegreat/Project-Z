@@ -6,9 +6,19 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.levelEditor.ui {
+
+/**
+ * Интерфейс для панели, являющейся частью юзер интерфейса.
+ */
 public interface IPanel {
 
+    /**
+     * Отображение/показ панели.
+     */
     function show ():void;
+    /**
+     * Скрытие панели.
+     */
     function hide ():void;
 }
 }

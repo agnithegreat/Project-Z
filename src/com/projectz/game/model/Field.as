@@ -263,7 +263,7 @@ public class Field extends EventDispatcher {
     private function setObjectDepth($object: FieldObject, $depth: int):void {
         for (var i:int = 0; i < $object.data.width; i++) {
             for (var j:int = 0; j < $object.data.height; j++) {
-                if ($object.data.mask[i][j]) {
+                if ($object.data.getUnwalkable(i, j)) {
                     var cell: Cell = getCell($object.cell.x+i-$object.data.top.x, $object.cell.y+j-$object.data.top.y);
                     cell.depth = $depth;
                 }
@@ -402,7 +402,7 @@ public class Field extends EventDispatcher {
             for (var j:int = 0; j < $object.data.mask[i].length; j++) {
                 cell = getCell($x+i, $y+j);
                 if (cell) {
-                    if ($object.data.mask[i][j]==1) {
+                    if ($object.data.getUnwalkable(i, j)) {
                         _grid.setWalkable(cell.x, cell.y, false);
                         cell.addObject($object);
                         cell.walkable = false;

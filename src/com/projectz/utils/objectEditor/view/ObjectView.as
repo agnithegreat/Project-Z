@@ -8,6 +8,7 @@
 package com.projectz.utils.objectEditor.view {
 import com.projectz.game.view.objects.EnemyView;
 import com.projectz.utils.objectEditor.data.PartData;
+import com.projectz.utils.objectEditor.data.events.EditPartDataEvent;
 
 import flash.geom.Point;
 
@@ -26,6 +27,7 @@ public class ObjectView extends PositionView {
 
     public function ObjectView($data: PartData) {
         _partData = $data;
+        _partData.addEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, partDataWasChanged);
 
         super(new Point(0,0));
 
@@ -54,11 +56,16 @@ public class ObjectView extends PositionView {
 
     override public function destroy():void {
         super.destroy();
+        _partData.removeEventListener(EditPartDataEvent.PART_DATA_WAS_CHANGED, partDataWasChanged);
 
         if (_bg) {
             _bg.removeFromParent(true);
         }
         _bg = null;
+    }
+
+    private function partDataWasChanged (event:EditPartDataEvent):void {
+        update();
     }
 }
 }

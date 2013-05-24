@@ -10,13 +10,25 @@ import com.projectz.utils.levelEditor.data.GeneratorData;
 
 import starling.events.Event;
 
+/**
+ * Событие изменения генератора.
+ */
 public class EditGeneratorEvent extends Event {
 
     private var _generatorData:GeneratorData;
 
-    public static const GENERATOR_WAS_CHANGED:String = "generator was changed";
-    public static const GENERATOR_WAS_REMOVED:String = "generator was removed";
+    /**
+     * Добавление нового генератора.
+     */
     public static const GENERATOR_WAS_ADDED:String = "generator was added";
+    /**
+     * Изменение генератора.
+     */
+    public static const GENERATOR_WAS_CHANGED:String = "generator was changed";
+    /**
+     * Удаление генератора.
+     */
+    public static const GENERATOR_WAS_REMOVED:String = "generator was removed";
 
     public function EditGeneratorEvent(generatorData:GeneratorData, type:String = GENERATOR_WAS_CHANGED, bubbles:Boolean = false) {
         this.generatorData = generatorData;

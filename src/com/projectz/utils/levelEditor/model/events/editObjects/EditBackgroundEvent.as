@@ -10,6 +10,9 @@ import com.projectz.utils.objectEditor.data.ObjectData;
 
 import starling.events.Event;
 
+/**
+ * Событие изменения бэкграунда.
+ */
 public class EditBackgroundEvent extends Event{
 
     private var _objectData:ObjectData;
@@ -21,6 +24,9 @@ public class EditBackgroundEvent extends Event{
         super (type, bubbles, objectData);
     }
 
+    /**
+     * Бэкграунд в виде объекта ObjectData.
+     */
     public function get objectData():ObjectData {
         return _objectData;
     }
