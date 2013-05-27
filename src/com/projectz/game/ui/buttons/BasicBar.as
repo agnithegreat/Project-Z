@@ -12,6 +12,8 @@ import com.projectz.utils.objectEditor.view.FieldObjectView;
 
 import flash.filters.GlowFilter;
 
+import starling.core.Starling;
+
 import starling.display.DisplayObject;
 
 import starling.display.Image;
@@ -27,6 +29,7 @@ import starling.utils.HAlign;
 
 public class BasicBar extends Sprite {
 
+    private var _container: Sprite;//Контейнер, содержащий все визуальные элементы. Используется для позиционирования при анимации.
     private var _imgGlow: Image;//Картинка свечения бара.
     private var _imgBack: Image;//Картинка заднего фона.
     private var _iconContainer:Sprite;//Контейнер для отображения иконок.
@@ -37,37 +40,49 @@ public class BasicBar extends Sprite {
 
     private var _glow:Boolean = false;
 
-    private static const PROGRESS_BAR_X:int = 52;
-    private static const PROGRESS_BAR_Y:int = 52;
+    private static const ELEMENTS_X:int = -52;
+    private static const ELEMENTS_Y:int = -52;
     private static const TF_WIDTH:int = 104;
     private static const TF_Y:int = 56;
     private static const TF_FONT_SIZE:int = 30;
     private static const ICON_X:int = 70;
     private static const ICON_Y:int = 90;
+    private static const SELECT_ANIMATION_TWEEN_TIME:Number = .1;
+    private static const SELECT_ANIMATION_SCALE:Number = 1.1;
 
     /**
      * @param $assetsManager Менеджер ресурсов старлинга.
      */
     public function BasicBar($assetsManager: AssetManager) {
+
+        _container = new Sprite();
+        _container.x = -ELEMENTS_X;
+        _container.y = -ELEMENTS_Y;
+        addChild(_container);
+
         this._assetsManager = $assetsManager;
         _imgGlow = new Image($assetsManager.getTexture("bar_radial-glow"));
-        addChild(_imgGlow);
+        _imgGlow.x = ELEMENTS_X;
+        _imgGlow.y = ELEMENTS_Y;
+        _container.addChild(_imgGlow);
 
         _imgBack = new Image($assetsManager.getTexture("bar_radial-back"));
-        addChild(_imgBack);
+        _imgBack.x = ELEMENTS_X;
+        _imgBack.y = ELEMENTS_Y;
+        _container.addChild(_imgBack);
 
         var progressTexture:Texture = $assetsManager.getTexture("bar_radial-progress_2");
 
         var textureWidth:int = progressTexture.width;
         _nGonProgress = new NGon(textureWidth / 2, 50, 0, 0, 0);
-        _nGonProgress.x = PROGRESS_BAR_X;
-        _nGonProgress.y = PROGRESS_BAR_Y;
         _nGonProgress.material = new StandardMaterial( new StandardVertexShader(), new TextureFragmentShader() );
         _nGonProgress.material.textures[0] = progressTexture;
-        addChild(_nGonProgress);
+        _container.addChild(_nGonProgress);
 
         _iconContainer = new Sprite();
-        addChild(_iconContainer);
+        _iconContainer.x = ELEMENTS_X;
+        _iconContainer.y = ELEMENTS_Y;
+        _container.addChild(_iconContainer);
 
         /*
         PoplarStd
@@ -85,8 +100,9 @@ public class BasicBar extends Sprite {
         glowFilter.strength = 4;
 //        glowFilter.inner = true;
         _tf.nativeFilters = [glowFilter];
-        _tf.y = TF_Y;
-        addChild(_tf);
+        _tf.x = ELEMENTS_X;
+        _tf.y = ELEMENTS_Y + TF_Y;
+        _container.addChild(_tf);
 
         glow = glow;
 
@@ -105,8 +121,26 @@ public class BasicBar extends Sprite {
     }
 
     public function set glow(value:Boolean):void {
+        if (!_glow && value){
+            selectAnimation ();
+        }
         _glow = value;
         _imgGlow.visible = value;
+    }
+
+    /**
+     * Небольшая анимация выделения бара (для красоты).
+     */
+    public function selectAnimation ():void {
+        Starling.juggler.tween(
+                _container,
+                SELECT_ANIMATION_TWEEN_TIME,
+                {
+                    scaleX:SELECT_ANIMATION_SCALE,
+                    scaleY:SELECT_ANIMATION_SCALE,
+                    onComplete:completeSelectAnimation
+                }
+        );
     }
 
     /**
@@ -179,7 +213,16 @@ public class BasicBar extends Sprite {
         icon.y = ICON_Y;
     }
 
+/////////////////////////////////////////////
+//PRIVATE:
+/////////////////////////////////////////////
 
+    /**
+     * Анимация возврата бара к нормальному состоянии после анимации выделения бара (для красоты).
+     */
+    private function completeSelectAnimation ():void {
+        Starling.juggler.tween(_container, SELECT_ANIMATION_TWEEN_TIME, {scaleX:1, scaleY:1});
+    }
 
 }
 }

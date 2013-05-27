@@ -114,7 +114,7 @@ public class Game extends EventDispatcher {
     //FOR_TEST+++
     private function testAddMoney ():void {
         money += 1;
-        Starling.juggler.delayCall(testAddMoney, 3);
+        Starling.juggler.delayCall(testAddMoney, 1);
     }
     //FOR_TEST---
 }

@@ -101,6 +101,7 @@ public class BottomPanel extends Sprite {
                         else {
                             if (defenderData.cost <= model.money) {
                                 uiController.currentDefenderData = defenderData;
+                                defenderBar.selectAnimation();
                             }
                         }
                     }
@@ -128,6 +129,9 @@ public class BottomPanel extends Sprite {
             }
             else {
                 defenderBar.show();
+                if (defenderBar.glow) {
+                    defenderBar.selectAnimation();
+                }
             }
         }
     }
