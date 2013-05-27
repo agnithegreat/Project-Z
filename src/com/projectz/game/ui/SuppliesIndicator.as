@@ -28,7 +28,7 @@ public class SuppliesIndicator extends Sprite {
         _icon = new Image($assetsManager.getTexture("icon-supplies"));
         addChild(_icon);
 
-        _tf = new TextField(60, 60, "x0", "MyriadPro", 30, 0xFFFFFF);
+        _tf = new TextField(60, 60, "x0", "PoplarStd", 30, 0xFFFFFF);
         _tf.hAlign = HAlign.LEFT;
         _tf.x = _icon.width+10;
         var glowFilter:GlowFilter = new GlowFilter();

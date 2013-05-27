@@ -90,7 +90,7 @@ public class BasicBar extends Sprite {
         MyriadPro
 
         */
-        _tf = new TextField(TF_WIDTH, TF_FONT_SIZE + 5, "", "MyriadPro", TF_FONT_SIZE, 0xffffff);
+        _tf = new TextField(TF_WIDTH, TF_FONT_SIZE + 5, "", "PoplarStd", TF_FONT_SIZE, 0xffffff);
         _tf.hAlign = HAlign.CENTER;
 //        _tf.filter = BlurFilter.createGlow(0, 1, 2, 1);
         var glowFilter:GlowFilter = new GlowFilter();
@@ -160,7 +160,6 @@ public class BasicBar extends Sprite {
      */
     public function setText (text:String):void {
         _tf.text = text;
-
     }
 
     /**
