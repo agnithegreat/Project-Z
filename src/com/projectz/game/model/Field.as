@@ -17,9 +17,7 @@ import com.projectz.utils.levelEditor.data.DataUtils;
 import com.projectz.utils.levelEditor.data.GeneratorData;
 import com.projectz.utils.levelEditor.data.LevelData;
 import com.projectz.utils.levelEditor.data.PathData;
-import com.projectz.utils.levelEditor.data.PathData;
 import com.projectz.utils.levelEditor.data.DefenderPositionData;
-import com.projectz.utils.levelEditor.data.WaveData;
 import com.projectz.utils.objectEditor.data.DefenderData;
 import com.projectz.utils.objectEditor.data.EnemyData;
 import com.projectz.utils.objectEditor.data.ObjectsStorage;
@@ -69,7 +67,6 @@ public class Field extends EventDispatcher {
     }
 
     private var _targets: Vector.<Building>;
-    private var _targetCells: Vector.<Cell>;
 
     private var _generators: Vector.<Generator>;
 
@@ -88,7 +85,6 @@ public class Field extends EventDispatcher {
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
         _targets = new <Building>[];
-        _targetCells = new <Cell>[];
         _generators = new <Generator>[];
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
@@ -120,7 +116,6 @@ public class Field extends EventDispatcher {
                     cell = new Cell(i, j);
                     cell.addEventListener(GameEvent.CELL_WALK, handleUpdateCell);
                     _field.push(cell);
-                    _targetCells.push(cell);
                     _fieldObj[i+"."+j] = cell;
                 }
             }
@@ -140,6 +135,7 @@ public class Field extends EventDispatcher {
     public function step($delta: Number):void {
         var len: int = _enemies.length;
 
+        // TODO: цикл жизни зомби
         var enemy:Enemy;
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
@@ -151,17 +147,21 @@ public class Field extends EventDispatcher {
             }
         }
 
-        len = _defenders.length;
-        var defender: Defender;
-        for (i = 0; i < len; i++) {
-            defender = _defenders[i];
+        // TODO: цикл жизни защитников
+//        len = _defenders.length;
+//        var defender: Defender;
+//        for (i = 0; i < len; i++) {
+//            defender = _defenders[i];
 //            defender.step();
-        }
+//        }
 
         len = _generators.length;
+        var generator: Generator;
         for (i = 0; i < len; i++) {
-            var place: PlaceData = _generators[i].createEnemy($delta);
-            if (place) {
+            generator = _generators[i];
+            generator.tick($delta);
+            var place: PlaceData = _generators[i].createEnemy();
+            if (place && _enemies.length<1) {
                 createPersonage(place.x, place.y, _objectsStorage.getObjectData(place.object), _generators[i].path);
             }
         }
@@ -432,9 +432,10 @@ public class Field extends EventDispatcher {
             personage = enemy;
             _enemies.push(enemy);
         } else if ($data is DefenderData) {
-            var defender: Defender = new Defender($data as DefenderData);
-            _defenders.push(defender);
-            personage = defender;
+            // TODO: добавить защитников
+//            var defender: Defender = new Defender($data as DefenderData);
+//            _defenders.push(defender);
+//            personage = defender;
         }
 
         if (personage) {
@@ -443,7 +444,7 @@ public class Field extends EventDispatcher {
 
             if (personage is Defender) {
                 cell.walkable = false;
-                defender.watch(getArea(cell.positionData.area, $x, $y, defender.radius));
+//                defender.watch(getArea(cell.positionData.area, $x, $y, defender.radius));
                 createAttackArea(personage);
             }
 
@@ -460,23 +461,24 @@ public class Field extends EventDispatcher {
     }
 
     private function handleUpdateCell($e: Event):void {
-        var cell: Cell = $e.currentTarget as Cell;
-        _grid.setWalkable(cell.x, cell.y, cell.walkable);
+//        var cell: Cell = $e.currentTarget as Cell;
+//        _grid.setWalkable(cell.x, cell.y, cell.walkable);
 
-        var enemy: Enemy;
-        var len: int = _enemies.length;
-        for (var i:int = 0; i < len; i++) {
-            enemy = _enemies[i];
-            if (cell.object!=enemy) {
-                updateWay(enemy);
-            }
-        }
+        // TODO: обновление пути зомби
+//        var enemy: Enemy;
+//        var len: int = _enemies.length;
+//        for (var i:int = 0; i < len; i++) {
+//            enemy = _enemies[i];
+//            if (cell.object!=enemy) {
+//                updateWay(enemy);
+//            }
+//        }
     }
 
     private function updateWay($enemy: Enemy):void {
         var cell: Cell = $enemy.target ? $enemy.target : $enemy.cell;
-//        var target: Cell = getTargetCell(cell);
-//        $enemy.go(getWay(cell, target, $enemy.path));
+        var target: Cell = _targets[0].cell;
+        $enemy.go(getWay(cell, target, $enemy.path));
     }
 
     public function destroy():void {

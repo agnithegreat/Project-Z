@@ -148,13 +148,13 @@ public class Defender extends Personage {
 
     // сортируем ранжевиков по расстоянию до цели
     private function sortRangeEnemies($enemy1: Enemy, $enemy2: Enemy):int {
-        var d1: int = Cell.getDistance($enemy1.cell, $enemy1.lastTarget);
-        var d2: int = Cell.getDistance($enemy2.cell, $enemy1.lastTarget);
-        if (d1 > d2) {
-            return 1;
-        } else if (d1 < d2) {
-            return -1;
-        }
+//        var d1: int = Cell.getDistance($enemy1.cell, $enemy1.lastTarget);
+//        var d2: int = Cell.getDistance($enemy2.cell, $enemy1.lastTarget);
+//        if (d1 > d2) {
+//            return 1;
+//        } else if (d1 < d2) {
+//            return -1;
+//        }
         return 0;
     }
 }

@@ -14,37 +14,12 @@ import starling.core.Starling;
 
 public class Enemy extends Personage {
 
+    public static var speedMultiplier: Number = 1;
+
     public static const WALK: String = "walk";
     public static const ATTACK: String = "attack";
     public static const DIE: String = "die";
     public static const STAY: String = "stay";
-
-    private var _lastTarget: Cell;
-    public function get lastTarget():Cell {
-        return _lastTarget;
-    }
-
-    private var _sightTarget: Cell;
-    public function get sightTarget():Cell {
-        return _sightTarget;
-    }
-
-    override public function get cell():Cell {
-        return _progress>0.5 && _target.depth>_cell.depth ? _target : _cell;
-    }
-
-    protected var _progress: Number;
-    public function get progress():Number {
-        return _progress;
-    }
-    private var _halfWay: Boolean;
-
-    override public function get positionX():Number {
-        return _target ? _cell.x+(_target.x-_cell.x)*_progress : _cell.x;
-    }
-    override public function get positionY():Number {
-        return _target ? _cell.y+(_target.y-_cell.y)*_progress : _cell.y;
-    }
 
     protected var _hp: int;
     public function get hp():int {
@@ -71,52 +46,45 @@ public class Enemy extends Personage {
 
     override public function place($cell: Cell):void {
         super.place($cell);
-        _cell.addObject(this);
-        _progress = 0;
-        _halfWay = false;
+        come($cell);
+    }
 
-        if (_cell.attackObject) {
-            _cell.walkable = false;
-        }
-
-        _sightTarget = _cell.sightObject ? _cell.sightObject.cell : null;
+    private function come($cell: Cell):void {
+        $cell.addObject(this);
     }
 
     public function go($cells: Vector.<Cell>):void {
         if ($cells.length>0) {
             _target = $cells[0];
-            _lastTarget = $cells[$cells.length-1];
 
-            _target.addObject(this);
             walk(true);
         }
     }
 
     public function step($delta: Number):void {
         if (_target) {
-            var aim: FieldObject = _target.object;
-            if (aim is ITarget && !(aim is Enemy)) {
-                damageTarget(aim as ITarget);
-            } else {
-                // TODO: выбрать стиль передвижения персонажей
-                if (!aim || aim==this) {
-                    _progress += _enemyData.speed * $delta/distance;
+            var spd: Number = _enemyData.speed * $delta * speedMultiplier;
+//            var aim: FieldObject = _target.object;
+//            if (aim is ITarget && !(aim is Enemy)) {
+//                damageTarget(aim as ITarget);
+//            } else {
+//                // TODO: выбрать стиль передвижения персонажей
+//                if (!aim || aim==this) {
+                    _positionX += dirX * spd;
+                    _positionY += dirY * spd;
                     update();
-                }
+//                }
+//            }
+
+            if (cellDistance > 0.5) {
+                leave();
             }
-        }
-
-        if (!_halfWay && _progress>=0.5) {
-            leave();
-            _halfWay = true;
-        }
-
-        if (_progress>=1) {
-            place(_target);
-            _target = null;
-
-            if (_cell.attackObject) {
-                _target = _cell.attackObject.cell;
+            if (targetDistance < 0.5) {
+                come(_target);
+            }
+            if (targetDistance < 0.05) {
+                place(_target);
+                _target = null;
             }
         }
     }

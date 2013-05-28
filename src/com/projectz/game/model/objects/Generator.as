@@ -40,9 +40,16 @@ public class Generator {
         _enabled = _wave.amount>0;
     }
 
-    public function createEnemy($delta: Number):PlaceData {
+    public function tick($delta: Number):void {
         _time += $delta;
-        if (!_enabled || _time < _wave.delay) {
+    }
+
+    public function get isReady():Boolean {
+        return _enabled && _time >= _wave.delay;
+    }
+
+    public function createEnemy():PlaceData {
+        if (!isReady) {
             return null;
         }
         _time = 0;

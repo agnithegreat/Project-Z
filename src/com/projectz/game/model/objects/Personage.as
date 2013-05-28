@@ -14,16 +14,25 @@ import flash.geom.Point;
 
 public class Personage extends FieldObject implements ITarget {
 
+    protected var _positionX: Number;
+    override public function get positionX():Number {
+        return _positionX;
+    }
+    protected var _positionY: Number;
+    override public function get positionY():Number {
+        return _positionY;
+    }
+
     protected var _target: Cell;
     public function get target():Cell {
         return _target;
     }
 
-    public function get dirX():int {
-        return _target ? _target.x-_cell.x : 0;
+    public function get dirX():Number {
+        return _target ? _target.x-_positionX : 0;
     }
-    public function get dirY():int {
-        return _target ? _target.y-_cell.y : 0;
+    public function get dirY():Number {
+        return _target ? _target.y-_positionY : 0;
     }
 
     public function get direction():int {
@@ -31,8 +40,12 @@ public class Personage extends FieldObject implements ITarget {
         return _target ? angle/(Math.PI/4)-1 : 0;
     }
 
-    public function get distance():Number {
-        return _target ? Point.distance(new Point(_target.x, _target.y), new Point(_cell.x, _cell.y)) : 0;
+    public function get cellDistance():Number {
+        return Point.distance(new Point(_cell.x, _cell.y), new Point(_positionX, _positionY));
+    }
+
+    public function get targetDistance():Number {
+        return _target ? Point.distance(new Point(_target.x, _target.y), new Point(_positionX, _positionY)) : 0;
     }
 
     protected var _alive: Boolean;
@@ -49,6 +62,12 @@ public class Personage extends FieldObject implements ITarget {
         super($data, $shadow);
 
         _alive = true;
+    }
+
+    override public function place($cell: Cell):void {
+        super.place($cell);
+        _positionX = $cell.x;
+        _positionY = $cell.y;
     }
 
     public function damage($value: int):void {
