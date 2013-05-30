@@ -76,7 +76,7 @@ public class App extends Sprite {
     }
 
     private function handleLoadProgress($event: Event):void {
-        trace("JSON loading progress:", $event.data);
+//        trace("JSON loading progress:", $event.data);
     }
 
     private function handleLoaded($event: Event):void {

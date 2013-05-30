@@ -84,6 +84,7 @@ public class FieldObject extends EventDispatcher {
 
     public function place($cell: Cell):void {
         _cell = $cell;
+        _cell.addObject(this);
     }
 
     public function update():void {

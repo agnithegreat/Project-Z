@@ -44,47 +44,38 @@ public class Enemy extends Personage {
         _cooldown = 0;
     }
 
-    override public function place($cell: Cell):void {
-        super.place($cell);
-        come($cell);
-    }
-
-    private function come($cell: Cell):void {
+    protected function come($cell: Cell):void {
+        _cell = $cell;
         $cell.addObject(this);
+
+        if (_cell.attackObject) {
+            _cell.walkable = false;
+        }
     }
 
-    public function go($cells: Vector.<Cell>):void {
-        if ($cells.length>0) {
-            _target = $cells[0];
-
-            walk(true);
-        }
+    public function go($cell: Cell):void {
+        turn($cell);
+        walk(true);
     }
 
     public function step($delta: Number):void {
         if (_target) {
-            var spd: Number = _enemyData.speed * $delta * speedMultiplier;
-//            var aim: FieldObject = _target.object;
-//            if (aim is ITarget && !(aim is Enemy)) {
-//                damageTarget(aim as ITarget);
-//            } else {
-//                // TODO: выбрать стиль передвижения персонажей
-//                if (!aim || aim==this) {
-                    _positionX += dirX * spd;
-                    _positionY += dirY * spd;
-                    update();
-//                }
-//            }
+            var aim: FieldObject = _target.object;
+            if (aim is ITarget && !(aim is Enemy)) {
+                damageTarget(aim as ITarget);
+            } else {
+                var spd: Number = _enemyData.speed * $delta * speedMultiplier;
+                _positionX += dirX * spd;
+                _positionY += dirY * spd;
+                update();
 
-            if (cellDistance > 0.5) {
-                leave();
-            }
-            if (targetDistance < 0.5) {
-                come(_target);
-            }
-            if (targetDistance < 0.05) {
-                place(_target);
-                _target = null;
+                if (cellDistance > targetDistance) {
+                    leave();
+                    come(_target);
+                }
+                if (targetDistance < 0.05) {
+                    _target = null;
+                }
             }
         }
     }

@@ -28,11 +28,12 @@ public class Personage extends FieldObject implements ITarget {
         return _target;
     }
 
+    protected var _direction: Point;
     public function get dirX():Number {
-        return _target ? _target.x-_positionX : 0;
+        return _direction.x;
     }
     public function get dirY():Number {
-        return _target ? _target.y-_positionY : 0;
+        return _direction.y;
     }
 
     public function get direction():int {
@@ -61,6 +62,7 @@ public class Personage extends FieldObject implements ITarget {
     public function Personage($data: PartData, $shadow: PartData) {
         super($data, $shadow);
 
+        _direction = new Point();
         _alive = true;
     }
 
@@ -68,6 +70,12 @@ public class Personage extends FieldObject implements ITarget {
         super.place($cell);
         _positionX = $cell.x;
         _positionY = $cell.y;
+    }
+
+    public function turn($target: Cell):void {
+        _target = $target;
+        _direction.x = _target ? _target.x-_cell.x : 0;
+        _direction.y = _target ? _target.y-_cell.y : 0;
     }
 
     public function damage($value: int):void {

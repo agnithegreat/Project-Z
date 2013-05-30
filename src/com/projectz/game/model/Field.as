@@ -135,7 +135,6 @@ public class Field extends EventDispatcher {
     public function step($delta: Number):void {
         var len: int = _enemies.length;
 
-        // TODO: цикл жизни зомби
         var enemy:Enemy;
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
@@ -161,7 +160,7 @@ public class Field extends EventDispatcher {
             generator = _generators[i];
             generator.tick($delta);
             var place: PlaceData = _generators[i].createEnemy();
-            if (place && _enemies.length<1) {
+            if (place) {
                 createPersonage(place.x, place.y, _objectsStorage.getObjectData(place.object), _generators[i].path);
             }
         }
@@ -432,10 +431,9 @@ public class Field extends EventDispatcher {
             personage = enemy;
             _enemies.push(enemy);
         } else if ($data is DefenderData) {
-            // TODO: добавить защитников
-//            var defender: Defender = new Defender($data as DefenderData);
-//            _defenders.push(defender);
-//            personage = defender;
+            var defender: Defender = new Defender($data as DefenderData);
+            _defenders.push(defender);
+            personage = defender;
         }
 
         if (personage) {
@@ -461,24 +459,23 @@ public class Field extends EventDispatcher {
     }
 
     private function handleUpdateCell($e: Event):void {
-//        var cell: Cell = $e.currentTarget as Cell;
-//        _grid.setWalkable(cell.x, cell.y, cell.walkable);
+        var cell: Cell = $e.currentTarget as Cell;
+        _grid.setWalkable(cell.x, cell.y, cell.walkable);
 
         // TODO: обновление пути зомби
-//        var enemy: Enemy;
-//        var len: int = _enemies.length;
-//        for (var i:int = 0; i < len; i++) {
-//            enemy = _enemies[i];
-//            if (cell.object!=enemy) {
-//                updateWay(enemy);
-//            }
-//        }
+        var enemy: Enemy;
+        var len: int = _enemies.length;
+        for (var i:int = 0; i < len; i++) {
+            enemy = _enemies[i];
+            if (enemy.target == cell) {
+                updateWay(enemy);
+            }
+        }
     }
 
     private function updateWay($enemy: Enemy):void {
-        var cell: Cell = $enemy.target ? $enemy.target : $enemy.cell;
         var target: Cell = _targets[0].cell;
-        $enemy.go(getWay(cell, target, $enemy.path));
+        $enemy.go(getWay($enemy.cell, target, $enemy.path)[0]);
     }
 
     public function destroy():void {

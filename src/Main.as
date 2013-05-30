@@ -91,7 +91,7 @@ public class Main extends Sprite {
 
         CONFIG::desktop {
             var dir: File = new File(_config.data.path);
-//            _assets.verbose = false;
+            _assets.verbose = false;
             _assets.enqueue(
                 dir.resolvePath("sounds"),
                 dir.resolvePath(basicAssetsPath)

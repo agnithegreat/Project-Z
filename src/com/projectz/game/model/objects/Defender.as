@@ -123,6 +123,7 @@ public class Defender extends Personage {
     }
 
     private function getEnemies():void {
+        // TODO: пофиксить
         _meleeEnemies = new <Enemy>[];
         _rangeEnemies = new <Enemy>[];
         var enemies: Vector.<Enemy> = new <Enemy>[];

@@ -45,8 +45,7 @@ package com.projectz.utils.pathFinding {
 
 		private static function search(path: int = 0) : Boolean {
 			var node : Node = _startNode;
-            var end: Node = _endNode;
-			while (node != end) {
+			while (node != _endNode) {
 				var startX : int = Math.max(0, node.x - 1);
 				var endX : int = Math.min(_grid.numCols - 1, node.x + 1);
 				var startY : int = Math.max(0, node.y - 1);
@@ -90,10 +89,6 @@ package com.projectz.utils.pathFinding {
 				}
 				_open.sortOn("f", Array.NUMERIC);
 				node = _open.shift() as Node;
-
-                if (node.f<_endNode.f) {
-                    _endNode = node;
-                }
 			}
 			return true;
 		}
