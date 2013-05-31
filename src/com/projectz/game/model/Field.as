@@ -467,15 +467,13 @@ public class Field extends EventDispatcher {
         var len: int = _enemies.length;
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
-            if (enemy.target == cell) {
-                updateWay(enemy);
-            }
+            enemy.checkWayCell(cell);
         }
     }
 
     private function updateWay($enemy: Enemy):void {
         var target: Cell = _targets[0].cell;
-        $enemy.go(getWay($enemy.cell, target, $enemy.path)[0]);
+        $enemy.go(getWay($enemy.cell, target, $enemy.path));
     }
 
     public function destroy():void {

@@ -26,6 +26,8 @@ public class Enemy extends Personage {
         return _hp;
     }
 
+    private var _way: Vector.<Cell>;
+
     private var _cooldown: int;
 
     protected var _path: int;
@@ -53,9 +55,13 @@ public class Enemy extends Personage {
         }
     }
 
-    public function go($cell: Cell):void {
-        turn($cell);
-        walk(true);
+    public function go($way: Vector.<Cell>):void {
+        _way = $way;
+
+        if (_way && _way.length>0) {
+            turn(_way.shift());
+            walk(true);
+        }
     }
 
     public function step($delta: Number):void {
@@ -75,8 +81,15 @@ public class Enemy extends Personage {
                 }
                 if (targetDistance < 0.05) {
                     _target = null;
+                    go(_way);
                 }
             }
+        }
+    }
+
+    public function checkWayCell($cell: Cell):void {
+        if (_way.indexOf($cell)>=0) {
+            _way = null;
         }
     }
 
