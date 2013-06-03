@@ -149,12 +149,12 @@ public class Field extends EventDispatcher {
         }
 
         // TODO: цикл жизни защитников
-//        len = _defenders.length;
-//        var defender: Defender;
-//        for (i = 0; i < len; i++) {
-//            defender = _defenders[i];
-//            defender.step();
-//        }
+        len = _defenders.length;
+        var defender: Defender;
+        for (i = 0; i < len; i++) {
+            defender = _defenders[i];
+            defender.step();
+        }
 
         len = _generators.length;
         var generator: Generator;
@@ -442,7 +442,7 @@ public class Field extends EventDispatcher {
 
             if (personage is Defender) {
                 cell.walkable = false;
-//                defender.watch(getArea(cell.positionData.area, $x, $y, defender.radius));
+                defender.watch(getArea(cell.positionData.area, $x, $y, defender.radius));
                 createAttackArea(personage);
             }
 
@@ -462,7 +462,6 @@ public class Field extends EventDispatcher {
         var cell: Cell = $e.currentTarget as Cell;
         _grid.setWalkable(cell.x, cell.y, cell.walkable);
 
-        // TODO: обновление пути зомби
         var enemy: Enemy;
         var len: int = _enemies.length;
         for (var i:int = 0; i < len; i++) {

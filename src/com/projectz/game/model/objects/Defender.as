@@ -82,7 +82,7 @@ public class Defender extends Personage {
             }
         }
         if (_aim) {
-            _target = _aim.cell;
+            turn(_aim.cell);
             var targets: Vector.<Enemy> = _defenderData.power ? _target.enemies : new <Enemy>[_aim];
             if (targets.length>0) {
                 damageTargets(targets);

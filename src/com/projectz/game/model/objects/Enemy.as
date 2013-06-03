@@ -52,7 +52,7 @@ public class Enemy extends Personage {
 
         if (_cell.attackObject) {
             _cell.walkable = false;
-            _target = _cell.attackObject.cell;
+            turn(_cell.attackObject.cell);
         }
     }
 
