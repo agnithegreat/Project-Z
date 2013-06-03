@@ -67,6 +67,7 @@ public class Field extends EventDispatcher {
     }
 
     private var _targets: Vector.<Building>;
+    private var _targetCells: Vector.<Cell>;
 
     private var _generators: Vector.<Generator>;
 
@@ -85,6 +86,7 @@ public class Field extends EventDispatcher {
         _objectsStorage = $objectsStorage;
         _objects = new <FieldObject>[];
         _targets = new <Building>[];
+        _targetCells = new <Cell>[];
         _generators = new <Generator>[];
         _enemies = new <Enemy>[];
         _defenders = new <Defender>[];
@@ -386,7 +388,7 @@ public class Field extends EventDispatcher {
                 if (cell) {
                     if ($object.checkCell(i, j)) {
                         if ($object is Building) {
-//                            _targetCells.push(cell);
+                            _targetCells.push(cell);
                         }
                     } else {
                         cell.attackObject = $object;
@@ -472,8 +474,20 @@ public class Field extends EventDispatcher {
     }
 
     private function updateWay($enemy: Enemy):void {
-        var target: Cell = _targets[0].cell;
+        var target: Cell = getTargetCell();
         $enemy.go(getWay($enemy.cell, target, $enemy.path));
+    }
+
+    private function getTargetCell():Cell {
+        var cell: Cell;
+        while (!cell) {
+            var rand: int = Math.random()*_targetCells.length;
+            cell = _targetCells[rand];
+            if (!cell.walkable) {
+                cell = null;
+            }
+        }
+        return cell;
     }
 
     public function destroy():void {

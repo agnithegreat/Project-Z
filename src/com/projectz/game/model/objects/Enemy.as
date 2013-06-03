@@ -88,8 +88,9 @@ public class Enemy extends Personage {
     }
 
     public function checkWayCell($cell: Cell):void {
-        if (_way.indexOf($cell)>=0) {
-            _way = null;
+        var index: int = _way.indexOf($cell);
+        if (index >= 0) {
+            _way.slice(index);
         }
     }
 
