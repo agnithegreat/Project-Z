@@ -52,6 +52,7 @@ public class Enemy extends Personage {
 
         if (_cell.attackObject) {
             _cell.walkable = false;
+            _target = _cell.attackObject.cell;
         }
     }
 
@@ -87,10 +88,10 @@ public class Enemy extends Personage {
         }
     }
 
-    public function checkWayCell($cell: Cell):void {
-        var index: int = _way.indexOf($cell);
+    public function cutWay($cell: Cell):void {
+        var index: int = _way ? _way.indexOf($cell) : -1;
         if (index >= 0) {
-            _way.slice(index);
+            _way = _way.slice(0, index);
         }
     }
 

@@ -387,10 +387,8 @@ public class Field extends EventDispatcher {
                 var cell: Cell = getCell(i, j);
                 if (cell) {
                     if ($object.checkCell(i, j)) {
-                        if ($object is Building) {
-                            _targetCells.push(cell);
-                        }
                     } else {
+                        _targetCells.push(cell);
                         cell.attackObject = $object;
                     }
                 }
@@ -469,25 +467,25 @@ public class Field extends EventDispatcher {
         var len: int = _enemies.length;
         for (var i:int = 0; i < len; i++) {
             enemy = _enemies[i];
-            enemy.checkWayCell(cell);
+            enemy.cutWay(cell);
         }
     }
 
     private function updateWay($enemy: Enemy):void {
         var target: Cell = getTargetCell();
-        $enemy.go(getWay($enemy.cell, target, $enemy.path));
+        if (target) {
+            $enemy.go(getWay($enemy.cell, target, $enemy.path));
+        }
     }
 
     private function getTargetCell():Cell {
-        var cell: Cell;
-        while (!cell) {
-            var rand: int = Math.random()*_targetCells.length;
-            cell = _targetCells[rand];
-            if (!cell.walkable) {
-                cell = null;
+        for (var i:int = 0; i < _targetCells.length; i++) {
+            var cell: Cell = _targetCells[i];
+            if (cell.walkable) {
+                return cell;
             }
         }
-        return cell;
+        return null;
     }
 
     public function destroy():void {

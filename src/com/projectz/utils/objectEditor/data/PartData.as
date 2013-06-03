@@ -247,7 +247,7 @@ public class PartData extends EventDispatcher {
     public function get left():Point {
         if (!_left) {
             _left = new Point(width-1, top.y);
-            while (!_mask[_left.x][_left.y]) {
+            while (!_mask[_left.x][_left.y] && _left.x>top.x) {
                 _left.x--;
             }
         }
@@ -258,7 +258,7 @@ public class PartData extends EventDispatcher {
     public function get right():Point {
         if (!_right) {
             _right = new Point(top.x, height-1);
-            while (!_mask[_right.x][_right.y]) {
+            while (!_mask[_right.x][_right.y] && _right.y>top.y) {
                 _right.y--;
             }
         }
