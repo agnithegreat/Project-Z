@@ -229,7 +229,7 @@ public class PartData extends EventDispatcher {
                 }
             }
         }
-        return null;
+        return new Point(0, 0);
     }
 
     private var _top: Point;
