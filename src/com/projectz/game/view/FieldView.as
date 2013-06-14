@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.view {
+import com.projectz.AppSettings;
 import com.projectz.game.view.objects.*;
 import com.projectz.game.view.*;
 import com.projectz.game.controller.UIController;
@@ -53,7 +54,7 @@ public class FieldView extends Sprite {
         _field.addEventListener(GameEvent.UPDATE, handleUpdate);
         _field.addEventListener(GameEvent.OBJECT_ADDED, handleAddObject);
 
-        _bg = new Image(_uiController.assets.getTexture(_field.level.bg));
+        _bg = new Image(_uiController.assetManager.getTexture(_field.level.bg));
         _bg.touchable = false;
         addChild(_bg);
 
@@ -67,13 +68,13 @@ public class FieldView extends Sprite {
         var len: int = _field.field.length;
         var cell: CellView;
         for (var i:int = 0; i < len; i++) {
-            cell = new CellView(_field.field[i], _uiController.assets.getTexture("ms-cell"));
+            cell = new CellView(_field.field[i], _uiController.assetManager.getTexture("ms-cell"));
             _cells.addChild(cell);
         }
         _cells.flatten();
 
-        _container.x = (Constants.WIDTH+PositionView.cellWidth)*0.5;
-        _container.y = (Constants.HEIGHT+(1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
+        _container.x = (AppSettings.appWidth + PositionView.cellWidth)*0.5;
+        _container.y = (AppSettings.appHeight + (1-(_field.height+_field.height)*0.5)*PositionView.cellHeight)*0.5;
 
         _staticShadows = new Sprite();
         _staticShadows.touchable = false;
@@ -145,13 +146,13 @@ public class FieldView extends Sprite {
         var target: PositionView = $event.target as PositionView;
         var effect: Effect;
         if ($event.data == Effect.BLOOD) {
-            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTextures("effect_brain"));
+            effect = new Effect(target.positionX, target.positionY, _uiController.assetManager.getTextures("effect_brain"));
             effect.pivotY += 40;
             _overallEffects.addChild(effect);
             effect.hide(2, 1);
         } else if ($event.data == Effect.DIE) {
             var rand: int = Math.random()*2+1;
-            effect = new Effect(target.positionX, target.positionY, _uiController.assets.getTextures("effect_blood_0"+rand));
+            effect = new Effect(target.positionX, target.positionY, _uiController.assetManager.getTextures("effect_blood_0"+rand));
             _floorEffects.addChild(effect);
             effect.hide(3, 1);
         }

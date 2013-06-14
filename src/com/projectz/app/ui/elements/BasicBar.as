@@ -7,10 +7,9 @@
  */
 package com.projectz.app.ui.elements {
 
+import com.projectz.app.ui.TextFieldManager;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.view.FieldObjectView;
-
-import flash.filters.GlowFilter;
 
 import starling.core.Starling;
 
@@ -90,18 +89,11 @@ public class BasicBar extends Sprite {
         MyriadPro
 
         */
-        _tf = new TextField(TF_WIDTH, TF_FONT_SIZE + 5, "", "PoplarStd", TF_FONT_SIZE, 0xffffff);
+        _tf = new TextField(TF_WIDTH, TF_FONT_SIZE + 5, "");
         _tf.hAlign = HAlign.CENTER;
-//        _tf.filter = BlurFilter.createGlow(0, 1, 2, 1);
-        var glowFilter:GlowFilter = new GlowFilter();
-        glowFilter.color = 0x000000;
-        glowFilter.blurX = 5;
-        glowFilter.blurY = 5;
-        glowFilter.strength = 4;
-//        glowFilter.inner = true;
-        _tf.nativeFilters = [glowFilter];
         _tf.x = ELEMENTS_X;
         _tf.y = ELEMENTS_Y + TF_Y;
+        TextFieldManager.setAppDefaultStyle(_tf);
         _container.addChild(_tf);
 
         glow = glow;

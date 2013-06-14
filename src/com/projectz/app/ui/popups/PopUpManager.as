@@ -12,6 +12,7 @@ import com.projectz.game.App;
 import com.projectz.app.ui.popups.events.PopUpEvent;
 
 import starling.events.Event;
+import starling.utils.AssetManager;
 
 public class PopUpManager {
 
@@ -27,8 +28,26 @@ public class PopUpManager {
         if (!key) {
             throw new SingletonError();
         }
+    }
+
+/////////////////////////////////////////////
+//PUBLIC:
+/////////////////////////////////////////////
+
+    public static function getInstance ():PopUpManager {
+        if (!_instance) {
+            _instance = new PopUpManager (new SingletonKey ());
+        }
+        return _instance;
+    }
+
+    /**
+     * Создание попапов.
+     * @param assetManager Менеджер ассетов старлинга.
+     */
+    public function init (assetManager:AssetManager):void {
         //Создаём все попапы:
-        screenPopUp = new ScreenPopUp ();
+        screenPopUp = new ScreenPopUp (assetManager);
 
         //Добавляем все попапы в вектор-хранилище.
         allPopUps = new Vector.<BasicPopUp>();
@@ -36,13 +55,6 @@ public class PopUpManager {
 
         //add listeners:
         screenPopUp.addEventListener (PopUpEvent.OPEN, openScreenPopUpListener);
-    }
-
-    public static function getInstance ():PopUpManager {
-        if (!_instance) {
-            _instance = new PopUpManager (new SingletonKey ());
-        }
-        return _instance;
     }
 
     public function openScreen (nextScreenId:String):void {

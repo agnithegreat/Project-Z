@@ -10,7 +10,7 @@ import com.projectz.game.controller.UIController;
 import com.projectz.game.controller.events.selectDefender.SelectDefenderEvent;
 import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Game;
-import com.projectz.game.ui.buttons.DefenderBar;
+import com.projectz.game.ui.DefenderBar;
 import com.projectz.utils.objectEditor.data.DefenderData;
 
 import starling.core.Starling;

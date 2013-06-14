@@ -24,15 +24,15 @@ public class UIController extends EventDispatcher {
     private var _currentDefenderData:DefenderData;
 
     private var _gameController: GameController;
-    private var _assets: AssetManager;
+    private var _assetManager: AssetManager;
 
-    public function get assets():AssetManager {
-        return _assets;
+    public function get assetManager():AssetManager {
+        return _assetManager;
     }
 
     public function UIController($game: GameController, $assets: AssetManager) {
         _gameController = $game;
-        _assets = $assets;
+        _assetManager = $assets;
     }
 
     /**

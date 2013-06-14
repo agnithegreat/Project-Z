@@ -6,9 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.ui {
+import com.projectz.AppSettings;
 import com.projectz.game.controller.UIController;
 import com.projectz.game.model.Game;
-import com.projectz.game.ui.buttons.ButtonBase;
+import com.projectz.app.ui.elements.BasicButton;
 import com.projectz.utils.objectEditor.data.DefenderData;
 
 import starling.display.Sprite;
@@ -25,16 +26,20 @@ public class UI extends Sprite {
      * @param $uiController Ссылка на контроллер (mvc).
      */
     public function UI($model:Game, $uiController: UIController, $assetsManager: AssetManager) {
-        ButtonBase.init($assetsManager);
+        BasicButton.init($assetsManager);
 
         _topPanel = new TopPanel($model, $uiController, $assetsManager);
         addChild(_topPanel);
 
         _bottomPanel = new BottomPanel($model, $uiController, $assetsManager);
-        _bottomPanel.y = Constants.HEIGHT;
+        _bottomPanel.y = AppSettings.appHeight;
         addChild(_bottomPanel);
 
         appear();
+    }
+
+    public function destroy ():void {
+
     }
 
     public function appear():void {

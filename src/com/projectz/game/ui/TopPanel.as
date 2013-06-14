@@ -6,6 +6,10 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.ui {
+import com.projectz.app.ui.elements.BasicButton;
+import com.projectz.game.App;
+import com.projectz.app.ui.popups.PopUpManager;
+import com.projectz.app.ui.screens.AppScreens;
 import com.projectz.game.controller.UIController;
 import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Game;
@@ -15,6 +19,9 @@ import starling.display.Button;
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.events.Event;
+import starling.events.Touch;
+import starling.events.TouchEvent;
+import starling.events.TouchPhase;
 import starling.utils.AssetManager;
 
 public class TopPanel extends Sprite {
@@ -25,6 +32,8 @@ public class TopPanel extends Sprite {
     private var _bg: Image;
 
     private var _supplies: SuppliesIndicator;
+
+    private var btnMenu: Button;
 
     /**
      * @param $model Ссылка на модель.
@@ -41,19 +50,13 @@ public class TopPanel extends Sprite {
         _supplies = new SuppliesIndicator($assetsManager);
         addChild(_supplies);
 
-        var menu: Button = new Button($assetsManager.getTexture("btn-temp-02"));
-        menu.x = _bg.width-menu.width-10;
-        menu.y = (_bg.height-menu.height)/2-2;
-        addChild(menu);
+        btnMenu = new BasicButton(2, "Menu");
+        btnMenu.x = _bg.width-btnMenu.width-10;
+        btnMenu.y = (_bg.height-btnMenu.height)/2-2;
+        btnMenu.addEventListener (TouchEvent.TOUCH, touchListener);
+        addChild(btnMenu);
 
         model.addEventListener(GameEvent.SET_MONEY, setMoneyListener);
-
-//        var button: ButtonBase = new ButtonBase(2, "", $assets.getTexture("icon-btn_menu"));
-//        button.scaleX = button.scaleY = 0.5;
-//        button.x = _bg.width-button.width;
-//        addChild(button);
-
-
     }
 
 /////////////////////////////////////////////
@@ -77,6 +80,27 @@ public class TopPanel extends Sprite {
 
     private function setMoneyListener (event:Event):void {
         update(model.money);
+    }
+
+    private function touchListener (event:TouchEvent):void {
+        var touch:Touch = event.getTouch(stage);
+        if (touch) {
+            switch (touch.phase) {
+                case TouchPhase.BEGAN:                                      // press
+                    switch (event.currentTarget) {
+                        case (btnMenu):
+                            PopUpManager.getInstance().openScreen(AppScreens.LEVEL_MENU_SCREEN);
+                            break;
+                    }
+                    break;
+//                case TouchPhase.ENDED:                                      // click
+//                    //
+//                    break;
+//                default :
+            }
+        }
+
+
     }
 }
 }

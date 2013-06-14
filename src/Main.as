@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package {
+import com.projectz.AppSettings;
 
 CONFIG::web {
     import flash.net.URLLoader;
@@ -20,7 +21,6 @@ CONFIG::desktop {
 import com.projectz.game.App;
 import com.projectz.utils.json.JSONLoader;
 
-import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Rectangle;
@@ -84,6 +84,7 @@ public class Main extends Sprite {
         // TODO: подготовить графику для retina
 //        _scaleFactor = viewPort.width < 1152 ? 1 : 2;
         _scaleFactor = 1;
+        AppSettings.scaleFactor = _scaleFactor;
         _assets = new AssetManager(_scaleFactor);
         basicAssetsPath = formatString("textures/{0}x/final", _scaleFactor);
 

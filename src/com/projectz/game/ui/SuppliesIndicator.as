@@ -7,11 +7,10 @@
  */
 package com.projectz.game.ui {
 
-import flash.filters.GlowFilter;
+import com.projectz.app.ui.TextFieldManager;
 
 import starling.display.Image;
 import starling.display.Sprite;
-import starling.filters.BlurFilter;
 import starling.text.TextField;
 import starling.utils.AssetManager;
 import starling.utils.HAlign;
@@ -28,19 +27,11 @@ public class SuppliesIndicator extends Sprite {
         _icon = new Image($assetsManager.getTexture("icon-supplies"));
         addChild(_icon);
 
-        _tf = new TextField(60, 60, "x0", "PoplarStd", 30, 0xFFFFFF);
+        _tf = new TextField(60, 60, "x0");
         _tf.hAlign = HAlign.LEFT;
         _tf.x = _icon.width+10;
-        var glowFilter:GlowFilter = new GlowFilter();
-        glowFilter.color = 0x000000;
-        glowFilter.blurX = 5;
-        glowFilter.blurY = 5;
-        glowFilter.strength = 4;
-//        glowFilter.inner = true;
-        _tf.nativeFilters = [glowFilter];
+        TextFieldManager.setAppDefaultStyle(_tf);
         addChild(_tf);
-
-        _tf.filter = BlurFilter.createGlow(0, 1, 3, 1);
     }
 
     public function update($amount: int):void {
