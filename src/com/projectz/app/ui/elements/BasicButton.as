@@ -5,7 +5,7 @@
  * Time: 8:24
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.ui.buttons {
+package com.projectz.app.ui.elements {
 import flash.geom.Matrix;
 
 import starling.display.Button;
@@ -14,11 +14,12 @@ import starling.textures.RenderTexture;
 import starling.textures.Texture;
 import starling.utils.AssetManager;
 
-public class ButtonBase extends Button {
+public class BasicButton extends Button {
 
     private static var left: Image;
     private static var center: Image;
     private static var right: Image;
+
     public static function init($assets: AssetManager):void {
         left = new Image($assets.getTexture("btn_blue_01"));
         center = new Image($assets.getTexture("btn_blue_02"));
@@ -41,7 +42,7 @@ public class ButtonBase extends Button {
         return base;
     }
 
-    public function ButtonBase($size: Number, text:String = "", $content: Texture = null) {
+    public function BasicButton($size: Number, text:String = "", $content: Texture = null) {
         super(getBase($size, $content), text);
     }
 }

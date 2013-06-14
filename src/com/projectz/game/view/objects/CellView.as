@@ -5,8 +5,7 @@
  * Time: 0:56
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.view {
-import com.projectz.game.view.objects.*;
+package com.projectz.game.view.objects {
 import com.projectz.game.view.*;
 import com.projectz.game.model.Cell;
 import com.projectz.game.event.GameEvent;

@@ -5,7 +5,7 @@
  * Time: 15:44
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.ui.buttons {
+package com.projectz.app.ui.elements {
 
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.view.FieldObjectView;

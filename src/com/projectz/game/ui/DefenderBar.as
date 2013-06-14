@@ -5,8 +5,9 @@
  * Time: 18:50
  * To change this template use File | Settings | File Templates.
  */
-package com.projectz.game.ui.buttons {
+package com.projectz.game.ui {
 
+import com.projectz.app.ui.elements.BasicBar;
 import com.projectz.utils.objectEditor.data.DefenderData;
 
 import starling.display.DisplayObject;
