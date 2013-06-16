@@ -588,7 +588,7 @@ package feathers.core
 		 * uses. After Starling Framework finalizes masking, it may be removed
 		 * or refactored. Use at your own risk.
 		 */
-		override public function get clipRect():Rectangle
+		public function get clipRect():Rectangle
 		{
 			return this._clipRect;
 		}
@@ -596,7 +596,7 @@ package feathers.core
 		/**
 		 * @private
 		 */
-		override public function set clipRect(value:Rectangle):void
+		public function set clipRect(value:Rectangle):void
 		{
 			this._clipRect = value;
 			if(this._clipRect)

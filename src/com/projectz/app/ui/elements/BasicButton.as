@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.app.ui.elements {
+import com.projectz.AppSettings;
 import com.projectz.app.ui.TextFieldManager;
 
 import flash.geom.Matrix;
@@ -25,7 +26,9 @@ public class BasicButton extends Button {
     private static var center: Image;
     private static var right: Image;
 
-    protected var mTextField:TextField;
+    protected var mTextField:TextField;//Текстовое поле кнопки. Сохранено оригинальное название приватной переменной из классов старлинга.
+
+    private static const TF_Y_INDENT:int = 3;
 
     public static function init($assets: AssetManager):void {
         left = new Image($assets.getTexture("btn_blue_01"));
@@ -69,6 +72,7 @@ public class BasicButton extends Button {
         }
         if (mTextField) {
             TextFieldManager.setButtonDefaultStyle(mTextField);
+            mTextField.y += TF_Y_INDENT * AppSettings.scaleFactor;
         }
     }
 }
