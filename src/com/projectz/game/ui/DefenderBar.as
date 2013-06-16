@@ -8,6 +8,9 @@
 package com.projectz.game.ui {
 
 import com.projectz.app.ui.elements.BasicBar;
+import com.projectz.game.model.objects.Defender;
+import com.projectz.game.view.objects.DefenderView;
+import com.projectz.utils.StarlingUtils;
 import com.projectz.utils.objectEditor.data.DefenderData;
 
 import starling.display.DisplayObject;
@@ -31,11 +34,31 @@ public class DefenderBar extends BasicBar {
 
     public function set defenderData(value:DefenderData):void {
         _defenderData = value;
-        createIconByObjectData(_defenderData);
+        createIconByDefenderData(_defenderData);
         setText(String (_defenderData.cost));
+
+
     }
 
-    override protected function placeIcon (icon:DisplayObject):void {
+    /**
+     * Создание и отображение иконки по DefenderData.
+     * @param defenderData Защитник для создания иконки.
+     */
+    public function createIconByDefenderData (defenderData:DefenderData):void {
+        if (defenderData) {
+            if (defenderData is DefenderData) {
+                var defender:Defender = new Defender (defenderData);
+                var defenderView:DefenderView = new DefenderView (defender);
+                defenderView.stay(1);
+                defenderView.stopCurrentStateAnimation();
+                positionIcon (defenderView);
+                addIcon(defenderView);
+                defenderView
+            }
+        }
+    }
+
+    override protected function positionIcon (icon:DisplayObject):void {
         icon.x = ICON_X;
         icon.y = ICON_Y;
     }

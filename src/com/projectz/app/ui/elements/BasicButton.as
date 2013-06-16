@@ -10,6 +10,7 @@ import com.projectz.AppSettings;
 import com.projectz.app.ui.TextFieldManager;
 
 import flash.geom.Matrix;
+import flash.geom.Rectangle;
 
 import starling.display.Button;
 import starling.display.DisplayObject;
@@ -28,6 +29,7 @@ public class BasicButton extends Button {
 
     protected var mTextField:TextField;//Текстовое поле кнопки. Сохранено оригинальное название приватной переменной из классов старлинга.
 
+    private static const INDENT:int = 1;
     private static const TF_Y_INDENT:int = 3;
 
     public static function init($assets: AssetManager):void {
@@ -42,9 +44,13 @@ public class BasicButton extends Button {
         var base: RenderTexture = new RenderTexture(left.width + right.width + centerWidth, center.height);
         base.draw(left);
         if (centerWidth) {
-            base.draw(center, new Matrix($scale,0,0,1,left.width - 1,0));
+            base.draw(center, new Matrix($scale,0,0,1,left.width - INDENT,0));
         }
-        base.draw(right, new Matrix(1,0,0,1,left.width+centerWidth - 2));
+        var indent:int = INDENT * 2;
+        if (centerWidth == 0) {
+            indent = INDENT;
+        }
+        base.draw(right, new Matrix(1,0,0,1,left.width+centerWidth - indent));
         if ($content) {
             var content: Image = new Image($content);
             base.draw(content, new Matrix(1,0,0,1,(base.width-content.width)/2,(base.height-content.height)/2));
@@ -72,7 +78,9 @@ public class BasicButton extends Button {
         }
         if (mTextField) {
             TextFieldManager.setButtonDefaultStyle(mTextField);
-            mTextField.y += TF_Y_INDENT * AppSettings.scaleFactor;
+            var rect:Rectangle = textBounds;
+            rect.y = TF_Y_INDENT * AppSettings.scaleFactor;
+            textBounds = rect;
         }
     }
 }

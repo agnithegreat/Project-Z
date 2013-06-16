@@ -8,9 +8,6 @@
 package com.projectz.app.ui.elements {
 
 import com.projectz.app.ui.TextFieldManager;
-import com.projectz.utils.objectEditor.data.ObjectData;
-import com.projectz.utils.objectEditor.view.FieldObjectView;
-
 import starling.core.Starling;
 
 import starling.display.DisplayObject;
@@ -155,17 +152,13 @@ public class BasicBar extends Sprite {
     }
 
     /**
-     * Создание и отображение иконки по объекту ObjectData.
-     * @param objectData Объект для создания иконки.
+     * Установка иконки.
+     * @param icon
      */
-    public function createIconByObjectData (objectData:ObjectData):void {
+    public function addIcon (icon:DisplayObject):void {
         _iconContainer.removeChildren();
-        if (objectData) {
-            var fieldObjectView:FieldObjectView = new FieldObjectView(objectData, _assetsManager);
-            fieldObjectView.asIcon();
-            placeIcon (fieldObjectView);
-            _iconContainer.addChild(fieldObjectView);
-        }
+        positionIcon (icon);
+        _iconContainer.addChild(icon);
     }
 
     /**
@@ -199,7 +192,7 @@ public class BasicBar extends Sprite {
      * Позиционирование иконки.
      * @param icon Иконка для позиционирования.
      */
-    protected function placeIcon (icon:DisplayObject):void {
+    protected function positionIcon (icon:DisplayObject):void {
         icon.x = ICON_X;
         icon.y = ICON_Y;
     }

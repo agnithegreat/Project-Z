@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.utils.objectEditor.view {
+import com.projectz.game.model.objects.Defender;
 import com.projectz.utils.StarlingUtils;
 import com.projectz.utils.objectEditor.data.ObjectData;
 import com.projectz.utils.objectEditor.data.PartData;
@@ -168,7 +169,6 @@ public class FieldObjectView extends Sprite {
         init();
 
         //Устанавливаем нормальную прозрачность объектов.
-        var previousAlpha:Number = _objects.alpha;
         _objects.alpha = 1;
 
         //Останавливаем анимацию:

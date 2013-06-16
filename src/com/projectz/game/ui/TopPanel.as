@@ -6,8 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 package com.projectz.game.ui {
-import com.projectz.app.ui.elements.BasicButton;
-import com.projectz.game.App;
+import com.projectz.AppSettings;
+import com.projectz.app.ui.elements.BasicButtonWithIcon;
 import com.projectz.app.ui.popups.PopUpManager;
 import com.projectz.app.ui.screens.AppScreens;
 import com.projectz.game.controller.UIController;
@@ -15,7 +15,6 @@ import com.projectz.game.event.GameEvent;
 import com.projectz.game.model.Game;
 
 import starling.core.Starling;
-import starling.display.Button;
 import starling.display.Image;
 import starling.display.Sprite;
 import starling.events.Event;
@@ -33,7 +32,13 @@ public class TopPanel extends Sprite {
 
     private var _supplies: SuppliesIndicator;
 
-    private var btnMenu: Button;
+    private var btnMenu: BasicButtonWithIcon;
+    private var btnPlay: BasicButtonWithIcon;
+    private var btnPause: BasicButtonWithIcon;
+
+    private const BUTTON_TOP_MARGIN:int = 2;
+    private const BUTTON_RIGHT_MARGIN:int = 10;
+    private const BUTTON_DISTANCE:int = 10;
 
     /**
      * @param $model Ссылка на модель.
@@ -50,11 +55,24 @@ public class TopPanel extends Sprite {
         _supplies = new SuppliesIndicator($assetsManager);
         addChild(_supplies);
 
-        btnMenu = new BasicButton(2, "Menu");
-        btnMenu.x = _bg.width-btnMenu.width-10;
-        btnMenu.y = (_bg.height-btnMenu.height)/2-2;
+        var scaleFactor:int = AppSettings.scaleFactor;
+        btnMenu = new BasicButtonWithIcon(2, "Menu", $assetsManager.getTexture("icon-btn_menu"));
+        btnMenu.x = _bg.width - btnMenu.width - BUTTON_RIGHT_MARGIN * scaleFactor;
+        btnMenu.y = (_bg.height - btnMenu.height) / 2 - BUTTON_TOP_MARGIN * scaleFactor;
         btnMenu.addEventListener (TouchEvent.TOUCH, touchListener);
         addChild(btnMenu);
+
+        btnPlay = new BasicButtonWithIcon(0, "", $assetsManager.getTexture("icon-btn_play"));
+        btnPlay.x = _bg.width - btnMenu.width - btnPlay.width - (BUTTON_RIGHT_MARGIN + BUTTON_DISTANCE) * scaleFactor;
+        btnPlay.y = (_bg.height - btnPlay.height) / 2 - BUTTON_TOP_MARGIN * scaleFactor;
+        btnPlay.addEventListener (TouchEvent.TOUCH, touchListener);
+        addChild(btnPlay);
+
+        btnPause = new BasicButtonWithIcon(0, "", $assetsManager.getTexture("icon-btn_pause"));
+        btnPause.x = _bg.width - btnMenu.width - btnPause.width - (BUTTON_RIGHT_MARGIN + BUTTON_DISTANCE) * scaleFactor;
+        btnPause.y = (_bg.height - btnPause.height) / 2 - BUTTON_TOP_MARGIN * scaleFactor;
+        btnPause.addEventListener (TouchEvent.TOUCH, touchListener);
+        addChild(btnPause);
 
         model.addEventListener(GameEvent.SET_MONEY, setMoneyListener);
     }
@@ -91,6 +109,14 @@ public class TopPanel extends Sprite {
                         case (btnMenu):
                             PopUpManager.getInstance().openScreen(AppScreens.LEVEL_MENU_SCREEN);
                             break;
+                        case (btnPlay):
+                            //TODO:Привязать изменение модели.
+                            playListener (null);
+                            break;
+                        case (btnPause):
+                            //TODO:Привязать изменение модели.
+                            pauseListener (null);
+                            break;
                     }
                     break;
 //                case TouchPhase.ENDED:                                      // click
@@ -99,8 +125,16 @@ public class TopPanel extends Sprite {
 //                default :
             }
         }
+    }
 
+    private function pauseListener (event:Event):void {
+        btnPause.visible = false;
+        btnPlay.visible = true;
+    }
 
+    private function playListener (event:Event):void {
+        btnPause.visible = true;
+        btnPlay.visible = false;
     }
 }
 }
